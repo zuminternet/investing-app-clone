@@ -3,7 +3,6 @@ import Vuex from 'vuex';
 
 Vue.use(Vuex)
 
-
 export default () => {
     return new Vuex.Store({
         // 각 기능 별 모듈

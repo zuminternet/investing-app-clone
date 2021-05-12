@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <p>hi</p>
     <router-view></router-view>
   </div>
 </template>
@@ -12,9 +13,9 @@
  *
  **********************************************************
  */
-export default {
-  name: 'App',
-};
+  export default {
+    name: 'App',
+  };
 </script>
 
 <style>

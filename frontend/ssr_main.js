@@ -5,11 +5,12 @@ import App from './App.vue';
 import createRouter from './router';
 import createStore from './store';
 
-Vue.use(Router)
-Vue.use(Vuex)
+Vue.use(Router);
+Vue.use(Vuex);
 
-module.exports = function createApp (ctx) {
+export default (ctx) => {
     return new Promise((resolve, reject) => {
+
         const store = createStore();
         const router = createRouter();
 
@@ -28,5 +29,10 @@ module.exports = function createApp (ctx) {
 
             resolve(app);
         });
-    })
-}
+
+    });
+};
+
+
+
+

@@ -1,4 +1,4 @@
-require('zum-portal-core/banner'); // 배너출력
+
 const {modeConfigurer} = require('zum-portal-core/frontend/config/configUtils');
 
 /**

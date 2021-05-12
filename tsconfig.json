@@ -11,6 +11,7 @@
         "emitDecoratorMetadata": true,
         "allowJs": true
     },
+
     "exclude": [
         "./frontend/**",
         "./node_modules/**"
