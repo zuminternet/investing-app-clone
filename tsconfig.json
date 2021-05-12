@@ -13,7 +13,7 @@
     },
 
     "exclude": [
-        "./frontend/**",
+        "./**/frontend/**",
         "./node_modules/**"
     ]
 }

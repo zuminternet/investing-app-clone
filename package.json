@@ -5,11 +5,11 @@
   "main": "index.js",
   "scripts": {
     "dev": "concurrently -c yellow,cyan \"npm:frontend:dev\" \"npm:backend:dev\"",
-    "start": "cross-env ZUM_BACK_MODE=deploy NODE_ENV=production ts-node ./backend/Server.ts",
+    "start": "cross-env ZUM_BACK_MODE=deploy NODE_ENV=production ts-node ./common/backend/Server.ts",
     "build": "rimraf ./node_modules/.cache && npm run frontend:build",
     "frontend:dev": "cross-env ZUM_FRONT_MODE=dev vue-cli-service serve",
     "frontend:build": "vue-cli-service build --no-clean && cross-env ZUM_FRONT_MODE=ssr vue-cli-service build --no-clean",
-    "backend:dev": "cross-env NODE_ENV=development nodemon --exec ts-node --transpile-only backend/Server.ts"
+    "backend:dev": "cross-env NODE_ENV=development nodemon --exec ts-node --transpile-only ../common/backend/Server.ts"
   },
   "repository": {
     "type": "git",
