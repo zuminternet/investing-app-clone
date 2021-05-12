@@ -33,5 +33,9 @@
   "bugs": {
     "url": "https://github.com/elrion018/investing-app-clone/issues"
   },
-  "homepage": "https://github.com/elrion018/investing-app-clone#readme"
+  "homepage": "https://github.com/elrion018/investing-app-clone#readme",
+  "devDependencies": {
+    "eslint": "^7.26.0",
+    "prettier": "^1.19.1"
+  }
 }
