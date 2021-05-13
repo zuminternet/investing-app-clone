@@ -1,6 +1,0 @@
-{
-  "watch": ["**/backend/**", "**/resources/**"],
-  "ext": "ts,js,html,yaml,yml,json",
-  "ignore": ["**/*.spec.ts"],
-  "exec": "npm start"
-}
