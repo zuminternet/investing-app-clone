@@ -21,3 +21,6 @@
 
 # VSCode Docker Config files
 .devcontainer/
+
+# test coverage directory
+coverage/
