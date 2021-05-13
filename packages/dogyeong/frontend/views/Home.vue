@@ -10,4 +10,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style lang="scss" scoped>
+div {
+  background-color: red;
+}
+</style>
