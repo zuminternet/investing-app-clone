@@ -1,4 +1,4 @@
 import 'reflect-metadata';
-import {appContainer} from './AppContainer'
+import { appContainer } from './AppContainer';
 
 appContainer.listen();

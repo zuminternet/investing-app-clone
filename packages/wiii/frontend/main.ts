@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 import 'zum-portal-core/frontend';
 import App from './App.vue';
 import createRouter from './router';
@@ -8,8 +8,8 @@ Vue.prototype._$router = createRouter();
 Vue.prototype._$store = createStore();
 
 const $app = new Vue({
-    el: '#app',
-    router: Vue.prototype._$router,
-    store: Vue.prototype._$store,
-    render: h => h(App)
+  el: '#app',
+  router: Vue.prototype._$router,
+  store: Vue.prototype._$store,
+  render: (h) => h(App),
 });
