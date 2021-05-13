@@ -17,7 +17,6 @@ export class HomeFacade {
   public ssrHtml: SsrHtml = {}; // SSR HTML 데이터
 
   constructor(@Yml('application') private application) {
-    console.log('??', process.env.INIT_CWD, application);
     const clientManifest = require(path.join(RESOURCES_PATH, '/vue-ssr-client-manifest.json'));
 
     // SSR 번들 렌더러 생성
