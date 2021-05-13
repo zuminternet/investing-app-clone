@@ -9,8 +9,9 @@
     "moduleResolution": "node",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "allowJs": true
+    "allowJs": true,
+    "esModuleInterop": true
   },
 
-  "exclude": ["**/frontend/**", "**/node_modules/**"]
+  "exclude": ["frontend/**", "node_modules/**"]
 }

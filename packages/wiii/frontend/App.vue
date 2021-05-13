@@ -17,3 +17,9 @@ export default {
   name: 'App',
 };
 </script>
+
+<style>
+p {
+  color: red;
+}
+</style>

@@ -1,15 +1,17 @@
 import Vue from 'vue';
-import 'zum-portal-core/frontend';
-import App from './App.vue';
+import { initializer } from 'zum-portal-core/frontend';
+import App from './App';
 import createRouter from './router';
 import createStore from './store';
 
-Vue.prototype._$router = createRouter();
-Vue.prototype._$store = createStore();
+initializer(() => {
+  Vue.prototype._$router = createRouter();
+  Vue.prototype._$store = createStore();
 
-const $app = new Vue({
-  el: '#app',
-  router: Vue.prototype._$router,
-  store: Vue.prototype._$store,
-  render: (h) => h(App),
+  return new Vue({
+    el: '#app',
+    router: Vue.prototype._$router,
+    store: Vue.prototype._$store,
+    render: (h) => h(App),
+  });
 });
