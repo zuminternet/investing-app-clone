@@ -1,12 +1,4 @@
-.idea
 /node_modules/
-/.idea/workspace.xml
-/.idea/vcs.xml
-/.idea/modules.xml
-/.idea/inspectionProfiles/
-/.idea/misc.xml
-/.idea/.gitignore
-/.idea/codeStyles/
 /logs/
 /dist/
 /resources/static/js/
@@ -17,3 +9,15 @@
 /resources/vue-ssr-client-manifest.json
 /resources/templates/dist/
 
+# IntelliJ config files
+.idea
+/.idea/workspace.xml
+/.idea/vcs.xml
+/.idea/modules.xml
+/.idea/inspectionProfiles/
+/.idea/misc.xml
+/.idea/.gitignore
+/.idea/codeStyles/
+
+# VSCode Docker Config files
+.devcontainer/
