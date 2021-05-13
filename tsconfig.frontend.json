@@ -5,14 +5,14 @@
         "module": "commonjs",
         "outDir": "./dist",
         "baseUrl": "./",
-        "types": ["reflect-metadata"],
+        "types": ["reflect-metadata", "node"],
         "moduleResolution": "node",
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
         "allowJs": true
     },
     "exclude": [
-        "./backend/**",
-        "./node_modules/**"
+        "**/backend/**",
+        "**/node_modules/**"
     ]
 }

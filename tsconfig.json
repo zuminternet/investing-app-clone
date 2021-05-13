@@ -5,7 +5,7 @@
         "module": "commonjs",
         "outDir": "./dist",
         "baseUrl": "./",
-        "types": ["reflect-metadata"],
+        "types": ["reflect-metadata", "node"],
         "moduleResolution": "node",
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
@@ -13,7 +13,7 @@
     },
 
     "exclude": [
-        "./frontend/**",
-        "./node_modules/**"
+        "**/frontend/**",
+        "**/node_modules/**"
     ]
 }
