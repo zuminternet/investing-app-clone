@@ -1,13 +1,13 @@
-/node_modules/
+**/node_modules/
 /logs/
 /dist/
-/resources/static/js/
-/resources/static/css/
-/resources/static/img/
-/resources/report.html
-/resources/vue-ssr-server-bundle.json
-/resources/vue-ssr-client-manifest.json
-/resources/templates/dist/
+**/resources/static/js/
+**/resources/static/css/
+**/resources/static/img/
+**/resources/report.html
+**/resources/vue-ssr-server-bundle.json
+**/resources/vue-ssr-client-manifest.json
+**/resources/templates/dist/
 
 # IntelliJ config files
 .idea

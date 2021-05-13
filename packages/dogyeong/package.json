@@ -1,0 +1,20 @@
+{
+  "name": "dogyeong",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "concurrently -c yellow,cyan \"npm:frontend:dev\" \"npm:backend:dev\"",
+    "start": "cross-env ZUM_BACK_MODE=deploy NODE_ENV=production ts-node ./backend/Server.ts",
+    "build": "rimraf ./node_modules/.cache && npm run frontend:build",
+    "frontend:dev": "cross-env ZUM_FRONT_MODE=dev vue-cli-service serve",
+    "frontend:build": "vue-cli-service build --no-clean && cross-env ZUM_FRONT_MODE=ssr vue-cli-service build --no-clean",
+    "backend:dev": "cross-env NODE_ENV=development nodemon --exec ts-node --transpile-only backend/Server.ts"
+  },
+  "dependencies": {
+    "@vue/cli-plugin-babel": "^4.5.13",
+    "@vue/cli-plugin-typescript": "^4.5.13",
+    "cross-env": "^7.0.3",
+    "typescript": "^4.2.4",
+    "vue": "^2.6.12",
+    "zum-portal-core": "^1.1.1"
+  }
+}
