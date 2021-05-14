@@ -6,7 +6,10 @@ module.exports = {
   transform: {
     '^.+\\.(vue)$': 'vue-jest',
     '^.+\\.js$': 'babel-jest',
+    '^.+\\.ts$': 'ts-jest',
   },
+
+  testMatch: ['**/__tests__/**/*.js'],
 
   // 테스트 대상 파일
   moduleFileExtensions: ['js', 'ts', 'json', 'vue'],
@@ -25,7 +28,7 @@ module.exports = {
   // module alias
   // __test__ 디렉토리를 component 디렉토리 밖에 만드는 경우 필수
   moduleNameMapper: {
-    '^@/(.*)$': '<rootDir>/$1',
+    '^@/(.*)$': '<rootDir>/frontend/$1',
   },
 
   //
