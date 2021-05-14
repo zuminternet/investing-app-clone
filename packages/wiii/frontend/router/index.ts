@@ -1,6 +1,8 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import Home from '../views/Home.vue';
+
+import { views } from '@/types';
+import Home from '@/views/Home.vue';
 
 Vue.use(Router);
 
@@ -12,7 +14,7 @@ export default () => {
     routes: [
       {
         path: '/**',
-        name: 'Home',
+        name: views.Home,
         component: Home,
       },
     ],

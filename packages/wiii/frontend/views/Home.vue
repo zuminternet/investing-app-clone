@@ -1,22 +1,22 @@
 <template>
-  <div>
-    <p>{{ message }}</p>
+  <div class="area">
+    <Header />
+    <!-- <Main />
+    <Footer /> -->
   </div>
 </template>
 
 <script>
+import Header from '@/components/header/';
+// import Main from '@/components/main/';
+// import Footer from '@/components/footer/';
+
 export default {
   name: 'Home',
-  data() {
-    return {
-      message: 'hello jest',
-    };
+  components: {
+    Header,
+    // Main,
+    // Footer
   },
 };
 </script>
-
-<style lang="scss" scoped>
-p {
-  color: blueviolet;
-}
-</style>
