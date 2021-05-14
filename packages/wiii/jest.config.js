@@ -12,7 +12,15 @@ module.exports = {
   moduleFileExtensions: ['js', 'ts', 'json', 'vue'],
 
   // 테스트 제외 패턴
-  modulePathIgnorePatterns: ['<rootDir>/node_modules', '<rootDir>/dist', '<rootDir>/resources', '<rootDir>/coverage'],
+  modulePathIgnorePatterns: [
+    '<rootDir>/node_modules',
+    '<rootDir>/dist',
+    '<rootDir>/resources',
+    '<rootDir>/coverage',
+    'config.js',
+    '.babelrc.js',
+    'vue.page.js',
+  ],
 
   // module alias
   // __test__ 디렉토리를 component 디렉토리 밖에 만드는 경우 필수
@@ -39,7 +47,7 @@ module.exports = {
   maxWorkers: '70%',
 
   // 커버리지 보고 싶을 때
-  collectCoverage: true,
+  // collectCoverage: true,
   // js, ts, vue만 포함, node_modules 제외
-  collectCoverageFrom: ['**/*.{js,vue}', '!**/node_modules/**'],
+  // collectCoverageFrom: ['**/*.{js,vue}', '!**/node_modules/**'],
 };

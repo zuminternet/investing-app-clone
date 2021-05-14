@@ -1,8 +1,8 @@
 import Vue from 'vue';
 import { initializer } from 'zum-portal-core/frontend';
-import App from './App';
-import createRouter from './router';
-import createStore from './store';
+import App from '@/App';
+import createRouter from '@/router';
+import createStore from '@/store';
 
 initializer(() => {
   Vue.prototype._$router = createRouter();
