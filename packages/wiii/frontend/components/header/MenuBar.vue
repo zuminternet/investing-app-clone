@@ -7,7 +7,7 @@
 <script>
 import { mapMutations } from 'vuex';
 import Icon from './MenuIcon';
-import { mutationTypes } from '@/store/types';
+import { actionTypes } from '@/store/types';
 
 export default {
   data() {
@@ -23,7 +23,7 @@ export default {
     Icon,
   },
   methods: {
-    ...mapMutations([mutationTypes.setCurrentView]),
+    ...mapMutations([actionTypes.setCurrentView]),
   },
 };
 </script>

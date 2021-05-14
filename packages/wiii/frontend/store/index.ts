@@ -1,6 +1,8 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+
 import { views } from '@/types';
+import { actionTypes } from '@/store/types';
 
 Vue.use(Vuex);
 
@@ -11,9 +13,13 @@ export default () =>
     },
     mutations: {
       setCurrentView(state, selectedView) {
-        this.currentView = selectedView;
+        state.currentView = selectedView;
       },
     },
-    actions: {},
+    actions: {
+      setCurrentView(context, selectedView) {
+        return context.commit(actionTypes.setCurrentView, selectedView);
+      },
+    },
     modules: {},
   });

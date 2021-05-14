@@ -4,7 +4,7 @@ module.exports = {
 
   // 확장자별 테스트 라이브러리 지정
   transform: {
-    '^.+\\.(vue)$': 'vue-jest',
+    '^.+\\.vue$': 'vue-jest',
     '^.+\\.js$': 'babel-jest',
     '^.+\\.ts$': 'ts-jest',
   },

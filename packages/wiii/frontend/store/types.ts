@@ -1,3 +1,3 @@
-export enum mutationTypes {
+export enum actionTypes {
   setCurrentView = 'setCurrentView',
 }
