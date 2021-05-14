@@ -1,14 +1,13 @@
 <template>
   <p>
     {{message}}
-    {{children}}
   </p>
 </template>
 
 <script>
 export default {
   name: "CustomText",
-  props: ['message', 'children']
+  props: ['message']
 }
 </script>
 

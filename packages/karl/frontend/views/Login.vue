@@ -11,12 +11,17 @@
         <custom-text :message="alreadyRegister"></custom-text>
         <text-button :message="signIn"></text-button>
       </div>
+      <text-button :message="passWithoutLogin" @handle-button-click="routeToHome"></text-button>
+
     </div>
   </div>
 </template>
 
 <script>
-import { OAuthButton, TextButton, CustomText, LoginSwiper } from '../components'
+import OAuthButton from '../components/OAuthButton.vue'
+import TextButton from '../components/TextButton.vue'
+import CustomText from '../components/CustomText.vue'
+import LoginSwiper from '../components/LoginSwiper.vue'
 import { text } from '../constants'
 
 export default {
@@ -25,7 +30,8 @@ export default {
     OAuthButton,
     TextButton,
     CustomText,
-    LoginSwiper
+    LoginSwiper,
+
   },
 
   data: function () {
@@ -34,7 +40,15 @@ export default {
       googleLogin: text.googleLogin,
       emailLogin: text.emailLogin,
       alreadyRegister: text.alreadyRegister,
-      signIn: text.signIn
+      signIn: text.signIn,
+      passWithoutLogin: text.passWithoutLogin
+    }
+  },
+
+  methods : {
+    routeToHome() {
+      this.$router.push('/home')
+
     }
   }
 };

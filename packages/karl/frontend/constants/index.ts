@@ -5,6 +5,20 @@ export const text = {
     alreadyRegister: '이미 가입하셨나요?',
     signIn: '로그인',
     realTimePrice: '실시간 시세',
-    realTimePriceDetail:'ZUM Investing App에선 전 세계 100곳 이상의 거래소에서 거래되는 겁나 많은 투자 상품에 대한 실시간 정보를 받을 수 있음!'
-
+    realTimePriceDetail:'ZUM Investing App에선 전 세계 100곳 이상의 거래소에서 거래되는 겁나 많은 투자 상품에 대한 실시간 정보를 받을 수 있음!',
+    passWithoutLogin:'건너뛰기',
+    MARKET: '시장',
+    NEWS: '뉴스',
+    CALENDAR: '캘린더',
+    FAVORITES: '즐겨찾기',
+    MORE: '더보기',
+    LATEST:'최신',
+    HOTTEST_NEWS: '가장 인기 있는 뉴스',
+    CRYPTO_CURRENCY: '암호화폐',
+    PRODUCT:'상품',
+    FOREIGN_EXCHANGE_MARKET: '외환시장',
+    STOCK_MARKET: '주식시장',
+    ECONOMIC_INDICATOR: '경제지표',
+    ECONOMIC_NEWS: '경제뉴스',
+    COVID_19: '코로나19'
 }

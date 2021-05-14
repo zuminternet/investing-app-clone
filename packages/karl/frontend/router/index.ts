@@ -9,15 +9,15 @@ export default () => {
     base: process.env.publicPath,
 
     routes: [
-      // {
-      //   path: '/**',
-      //   name: 'Home',
-      //   component: Home,
-      // },
       {
         path: '/',
         name: 'Login',
         component: Login,
+      },
+      {
+        path: '/home',
+        name: 'Home',
+        component: Home,
       },
     ],
   });
