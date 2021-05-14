@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import Home from '../views/Home.vue';
+import Home from '@/views/Home.vue';
+import Sub from '@/views/Sub.vue';
 
 Vue.use(Router);
 
@@ -11,9 +12,14 @@ export default () => {
 
     routes: [
       {
-        path: '/**',
+        path: '/',
         name: 'Home',
         component: Home,
+      },
+      {
+        path: '/sub',
+        name: 'Sub',
+        component: Sub,
       },
     ],
   });

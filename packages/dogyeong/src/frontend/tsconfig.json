@@ -1,5 +1,5 @@
 {
-  "extends": "../tsconfig.frontend",
+  "extends": "../../tsconfig.frontend",
   "compilerOptions": {
     "paths": {
       "@/*": ["./frontend/*"]
