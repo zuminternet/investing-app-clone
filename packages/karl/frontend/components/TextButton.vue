@@ -1,13 +1,20 @@
 <template>
-$END$
+  <button class="text-button">
+    {{message}}
+  </button>
 </template>
 
 <script>
 export default {
-name: "TextButton"
+  name: "TextButton",
+  props: ['message']
 }
 </script>
 
-<style scoped>
-
+<style>
+.text-button {
+  width: fit-content;
+  height: fit-content;
+  background-color: aqua;
+}
 </style>

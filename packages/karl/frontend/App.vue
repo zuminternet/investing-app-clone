@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-    <p>hi</p>
     <router-view></router-view>
   </div>
 </template>
@@ -17,3 +16,15 @@ export default {
   name: 'App',
 };
 </script>
+<style scoped>
+  #app {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: red;
+  }
+
+</style>

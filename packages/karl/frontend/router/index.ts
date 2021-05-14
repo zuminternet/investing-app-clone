@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import Home from '../views/Home.vue';
-
+import { Home, Login } from '../views'
 Vue.use(Router);
 
 export default () => {
@@ -10,10 +9,15 @@ export default () => {
     base: process.env.publicPath,
 
     routes: [
+      // {
+      //   path: '/**',
+      //   name: 'Home',
+      //   component: Home,
+      // },
       {
-        path: '/**',
-        name: 'Home',
-        component: Home,
+        path: '/',
+        name: 'Login',
+        component: Login,
       },
     ],
   });
