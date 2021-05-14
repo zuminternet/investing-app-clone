@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import Home from '@/views/Home.vue';
-import Sub from '@/views/Sub.vue';
+import { Market, Login, Search, Setting, Bookmark, News } from '@/views';
 
 Vue.use(Router);
 
@@ -13,13 +12,33 @@ export default () => {
     routes: [
       {
         path: '/',
-        name: 'Home',
-        component: Home,
+        name: 'Market',
+        component: Market,
       },
       {
-        path: '/sub',
-        name: 'Sub',
-        component: Sub,
+        path: '/login',
+        name: 'Login',
+        component: Login,
+      },
+      {
+        path: '/search',
+        name: 'Search',
+        component: Search,
+      },
+      {
+        path: '/setting',
+        name: 'Setting',
+        component: Setting,
+      },
+      {
+        path: '/news',
+        name: 'News',
+        component: News,
+      },
+      {
+        path: '/bookmark',
+        name: 'Bookmark',
+        component: Bookmark,
       },
     ],
   });
