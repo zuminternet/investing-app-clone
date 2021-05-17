@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import BottomNav from '../components/BottomNav/BottomNav';
+import BottomNav from '@/components/BottomNav/BottomNav';
 
 export default {
   name: 'News',

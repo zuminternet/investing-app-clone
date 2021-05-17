@@ -4,7 +4,7 @@
       <h1>시장</h1>
     </HeaderBar>
     <!-- Slider main container -->
-    <div class="swiper-container" ref="swiperContainer">
+    <div ref="swiperContainer" class="swiper-container">
       <!-- Additional required wrapper -->
       <div class="swiper-wrapper">
         <!-- Slides -->
@@ -18,11 +18,11 @@
 </template>
 
 <script>
-import HeaderBar from '../components/HeaderBar/HeaderBar';
-import BottomNav from '../components/BottomNav/BottomNav';
-import MarketExchange from '../components/Market/MarketExchange';
-import MarketCurrency from '../components/Market/MarketCurrency';
-import MarketStock from '../components/Market/MarketStock';
+import HeaderBar from '@/components/HeaderBar/HeaderBar';
+import BottomNav from '@/components/BottomNav/BottomNav';
+import MarketExchange from '@/components/Market/MarketExchange';
+import MarketCurrency from '@/components/Market/MarketCurrency';
+import MarketStock from '@/components/Market/MarketStock';
 import Swiper from 'swiper';
 
 export default {
