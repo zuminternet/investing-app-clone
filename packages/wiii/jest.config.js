@@ -28,6 +28,8 @@ module.exports = {
   // module alias
   // __test__ 디렉토리를 component 디렉토리 밖에 만드는 경우 필수
   moduleNameMapper: {
+    '^@components/(.*)$': '<rootDir>/frontend/components/$1',
+    '^@configs/(.*)$': '<rootDir>/frontend/configs/$1',
     '^@/(.*)$': '<rootDir>/frontend/$1',
   },
 

@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 
-import { views } from '@/types';
+import { views } from '@configs/';
 import { actionTypes } from '@/store/types';
 
 Vue.use(Vuex);

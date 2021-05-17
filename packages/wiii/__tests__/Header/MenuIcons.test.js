@@ -1,7 +1,7 @@
 import { mount, createLocalVue } from '@vue/test-utils';
 import VueRouter from 'vue-router';
 
-import { events, views } from '@/types';
+import { events, views } from '@configs/';
 
 /**
  * @todo
@@ -12,9 +12,9 @@ import { events, views } from '@/types';
 
 import App from '@/App';
 import Home from '@/views/Home';
-import Header from '@/components/header';
-import MenuBar from '@/components/header/MenuBar';
-import MenuIcon from '@/components/header/MenuIcon';
+import Header from '@components/header';
+import MenuBar from '@components/header/MenuBar';
+import MenuIcon from '@components/header/MenuIcon';
 
 /**
  * @description
@@ -86,6 +86,7 @@ describe('App 및 Home view 마운트', () => {
       describe('지수 메뉴', () => {
         it('지수 메뉴를 클릭하면 해당 라우터로 이동한다', async () => {
           await idxMenu.trigger(events.MouseEventEnum.click);
+          console.log(appWrapper.text());
           expect(appWrapper.contains('지수')).toBe(true);
         });
       });

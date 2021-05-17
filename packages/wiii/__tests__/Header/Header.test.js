@@ -1,9 +1,9 @@
 import { mount, shallowMount } from '@vue/test-utils';
 
 import Home from '@/views/Home.vue';
-import Header from '@/components/header';
-import Title from '@/components/header/Title';
-import MenuBar from '@/components/header/MenuBar';
+import Header from '@components/header';
+import Title from '@components/header/Title';
+import MenuBar from '@components/header/MenuBar';
 
 describe('Home view 마운트', () => {
   const home = mount(Home);
