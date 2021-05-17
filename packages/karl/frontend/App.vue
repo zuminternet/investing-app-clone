@@ -16,13 +16,18 @@ export default {
   name: 'App',
 };
 </script>
-<style scoped>
+<style>
+  body {
+    margin: 0;
+    background-color: greenyellow;
+
+  }
   #app {
     display: flex;
     flex-direction: column;
     position: absolute;
-    top: 0;
     bottom: 0;
+    top: 0;
     width: 100%;
   }
 

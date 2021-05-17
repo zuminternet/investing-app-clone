@@ -11,7 +11,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .text-button {
   width: fit-content;
   height: fit-content;

@@ -1,14 +1,9 @@
 <template>
-  <div>
-    <header>
-      <top-naviagtor></top-naviagtor>
-    </header>
-    <main>
-      <div></div>
-    </main>
-    <footer>
-      <bottom-naviagtor></bottom-naviagtor>
-    </footer>
+  <div id="home-page">
+    <multipurpose-header></multipurpose-header>
+    <top-naviagtor></top-naviagtor>
+    <div class="contents-box"></div>
+    <bottom-naviagtor></bottom-naviagtor>
   </div>
 </template>
 
@@ -16,14 +11,27 @@
 
 import BottomNaviagtor from '../components/BottomNaviagtor.vue'
 import TopNaviagtor from '../components/TopNaviagtor.vue'
+import MultipurposeHeader from '../components/MultipurposeHeader.vue';
 
 export default {
   name: 'Home',
   components: {
     BottomNaviagtor,
-    TopNaviagtor
+    TopNaviagtor,
+    MultipurposeHeader
   }
 };
 </script>
 
-<style></style>
+<style>
+  #home-page {
+    display:flex;
+    flex-direction: column;
+    flex:1;
+  }
+
+  .contents-box {
+    flex:1
+  }
+
+</style>
