@@ -8,6 +8,7 @@
 **/resources/vue-ssr-server-bundle.json
 **/resources/vue-ssr-client-manifest.json
 **/resources/templates/dist/
+yarn-error.log
 
 # IntelliJ config files
 .idea

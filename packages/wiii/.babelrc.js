@@ -3,7 +3,12 @@ module.exports = {
   presets: ['@vue/app'],
   env: {
     test: {
-      presets: [['@babel/preset-env', { debug: true }]],
+      presets: [
+        [
+          '@babel/preset-env',
+          // { debug: true }
+        ],
+      ],
     },
   },
 };
