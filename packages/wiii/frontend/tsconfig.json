@@ -2,9 +2,7 @@
   "extends": "../tsconfig.frontend",
   "compilerOptions": {
     "paths": {
-      "@/*": ["./frontend/*"],
-      "@components/*": ["./frontend/components/*"],
-      "@configs/*": ["./frontend/configs/*"]
+      "@/*": ["./frontend/*"]
     }
   }
 }
