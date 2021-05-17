@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-    <router-view></router-view>
+    <div class="wrapper">
+      <router-view></router-view>
+    </div>
   </div>
 </template>
 
@@ -16,3 +18,17 @@ export default {
   name: 'App',
 };
 </script>
+
+<style lang="scss" scoped>
+#app {
+  background-color: var(--app-bg-color);
+
+  .wrapper {
+    width: 100%;
+    max-width: var(--app-width);
+    margin: auto;
+    background-color: var(--bg-color);
+    position: relative;
+  }
+}
+</style>

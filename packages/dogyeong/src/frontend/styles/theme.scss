@@ -1,0 +1,33 @@
+$theme-dark: (
+  'app-bg-color': #eef0f2,
+  'bg-color': #eef0f2,
+  'border-color': #00000029,
+  'text-color': #000000de,
+  'sub-text-color': #00000061,
+  'primary-color': #eda31b,
+);
+
+$theme-light: (
+  'app-bg-color': #eef0f2,
+  'bg-color': #fff,
+  'border-color': #00000029,
+  'text-color': #000000de,
+  'sub-text-color': #00000061,
+  'primary-color': #1b52ed,
+);
+
+#app {
+  @each $name, $color in $theme-light {
+    --#{$name}: #{$color};
+  }
+}
+
+#app.dark {
+  @each $name, $color in $theme-dark {
+    --#{$name}: #{$color};
+  }
+}
+
+:root {
+  --app-width: 800px;
+}
