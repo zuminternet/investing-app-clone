@@ -9,6 +9,7 @@ module.exports = {
           // { debug: true }
         ],
       ],
+      plugins: ['@babel/plugin-transform-runtime'],
     },
   },
 };
