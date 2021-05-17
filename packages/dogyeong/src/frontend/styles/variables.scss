@@ -1,15 +1,19 @@
 $theme-dark: (
-  'app-bg-color': #eef0f2,
-  'bg-color': #eef0f2,
-  'border-color': #00000029,
-  'text-color': #000000de,
-  'sub-text-color': #00000061,
+  'app-bg-color': #090c10,
+  'bg-color': #161b22,
+  'header-bg-color': #090c10,
+  'header-nav-bg-color': #161b22,
+  'border-color': #30363d,
+  'text-color': #c9d1d9,
+  'sub-text-color': #8b949e,
   'primary-color': #eda31b,
 );
 
 $theme-light: (
   'app-bg-color': #eef0f2,
   'bg-color': #fff,
+  'header-bg-color': #fff,
+  'header-nav-bg-color': #fff,
   'border-color': #00000029,
   'text-color': #000000de,
   'sub-text-color': #00000061,
