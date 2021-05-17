@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" :class="{ dark: $store.state.isDarkTheme }">
     <div class="wrapper">
       <router-view></router-view>
     </div>
@@ -25,6 +25,7 @@ export default {
 
   .wrapper {
     width: 100%;
+    height: 100%;
     max-width: var(--app-width);
     margin: auto;
     background-color: var(--bg-color);
