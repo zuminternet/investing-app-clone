@@ -20,14 +20,15 @@ export default {
   body {
     margin: 0;
     background-color: greenyellow;
+    
+
 
   }
   #app {
     display: flex;
     flex-direction: column;
     position: absolute;
-    bottom: 0;
-    top: 0;
+    height: 100%;
     width: 100%;
   }
 
