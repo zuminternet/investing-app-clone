@@ -1,6 +1,6 @@
 <template>
   <div class="item-card-list">
-    <item-card></item-card>
+    <item-card @route-to-item-detail="routeToItemDetail"></item-card>
     <item-card></item-card>
     <item-card></item-card>
     <item-card></item-card>
@@ -63,7 +63,13 @@ export default {
     name:"ItemCardList",
     components: {
       ItemCard
-    }
+    },
+    methods: {
+      routeToItemDetail() {
+        this.$router.push('/item-detail')
+
+      }
+  }
 }
 </script>
 

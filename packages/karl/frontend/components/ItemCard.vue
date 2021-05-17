@@ -1,5 +1,5 @@
 <template>
-  <button class="item-card">
+  <button class="item-card" @click="$emit('route-to-item-detail')">
     <div class="item-information-except-price">
       {{itemName}}
 
