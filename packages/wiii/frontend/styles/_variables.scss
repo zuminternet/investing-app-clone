@@ -1,0 +1,56 @@
+@import 'colors';
+@import 'sizes';
+
+.reset {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+.center {
+  @extend .reset;
+
+  display: grid;
+  place-items: center;
+}
+
+.area {
+  @extend .center;
+
+  max-width: $max-width-mobile;
+}
+
+.card {
+  @extend .center;
+
+  margin: $margin-card;
+  background-clip: content-box;
+  background-color: $white-900;
+  color: $grey-900;
+}
+
+.hover-enter-active {
+  background-color: $blue-500;
+  animation: button-hover 0.5s ease;
+}
+
+.router-link {
+  @extend .card;
+
+  text-decoration: none;
+
+  &-active {
+    font-weight: bold;
+  }
+}
+
+@keyframes button-hover {
+  50% {
+    transform: scale(1.5);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}

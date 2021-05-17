@@ -7,6 +7,7 @@
     "build": "rimraf ./node_modules/.cache && npm run frontend:build",
     "frontend:dev": "cross-env ZUM_FRONT_MODE=dev vue-cli-service serve",
     "frontend:build": "vue-cli-service build --no-clean && cross-env ZUM_FRONT_MODE=ssr vue-cli-service build --no-clean",
+    "frontend:test": "jest --watchAll",
     "backend:dev": "cross-env NODE_ENV=development nodemon --exec ts-node --transpile-only backend/Server.ts"
   },
   "dependencies": {
@@ -16,5 +17,17 @@
     "typescript": "^4.2.4",
     "vue": "^2.6.12",
     "zum-portal-core": "^1.1.1"
+  },
+  "devDependencies": {
+    "@types/jest": "^26.0.23",
+    "@vue/cli-plugin-unit-jest": "^4.5.13",
+    "@vue/test-utils": "^1.2.0",
+    "babel-core": "^7.0.0-bridge.0",
+    "babel-jest": "^26.6.3",
+    "jest": "^26.6.3",
+    "jest-environment-jsdom-sixteen": "^2.0.0",
+    "jest-plugin-context": "^2.9.0",
+    "jest-serializer-vue": "^2.0.2",
+    "vue-jest": "^3.0.7"
   }
 }

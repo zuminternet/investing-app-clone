@@ -1,7 +1,6 @@
 <template>
-  <div id="app">
-    <p>hi</p>
-    <router-view></router-view>
+  <div id="app" class="area">
+    <router-view />
   </div>
 </template>
 
@@ -17,3 +16,19 @@ export default {
   name: 'App',
 };
 </script>
+
+<style lang="scss">
+html {
+  @extend .center;
+
+  background-color: $grey-100;
+
+  body {
+    @extend .area;
+
+    font-family: -apple-system, 'Helvetica Neue', 'Noto Sans KR', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+</style>

@@ -1,20 +1,25 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 
+import { views } from '@/types';
+import { actionTypes } from '@/store/types';
+
 Vue.use(Vuex);
 
-export default () => {
-  return new Vuex.Store({
-    // 각 기능 별 모듈
+export default () =>
+  new Vuex.Store({
+    state: {
+      currentView: views.Home,
+    },
+    mutations: {
+      setCurrentView(state, selectedView) {
+        state.currentView = selectedView;
+      },
+    },
+    actions: {
+      setCurrentView(context, selectedView) {
+        return context.commit(actionTypes.setCurrentView, selectedView);
+      },
+    },
     modules: {},
-
-    // 글로벌 영역 상태값.
-    state: {},
-
-    getters: {},
-
-    mutations: {},
-
-    actions: {},
   });
-};
