@@ -1,7 +1,7 @@
 <template>
   <header class="area">
     <Title />
-    <menu-bar />
+    <MenuBar />
   </header>
 </template>
 
