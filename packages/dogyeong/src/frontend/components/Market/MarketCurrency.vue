@@ -4,7 +4,7 @@
 
 <script>
 export default {
-  name: 'Virtual Currency',
+  name: 'VirtualCurrency',
 };
 </script>
 
