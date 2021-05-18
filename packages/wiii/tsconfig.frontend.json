@@ -9,7 +9,10 @@
     "moduleResolution": "node",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "allowJs": true
+    "allowJs": true,
+    "paths": {
+      "@/*": ["./frontend/*"]
+    }
   },
   "exclude": ["**/backend/**", "**/node_modules/**"]
 }

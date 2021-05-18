@@ -12,7 +12,6 @@
     "allowJs": true,
     "esModuleInterop": true,
     "paths": {
-      "@/*": ["./frontend/*"],
       "$/*": ["./backend/*"]
     }
   },
