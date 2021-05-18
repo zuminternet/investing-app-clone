@@ -13403,7 +13403,7 @@ yorkie@^2.0.0:
     normalize-path "^1.0.0"
     strip-indent "^2.0.0"
 
-zum-portal-core@^1.1.1:
+zum-portal-core@1.1.1, zum-portal-core@^1.1.1:
   version "1.1.1"
   resolved "http://ci-portal.zuminternet.com/nexus/repository/zum-portal-npm/zum-portal-core/-/zum-portal-core-1.1.1.tgz#bb5052f3952f64a48174e6b84184fb511ab53311"
   integrity sha512-WgJw//Nq9YlLeanhu1m9MEX2O00AHssfMXOYB7nihfkauvgun2U+yrH+yxWXrIsyLBCiXPyoL/D6nvIKrGv9KA==
