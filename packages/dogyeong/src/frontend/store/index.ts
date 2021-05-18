@@ -5,11 +5,11 @@ Vue.use(Vuex);
 
 export default () => {
   return new Vuex.Store({
-    // 각 기능 별 모듈
     modules: {},
 
-    // 글로벌 영역 상태값.
-    state: {},
+    state: {
+      isDarkTheme: false,
+    },
 
     getters: {},
 
