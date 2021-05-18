@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 
-import { views } from '@/types';
+import { viewEnums } from '@/type';
 import { actionTypes } from '@/store/types';
 
 Vue.use(Vuex);
@@ -9,7 +9,7 @@ Vue.use(Vuex);
 export default () =>
   new Vuex.Store({
     state: {
-      currentView: views.Home,
+      currentView: viewEnums.views.Home,
     },
     mutations: {
       setCurrentView(state, selectedView) {

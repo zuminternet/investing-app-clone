@@ -1,5 +1,8 @@
 import { mount, shallowMount } from '@vue/test-utils';
 
+import { viewEnums } from '@/type';
+const { viewsTitle } = viewEnums;
+
 import Home from '@/views/Home.vue';
 import Header from '@/components/header';
 import Title from '@/components/header/Title';
@@ -48,7 +51,7 @@ describe('Home view 마운트', () => {
        * - `findAll` 메서드로 반환결과는 wrapper array임
        */
       it('Title 태그 h1의 innerText는 `ZUM 인베스팅`이다', () => {
-        expect(h1.at(0).text()).toBe('ZUM 인베스팅');
+        expect(h1.at(0).text()).toBe(viewsTitle.Home);
       });
     });
   });
