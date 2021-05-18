@@ -29,7 +29,7 @@ module.exports = {
       root: './packages/wiii',
       package: './package.json',
       tsconfig: './tsconfig.frontend.json',
-      globalComponents: ['./frontend/components/**/*.vue'],
+      globalComponents: [],
     },
   ],
 };
