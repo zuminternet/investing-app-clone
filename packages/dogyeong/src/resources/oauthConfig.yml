@@ -10,6 +10,6 @@ default:
     baseUrl: 'https://oauth2.googleapis.com/token'
     clientSecret: 'GAQlVQYoHPkR_XvZm1cod_Ej'
     grantType: 'authorization_code'
-    redirectUri: 'http://localhost:3000/api/auth/redirect'
-  
+    redirectUri: 'postmessage'
+
   goolgeUserInfoApiUrl: 'https://www.googleapis.com/oauth2/v1/userinfo?alt=json'
