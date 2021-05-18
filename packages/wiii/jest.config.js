@@ -50,6 +50,7 @@ module.exports = {
   // string | number, 최대 CPU 가동률
   maxWorkers: '70%',
 
+  verbose: true,
   // 커버리지 보고 싶을 때
   // collectCoverage: true,
   // js, ts, vue만 포함, node_modules 제외
