@@ -1,17 +1,18 @@
 <template>
   <div>
-    <h1>Bookmark</h1>
+    <HeaderBar>관심목록</HeaderBar>
     <BottomNav></BottomNav>
   </div>
 </template>
 
 <script>
-import BottomNav from '../components/BottomNav/BottomNav';
+import HeaderBar from '@/components/HeaderBar/HeaderBar';
+import BottomNav from '@/components/BottomNav/BottomNav';
 
 export default {
   name: 'Bookmark',
 
-  components: { BottomNav },
+  components: { HeaderBar, BottomNav },
 };
 </script>
 

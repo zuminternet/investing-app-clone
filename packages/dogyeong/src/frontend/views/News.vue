@@ -1,17 +1,19 @@
 <template>
   <div>
-    <h1>뉴스</h1>
+    <HeaderBar>
+      뉴스
+    </HeaderBar>
     <BottomNav></BottomNav>
   </div>
 </template>
 
 <script>
-import BottomNav from '../components/BottomNav/BottomNav';
+import HeaderBar from '@/components/HeaderBar/HeaderBar';
+import BottomNav from '@/components/BottomNav/BottomNav';
 
 export default {
   name: 'News',
-
-  components: { BottomNav },
+  components: { BottomNav, HeaderBar },
 };
 </script>
 

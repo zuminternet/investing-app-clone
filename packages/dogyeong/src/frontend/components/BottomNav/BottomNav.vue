@@ -17,9 +17,19 @@ export default {
 nav {
   position: fixed;
   bottom: 0;
-  background-color: skyblue;
+  background-color: var(--bg-color);
   width: 100%;
-  height: 40px;
+  max-width: var(--app-width);
+  height: 48px;
   z-index: 1;
+  border-top: 1px solid var(--border-color);
+  display: flex;
+
+  a {
+    flex: 1;
+    text-align: center;
+    height: 48px;
+    line-height: 48px;
+  }
 }
 </style>
