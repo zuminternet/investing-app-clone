@@ -6,7 +6,7 @@ export enum views {
 }
 
 export enum viewsTitle {
-  Home = 'ZUM 인베스팅',
+  Home = '인베스팅 ZUM',
   Markets = 'Markets',
   News = 'News',
   User = 'User',
@@ -29,3 +29,9 @@ export enum paths {
 export enum selectors {
   anchorHref = 'a[href]',
 }
+
+export const HomeMenuData = [
+  { id: views.Home, name: '홈', href: paths.Home },
+  { id: views.Markets, name: '마켓', href: paths.IndexMarket },
+  { id: views.News, name: '뉴스', href: paths.News },
+] as const;
