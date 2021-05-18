@@ -1,8 +1,7 @@
 import { mount, createLocalVue } from '@vue/test-utils';
 import VueRouter from 'vue-router';
 
-import { viewEnums } from '@/type';
-const { viewsTitle, views, paths, selectors } = viewEnums;
+import { viewsTitle, views, paths, selectors } from '@/type/views';
 
 /**
  * @todo

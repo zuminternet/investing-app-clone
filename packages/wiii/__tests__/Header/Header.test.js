@@ -1,7 +1,6 @@
-import { mount, shallowMount } from '@vue/test-utils';
+import { mount } from '@vue/test-utils';
 
-import { viewEnums } from '@/type';
-const { viewsTitle } = viewEnums;
+import { viewsTitle } from '@/type/views';
 
 import Home from '@/views/Home.vue';
 import Header from '@/components/header';
