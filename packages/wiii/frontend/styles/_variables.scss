@@ -9,48 +9,48 @@
 }
 
 .center {
-  @extend .reset;
-
   display: grid;
   place-items: center;
 }
 
+.rows-space-between {
+  @extend .reset;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .area {
+  @extend .reset;
   @extend .center;
 
   max-width: $max-width-mobile;
 }
 
 .card {
+  @extend .reset;
   @extend .center;
 
   margin: $margin-card;
-  background-clip: content-box;
+  padding: 5px;
+  border-radius: 15px;
   background-color: $white-900;
   color: $grey-900;
-}
-
-.hover-enter-active {
-  background-color: $blue-500;
-  animation: button-hover 0.5s ease;
 }
 
 .router-link {
   @extend .card;
 
+  margin: 0;
   text-decoration: none;
+  transition: all 0.2s ease-out;
+
+  &:hover {
+    background-color: $blue-100;
+  }
 
   &-active {
     font-weight: bold;
-  }
-}
-
-@keyframes button-hover {
-  50% {
-    transform: scale(1.5);
-  }
-
-  100% {
-    transform: scale(1);
   }
 }
