@@ -21,15 +21,13 @@ export default {
     margin: 0;
     background-color: greenyellow;
     
-
-
   }
   #app {
     display: flex;
     flex-direction: column;
     position: absolute;
-    height: 100%;
-    width: 100%;
+    height: 100vh;
+    width: 100vw;
   }
 
 </style>
