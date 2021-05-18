@@ -12,14 +12,28 @@
 import HeaderBar from '@/components/HeaderBar/HeaderBar';
 import Axios from 'axios';
 
+const GOOGLE_AUTH_OPTIONS = {
+  prompt: 'select_account',
+};
+
 export default {
   name: 'Login',
   components: { HeaderBar },
   methods: {
-    onClickLoginBtn() {
-      Axios.get('/api/auth')
-        .then(({ data }) => (window.location = data.url))
-        .catch(console.error);
+    async onClickLoginBtn() {
+      const gapi = window.gapi;
+
+      try {
+        const { code } = await gapi.auth2.getAuthInstance().grantOfflineAccess(GOOGLE_AUTH_OPTIONS);
+
+        const { data } = await Axios.get('/api/auth/google', {
+          headers: { INV_GOOGLE_AUTH: code },
+        });
+
+        console.log(data);
+      } catch (e) {
+        console.error(e);
+      }
     },
   },
 };
