@@ -1,18 +1,18 @@
-enum views {
+export enum views {
   Home = 'Home',
   Markets = 'Markets',
   News = 'News',
   User = 'User',
 }
 
-enum viewsTitle {
+export enum viewsTitle {
   Home = 'ZUM 인베스팅',
   Markets = 'Markets',
   News = 'News',
   User = 'User',
 }
 
-enum paths {
+export enum paths {
   Home = '/',
   Markets = '/markets/',
   MarketsRouter = '/markets/:detail',
@@ -26,13 +26,6 @@ enum paths {
   LogOut = '/user/logout',
 }
 
-enum selectors {
+export enum selectors {
   anchorHref = 'a[href]',
 }
-
-export default {
-  views,
-  viewsTitle,
-  paths,
-  selectors,
-};

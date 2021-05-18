@@ -8,8 +8,7 @@
 import { mapMutations } from 'vuex';
 import Icon from './MenuIcon';
 import { actionTypes } from '@/store/types';
-import { viewEnums } from '@/type';
-const { views, paths } = viewEnums;
+import { views, paths } from '@/type/views';
 
 export default {
   data() {

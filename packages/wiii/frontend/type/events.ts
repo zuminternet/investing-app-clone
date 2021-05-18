@@ -1,7 +1,3 @@
-enum MouseEventEnum {
+export enum MouseEventEnum {
   click = 'click',
 }
-
-export default {
-  MouseEventEnum,
-};
