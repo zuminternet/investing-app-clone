@@ -1,6 +1,7 @@
 import { Service } from 'zum-portal-core/backend/decorator/Alias';
 import { Yml } from 'zum-portal-core/backend/decorator/Yml';
 import Axios from 'axios';
+import { GoogleUserInfo } from './UserService';
 
 @Service()
 export default class AuthService {
@@ -9,7 +10,7 @@ export default class AuthService {
   /**
    * 사용자의 동의를 받고 얻은 코드로 사용자 정보를 받아와서 반환
    * @param code
-   * @returns userInfo | null
+   * @returns GoogleUserInfo | null
    */
   public async getUserInfo(code) {
     const {
@@ -39,7 +40,7 @@ export default class AuthService {
       // access token으로 user info 받아오기
       const { data } = await Axios.get(goolgeUserInfoApiUrl, userInfoRequestBody);
 
-      return data;
+      return data as GoogleUserInfo;
     } catch (e) {
       console.error(e);
       return null;
