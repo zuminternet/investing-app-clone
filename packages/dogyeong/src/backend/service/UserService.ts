@@ -10,12 +10,18 @@ export interface GoogleUserInfo {
   locale: string;
 }
 
+export interface UserInfo {
+  email: string;
+  name: string;
+  password: string;
+}
+
 @Service()
 export default class UserService {
   constructor() {}
 
   public async getUserByEmailAndPassword({ email, password }) {
-    const user = await User.findOne({ email, password }).lean();
+    const user = await User.findOne({ email, password }).lean<UserInfo>();
     return user;
   }
 
@@ -24,7 +30,7 @@ export default class UserService {
       { email: userInfo.email },
       { ...userInfo, isGoogleUser: true },
       { upsert: true, new: true },
-    ).lean();
+    ).lean<GoogleUserInfo>();
   }
 
   public async createUser({ name, email, password }) {
