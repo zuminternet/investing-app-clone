@@ -2,8 +2,15 @@ import { Controller, GetMapping, PostMapping } from 'zum-portal-core/backend/dec
 import { Request, Response } from 'express';
 import { Inject } from 'zum-portal-core/backend/decorator/Alias';
 import AuthService from '../service/AuthService';
-import UserService from '../service/UserService';
+import UserService, { GoogleUserInfo, UserInfo } from '../service/UserService';
 import TokenService from '../service/TokenService';
+
+const ACCESS_TOKEN_COOKIE_KEY = '_inv_access_token_';
+const GOOGLE_GRANT_CODE_HEADER = 'inv_google_auth';
+const tokenCookieOption = {
+  httpOnly: true,
+  maxAge: 24 * 3600 * 1000, // 1 day
+};
 
 @Controller({ path: '/api' })
 export class ApiController {
@@ -15,7 +22,7 @@ export class ApiController {
 
   @GetMapping({ path: ['/auth/google'] })
   public async loginGoogleUser(req: Request, res: Response) {
-    const code = req.headers['inv_google_auth'];
+    const code = req.headers[GOOGLE_GRANT_CODE_HEADER];
 
     if (!code) return res.status(400).json({ message: 'Invalid Header' });
 
@@ -27,7 +34,8 @@ export class ApiController {
     const user = await this.userService.createGoogleUser(userInfo);
     const token = this.tokenService.createToken(user);
 
-    res.json({ token, user });
+    res.cookie(ACCESS_TOKEN_COOKIE_KEY, token, tokenCookieOption);
+    res.json({ user: { name: user.name } });
   }
 
   @PostMapping({ path: ['/user'] })
@@ -37,7 +45,7 @@ export class ApiController {
 
       res.sendStatus(200);
     } catch (err) {
-      res.status(500).json({ ...err });
+      res.status(500).json(err);
     }
   }
 
@@ -50,9 +58,22 @@ export class ApiController {
 
       const token = this.tokenService.createToken(user);
 
-      res.json({ token, user });
+      res.cookie(ACCESS_TOKEN_COOKIE_KEY, token, tokenCookieOption);
+      res.json({ user: { name: user.name } });
     } catch (err) {
-      res.status(500).json({ err });
+      res.status(500).json(err);
+    }
+  }
+
+  @GetMapping({ path: ['/user'] })
+  public async getUser(req: Request, res: Response) {
+    try {
+      const token = req.cookies[ACCESS_TOKEN_COOKIE_KEY];
+      const { name } = this.tokenService.verifyToken(token) as GoogleUserInfo | UserInfo;
+
+      res.json({ user: { name } });
+    } catch (err) {
+      res.json(err);
     }
   }
 }
