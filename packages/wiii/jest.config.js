@@ -23,6 +23,7 @@ module.exports = {
     'config.js',
     '.babelrc.js',
     'vue.page.js',
+    '.eslintrc.*',
   ],
 
   // module alias

@@ -1,7 +1,8 @@
 import { mount, createLocalVue } from '@vue/test-utils';
 import VueRouter from 'vue-router';
 
-import { events, views } from '@/types';
+import { viewEnums } from '@/type';
+const { viewsTitle, views, paths, selectors } = viewEnums;
 
 /**
  * @todo
@@ -12,6 +13,9 @@ import { events, views } from '@/types';
 
 import App from '@/App';
 import Home from '@/views/Home';
+import Markets from '@/views/Markets';
+import News from '@/views/News';
+import User from '@/views/User';
 import Header from '@/components/header';
 import MenuBar from '@/components/header/MenuBar';
 import MenuIcon from '@/components/header/MenuIcon';
@@ -25,26 +29,41 @@ localVue.use(VueRouter);
 
 const routes = [
   {
-    path: '/**',
+    path: paths.MarketsRouter,
+    name: views.Markets,
+    component: Markets,
+  },
+  {
+    path: paths.User,
+    name: views.User,
+    component: User,
+  },
+  {
+    path: paths.News,
+    name: views.News,
+    component: News,
+  },
+  {
+    path: paths.Home,
     name: views.Home,
     component: Home,
   },
 ];
 
+const router = new VueRouter({ routes });
+
 describe('App 및 Home view 마운트', () => {
-  const router = new VueRouter({ routes });
   const appWrapper = mount(App, {
     localVue,
     router,
   });
+  const home = appWrapper.findComponent(Home);
 
   it('Routing이 포함된 App이 마운팅된다', () => {
     expect(appWrapper.exists()).toBeTruthy();
   });
 
-  const home = appWrapper.findComponent(Home);
-
-  describe('MenuBar Component', () => {
+  describe('MenuBar Component 마운트', () => {
     const header = home.findComponent(Header);
     const menuBar = header.findComponent(MenuBar);
 
@@ -53,10 +72,11 @@ describe('App 및 Home view 마운트', () => {
     });
 
     describe('MenuIcons Component', () => {
-      const MenuIcons = menuBar.findAllComponents(MenuIcon);
+      const menuIcons = menuBar.findAllComponents(MenuIcon);
 
-      it('MenuIcon 컴포넌트가 마운트 된다', () => {
-        expect(MenuIcons.exists()).toBeTruthy();
+      it('menuIcons 컴포넌트가 마운트 된다', () => {
+        expect(appWrapper.findAllComponents(MenuIcon)).toBeTruthy();
+        expect(home.html().includes('ul')).toBeTruthy();
       });
 
       /**
@@ -65,43 +85,111 @@ describe('App 및 Home view 마운트', () => {
        */
       const iconNums = 3;
       it(`MenuIcon 컴포넌트 수는 ${iconNums}개다`, () => {
-        expect(MenuIcons.length).toBe(iconNums);
+        expect(menuIcons.length).toBe(iconNums);
       });
 
-      const idxMenu = MenuIcons.at(0);
-      it('MenuIcons 중 첫번째 메뉴는 지수 메뉴이다 ', () => {
-        expect(idxMenu.exists()).toBeTruthy();
+      const homeMenu = menuIcons.at(0);
+      it('menuIcons 중 첫번째 메뉴는 홈 메뉴이다 ', () => {
+        expect(homeMenu.contains(selectors.anchorHref));
+        expect(homeMenu.text().includes('홈')).toBe(true);
       });
 
-      const stockMenu = MenuIcons.at(1);
-      it('MenuIcons 중 두번째 메뉴는 주식 메뉴이다 ', () => {
-        expect(stockMenu.exists()).toBeTruthy();
+      const marketMenu = menuIcons.at(1);
+      it('menuIcons 중 두번째 메뉴는 마켓 메뉴이다 ', () => {
+        expect(marketMenu.contains(selectors.anchorHref));
+        expect(marketMenu.text().includes('마켓')).toBe(true);
       });
 
-      const coinMenu = MenuIcons.at(2);
-      it('MenuIcons 중 세번째 메뉴는 코인 메뉴이다 ', () => {
-        expect(coinMenu.exists()).toBeTruthy();
+      const newsMenu = menuIcons.at(2);
+      it('menuIcons 중 세번째 메뉴는 뉴스 메뉴이다 ', () => {
+        expect(newsMenu.contains(selectors.anchorHref));
+        expect(newsMenu.text().includes('뉴스')).toBe(true);
+      });
+    });
+  });
+});
+
+describe('메뉴 아이콘 클릭 및 라우팅 테스트', () => {
+  const appWrapper = mount(App, {
+    localVue,
+    router,
+  });
+  const home = appWrapper.findComponent(Home);
+  const menuIcons = home.findAllComponents(MenuIcon);
+
+  describe('홈 메뉴 클릭', () => {
+    const homeMenu = menuIcons.at(0);
+    const homeMenuPath = paths.Home;
+    const homeMenuText = '홈';
+
+    it('홈 메뉴 아이콘의 href(to) props는 `/`이다', () => {
+      expect(homeMenu.props('href')).toBe(homeMenuPath);
+    });
+    it('홈 메뉴 아이콘의 텍스트는 `/`이다', () => {
+      expect(homeMenu.text()).toBe(homeMenuText);
+    });
+
+    describe('홈 Route 이동', () => {
+      it('홈 route로 이동하면 홈 view가 나타난다', async () => {
+        router.push(homeMenuPath);
+        await appWrapper.vm.$nextTick();
+        expect(appWrapper.vm.$route.path).toBe(homeMenuPath);
+        expect(appWrapper.find(Home).exists()).toBe(true);
       });
 
-      describe('지수 메뉴', () => {
-        it('지수 메뉴를 클릭하면 해당 라우터로 이동한다', async () => {
-          await idxMenu.trigger(events.MouseEventEnum.click);
-          expect(appWrapper.contains('지수')).toBe(true);
-        });
+      it(`홈 view의 타이틀은 '${viewsTitle.Home}'이다`, () => {
+        expect(appWrapper.text()).toContain(viewsTitle.Home);
+      });
+    });
+  });
+
+  describe('마켓 메뉴 Icon', () => {
+    const marketMenu = menuIcons.at(1);
+    const marketMenuPath = paths.IndexMarket;
+    const marketMenuText = '마켓';
+    it(`마켓 메뉴 아이콘의 href(to) props는 '${marketMenuPath}'이다`, () => {
+      expect(marketMenu.props('href')).toBe(marketMenuPath);
+    });
+    it(`마켓 메뉴 아이콘의 텍스트는 '${marketMenuText}'이다`, () => {
+      expect(marketMenu.text()).toBe(marketMenuText);
+    });
+
+    describe('마켓 Route 이동', () => {
+      it('마켓 route로 이동하면 마켓 view가 나타난다', async () => {
+        router.push(marketMenuPath);
+        await appWrapper.vm.$nextTick();
+        expect(appWrapper.vm.$route.path).toBe(marketMenuPath);
+        expect(appWrapper.find(Markets).exists()).toBe(true);
       });
 
-      describe('주식 메뉴', () => {
-        it('주식 메뉴를 클릭하면 해당 라우터로 이동한다', async () => {
-          await stockMenu.trigger(events.MouseEventEnum.click);
-          expect(appWrapper.contains('주식')).toBe(true);
-        });
+      it(`마켓 view의 타이틀은 '${viewsTitle.Markets}'이다`, () => {
+        expect(appWrapper.text()).toContain(viewsTitle.Markets);
+      });
+    });
+  });
+
+  describe('뉴스 메뉴', () => {
+    const newsMenu = menuIcons.at(2);
+    const newsMemuPath = paths.News;
+    const newsMenuText = '뉴스';
+
+    it(`뉴스 메뉴 아이콘의 href(to) props는 '${newsMemuPath}'이다`, () => {
+      expect(newsMenu.props('href')).toBe(newsMemuPath);
+    });
+    it(`뉴스 메뉴 아이콘의 텍스트는 '${newsMenuText}'이다`, () => {
+      expect(newsMenu.text()).toBe(newsMenuText);
+    });
+
+    describe('뉴스 Route 이동', () => {
+      it('뉴스 route로 이동하면 뉴스 view가 나타난다', async () => {
+        router.push(newsMemuPath);
+        await appWrapper.vm.$nextTick();
+        expect(appWrapper.vm.$route.path).toBe(newsMemuPath);
+        expect(appWrapper.find(News).exists()).toBe(true);
       });
 
-      describe('코인 메뉴', () => {
-        it('코인 메뉴를 클릭하면 해당 라우터로 이동한다', async () => {
-          await coinMenu.trigger(events.MouseEventEnum.click);
-          expect(appWrapper.contains('코인')).toBe(true);
-        });
+      it(`뉴스 view의 타이틀은 '${viewsTitle.News}'이다`, () => {
+        expect(appWrapper.text()).toContain(viewsTitle.News);
       });
     });
   });

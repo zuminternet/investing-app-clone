@@ -10,7 +10,11 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "allowJs": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "paths": {
+      "@/*": ["./frontend/*"],
+      "$/*": ["./backend/*"]
+    }
   },
   "exclude": ["frontend/**", "node_modules/**"]
 }
