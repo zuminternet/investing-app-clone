@@ -29,7 +29,7 @@ import Vue from 'vue'
 import VueAwesomeSwiper from 'vue-awesome-swiper'
 import {Swiper,SwiperSlide} from 'vue-awesome-swiper'
 import 'swiper/css/swiper.css'
-import CustomText from '../components/CustomText.vue'
+import CustomText from '../../../common/frontend/components/CustomText.vue'
 import { text } from '../constants'
 
 Vue.use(VueAwesomeSwiper);
