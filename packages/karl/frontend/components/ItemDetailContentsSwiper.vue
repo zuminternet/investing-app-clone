@@ -1,10 +1,7 @@
 <template>
   <swiper class="item-detail-contents-swiper">
       <swiper-slide>
-        <item-detail-overall-content></item-detail-overall-content>
-      </swiper-slide>
-      <swiper-slide>
-        <item-card-list :excludingHeight="210">></item-card-list>
+        <item-detail-overall-content :itemDetailInformations="itemDetailInformations"></item-detail-overall-content>
       </swiper-slide>
     </swiper>
 </template>
@@ -24,11 +21,12 @@ export default {
     SwiperSlide,
     ItemCardList,
     ItemDetailOverallContent
-  }
+  },
+  props: ['itemDetailInformations'],
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
   .item-detail-contents-swiper {
     display: flex;
     flex:1;

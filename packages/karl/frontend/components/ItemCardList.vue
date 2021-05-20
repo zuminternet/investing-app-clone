@@ -30,8 +30,7 @@ export default {
     },
 }
 </script>
-
-<style scoped>
+<style scoped lang="scss">
   .item-card-list {
     display: flex;
     /* position: absolute;
@@ -44,5 +43,4 @@ export default {
     overflow-y:auto;
     flex-direction: column;
   }
-
 </style>

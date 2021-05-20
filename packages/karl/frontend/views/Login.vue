@@ -60,7 +60,6 @@ export default {
     flex-direction: column;
     align-items: center;
     height: 100%;
-    /*background-color: blue;*/
   }
 
   .oauth-buttons-box {

@@ -5,6 +5,7 @@
 </template>
 
 <script>
+
 /*
  **********************************************************
  *
@@ -16,18 +17,10 @@ export default {
   name: 'App',
 };
 </script>
-<style>
-  body {
-    margin: 0;
-    background-color: greenyellow;
-    
-  }
-  #app {
-    display: flex;
-    flex-direction: column;
-    position: absolute;
-    height: 100vh;
-    width: 100vw;
-  }
-
+<style lang="scss" scoped>
+@import './styles';
 </style>
+
+
+
+

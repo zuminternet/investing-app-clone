@@ -1,9 +1,9 @@
 <template>
   <div id="item-detail-page">
-    <multipurpose-header></multipurpose-header>
-    <item-detail-price-box></item-detail-price-box>
+    <multipurpose-header :itemDetailInformations="itemDetailInformations"></multipurpose-header>
+    <item-detail-price-box :itemDetailInformations="itemDetailInformations"></item-detail-price-box>
     <top-naviagtor></top-naviagtor>
-    <item-detail-contents-swiper></item-detail-contents-swiper>
+    <item-detail-contents-swiper :itemDetailInformations="itemDetailInformations"></item-detail-contents-swiper>
     <bottom-naviagtor></bottom-naviagtor>
   </div>
 </template>
@@ -30,14 +30,9 @@ export default {
 
   computed: {
     ...mapState({
-      itemDetailInformation: state => state.market.itemDetailInformation
+      itemDetailInformations: state => state.market.itemDetailInformations
     })
   },
-
-  created() {
-    console.log(this.itemDetailInformation)
-  }
-
   
 }
 </script>

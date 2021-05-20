@@ -1,6 +1,6 @@
 <template>
   <div class="item-detail-overall-info-box">
-    <item-detail-overall-info-row v-for="(information, index) in informations" :key="index"></item-detail-overall-info-row>
+    <item-detail-overall-info-row v-for="(information, index) in itemOverallInformations" :key="index" :information="information"></item-detail-overall-info-row>
   </div>
 </template>
 
@@ -12,13 +12,7 @@ export default {
   components: {
     ItemDetailOverallInfoRow
   },
-  data() {
-    return {
-      informations: [{}, {}, {}, {}, {}]
-    }
-  }
-  
-
+  props: ['itemOverallInformations'],
 }
 </script>
 

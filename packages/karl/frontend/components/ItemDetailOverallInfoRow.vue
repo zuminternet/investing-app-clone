@@ -1,8 +1,8 @@
 <template>
   <div class="item-detail-overall-info-row">
-    <custom-text :message="'일일 변동폭'"></custom-text>
+    <custom-text :message="rowName"></custom-text>
     <div class="empty-space"></div>
-    <custom-text :message="'3,134.52'"></custom-text>
+    <custom-text :message="rowValue"></custom-text>
   </div>
 </template>
 
@@ -14,7 +14,13 @@ export default {
   components: {
     CustomText
   },
-  props: ['information']
+  props: ['information'],
+  data() {
+    return {
+      rowName: this.information[0],
+      rowValue: this.information[1]
+    }
+  },
 }
 </script>
 
@@ -22,7 +28,6 @@ export default {
   .item-detail-overall-info-row {
     display: flex;
     height: 20px;
-    /* background-color: green; */
   }
 
   .empty-space {

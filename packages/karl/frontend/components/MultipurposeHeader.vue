@@ -1,15 +1,40 @@
 <template>
-  <div class="multipurpose-header">
-    <div class="header-title-box">
-      <p>{{ title }}</p>
-      <custom-text :message="marketName"></custom-text>
-    </div>
-    <div class="empty-space"></div>
-    <div class="header-button-box">
-      <button class="header-button"></button>
-      <button class="header-button"></button>
-      <button class="header-button"></button>
-    </div>
+  <div>
+    <template v-if="itemDetailInformations">
+      <div class="multipurpose-header">
+        <div class="header-button-box">
+          <button class="header-button"></button>
+        </div>
+        <div>
+          <div>
+            <custom-text :message="itemDetailInformations.itemName"></custom-text>
+          </div>
+          
+          <div>
+            <custom-text :message="itemDetailInformations.itemCategory"></custom-text>
+          </div>
+        </div>
+        <div class="empty-space"></div>
+        <div class="header-button-box">
+          <button class="header-button"></button>
+          <button class="header-button"></button>
+          <button class="header-button"></button>
+        </div>
+      </div>
+    </template>
+    
+    <template v-else>
+      <div class="multipurpose-header">
+        <div class="header-title-box">
+          <p>{{ title }}</p>
+        </div>
+        <div class="empty-space"></div>
+        <div class="header-button-box">
+          <button class="header-button"></button>
+        </div>
+      </div>
+    </template>
+    
   </div>
 </template>
 
@@ -21,6 +46,7 @@ export default {
   components: {
     CustomText
   },
+  props: ['itemDetailInformations'],
   data: function() {
     return {
       title: 'investing.com',
