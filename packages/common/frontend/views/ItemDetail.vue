@@ -2,8 +2,7 @@
   <div id="item-detail-page">
     <multipurpose-header :itemDetailInformations="itemDetailInformations"></multipurpose-header>
     <item-detail-price-box :itemDetailInformations="itemDetailInformations"></item-detail-price-box>
-    <top-naviagtor></top-naviagtor>
-    <custom-swiper>
+    <custom-swiper :navigatorButtonNames="navigatorButtonNames">
       <swiper-slide>
         <item-detail-overall-content :itemDetailInformations="itemDetailInformations" :excludingHeight="210"></item-detail-overall-content>
       </swiper-slide>
@@ -14,7 +13,6 @@
         <item-detail-overall-content :itemDetailInformations="itemDetailInformations" :excludingHeight="210"></item-detail-overall-content>
       </swiper-slide>
     </custom-swiper>
-    <!-- <item-detail-contents-swiper :itemDetailInformations="itemDetailInformations"></item-detail-contents-swiper> -->
     <bottom-naviagtor></bottom-naviagtor>
   </div>
 </template>
@@ -22,12 +20,12 @@
 <script>
 import { mapState } from 'vuex'
 import {SwiperSlide} from 'vue-awesome-swiper'
+import { text } from '../constants'
 
 
 import BottomNaviagtor from '../components/BottomNaviagtor.vue'
 import TopNaviagtor from '../components/TopNaviagtor.vue'
 import MultipurposeHeader from '../components/MultipurposeHeader.vue'
-import ItemDetailContentsSwiper from '../components/ItemDetailContentsSwiper.vue'
 import ItemDetailPriceBox from '../components/ItemDetailPriceBox.vue'
 import CustomSwiper from '../components/CustomSwiper.vue'
 import ItemDetailOverallContent from '../components/ItemDetailOverallContent.vue'
@@ -39,11 +37,23 @@ export default {
     BottomNaviagtor,
     TopNaviagtor,
     MultipurposeHeader,
-    ItemDetailContentsSwiper,
     ItemDetailPriceBox,
     CustomSwiper,
     SwiperSlide,
     ItemDetailOverallContent
+  },
+
+  data() {
+    return {
+      navigatorButtonNames: [text.LATEST,
+      text.HOTTEST_NEWS,
+      text.CRYPTO_CURRENCY,
+      text.FOREIGN_EXCHANGE_MARKET,
+      text.STOCK_MARKET,
+      text.ECONOMIC_INDICATOR,
+      text.ECONOMIC_NEWS,
+      text.COVID_19]
+    }
   },
 
   computed: {

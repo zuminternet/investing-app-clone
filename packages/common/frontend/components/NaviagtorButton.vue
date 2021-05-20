@@ -1,6 +1,6 @@
 <template>
-  <button>
-    {{buttonName}}
+  <button class="navigator-button">
+    <slot></slot>
   </button>
 </template>
 
@@ -9,11 +9,15 @@
 
 export default {
   name: "NaviagtorButton",
-  props: ['buttonName']
 }
 </script>
 
 <style scoped lang="scss">
-
+  .navigator-button {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+  }
 
 </style>
