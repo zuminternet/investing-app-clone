@@ -1,6 +1,6 @@
 <template>
   <span>
-    {{message}}
+    <slot></slot>
   </span>
 </template>
 

@@ -3,12 +3,12 @@
     <div class="up-and-down-icon"></div>
     <div>    
       <div>
-        <custom-text :message="this.itemDetailInformations.itemPrice"></custom-text>
-        <custom-text :message="this.itemDetailInformations.fluctuationPrice"></custom-text>
+        <custom-text>{{this.itemDetailInformations.itemPrice}}</custom-text>
+        <custom-text>{{this.itemDetailInformations.fluctuationPrice}}</custom-text>
       </div>
       <div>
-        <custom-text :message="this.itemDetailInformations.itemTime"></custom-text>
-        <custom-text :message="this.itemDetailInformations.itemCurrency"></custom-text>
+        <custom-text>{{this.itemDetailInformations.itemTime}}</custom-text>
+        <custom-text>{{this.itemDetailInformations.itemCurrency}}</custom-text>
       </div>
     </div>
     <div class="empty-space"></div>

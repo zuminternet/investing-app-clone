@@ -1,9 +1,10 @@
 <template>
   <swiper class="item-detail-contents-swiper">
-      <swiper-slide>
-        <item-detail-overall-content :itemDetailInformations="itemDetailInformations"></item-detail-overall-content>
-      </swiper-slide>
-    </swiper>
+    <swiper-slide>
+      <item-detail-overall-content :itemDetailInformations="itemDetailInformations" :excludingHeight="210"></item-detail-overall-content>
+
+    </swiper-slide>
+  </swiper>
 </template>
 
 <script>

@@ -1,8 +1,8 @@
 <template>
   <div class="item-detail-overall-info-row">
-    <custom-text :message="rowName"></custom-text>
+    <custom-text>{{rowName}}</custom-text>
     <div class="empty-space"></div>
-    <custom-text :message="rowValue"></custom-text>
+    <custom-text>{{rowValue}}</custom-text>
   </div>
 </template>
 

@@ -7,11 +7,11 @@
         </div>
         <div>
           <div>
-            <custom-text :message="itemDetailInformations.itemName"></custom-text>
+            <custom-text>{{itemDetailInformations.itemName}}</custom-text>
           </div>
           
           <div>
-            <custom-text :message="itemDetailInformations.itemCategory"></custom-text>
+            <custom-text>{{itemDetailInformations.itemCategory}}</custom-text>
           </div>
         </div>
         <div class="empty-space"></div>
