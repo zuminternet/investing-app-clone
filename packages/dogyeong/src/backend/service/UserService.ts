@@ -15,20 +15,20 @@ export default class UserService {
   constructor() {}
 
   public async getUserByEmailAndPassword({ email, password }) {
-    const user = await User.findOne({ email, password });
+    const user = await User.findOne({ email, password }).lean();
     return user;
   }
 
   public async createGoogleUser(userInfo: GoogleUserInfo) {
-    const user = await User.findOne({ email: userInfo.email });
-
-    if (user) return user;
-
-    return await User.create({ ...userInfo, isGoogleUser: true }).then(console.log);
+    return await User.findOneAndUpdate(
+      { email: userInfo.email },
+      { ...userInfo, isGoogleUser: true },
+      { upsert: true, new: true },
+    ).lean();
   }
 
   public async createUser({ name, email, password }) {
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }).lean();
 
     if (user) throw new Error('User already exists');
 

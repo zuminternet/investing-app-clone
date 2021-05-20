@@ -6,6 +6,7 @@ mongoose
   .connect('mongodb://127.0.0.1:27017/investing', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    useFindAndModify: false,
     user: 'zum',
     pass: 'zumdev',
     authSource: 'admin',
