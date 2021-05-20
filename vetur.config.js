@@ -25,5 +25,11 @@ module.exports = {
       snippetFolder: './.vscode/vetur/snippets',
       globalComponents: [],
     },
+    {
+      root: './packages/wiii',
+      package: './package.json',
+      tsconfig: './tsconfig.frontend.json',
+      globalComponents: [],
+    },
   ],
 };

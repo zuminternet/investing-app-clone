@@ -1,19 +1,46 @@
-$grey-900: hsla(0, 0%, 26%, 0.9);
-$grey-700: hsla(0, 0%, 26%, 0.7);
-$grey-500: hsla(0, 0%, 26%, 0.5);
-$grey-300: hsla(0, 0%, 26%, 0.3);
-$grey-100: hsla(0, 0%, 26%, 0.1);
+// materialuicolors(https://materialuicolors.co/?ref=uxprocc)
+// grey
+$grey-900: rgba(33, 33, 33, 1);
+$grey-700: rgba(97, 97, 97, 1);
+$grey-500: rgba(158, 158, 158, 1);
+$grey-300: rgba(224, 224, 224, 1);
+$grey-100: rgba(245, 245, 245, 1);
 
-$white-900: hsla(0, 0%, 100%, 0.9);
+$white-900: hsla(0, 0%, 100%, 1);
 
-$blue-900: hsla(206, 99%, 31%, 0.9);
-$blue-700: hsla(206, 99%, 31%, 0.7);
-$blue-500: hsla(206, 99%, 31%, 0.5);
-$blue-300: hsla(206, 99%, 31%, 0.3);
-$blue-100: hsla(206, 99%, 31%, 0.1);
+// blue
+$blue-900: rgba(13, 71, 161, 1);
+$blue-700: rgba(25, 118, 210, 1);
+$blue-500: rgba(33, 150, 243, 1);
+$blue-300: rgba(100, 181, 246, 1);
+$blue-100: rgba(187, 222, 251, 1);
 
-$green-900: hsla(170, 100%, 15%, 0.9);
-$green-700: hsla(170, 100%, 15%, 0.7);
-$green-500: hsla(170, 100%, 15%, 0.5);
-$green-300: hsla(170, 100%, 15%, 0.3);
-$green-100: hsla(170, 100%, 15%, 0.1);
+// teal
+$green-900: rgba(0, 77, 64, 1);
+$green-700: rgba(0, 121, 107, 1);
+$green-500: rgba(0, 150, 136, 1);
+$green-300: rgba(77, 182, 172, 1);
+$green-100: rgba(178, 223, 219, 1);
+
+$red-neon: rgba(255, 23, 68, 1);
+$cyan-neon: rgba(224, 247, 250, 1);
+
+:export {
+  grey900: $grey-900;
+  grey700: $grey-700;
+  grey500: $grey-500;
+  grey300: $grey-300;
+  grey100: $grey-100;
+  white900: $white-900;
+  blue900: $blue-900;
+  blue700: $blue-700;
+  blue500: $blue-500;
+  blue300: $blue-300;
+  blue100: $blue-100;
+  green900: $green-900;
+  green700: $green-700;
+  green500: $green-500;
+  green300: $green-300;
+  green100: $green-100;
+  red-neon: $red-neon;
+}

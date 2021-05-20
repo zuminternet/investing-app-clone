@@ -1,19 +1,19 @@
 <template>
-  <div id="app" class="area">
+  <div class="area" :class="isDark">
     <router-view />
   </div>
 </template>
 
 <script>
-/*
- **********************************************************
- *
- *    줌 프론트엔드 신규입사자 파일럿 프로젝트 엔트리 컴포넌트
- *
- **********************************************************
- */
 export default {
   name: 'App',
+
+  computed: {
+    isDark() {
+      // return this.isDark ? 'dark' : null;
+      return null;
+    },
+  },
 };
 </script>
 
@@ -21,14 +21,20 @@ export default {
 html {
   @extend .center;
 
-  background-color: $grey-100;
-
   body {
-    @extend .area;
+    @extend .reset;
+
+    max-width: $max-width-mobile;
+    height: 100vh;
+    background-color: $grey-100;
 
     font-family: -apple-system, 'Helvetica Neue', 'Noto Sans KR', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
+}
+
+.dark {
+  background-color: $grey-700;
 }
 </style>

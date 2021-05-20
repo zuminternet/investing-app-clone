@@ -7,7 +7,7 @@
     "build": "rimraf ./node_modules/.cache && npm run frontend:build",
     "frontend:dev": "cross-env ZUM_FRONT_MODE=dev vue-cli-service serve",
     "frontend:build": "vue-cli-service build --no-clean && cross-env ZUM_FRONT_MODE=ssr vue-cli-service build --no-clean",
-    "frontend:test": "jest --watchAll --silent",
+    "frontend:test": "jest --watchAll --silent --colors",
     "backend:dev": "cross-env NODE_ENV=development nodemon --exec ts-node --transpile-only backend/Server.ts"
   },
   "dependencies": {
