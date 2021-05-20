@@ -11,7 +11,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .text-button {
   width: fit-content;
   height: fit-content;

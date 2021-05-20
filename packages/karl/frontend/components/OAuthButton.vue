@@ -11,7 +11,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
   .oauth-button {
     background-color: red;
     display: flex;

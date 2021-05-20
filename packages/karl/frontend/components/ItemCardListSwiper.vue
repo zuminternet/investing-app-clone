@@ -31,7 +31,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
   .item-card-list-swiper {
     display: flex;
     flex:1;

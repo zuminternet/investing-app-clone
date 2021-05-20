@@ -26,7 +26,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
   .item-card {
     display: flex;
     flex: 0 0 auto;
