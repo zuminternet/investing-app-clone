@@ -8,7 +8,7 @@
       <o-auth-button :message="googleLogin"></o-auth-button>
       <text-button :message="emailLogin"></text-button>
       <div class="normal-login-box">
-        <custom-text :message="alreadyRegister"></custom-text>
+        <custom-text>{{alreadyRegister}}</custom-text>
         <text-button :message="signIn"></text-button>
       </div>
       <text-button :message="passWithoutLogin" @handle-button-click="routeToHome"></text-button>
@@ -20,7 +20,7 @@
 <script>
 import OAuthButton from '../components/OAuthButton.vue'
 import TextButton from '../components/TextButton.vue'
-import CustomText from '../components/CustomText.vue'
+import CustomText from '../../../common/frontend/components/CustomText.vue'
 import LoginSwiper from '../components/LoginSwiper.vue'
 import { text } from '../constants'
 

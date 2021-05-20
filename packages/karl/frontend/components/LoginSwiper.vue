@@ -2,23 +2,23 @@
   <swiper class="swiper" :options="swiperOptions">
     <swiper-slide class="swiper-slide">
       <div class="swiper-img"></div>
-      <CustomText :message="realTimePrice"></CustomText>
-      <CustomText :message="realTimePriceDetail"></CustomText>
+      <custom-text>{{realTimePrice}}</custom-text>
+      <custom-text>{{realTimePriceDetail}}</custom-text>
     </swiper-slide>
     <swiper-slide class="swiper-slide">
       <div class="swiper-img"></div>
-      <CustomText :message="realTimePrice"></CustomText>
-      <CustomText :message="realTimePriceDetail"></CustomText>
+      <custom-text>{{realTimePrice}}</custom-text>
+      <custom-text>{{realTimePriceDetail}}</custom-text>
     </swiper-slide>
     <swiper-slide class="swiper-slide">
       <div class="swiper-img"></div>
-      <CustomText :message="realTimePrice"></CustomText>
-      <CustomText :message="realTimePriceDetail"></CustomText>
+      <custom-text>{{realTimePrice}}</custom-text>
+      <custom-text>{{realTimePriceDetail}}</custom-text>
     </swiper-slide>
     <swiper-slide class="swiper-slide">
       <div class="swiper-img"></div>
-      <CustomText :message="realTimePrice"></CustomText>
-      <CustomText :message="realTimePriceDetail"></CustomText>
+      <custom-text>{{realTimePrice}}</custom-text>
+      <custom-text>{{realTimePriceDetail}}</custom-text>
     </swiper-slide>
     <div class="swiper-pagination" slot="pagination"></div>
   </swiper>

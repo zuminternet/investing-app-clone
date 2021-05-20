@@ -1,13 +1,13 @@
 <template>
   <span>
-    {{message}}
+    <slot></slot>
   </span>
 </template>
 
 <script>
 export default {
   name: "CustomText",
-  props: ['message', 'fontSize']
+  props: ['fontSize']
 }
 </script>
 
