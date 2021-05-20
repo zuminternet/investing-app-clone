@@ -3,10 +3,10 @@ module.exports = {
   env: {
     node: true,
   },
-  extends: ['eslint:recommended', 'plugin:vue/recommended', 'prettier'],
+  extends: ['eslint:recommended', 'plugin:vue/recommended', '@vue/typescript', 'prettier'],
   parser: 'vue-eslint-parser',
   parserOptions: {
-    parser: '@babel/eslint-parser',
+    parser: '@typescript-eslint/parser',
     sourceType: 'module',
     ecmaVersion: 2020,
   },
