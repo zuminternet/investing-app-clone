@@ -4,16 +4,17 @@
  * - typeorm - connections
  */
 
-import { MySQLConnOptions, MongoDBConnOptions } from '$/config/db';
+import { MongoDBConnOptions, MySQLConnOptions } from '$/config/db';
 import { Connection, createConnections } from 'typeorm';
-
-export { default as mySQLDao } from './dao/mysql';
-export { default as mongoDao } from './dao/mongodb';
-export { default as redisDao } from './dao/redis';
+import MongoDBDao from './dao/mongodb';
+import MySQLDao from './dao/mysql';
 
 export const getConnections = async (): Promise<Connection[]> => {
   try {
-    return await createConnections([MySQLConnOptions, MongoDBConnOptions]);
+    const conn = await createConnections([MySQLConnOptions, MongoDBConnOptions]);
+    new MySQLDao();
+    new MongoDBDao();
+    return conn;
   } catch (e) {
     console.error(e);
     return;

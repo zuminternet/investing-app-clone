@@ -7,17 +7,11 @@
  * - 회원 탈퇴
  * - TypeORM 사용해 User 모델 관리
  */
-import { Connection, getConnection } from 'typeorm';
-import { CheckUserProps, CreateUserProps } from '../types';
-import { DBName } from '$/config/db';
+import User from '$/db/models/User';
+import { CheckUserProps, CreateUserProps } from '$/db/types';
+import { Repository } from 'typeorm';
 
-export default class MySQL {
-  private conn: Connection;
-
-  constructor() {
-    this.conn = getConnection(DBName.mysql);
-  }
-
+export default class MySQL extends Repository<User> {
   /**
    * checkDuplicated; email 중복 체크
    * @param email
@@ -98,6 +92,23 @@ export default class MySQL {
     } catch (e) {
       console.error(e);
       return false;
+    }
+  }
+
+  /**
+   * findUserId
+   * @description
+   * mail로 검색 후 user id 반환
+   * @param email 댓글 사용자 email
+   * @returns UserId
+   */
+  public async findUserIdByEmail(email: string): Promise<number> {
+    try {
+      const { id } = await this.findOne({ email });
+      return id;
+    } catch (e) {
+      console.error(e);
+      return;
     }
   }
 }
