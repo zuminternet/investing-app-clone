@@ -22,11 +22,11 @@ export class ApiController {
 
   @GetMapping({ path: ['/auth/google'] })
   public async loginGoogleUser(req: Request, res: Response) {
-    const code = req.headers[GOOGLE_GRANT_CODE_HEADER];
+    const grantCode = req.headers[GOOGLE_GRANT_CODE_HEADER];
 
-    if (!code) return res.status(400).json({ message: 'Invalid Header' });
+    if (!grantCode) return res.status(400).json({ message: 'Invalid Header' });
 
-    const userInfo = await this.authService.getUserInfo(code);
+    const userInfo = await this.authService.getUserInfo(grantCode);
 
     if (!userInfo) return res.json({});
 
