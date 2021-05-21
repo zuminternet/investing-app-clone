@@ -10,7 +10,7 @@
  * - express app.use(session(sessionConfigs))
  */
 // import express from 'express';
-import { devRedis, secretKey } from '$/config/db';
+import { RedisConnOptions, secretKey } from '$/config/db';
 import connector from 'connect-redis';
 import session from 'express-session';
 import redis from 'redis';
@@ -18,7 +18,7 @@ import redis from 'redis';
 const redisClient = redis.createClient();
 const redisStore = connector(session);
 
-const { host, port } = devRedis;
+const { host, port } = RedisConnOptions;
 const store = new redisStore({ host, port, client: redisClient });
 
 export const sessionConfigs = { secret: secretKey, store, saveUninitialized: false, resave: false };
