@@ -7,11 +7,11 @@
         </div>
         <div>
           <div>
-            <custom-text>{{itemDetailInformations.itemName}}</custom-text>
+            <custom-text>{{ itemDetailInformations.itemName }}</custom-text>
           </div>
-          
+
           <div>
-            <custom-text>{{itemDetailInformations.itemCategory}}</custom-text>
+            <custom-text>{{ itemDetailInformations.itemCategory }}</custom-text>
           </div>
         </div>
         <div class="empty-space"></div>
@@ -22,7 +22,7 @@
         </div>
       </div>
     </template>
-    
+
     <template v-else>
       <div class="multipurpose-header">
         <div class="header-title-box">
@@ -34,54 +34,52 @@
         </div>
       </div>
     </template>
-    
   </div>
 </template>
 
 <script>
-import CustomText from '../components/CustomText.vue'
+import CustomText from '../components/CustomText.vue';
 
 export default {
-  name:"MultipurposeHeader",
+  name: 'MultipurposeHeader',
   components: {
-    CustomText
+    CustomText,
   },
   props: ['itemDetailInformations'],
   data: function() {
     return {
       title: 'investing.com',
-      marketName:'홍콩'
-    }
-  }
-}
+      marketName: '홍콩',
+    };
+  },
+};
 </script>
 
 <style scoped lang="scss">
-  .multipurpose-header {
-    display: flex;
-    height: 50px;
+.multipurpose-header {
+  display: flex;
+  height: 50px;
+}
 
-  }
+.header-title-box {
+  display: flex;
+  flex-direction: column;
+}
 
-  .header-title-box {
-    display: flex;
-    flex-direction: column;
-  }
+.empty-space {
+  flex: 1;
+}
 
-  .empty-space {
-    flex: 1;
-  }
+.header-button-box {
+  display: flex;
+  align-items: center;
+  /* justify-content: space-between; */
+}
 
-  .header-button-box {
-    display: flex;
-    align-items: center;
-    /* justify-content: space-between; */
-  }
-
-  .header-button {
-    width: 30px;
-    height: 30px;
-    background-color: green;
-    margin-right: 10px;
-  }
+.header-button {
+  width: 30px;
+  height: 30px;
+  background-color: green;
+  margin-right: 10px;
+}
 </style>

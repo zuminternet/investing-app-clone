@@ -1,35 +1,35 @@
 <template>
   <swiper class="item-detail-contents-swiper">
     <swiper-slide>
-      <item-detail-overall-content :itemDetailInformations="itemDetailInformations" :excludingHeight="210"></item-detail-overall-content>
-
+      <item-detail-overall-content
+        :itemDetailInformations="itemDetailInformations"
+        :excludingHeight="210"
+      ></item-detail-overall-content>
     </swiper-slide>
   </swiper>
 </template>
 
 <script>
-import {Swiper,SwiperSlide} from 'vue-awesome-swiper'
-import 'swiper/css/swiper.css'
+import { Swiper, SwiperSlide } from 'vue-awesome-swiper';
+import 'swiper/css/swiper.css';
 
-import ItemDetailOverallContent from '../components/ItemDetailOverallContent.vue'
-
+import ItemDetailOverallContent from '../components/ItemDetailOverallContent.vue';
 
 export default {
-  name:"ItemDetailContentsSwiper",
+  name: 'ItemDetailContentsSwiper',
   components: {
     Swiper,
     SwiperSlide,
-    ItemDetailOverallContent
+    ItemDetailOverallContent,
   },
   props: ['itemDetailInformations'],
-}
+};
 </script>
 
 <style scoped lang="scss">
-  .item-detail-contents-swiper {
-    display: flex;
-    flex:1;
-    width: 100%;
-  }
-
+.item-detail-contents-swiper {
+  display: flex;
+  flex: 1;
+  width: 100%;
+}
 </style>

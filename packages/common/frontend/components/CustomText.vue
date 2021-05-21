@@ -6,11 +6,9 @@
 
 <script>
 export default {
-  name: "CustomText",
-  props: ['message', 'fontSize']
-}
+  name: 'CustomText',
+  props: ['message', 'fontSize'],
+};
 </script>
 
-<style scoped lang="scss">
-
-</style>
+<style scoped lang="scss"></style>

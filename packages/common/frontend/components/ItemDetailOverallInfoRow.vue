@@ -1,37 +1,36 @@
 <template>
   <div class="item-detail-overall-info-row">
-    <custom-text>{{rowName}}</custom-text>
+    <custom-text>{{ rowName }}</custom-text>
     <div class="empty-space"></div>
-    <custom-text>{{rowValue}}</custom-text>
+    <custom-text>{{ rowValue }}</custom-text>
   </div>
 </template>
 
 <script>
-import CustomText from '../components/CustomText.vue'
+import CustomText from '../components/CustomText.vue';
 
 export default {
-  name:"ItemDetailOverallInfoRow",
+  name: 'ItemDetailOverallInfoRow',
   components: {
-    CustomText
+    CustomText,
   },
   props: ['information'],
   data() {
     return {
       rowName: this.information[0],
-      rowValue: this.information[1]
-    }
+      rowValue: this.information[1],
+    };
   },
-}
+};
 </script>
 
 <style scoped lang="scss">
-  .item-detail-overall-info-row {
-    display: flex;
-    height: 20px;
-  }
+.item-detail-overall-info-row {
+  display: flex;
+  height: 20px;
+}
 
-  .empty-space {
-    flex:1
-  }
-
+.empty-space {
+  flex: 1;
+}
 </style>
