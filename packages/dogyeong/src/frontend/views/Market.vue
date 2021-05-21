@@ -37,7 +37,8 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from 'vue';
 import HeaderBar from '@/components/HeaderBar/HeaderBar';
 import BottomNav from '@/components/BottomNav/BottomNav';
 import MarketExchange from '@/components/Market/MarketExchange';
@@ -46,7 +47,7 @@ import MarketStock from '@/components/Market/MarketStock';
 import HeaderNav from '@/components/HeaderNav/HeaderNav';
 import Swiper from 'swiper';
 
-export default {
+export default Vue.extend({
   name: 'Index',
 
   components: {
@@ -106,7 +107,7 @@ export default {
       this.currentNavId = this.navRoutes[index - 1].id;
     },
   },
-};
+});
 </script>
 
 <style lang="scss" scoped>

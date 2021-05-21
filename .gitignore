@@ -25,3 +25,6 @@ yarn-error.log
 
 # test coverage directory
 coverage/
+
+# docker database data
+**/docker/data

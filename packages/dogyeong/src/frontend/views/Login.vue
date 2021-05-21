@@ -8,7 +8,8 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from 'vue';
 import HeaderBar from '@/components/HeaderBar/HeaderBar';
 import Axios from 'axios';
 
@@ -16,7 +17,7 @@ const GOOGLE_AUTH_OPTIONS = {
   prompt: 'select_account',
 };
 
-export default {
+export default Vue.extend({
   name: 'Login',
   components: { HeaderBar },
   methods: {
@@ -36,7 +37,7 @@ export default {
       }
     },
   },
-};
+});
 </script>
 
 <style lang="scss" scoped>

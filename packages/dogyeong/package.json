@@ -7,13 +7,20 @@
     "build": "rimraf ./node_modules/.cache && npm run frontend:build",
     "frontend:dev": "cross-env ZUM_FRONT_MODE=dev BASE_PATH=src vue-cli-service serve",
     "frontend:build": "cross-env BASE_PATH=src vue-cli-service build --no-clean && cross-env BASE_PATH=src ZUM_FRONT_MODE=ssr vue-cli-service build --no-clean",
-    "backend:dev": "cross-env BASE_PATH=src NODE_ENV=development nodemon --exec ts-node --transpile-only src/backend/Server.ts"
+    "backend:dev": "cross-env BASE_PATH=src NODE_ENV=development nodemon --exec ts-node --transpile-only src/backend/Server.ts",
+    "db:up": "docker-compose -f docker/db.yml up -d mongo",
+    "db:down": "docker-compose -f docker/db.yml down",
+    "db:start": "docker-compose -f docker/db.yml start",
+    "db:stop": "docker-compose -f docker/db.yml stop"
   },
   "dependencies": {
+    "@types/jsonwebtoken": "^8.5.1",
     "@vue/cli-plugin-babel": "^4.5.13",
     "@vue/cli-plugin-typescript": "^4.5.13",
     "common": "1.0.0",
     "cross-env": "^7.0.3",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.12.10",
     "swiper": "^6.6.1",
     "typescript": "^4.2.4",
     "vue": "^2.6.12",
