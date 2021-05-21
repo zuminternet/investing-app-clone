@@ -48,7 +48,7 @@ export default Vue.extend({
           headers: { INV_GOOGLE_AUTH: code },
         });
 
-        localStorage.setItem('_inv_user_', user.name);
+        this.$store.commit('setUser', user.name);
       } catch (e) {
         console.error(e);
       }
@@ -58,7 +58,7 @@ export default Vue.extend({
         email: this.email,
         password: this.password,
       })
-        .then(({ data: { user } }) => localStorage.setItem('_inv_user_', user.name))
+        .then(({ data: { user } }) => this.$store.commit('setUser', user.name))
         .catch(console.error);
     },
   },

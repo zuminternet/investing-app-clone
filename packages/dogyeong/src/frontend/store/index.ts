@@ -9,11 +9,19 @@ export default () => {
 
     state: {
       isDarkTheme: false,
+      user: null,
     },
 
     getters: {},
 
-    mutations: {},
+    mutations: {
+      changeTheme(state, isDark: boolean) {
+        state.isDarkTheme = isDark;
+      },
+      setUser(state, user) {
+        state.user = user;
+      },
+    },
 
     actions: {},
   });

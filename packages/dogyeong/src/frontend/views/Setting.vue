@@ -3,7 +3,8 @@
     <HeaderBar>
       더보기
     </HeaderBar>
-    <div class="setting-item"><input v-model="$store.state.isDarkTheme" type="checkbox" /> 어두운 테마</div>
+    {{ user }}
+    <div class="setting-item"><input v-model="isDark" type="checkbox" /> 어두운 테마</div>
     <div class="setting-item"><RouterLink to="/login">로그인</RouterLink></div>
     <BottomNav></BottomNav>
   </div>
@@ -16,13 +17,26 @@ import BottomNav from '@/components/BottomNav/BottomNav.vue';
 
 export default Vue.extend({
   name: 'Setting',
+
   components: { BottomNav, HeaderBar },
-  data() {
-    return { isDark: false };
+
+  computed: {
+    isDark: {
+      get() {
+        return this.$store.state.isDarkTheme;
+      },
+      set(isDark) {
+        this.$store.commit('changeTheme', isDark);
+      },
+    },
+    user() {
+      return this.$store.state.user;
+    },
   },
+
   methods: {
-    onClickThemeToggleInput() {
-      console.log(this.isDark);
+    onChangeThemeCheckbox(e) {
+      this.$store.commit('changeTheme', e.target.checked);
     },
   },
 });
