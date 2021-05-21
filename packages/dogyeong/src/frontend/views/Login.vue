@@ -2,16 +2,22 @@
   <div class="login-wrapper">
     <HeaderBar>로그인</HeaderBar>
     <div class="form-wrapper">
-      <router-link to="/">to home</router-link><br />
-      <button @click="onClickLoginBtn">Google</button>
+      <form>
+        <input v-model="email" type="email" />
+        <input v-model="password" type="password" />
+        <button type="submit" @click.prevent="onClickLoginBtn">login</button>
+      </form>
+      <RouterLink to="/">to home</RouterLink><br />
+      <button @click="onClickGoogleLoginBtn">Google</button>
+      <RouterLink to="/signup">sign up</RouterLink>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import HeaderBar from '@/components/HeaderBar/HeaderBar';
 import Axios from 'axios';
+import HeaderBar from '@/components/HeaderBar/HeaderBar.vue';
 
 const GOOGLE_AUTH_OPTIONS = {
   prompt: 'select_account',
@@ -19,22 +25,41 @@ const GOOGLE_AUTH_OPTIONS = {
 
 export default Vue.extend({
   name: 'Login',
+
   components: { HeaderBar },
+
+  data() {
+    return {
+      email: '',
+      password: '',
+    };
+  },
+
   methods: {
-    async onClickLoginBtn() {
-      const gapi = window.gapi;
+    async onClickGoogleLoginBtn() {
+      const gapi = (window as any).gapi;
 
       try {
         const { code } = await gapi.auth2.getAuthInstance().grantOfflineAccess(GOOGLE_AUTH_OPTIONS);
 
-        const { data } = await Axios.get('/api/auth/google', {
+        const {
+          data: { user },
+        } = await Axios.get('/api/auth/google', {
           headers: { INV_GOOGLE_AUTH: code },
         });
 
-        console.log(data);
+        localStorage.setItem('_inv_user_', user.name);
       } catch (e) {
         console.error(e);
       }
+    },
+    async onClickLoginBtn() {
+      Axios.post('/api/auth', {
+        email: this.email,
+        password: this.password,
+      })
+        .then(({ data: { user } }) => localStorage.setItem('_inv_user_', user.name))
+        .catch(console.error);
     },
   },
 });

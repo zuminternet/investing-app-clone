@@ -1,7 +1,7 @@
 <template>
   <div id="app" :class="{ dark: $store.state.isDarkTheme }">
     <div class="wrapper">
-      <router-view></router-view>
+      <RouterView></RouterView>
     </div>
   </div>
 </template>
@@ -24,9 +24,14 @@ const GOOGLE_AUTH_PARAMS = {
 
 export default Vue.extend({
   name: 'App',
+
   mounted() {
-    const gapi = window.gapi;
+    const gapi = (window as any).gapi;
     gapi.load('auth2', () => gapi.auth2.init(GOOGLE_AUTH_PARAMS));
+  },
+
+  methods: {
+    getCurrentUser() {},
   },
 });
 </script>
