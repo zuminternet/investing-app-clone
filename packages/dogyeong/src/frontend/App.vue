@@ -26,12 +26,15 @@ export default Vue.extend({
   name: 'App',
 
   mounted() {
-    const gapi = (window as any).gapi;
-    gapi.load('auth2', () => gapi.auth2.init(GOOGLE_AUTH_PARAMS));
+    this.initGoogleApi();
+    this.$store.dispatch('fetchCurrentUser');
   },
 
   methods: {
-    getCurrentUser() {},
+    initGoogleApi() {
+      const gapi = (window as any).gapi;
+      gapi.load('auth2', () => gapi.auth2.init(GOOGLE_AUTH_PARAMS));
+    },
   },
 });
 </script>

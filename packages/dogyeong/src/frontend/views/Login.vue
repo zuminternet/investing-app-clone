@@ -5,10 +5,10 @@
       <form>
         <input v-model="email" type="email" />
         <input v-model="password" type="password" />
-        <button type="submit" @click.prevent="onClickLoginBtn">login</button>
+        <button type="submit" @click.prevent="login({ email, password })">login</button>
       </form>
       <RouterLink to="/">to home</RouterLink><br />
-      <button @click="onClickGoogleLoginBtn">Google</button>
+      <button @click="googleLogin">Google</button>
       <RouterLink to="/signup">sign up</RouterLink>
     </div>
   </div>
@@ -16,12 +16,8 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import Axios from 'axios';
+import { mapActions } from 'vuex';
 import HeaderBar from '@/components/HeaderBar/HeaderBar.vue';
-
-const GOOGLE_AUTH_OPTIONS = {
-  prompt: 'select_account',
-};
 
 export default Vue.extend({
   name: 'Login',
@@ -36,31 +32,7 @@ export default Vue.extend({
   },
 
   methods: {
-    async onClickGoogleLoginBtn() {
-      const gapi = (window as any).gapi;
-
-      try {
-        const { code } = await gapi.auth2.getAuthInstance().grantOfflineAccess(GOOGLE_AUTH_OPTIONS);
-
-        const {
-          data: { user },
-        } = await Axios.get('/api/auth/google', {
-          headers: { INV_GOOGLE_AUTH: code },
-        });
-
-        this.$store.commit('setUser', user.name);
-      } catch (e) {
-        console.error(e);
-      }
-    },
-    async onClickLoginBtn() {
-      Axios.post('/api/auth', {
-        email: this.email,
-        password: this.password,
-      })
-        .then(({ data: { user } }) => this.$store.commit('setUser', user.name))
-        .catch(console.error);
-    },
+    ...mapActions(['login', 'googleLogin']),
   },
 });
 </script>
