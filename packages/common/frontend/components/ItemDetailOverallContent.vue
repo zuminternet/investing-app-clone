@@ -26,10 +26,6 @@ export default {
       };
     },
   },
-
-  created() {
-    console.log(this.itemDetailInformations);
-  },
 };
 </script>
 

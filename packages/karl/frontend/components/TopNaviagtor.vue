@@ -12,42 +12,41 @@
 </template>
 
 <script>
-import NaviagtorButton from '../components/NaviagtorButton.vue'
-import { text } from '../constants'
+import NaviagtorButton from '../components/NaviagtorButton.vue';
+import { text } from '../../../common/frontend/constants';
 
 export default {
-  name: "TopNaviagtor",
+  name: 'TopNaviagtor',
   components: {
     NaviagtorButton,
   },
 
-  data: function () {
+  data: function() {
     return {
-      latest : text.LATEST,
+      latest: text.LATEST,
       hottestNews: text.HOTTEST_NEWS,
       cryptoCurrency: text.CRYPTO_CURRENCY,
       foreignExchangeMarket: text.FOREIGN_EXCHANGE_MARKET,
       stockMarket: text.STOCK_MARKET,
       economicIndicator: text.ECONOMIC_INDICATOR,
       economicNews: text.ECONOMIC_NEWS,
-      covid19: text.COVID_19
-    }
-  }
-}
+      covid19: text.COVID_19,
+    };
+  },
+};
 </script>
 <style scoped lang="scss">
-  .top-navigator {
-    display: flex;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    height: 50px;
-  }
+.top-navigator {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  height: 50px;
+}
 
-  .top-navigator-button {
-    display: flex;
-    flex: 0 0 auto;
-    align-items: center;
-    justify-content: center;
-  }
-
+.top-navigator-button {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+}
 </style>

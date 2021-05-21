@@ -1,25 +1,25 @@
 <template>
   <div id="home-page">
     <multipurpose-header></multipurpose-header>
-    <custom-swiper :navigatorButtonNames="navigatorButtonNames">
+    <custom-swiper :navigatorButtonNames="swiperNavigatorButtonNames">
       <swiper-slide v-for="(items, index) in itemCollections" :key="index">
         <item-card-list :items="items" :excludingHeight="150"></item-card-list>
       </swiper-slide>
     </custom-swiper>
-    <bottom-naviagtor></bottom-naviagtor>
+    <bottom-naviagtor :navigatorButtonNames="bottomNavigatorButtonNames"></bottom-naviagtor>
   </div>
 </template>
 
 <script>
-import { SwiperSlide } from 'vue-awesome-swiper'
-import { mapState, mapGetters } from 'vuex'
+import { SwiperSlide } from 'vue-awesome-swiper';
+import { mapState, mapGetters } from 'vuex';
 
-import BottomNaviagtor from '../components/BottomNaviagtor.vue'
-import MultipurposeHeader from '../components/MultipurposeHeader.vue'
-import ItemCardList from '../components/ItemCardList.vue'
-import CustomSwiper from '../../../common/frontend/components/CustomSwiper.vue'
+import BottomNaviagtor from '../../../common/frontend/components/BottomNaviagtor.vue';
+import MultipurposeHeader from '../components/MultipurposeHeader.vue';
+import ItemCardList from '../components/ItemCardList.vue';
+import CustomSwiper from '../../../common/frontend/components/CustomSwiper.vue';
 
-import { text } from '../constants'
+import { text } from '../../../common/frontend/constants';
 
 export default {
   name: 'Home',
@@ -27,31 +27,30 @@ export default {
     BottomNaviagtor,
     MultipurposeHeader,
     CustomSwiper,
-    ItemCardList
+    ItemCardList,
   },
   computed: {
     ...mapState({
-      stockItems: state => state.market.stockItems
+      stockItems: (state) => state.market.stockItems,
     }),
     ...mapGetters('market', {
-      itemCollections: 'itemCollections'
-    })
+      itemCollections: 'itemCollections',
+    }),
   },
 
   data() {
     return {
-      navigatorButtonNames: [text.INDICES, text.STOCK, text.CRYPTO_CURRENCY]
-    }
-  }
+      swiperNavigatorButtonNames: [text.INDICES, text.STOCK, text.CRYPTO_CURRENCY],
+      bottomNavigatorButtonNames: [text.MARKET, text.NEWS, text.CALENDAR, text.FAVORITES, text.MORE],
+    };
+  },
 };
 </script>
 
 <style scoped>
-  #home-page {
-    display:flex;
-    flex-direction: column;
-    flex:1
-  }
-
-
+#home-page {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
 </style>

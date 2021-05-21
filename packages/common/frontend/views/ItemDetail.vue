@@ -9,8 +9,32 @@
           :excludingHeight="210"
         ></item-detail-overall-content>
       </swiper-slide>
+      <swiper-slide>
+        <item-detail-overall-content
+          :itemDetailInformations="itemDetailInformations"
+          :excludingHeight="210"
+        ></item-detail-overall-content>
+      </swiper-slide>
+      <swiper-slide>
+        <item-detail-overall-content
+          :itemDetailInformations="itemDetailInformations"
+          :excludingHeight="210"
+        ></item-detail-overall-content>
+      </swiper-slide>
+      <swiper-slide>
+        <item-detail-overall-content
+          :itemDetailInformations="itemDetailInformations"
+          :excludingHeight="210"
+        ></item-detail-overall-content>
+      </swiper-slide>
+      <swiper-slide>
+        <item-detail-overall-content
+          :itemDetailInformations="itemDetailInformations"
+          :excludingHeight="210"
+        ></item-detail-overall-content>
+      </swiper-slide>
     </custom-swiper>
-    <bottom-naviagtor></bottom-naviagtor>
+    <bottom-naviagtor :navigatorButtonNames="navigatorButtonNames"></bottom-naviagtor>
   </div>
 </template>
 
@@ -38,16 +62,7 @@ export default {
 
   data() {
     return {
-      navigatorButtonNames: [
-        text.LATEST,
-        text.HOTTEST_NEWS,
-        text.CRYPTO_CURRENCY,
-        text.FOREIGN_EXCHANGE_MARKET,
-        text.STOCK_MARKET,
-        text.ECONOMIC_INDICATOR,
-        text.ECONOMIC_NEWS,
-        text.COVID_19,
-      ],
+      navigatorButtonNames: [text.OVERLALL, text.NEWS, text.ANALYSIS, text.OPINION, text.CHART],
     };
   },
 

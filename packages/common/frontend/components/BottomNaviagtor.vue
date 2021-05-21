@@ -1,10 +1,8 @@
 <template>
   <div class="bottom-navigator">
-    <naviagtor-button>{{ market }}</naviagtor-button>
-    <naviagtor-button>{{ news }}</naviagtor-button>
-    <naviagtor-button>{{ calendar }}</naviagtor-button>
-    <naviagtor-button>{{ favorites }}</naviagtor-button>
-    <naviagtor-button>{{ more }}</naviagtor-button>
+    <naviagtor-button v-for="(navigatorButtonName, index) in navigatorButtonNames" :key="index">{{
+      navigatorButtonName
+    }}</naviagtor-button>
   </div>
 </template>
 
@@ -17,6 +15,7 @@ export default {
   components: {
     NaviagtorButton,
   },
+  props: ['navigatorButtonNames'],
 
   data: function() {
     return {
