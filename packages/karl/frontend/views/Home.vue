@@ -47,7 +47,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 #home-page {
   display: flex;
   flex-direction: column;

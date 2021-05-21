@@ -52,12 +52,12 @@ export default {
 };
 </script>
 
-<style>
+<style scoped lang="scss">
 #login-page {
   display: flex;
+  flex: 1;
   flex-direction: column;
   align-items: center;
-  height: 100%;
 }
 
 .oauth-buttons-box {

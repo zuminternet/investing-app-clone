@@ -5,7 +5,6 @@
 </template>
 
 <script>
-
 /*
  **********************************************************
  *
@@ -17,10 +16,7 @@ export default {
   name: 'App',
 };
 </script>
-<style lang="scss" scoped>
-@import './styles';
+<style scoped lang="scss">
+#app {
+}
 </style>
-
-
-
-
