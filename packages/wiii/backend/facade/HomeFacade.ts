@@ -1,7 +1,7 @@
-import { Facade, Inject } from 'zum-portal-core/backend/decorator/Alias';
+import { Facade } from 'zum-portal-core/backend/decorator/Alias';
 import { BundleRenderer, createBundleRenderer } from 'vue-server-renderer';
-import { bundleRendering } from 'zum-portal-core/backend/ssr/BundleRendering';
 import { Yml } from 'zum-portal-core/backend/decorator/Yml';
+
 const path = require('path');
 const fs = require('fs');
 
@@ -12,10 +12,14 @@ const SSR_PATHS = ['/'];
 
 @Facade()
 export class HomeFacade {
-  private readonly renderer: BundleRenderer;
   public _emptyHtml: string;
   public ssrHtml: SsrHtml = {}; // SSR HTML 데이터
+  private readonly renderer: BundleRenderer;
 
+  /**
+   * @constructor
+   * @param application 앱 관련 설정 `resources/application.yml`에서 불러옴
+   */
   constructor(@Yml('application') private application) {
     const clientManifest = require(path.join(RESOURCES_PATH, '/vue-ssr-client-manifest.json'));
 
