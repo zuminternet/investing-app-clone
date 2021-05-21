@@ -22,20 +22,24 @@ export class ApiController {
 
   @GetMapping({ path: ['/auth/google'] })
   public async loginGoogleUser(req: Request, res: Response) {
-    const grantCode = req.headers[GOOGLE_GRANT_CODE_HEADER];
+    try {
+      const grantCode = req.headers[GOOGLE_GRANT_CODE_HEADER];
 
-    if (!grantCode) return res.status(400).json({ message: 'Invalid Header' });
+      if (!grantCode) return res.status(400).json({ message: 'Invalid Header' });
 
-    const userInfo = await this.authService.getUserInfo(grantCode);
+      const userInfo = await this.authService.getUserInfo(grantCode);
 
-    if (!userInfo) return res.json({});
+      if (!userInfo) return res.json({});
 
-    // 가입 안되어있으면 계정을 생성하고, 유저 정보 반환
-    const user = await this.userService.createGoogleUser(userInfo);
-    const token = this.tokenService.createToken(user);
+      // 가입 안되어있으면 계정을 생성하고, 유저 정보 반환
+      const user = await this.userService.createGoogleUser(userInfo);
+      const token = this.tokenService.createToken(user);
 
-    res.cookie(ACCESS_TOKEN_COOKIE_KEY, token, tokenCookieOption);
-    res.json({ user: { name: user.name } });
+      res.cookie(ACCESS_TOKEN_COOKIE_KEY, token, tokenCookieOption);
+      res.json({ user: { name: user.name } });
+    } catch (err) {
+      res.status(500).json(err);
+    }
   }
 
   @PostMapping({ path: ['/user'] })
@@ -73,7 +77,7 @@ export class ApiController {
 
       res.json({ user: { name } });
     } catch (err) {
-      res.json(err);
+      res.status(500).json(err);
     }
   }
 }
