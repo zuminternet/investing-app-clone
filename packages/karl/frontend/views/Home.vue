@@ -1,26 +1,47 @@
 <template>
   <div id="home-page">
     <multipurpose-header></multipurpose-header>
-    <top-naviagtor></top-naviagtor>
-    <item-card-list-swiper></item-card-list-swiper>
+    <custom-swiper :navigatorButtonNames="navigatorButtonNames">
+      <swiper-slide v-for="(items, index) in itemCollections" :key="index">
+        <item-card-list :items="items" :excludingHeight="150"></item-card-list>
+      </swiper-slide>
+    </custom-swiper>
     <bottom-naviagtor></bottom-naviagtor>
   </div>
 </template>
 
 <script>
-import BottomNaviagtor from '../components/BottomNaviagtor.vue'
-import TopNaviagtor from '../components/TopNaviagtor.vue'
-import MultipurposeHeader from '../components/MultipurposeHeader.vue'
-import ItemCardListSwiper from '../components/ItemCardListSwiper.vue'
+import { SwiperSlide } from 'vue-awesome-swiper'
+import { mapState, mapGetters } from 'vuex'
 
+import BottomNaviagtor from '../components/BottomNaviagtor.vue'
+import MultipurposeHeader from '../components/MultipurposeHeader.vue'
+import ItemCardList from '../components/ItemCardList.vue'
+import CustomSwiper from '../../../common/frontend/components/CustomSwiper.vue'
+
+import { text } from '../constants'
 
 export default {
   name: 'Home',
   components: {
     BottomNaviagtor,
-    TopNaviagtor,
     MultipurposeHeader,
-    ItemCardListSwiper
+    CustomSwiper,
+    ItemCardList
+  },
+  computed: {
+    ...mapState({
+      stockItems: state => state.market.stockItems
+    }),
+    ...mapGetters('market', {
+      itemCollections: 'itemCollections'
+    })
+  },
+
+  data() {
+    return {
+      navigatorButtonNames: [text.INDICES, text.STOCK, text.CRYPTO_CURRENCY]
+    }
   }
 };
 </script>

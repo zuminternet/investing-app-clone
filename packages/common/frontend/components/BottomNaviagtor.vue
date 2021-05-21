@@ -1,10 +1,10 @@
 <template>
   <div class="bottom-navigator">
-    <naviagtor-button class="bottom-navigator-button" :buttonName="market"></naviagtor-button>
-    <naviagtor-button class="bottom-navigator-button" :buttonName="news"></naviagtor-button>
-    <naviagtor-button class="bottom-navigator-button" :buttonName="calendar"></naviagtor-button>
-    <naviagtor-button class="bottom-navigator-button" :buttonName="favorites"></naviagtor-button>
-    <naviagtor-button class="bottom-navigator-button" :buttonName="more"></naviagtor-button>
+    <naviagtor-button>{{market}}</naviagtor-button>
+    <naviagtor-button>{{news}}</naviagtor-button>
+    <naviagtor-button>{{calendar}}</naviagtor-button>
+    <naviagtor-button>{{favorites}}</naviagtor-button>
+    <naviagtor-button>{{more}}</naviagtor-button>
   </div>
 </template>
 
@@ -35,12 +35,4 @@ export default {
     display: flex;
     height: 50px;
   }
-
-  .bottom-navigator-button {
-    display: flex;
-    flex: 1;
-    align-items: center;
-    justify-content: center;
-  }
-
 </style>

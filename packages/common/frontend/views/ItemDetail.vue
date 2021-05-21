@@ -6,12 +6,6 @@
       <swiper-slide>
         <item-detail-overall-content :itemDetailInformations="itemDetailInformations" :excludingHeight="210"></item-detail-overall-content>
       </swiper-slide>
-      <swiper-slide>
-        <item-detail-overall-content :itemDetailInformations="itemDetailInformations" :excludingHeight="210"></item-detail-overall-content>
-      </swiper-slide>
-      <swiper-slide>
-        <item-detail-overall-content :itemDetailInformations="itemDetailInformations" :excludingHeight="210"></item-detail-overall-content>
-      </swiper-slide>
     </custom-swiper>
     <bottom-naviagtor></bottom-naviagtor>
   </div>
@@ -19,12 +13,10 @@
 
 <script>
 import { mapState } from 'vuex'
-import {SwiperSlide} from 'vue-awesome-swiper'
+import { SwiperSlide } from 'vue-awesome-swiper'
 import { text } from '../constants'
 
-
 import BottomNaviagtor from '../components/BottomNaviagtor.vue'
-import TopNaviagtor from '../components/TopNaviagtor.vue'
 import MultipurposeHeader from '../components/MultipurposeHeader.vue'
 import ItemDetailPriceBox from '../components/ItemDetailPriceBox.vue'
 import CustomSwiper from '../components/CustomSwiper.vue'
@@ -35,7 +27,6 @@ export default {
   name:"ItemDetail",
   components: {
     BottomNaviagtor,
-    TopNaviagtor,
     MultipurposeHeader,
     ItemDetailPriceBox,
     CustomSwiper,

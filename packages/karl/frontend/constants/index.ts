@@ -20,5 +20,7 @@ export const text = {
     STOCK_MARKET: '주식시장',
     ECONOMIC_INDICATOR: '경제지표',
     ECONOMIC_NEWS: '경제뉴스',
-    COVID_19: '코로나19'
+    COVID_19: '코로나19',
+    INDICES: '지수',
+    STOCK:'주식',
 }
