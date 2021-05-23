@@ -2,35 +2,95 @@ import { Service } from 'zum-portal-core/backend/decorator/Alias';
 import * as yahooFinance from 'yahoo-finance';
 import { investing } from 'investing-com-api';
 
+interface InvestingData {
+  date: number;
+  value: number;
+}
+
+interface InvestingApiResponse {
+  key: string;
+  result: InvestingData;
+}
+
+interface CandleChartData {
+  date: Date;
+  open: number;
+  high: number;
+  low: number;
+  close: number;
+  volume: number;
+  adjClose: number;
+  symbol: string;
+}
+
+enum Indices {
+  dowJones30 ='indices/us-30',
+  nasdaq100 = 'indices/nq-100',
+  snp500 = 'indices/us-spx-500',
+  dax = 'indices/germany-30',
+  ftse100 = 'indices/uk-100',
+  cac40 = 'indices/france-40',
+  nikkei225 = 'indices/japan-ni225',
+  ftseMib = 'indices/it-mib-40',
+};
+
+enum Cryptos {
+  btcUsd = 'crypto/bitcoin/btc-usd',
+  ethUsd = 'crypto/ethereum/eth-usd?c997650',
+  bchUsd = 'crypto/bitcoin-cash/bch-usd',
+  iotaUsd = 'crypto/iota/iota-usd',
+  ltcUsd = 'crypto/litecoin/ltc-usd?c1010798',
+};
+
+enum Stocks {
+  apple = 'equities/apple-computer-inc',
+  google = 'equities/google-inc',
+  tesla = 'equities/tesla-motors',
+}
+
 @Service()
 export default class MarketService {
   constructor() {}
 
-  public getIndices() {
-    /** historical */
-    // 기간동안의 캔들 데이터
-    // return yahooFinance.historical({
-    //   symbol: 'AAPL',
-    //   from: '2012-01-01',
-    //   to: '2012-12-31',
-    // });
-    /** quote */
-    // "price"
-    // 현재가격에 대한 자세한 정보
-    // 가격변동, 가격변동(퍼센트) ...
-    // return yahooFinance.quote({
-    //   symbol: 'TSLA',
-    //   modules: ['price'],
-    // });
-    // "summaryProfile"
-    // 회사정보(주소,위치,전화번호 등)
-    // "summaryDetail"
-    // 50일 평균, 200일 평균 등...
-
-    return investing('currencies/eur-usd');
+  private callInvesting([key, investingId]){ 
+    return new Promise<InvestingApiResponse>((resolve, reject) => {
+      investing(investingId)
+        .then((result) => resolve({ key, result }))
+        .catch(reject)
+    });
   }
 
-  public getCoins() {}
+  /** @TODO 캐싱 적용 */
+  // 지수 
+  public getIndices() {
+    return Promise.all(Object.entries(Indices).map(this.callInvesting));
+  }
 
-  public getStocks() {}
+  // 암호화폐
+  public getCoins() {
+    return Promise.all(Object.entries(Cryptos).map(this.callInvesting));
+  }
+
+  // 주식
+  public getStocks() {
+    return Promise.all(Object.entries(Stocks).map(this.callInvesting));
+  }
+
+  // 종목상세 : 52주 변동폭, 일일 변동폭, 거래량(volume), 시가총액(marketcap), 매수가(bid), 매도가(ask), 
+  public getSummaryDetail(symbol): Promise<{}> {
+    return yahooFinance.quote({
+      symbol,
+      modules: ['summaryDetail']
+    })
+  }
+
+  // 캔들차트 데이터
+  public getCandleChartData(symbol): Promise<CandleChartData[]> {
+    return yahooFinance.historical({
+      symbol,
+      from: '2012-01-01',
+      to: '2012-12-31',
+      // period: 'd'  // 'd' (daily), 'w' (weekly), 'm' (monthly), 'v' (dividends only)
+    });
+  }
 }
