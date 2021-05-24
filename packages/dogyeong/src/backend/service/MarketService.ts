@@ -7,12 +7,12 @@ interface InvestingData {
   value: number;
 }
 
-interface InvestingApiResponse {
+export interface InvestingApiResponse {
   key: string;
   result: InvestingData;
 }
 
-interface CandleChartData {
+export interface CandleChartData {
   date: Date;
   open: number;
   high: number;
@@ -23,8 +23,48 @@ interface CandleChartData {
   symbol: string;
 }
 
+export interface SummaryDetail {
+  summaryDetail: {
+    maxAge: number;
+    priceHint: number;
+    previousClose: number;
+    open: number;
+    dayLow: number;
+    dayHigh: number;
+    regularMarketPreviousClose: number;
+    regularMarketOpen: number;
+    regularMarketDayLow: number;
+    regularMarketDayHigh: number;
+    dividendRate: number;
+    dividendYield: number;
+    exDividendDate: Date;
+    payoutRatio: number;
+    fiveYearAvgDividendYield: number;
+    beta: number;
+    trailingPE: number;
+    forwardPE: number;
+    volume: number;
+    regularMarketVolume: number;
+    averageVolume: number;
+    averageVolume10days: number;
+    averageDailyVolume10Day: number;
+    bid: number;
+    ask: number;
+    bidSize: number;
+    askSize: number;
+    marketCap: number;
+    fiftyTwoWeekLow: number;
+    fiftyTwoWeekHigh: number;
+    priceToSalesTrailing12Months: number;
+    fiftyDayAverage: number;
+    twoHundredDayAverage: number;
+    trailingAnnualDividendRate: number;
+    trailingAnnualDividendYield: number;
+  };
+}
+
 enum Indices {
-  dowJones30 ='indices/us-30',
+  dowJones30 = 'indices/us-30',
   nasdaq100 = 'indices/nq-100',
   snp500 = 'indices/us-spx-500',
   dax = 'indices/germany-30',
@@ -32,7 +72,7 @@ enum Indices {
   cac40 = 'indices/france-40',
   nikkei225 = 'indices/japan-ni225',
   ftseMib = 'indices/it-mib-40',
-};
+}
 
 enum Cryptos {
   btcUsd = 'crypto/bitcoin/btc-usd',
@@ -40,7 +80,7 @@ enum Cryptos {
   bchUsd = 'crypto/bitcoin-cash/bch-usd',
   iotaUsd = 'crypto/iota/iota-usd',
   ltcUsd = 'crypto/litecoin/ltc-usd?c1010798',
-};
+}
 
 enum Stocks {
   apple = 'equities/apple-computer-inc',
@@ -50,18 +90,16 @@ enum Stocks {
 
 @Service()
 export default class MarketService {
-  constructor() {}
-
-  private callInvesting([key, investingId]){ 
+  private callInvesting([key, investingId]) {
     return new Promise<InvestingApiResponse>((resolve, reject) => {
       investing(investingId)
         .then((result) => resolve({ key, result }))
-        .catch(reject)
+        .catch(reject);
     });
   }
 
   /** @TODO 캐싱 적용 */
-  // 지수 
+  // 지수
   public getIndices() {
     return Promise.all(Object.entries(Indices).map(this.callInvesting));
   }
@@ -76,16 +114,16 @@ export default class MarketService {
     return Promise.all(Object.entries(Stocks).map(this.callInvesting));
   }
 
-  // 종목상세 : 52주 변동폭, 일일 변동폭, 거래량(volume), 시가총액(marketcap), 매수가(bid), 매도가(ask), 
-  public getSummaryDetail(symbol): Promise<{}> {
+  // 종목상세 : 52주 변동폭, 일일 변동폭, 거래량(volume), 시가총액(marketcap), 매수가(bid), 매도가(ask),
+  public getSummaryDetail(symbol: string): Promise<SummaryDetail> {
     return yahooFinance.quote({
       symbol,
-      modules: ['summaryDetail']
-    })
+      modules: ['summaryDetail'],
+    });
   }
 
   // 캔들차트 데이터
-  public getCandleChartData(symbol): Promise<CandleChartData[]> {
+  public getCandleChartData(symbol: string): Promise<CandleChartData[]> {
     return yahooFinance.historical({
       symbol,
       from: '2012-01-01',
