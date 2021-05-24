@@ -94,10 +94,8 @@ export class ApiController {
   public async getIndex(req: Request, res: Response) {
     this.marketService
       .getIndices()
-      .then((res) => {
-        console.log(res);
-      })
+      .then((res) => console.log(res))
       .catch(console.error)
-      .finally(res.end());
+      .finally(() => res.end());
   }
 }
