@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import { Market, Login, Search, Setting, Bookmark, News, Signup } from '@/views';
+import Market from '@/views/Market.vue';
 
 Vue.use(Router);
 
@@ -18,32 +18,32 @@ export default () => {
       {
         path: '/login',
         name: 'Login',
-        component: Login,
+        component: () => import('@/views/Login.vue'),
       },
       {
         path: '/search',
         name: 'Search',
-        component: Search,
+        component: () => import('@/views/Search.vue'),
       },
       {
         path: '/setting',
         name: 'Setting',
-        component: Setting,
+        component: () => import('@/views/Setting.vue'),
       },
       {
         path: '/news',
         name: 'News',
-        component: News,
+        component: () => import('@/views/News.vue'),
       },
       {
         path: '/bookmark',
         name: 'Bookmark',
-        component: Bookmark,
+        component: () => import('@/views/Bookmark.vue'),
       },
       {
         path: '/signup',
         name: 'Signup',
-        component: Signup,
+        component: () => import('@/views/Signup.vue'),
       },
     ],
   });
