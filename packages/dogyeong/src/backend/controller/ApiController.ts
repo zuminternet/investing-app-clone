@@ -4,6 +4,7 @@ import { Inject } from 'zum-portal-core/backend/decorator/Alias';
 import AuthService from '../service/AuthService';
 import UserService, { GoogleUserInfo, UserInfo } from '../service/UserService';
 import TokenService from '../service/TokenService';
+import MarketService from '../service/MarketService';
 
 const ACCESS_TOKEN_COOKIE_KEY = '_inv_access_token_';
 const GOOGLE_GRANT_CODE_HEADER = 'inv_google_auth';
@@ -18,6 +19,7 @@ export class ApiController {
     @Inject(AuthService) private authService: AuthService,
     @Inject(UserService) private userService: UserService,
     @Inject(TokenService) private tokenService: TokenService,
+    @Inject(MarketService) private marketService: MarketService,
   ) {}
 
   @PostMapping({ path: ['/user'] })
@@ -86,5 +88,16 @@ export class ApiController {
   public logout(req: Request, res: Response) {
     res.clearCookie(ACCESS_TOKEN_COOKIE_KEY);
     res.end();
+  }
+
+  @GetMapping({ path: ['/index'] })
+  public async getIndex(req: Request, res: Response) {
+    this.marketService
+      .getIndices()
+      .then((res) => {
+        console.log(res);
+      })
+      .catch(console.error)
+      .finally(res.end());
   }
 }
