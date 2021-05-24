@@ -4,6 +4,11 @@ export const apiEndpoints = {
   googleLogin: '/api/auth/google',
   fetchUser: '/api/user',
   logout: '/api/logout',
+  getIndices: '/api/indices',
+  getCoins: '/api/coins',
+  getStocks: '/api/stocks',
+  getSummary: '/api/summary',
+  getChart: '/api/chart',
 };
 
 export const googleAuthInitConfig = {
