@@ -1,16 +1,10 @@
 import 'reflect-metadata';
 import { appContainer } from 'common/backend/AppContainer';
 import * as mongoose from 'mongoose';
+import { mongoConfig } from './config';
 
 mongoose
-  .connect('mongodb://127.0.0.1:27017/investing', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useFindAndModify: false,
-    user: 'zum',
-    pass: 'zumdev',
-    authSource: 'admin',
-  })
+  .connect(mongoConfig.uri, mongoConfig.options)
   .then(() => {
     console.log('Connected to MongoDB');
     appContainer.listen();
