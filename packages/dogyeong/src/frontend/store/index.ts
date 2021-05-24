@@ -1,12 +1,9 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import Axios from 'axios';
+import { apiEndpoints, googleAuthOptions } from '@/config';
 
 Vue.use(Vuex);
-
-const GOOGLE_AUTH_OPTIONS = {
-  prompt: 'select_account',
-};
 
 export default () => {
   return new Vuex.Store({
@@ -33,7 +30,7 @@ export default () => {
         try {
           const {
             data: { user },
-          } = await Axios.post('/api/auth', { email, password });
+          } = await Axios.post(apiEndpoints.login, { email, password });
           console.log(user);
           commit('setUser', user.name);
         } catch (e) {
@@ -43,11 +40,11 @@ export default () => {
       async googleLogin({ commit }) {
         try {
           const gapi = (window as any).gapi;
-          const { code } = await gapi.auth2.getAuthInstance().grantOfflineAccess(GOOGLE_AUTH_OPTIONS);
+          const { code } = await gapi.auth2.getAuthInstance().grantOfflineAccess(googleAuthOptions);
 
           const {
             data: { user },
-          } = await Axios.get('/api/auth/google', { headers: { inv_google_auth: code } });
+          } = await Axios.get(apiEndpoints.googleLogin, { headers: { inv_google_auth: code } });
           console.log(user);
           commit('setUser', user.name);
         } catch (e) {
@@ -58,7 +55,7 @@ export default () => {
         try {
           const {
             data: { user },
-          } = await Axios.get('/api/user');
+          } = await Axios.get(apiEndpoints.fetchUser);
 
           commit('setUser', user.name);
         } catch (e) {
@@ -67,7 +64,7 @@ export default () => {
       },
       async logout({ commit }) {
         try {
-          await Axios.get('/api/logout');
+          await Axios.get(apiEndpoints.logout);
           commit('setUser', null);
         } catch (e) {
           console.error(e);

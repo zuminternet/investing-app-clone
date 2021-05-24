@@ -16,9 +16,13 @@ import Vue from 'vue';
 import Axios from 'axios';
 import HeaderBar from '@/components/HeaderBar/HeaderBar.vue';
 import BottomNav from '@/components/BottomNav/BottomNav.vue';
+import { apiEndpoints } from '@/config';
 
 export default Vue.extend({
-  components: { HeaderBar, BottomNav },
+  components: {
+    HeaderBar,
+    BottomNav,
+  },
 
   data() {
     return {
@@ -30,11 +34,13 @@ export default Vue.extend({
 
   methods: {
     onClickSignupBtn() {
-      Axios.post('/api/user', {
+      Axios.post(apiEndpoints.signup, {
         name: this.name,
         email: this.email,
         password: this.password,
-      }).then(() => this.$router.replace('/login'));
+      })
+        .then(() => this.$router.replace('/login'))
+        .catch(console.error);
     },
   },
 });
