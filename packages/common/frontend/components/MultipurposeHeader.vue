@@ -14,7 +14,7 @@
             <custom-text>{{ itemCategory }}</custom-text>
           </div>
         </div>
-        <div class="empty-space"></div>
+        <empty-space></empty-space>
         <div class="header-button-box">
           <button class="header-button"></button>
           <button class="header-button"></button>
@@ -28,7 +28,7 @@
         <div class="header-title-box">
           <p>{{ title }}</p>
         </div>
-        <div class="empty-space"></div>
+        <empty-space></empty-space>
         <div class="header-button-box">
           <button class="header-button"></button>
         </div>
@@ -39,11 +39,13 @@
 
 <script>
 import CustomText from '../components/CustomText.vue';
+import EmptySpace from '../components/karl/EmptySpace.vue';
 
 export default {
   name: 'MultipurposeHeader',
   components: {
     CustomText,
+    EmptySpace,
   },
   props: ['itemDetailInformations'],
 
@@ -71,14 +73,9 @@ export default {
   flex-direction: column;
 }
 
-.empty-space {
-  flex: 1;
-}
-
 .header-button-box {
   display: flex;
   align-items: center;
-  /* justify-content: space-between; */
 }
 
 .header-button {

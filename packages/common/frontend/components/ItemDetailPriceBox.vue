@@ -3,15 +3,15 @@
     <div class="up-and-down-icon"></div>
     <div>
       <div>
-        <custom-text>{{ this.itemDetailInformations.itemPrice }}</custom-text>
-        <custom-text>{{ this.itemDetailInformations.fluctuationPrice }}</custom-text>
+        <custom-text>{{ itemPrice }}</custom-text>
+        <custom-text>{{ fluctuationPrice }}</custom-text>
       </div>
       <div>
-        <custom-text>{{ this.itemDetailInformations.itemTime }}</custom-text>
-        <custom-text>{{ this.itemDetailInformations.itemCurrency }}</custom-text>
+        <custom-text>{{ itemTime }}</custom-text>
+        <custom-text>{{ itemCurrency }}</custom-text>
       </div>
     </div>
-    <div class="empty-space"></div>
+    <empty-space></empty-space>
     <div>
       <button class="share-button"></button>
     </div>
@@ -20,13 +20,26 @@
 
 <script>
 import CustomText from '../components/CustomText.vue';
+import EmptySpace from '../components/karl/EmptySpace.vue';
 
 export default {
   name: 'ItemDetailPriceBox',
   components: {
     CustomText,
+    EmptySpace,
   },
   props: ['itemDetailInformations'],
+
+  data() {
+    const { itemPrice, fluctuationPrice, itemTime, itemCurrency } = this.itemDetailInformations;
+
+    return {
+      itemPrice,
+      fluctuationPrice,
+      itemTime,
+      itemCurrency,
+    };
+  },
 };
 </script>
 
@@ -43,10 +56,6 @@ export default {
   height: 30px;
   background-color: green;
   margin-right: 10px;
-}
-
-.empty-space {
-  flex: 1;
 }
 
 .share-button {
