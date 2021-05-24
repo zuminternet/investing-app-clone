@@ -1,14 +1,14 @@
 <template>
   <button class="text-button" @click="$emit('handle-button-click')">
-    {{message}}
+    <slot></slot>
   </button>
 </template>
 
 <script>
 export default {
-  name: "TextButton",
-  props: ['message']
-}
+  name: 'TextButton',
+  props: [],
+};
 </script>
 
 <style scoped lang="scss">

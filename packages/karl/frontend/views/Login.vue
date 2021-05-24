@@ -1,17 +1,17 @@
 <template>
-  <div id="login-page">
+  <div class="login-page">
     <div class="swiper-box">
       <login-swiper></login-swiper>
     </div>
     <div class="oauth-buttons-box">
-      <o-auth-button :message="facebookLogin"></o-auth-button>
-      <o-auth-button :message="googleLogin"></o-auth-button>
-      <text-button :message="emailLogin"></text-button>
+      <o-auth-button>{{ facebookLogin }}</o-auth-button>
+      <o-auth-button>{{ googleLogin }}</o-auth-button>
+      <text-button>{{ emailLogin }}</text-button>
       <div class="normal-login-box">
         <custom-text>{{ alreadyRegister }}</custom-text>
-        <text-button :message="signIn"></text-button>
+        <text-button @handle-button-click="routeToSignup">{{ signIn }}</text-button>
       </div>
-      <text-button :message="passWithoutLogin" @handle-button-click="routeToHome"></text-button>
+      <text-button @handle-button-click="routeToHome">{{ passWithoutLogin }}</text-button>
     </div>
   </div>
 </template>
@@ -34,13 +34,14 @@ export default {
   },
 
   data: function() {
+    const { FACEBOOK_LOGIN, GOOGLE_LOGIN, EMAIL_LOGIN, ALREADY_REGISTER, SIGN_IN, PASS_WITHOUT_LOGIN } = text;
     return {
-      facebookLogin: text.FACEBOOK_LOGIN,
-      googleLogin: text.GOOGLE_LOGIN,
-      emailLogin: text.EMAIL_LOGIN,
-      alreadyRegister: text.ALREADY_REGISTER,
-      signIn: text.SIGN_IN,
-      passWithoutLogin: text.PASS_WITHOUT_LOGIN,
+      facebookLogin: FACEBOOK_LOGIN,
+      googleLogin: GOOGLE_LOGIN,
+      emailLogin: EMAIL_LOGIN,
+      alreadyRegister: ALREADY_REGISTER,
+      signIn: SIGN_IN,
+      passWithoutLogin: PASS_WITHOUT_LOGIN,
     };
   },
 
@@ -48,12 +49,16 @@ export default {
     routeToHome() {
       this.$router.push('/home');
     },
+
+    routeToSignup() {
+      this.$router.push('/signup');
+    },
   },
 };
 </script>
 
 <style scoped lang="scss">
-#login-page {
+.login-page {
   display: flex;
   flex: 1;
   flex-direction: column;
