@@ -132,8 +132,8 @@ export default class MarketService {
 
     return yahooFinance.historical({
       symbol,
-      from: this.getDateString(currentTimeStamp),
-      to: this.getDateString(lastYearTimeStamp),
+      from: this.getDateString(lastYearTimeStamp),
+      to: this.getDateString(currentTimeStamp),
     });
   }
 }
