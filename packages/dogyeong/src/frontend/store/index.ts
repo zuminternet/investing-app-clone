@@ -39,13 +39,12 @@ export default () => {
       },
       async googleLogin({ commit }) {
         try {
-          const gapi = (window as any).gapi;
+          const gapi = window.gapi;
           const { code } = await gapi.auth2.getAuthInstance().grantOfflineAccess(googleAuthOptions);
-
           const {
             data: { user },
           } = await Axios.get(apiEndpoints.googleLogin, { headers: { inv_google_auth: code } });
-          console.log(user);
+
           commit('setUser', user.name);
         } catch (e) {
           console.error(e);
