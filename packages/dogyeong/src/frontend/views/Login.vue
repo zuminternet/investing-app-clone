@@ -2,40 +2,37 @@
   <div class="login-wrapper">
     <HeaderBar>로그인</HeaderBar>
     <div class="form-wrapper">
-      <router-link to="/">to home</router-link><br />
-      <button @click="onClickLoginBtn">Google</button>
+      <form>
+        <input v-model="email" type="email" />
+        <input v-model="password" type="password" />
+        <button type="submit" @click.prevent="login({ email, password })">login</button>
+      </form>
+      <RouterLink to="/">to home</RouterLink><br />
+      <button @click="googleLogin">Google</button>
+      <RouterLink to="/signup">sign up</RouterLink>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import HeaderBar from '@/components/HeaderBar/HeaderBar';
-import Axios from 'axios';
-
-const GOOGLE_AUTH_OPTIONS = {
-  prompt: 'select_account',
-};
+import { mapActions } from 'vuex';
+import HeaderBar from '@/components/HeaderBar/HeaderBar.vue';
 
 export default Vue.extend({
   name: 'Login',
+
   components: { HeaderBar },
+
+  data() {
+    return {
+      email: '',
+      password: '',
+    };
+  },
+
   methods: {
-    async onClickLoginBtn() {
-      const gapi = window.gapi;
-
-      try {
-        const { code } = await gapi.auth2.getAuthInstance().grantOfflineAccess(GOOGLE_AUTH_OPTIONS);
-
-        const { data } = await Axios.get('/api/auth/google', {
-          headers: { INV_GOOGLE_AUTH: code },
-        });
-
-        console.log(data);
-      } catch (e) {
-        console.error(e);
-      }
-    },
+    ...mapActions(['login', 'googleLogin']),
   },
 });
 </script>

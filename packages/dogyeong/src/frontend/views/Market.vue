@@ -39,12 +39,12 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import HeaderBar from '@/components/HeaderBar/HeaderBar';
-import BottomNav from '@/components/BottomNav/BottomNav';
-import MarketExchange from '@/components/Market/MarketExchange';
-import MarketCurrency from '@/components/Market/MarketCurrency';
-import MarketStock from '@/components/Market/MarketStock';
-import HeaderNav from '@/components/HeaderNav/HeaderNav';
+import HeaderBar from '@/components/HeaderBar/HeaderBar.vue';
+import BottomNav from '@/components/BottomNav/BottomNav.vue';
+import MarketExchange from '@/components/Market/MarketExchange.vue';
+import MarketCurrency from '@/components/Market/MarketCurrency.vue';
+import MarketStock from '@/components/Market/MarketStock.vue';
+import HeaderNav from '@/components/HeaderNav/HeaderNav.vue';
 import Swiper from 'swiper';
 
 export default Vue.extend({
@@ -77,7 +77,6 @@ export default Vue.extend({
       autoHeight: true,
       touchAngle: 20,
       threshold: 14,
-      iOSEdgeSwipeThreshold: 30,
       speed: 150,
       grabCursor: true,
     });

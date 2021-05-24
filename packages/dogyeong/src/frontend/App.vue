@@ -1,7 +1,7 @@
 <template>
   <div id="app" :class="{ dark: $store.state.isDarkTheme }">
     <div class="wrapper">
-      <router-view></router-view>
+      <RouterView></RouterView>
     </div>
   </div>
 </template>
@@ -15,18 +15,22 @@
  **********************************************************
  */
 import Vue from 'vue';
-
-const GOOGLE_AUTH_PARAMS = {
-  client_id: '266193407466-7qvkgbj34vr3k5dbf0o31gnsii3b78s4.apps.googleusercontent.com',
-  scope: 'https://www.googleapis.com/auth/userinfo.profile',
-  access_type: 'code',
-};
+import { googleAuthInitConfig } from '@/config';
 
 export default Vue.extend({
   name: 'App',
+
   mounted() {
-    const gapi = window.gapi;
-    gapi.load('auth2', () => gapi.auth2.init(GOOGLE_AUTH_PARAMS));
+    this.initGoogleApi();
+    this.$store.dispatch('fetchCurrentUser');
+  },
+
+  methods: {
+    initGoogleApi() {
+      const { lib, args } = googleAuthInitConfig;
+      const gapi = (window as any).gapi;
+      gapi.load(lib, () => gapi.auth2.init(args));
+    },
   },
 });
 </script>
