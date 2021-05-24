@@ -1,8 +1,6 @@
 module.exports = {
   root: true,
-  env: {
-    node: true,
-  },
+  env: { node: true },
   extends: ['eslint:recommended', 'plugin:vue/recommended', '@vue/typescript', 'prettier'],
   parser: 'vue-eslint-parser',
   parserOptions: {
@@ -13,5 +11,14 @@ module.exports = {
   rules: {
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+    'object-curly-newline': [
+      'error',
+      {
+        ObjectExpression: { multiline: true, minProperties: 3 },
+        ObjectPattern: { multiline: true, minProperties: 3 },
+        ImportDeclaration: 'never',
+        ExportDeclaration: 'never',
+      },
+    ],
   },
 };
