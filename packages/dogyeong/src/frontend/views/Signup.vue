@@ -13,10 +13,9 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import Axios from 'axios';
 import HeaderBar from '@/components/HeaderBar/HeaderBar.vue';
 import BottomNav from '@/components/BottomNav/BottomNav.vue';
-import { apiEndpoints } from '@/config';
+import * as authService from '@/services/authService';
 
 export default Vue.extend({
   components: {
@@ -34,11 +33,12 @@ export default Vue.extend({
 
   methods: {
     onClickSignupBtn() {
-      Axios.post(apiEndpoints.signup, {
-        name: this.name,
-        email: this.email,
-        password: this.password,
-      })
+      authService
+        .signup({
+          name: this.name,
+          email: this.email,
+          password: this.password,
+        })
         .then(() => this.$router.replace('/login'))
         .catch(console.error);
     },

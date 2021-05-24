@@ -16,3 +16,5 @@ export const googleAuthInitConfig = {
 };
 
 export const googleAuthOptions = { prompt: 'select_account' };
+
+export const googleAuthHeader = 'inv_google_auth';
