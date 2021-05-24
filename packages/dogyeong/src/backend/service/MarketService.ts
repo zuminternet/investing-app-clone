@@ -23,6 +23,7 @@ export interface CandleChartData {
   symbol: string;
 }
 
+// 종목상세 : 52주 변동폭, 일일 변동폭, 거래량(volume), 시가총액(marketcap), 매수가(bid), 매도가(ask),
 export interface SummaryDetail {
   summaryDetail: {
     maxAge: number;
@@ -90,6 +91,14 @@ enum Stocks {
 
 @Service()
 export default class MarketService {
+  private getDateString(timeStamp: number) {
+    const date = new Date(timeStamp);
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    return `${year}-${month}-${day}`;
+  }
+
   private callInvesting([key, investingId]) {
     return new Promise<InvestingApiResponse>((resolve, reject) => {
       investing(investingId)
@@ -98,23 +107,18 @@ export default class MarketService {
     });
   }
 
-  /** @TODO 캐싱 적용 */
-  // 지수
   public getIndices() {
     return Promise.all(Object.entries(Indices).map(this.callInvesting));
   }
 
-  // 암호화폐
   public getCoins() {
     return Promise.all(Object.entries(Cryptos).map(this.callInvesting));
   }
 
-  // 주식
   public getStocks() {
     return Promise.all(Object.entries(Stocks).map(this.callInvesting));
   }
 
-  // 종목상세 : 52주 변동폭, 일일 변동폭, 거래량(volume), 시가총액(marketcap), 매수가(bid), 매도가(ask),
   public getSummaryDetail(symbol: string): Promise<SummaryDetail> {
     return yahooFinance.quote({
       symbol,
@@ -122,13 +126,14 @@ export default class MarketService {
     });
   }
 
-  // 캔들차트 데이터
   public getCandleChartData(symbol: string): Promise<CandleChartData[]> {
+    const currentTimeStamp = Date.now();
+    const lastYearTimeStamp = currentTimeStamp - 1000 * 3600 * 24 * 365;
+
     return yahooFinance.historical({
       symbol,
-      from: '2012-01-01',
-      to: '2012-12-31',
-      // period: 'd'  // 'd' (daily), 'w' (weekly), 'm' (monthly), 'v' (dividends only)
+      from: this.getDateString(currentTimeStamp),
+      to: this.getDateString(lastYearTimeStamp),
     });
   }
 }
