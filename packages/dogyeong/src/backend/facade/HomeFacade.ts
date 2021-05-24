@@ -27,7 +27,7 @@ export class HomeFacade {
   }
 
   public async renderHtml(): Promise<void> {
-    for (let path of SSR_PATHS) {
+    for (const path of SSR_PATHS) {
       this.ssrHtml[path] = this.ssrHtml[path] || {};
 
       try {

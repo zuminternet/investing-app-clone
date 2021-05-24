@@ -15,4 +15,4 @@ export const googleAuthInitConfig = {
   },
 };
 
-export const googleAuthOptions = {prompt: 'select_account',};
+export const googleAuthOptions = { prompt: 'select_account' };
