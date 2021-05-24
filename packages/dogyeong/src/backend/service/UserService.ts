@@ -18,8 +18,6 @@ export interface UserInfo {
 
 @Service()
 export default class UserService {
-  constructor() {}
-
   public async getUserByEmailAndPassword({ email, password }) {
     const user = await User.findOne({ email, password }).lean<UserInfo>();
     return user;

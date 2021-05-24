@@ -19,11 +19,13 @@
     "@vue/cli-plugin-typescript": "^4.5.13",
     "common": "1.0.0",
     "cross-env": "^7.0.3",
+    "investing-com-api": "https://github.com/dogyeong/investing-com-api",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.12.10",
     "swiper": "^6.6.1",
     "typescript": "^4.2.4",
     "vue": "^2.6.12",
+    "yahoo-finance": "https://github.com/dogyeong/node-yahoo-finance",
     "zum-portal-core": "1.1.1"
   },
   "devDependencies": {
