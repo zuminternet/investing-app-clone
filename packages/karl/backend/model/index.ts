@@ -8,6 +8,4 @@ const userSchema = new Schema({
 
 const User = model('User', userSchema)
 
-
-
-export { User}
+export { User }
