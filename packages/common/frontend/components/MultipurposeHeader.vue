@@ -7,11 +7,11 @@
         </div>
         <div>
           <div>
-            <custom-text>{{ itemDetailInformations.itemName }}</custom-text>
+            <custom-text>{{ itemName }}</custom-text>
           </div>
 
           <div>
-            <custom-text>{{ itemDetailInformations.itemCategory }}</custom-text>
+            <custom-text>{{ itemCategory }}</custom-text>
           </div>
         </div>
         <div class="empty-space"></div>
@@ -46,8 +46,13 @@ export default {
     CustomText,
   },
   props: ['itemDetailInformations'],
-  data: function() {
+
+  data() {
+    const { itemName, itemCategory } = this.itemDetailInformations ? this.itemDetailInformations : {};
+
     return {
+      itemName,
+      itemCategory,
       title: 'investing.com',
       marketName: '홍콩',
     };

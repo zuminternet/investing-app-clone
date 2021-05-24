@@ -16,9 +16,10 @@ export default {
   },
   props: ['information'],
   data() {
+    const [rowName, rowValue] = this.information;
     return {
-      rowName: this.information[0],
-      rowValue: this.information[1],
+      rowName,
+      rowValue,
     };
   },
 };
