@@ -7,7 +7,7 @@
 <script>
 export default {
   name: 'CustomText',
-  props: ['message', 'fontSize'],
+  props: ['fontSize'],
 };
 </script>
 

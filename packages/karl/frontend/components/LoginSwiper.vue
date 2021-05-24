@@ -43,14 +43,15 @@ export default {
   },
 
   data: function() {
+    const { REAL_TIME_PRICE, REAL_TIME_PRICE_DETAIL } = text;
     return {
       swiperOptions: {
         pagination: {
           el: '.swiper-pagination',
         },
       },
-      realTimePrice: text.REAL_TIME_PRICE,
-      realTimePriceDetail: text.REAL_TIME_PRICE_DETAIL,
+      realTimePrice: REAL_TIME_PRICE,
+      realTimePriceDetail: REAL_TIME_PRICE_DETAIL,
     };
   },
 };

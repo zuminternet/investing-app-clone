@@ -2,7 +2,7 @@
   <div id="item-detail-page">
     <multipurpose-header :itemDetailInformations="itemDetailInformations"></multipurpose-header>
     <item-detail-price-box :itemDetailInformations="itemDetailInformations"></item-detail-price-box>
-    <custom-swiper :navigatorButtonNames="navigatorButtonNames">
+    <custom-swiper :navigatorButtonNames="swiperNavigatorButtonNames">
       <swiper-slide>
         <item-detail-overall-content
           :itemDetailInformations="itemDetailInformations"
@@ -34,7 +34,7 @@
         ></item-detail-overall-content>
       </swiper-slide>
     </custom-swiper>
-    <bottom-naviagtor :navigatorButtonNames="navigatorButtonNames"></bottom-naviagtor>
+    <bottom-naviagtor :navigatorButtonNames="bottomNavigatorButtonNames"></bottom-naviagtor>
   </div>
 </template>
 
@@ -61,8 +61,10 @@ export default {
   },
 
   data() {
+    const { OVERLALL, NEWS, ANALYSIS, OPINION, CHART, MARKET, CALENDAR, FAVORITES, MORE } = text;
     return {
-      navigatorButtonNames: [text.OVERLALL, text.NEWS, text.ANALYSIS, text.OPINION, text.CHART],
+      swiperNavigatorButtonNames: [OVERLALL, NEWS, ANALYSIS, OPINION, CHART],
+      bottomNavigatorButtonNames: [MARKET, NEWS, CALENDAR, FAVORITES, MORE],
     };
   },
 

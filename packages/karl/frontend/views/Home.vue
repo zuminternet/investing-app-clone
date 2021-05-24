@@ -15,7 +15,7 @@ import { SwiperSlide } from 'vue-awesome-swiper';
 import { mapState, mapGetters } from 'vuex';
 
 import BottomNaviagtor from '../../../common/frontend/components/BottomNaviagtor.vue';
-import MultipurposeHeader from '../components/MultipurposeHeader.vue';
+import MultipurposeHeader from '../../../common/frontend/components/MultipurposeHeader.vue';
 import ItemCardList from '../components/ItemCardList.vue';
 import CustomSwiper from '../../../common/frontend/components/CustomSwiper.vue';
 
