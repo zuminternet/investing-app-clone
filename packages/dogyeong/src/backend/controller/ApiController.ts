@@ -20,6 +20,17 @@ export class ApiController {
     @Inject(TokenService) private tokenService: TokenService,
   ) {}
 
+  @PostMapping({ path: ['/user'] })
+  public async createUser(req: Request, res: Response) {
+    try {
+      await this.userService.createUser(req.body);
+
+      res.sendStatus(200);
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  }
+
   @GetMapping({ path: ['/auth/google'] })
   public async loginGoogleUser(req: Request, res: Response) {
     try {
@@ -37,17 +48,6 @@ export class ApiController {
 
       res.cookie(ACCESS_TOKEN_COOKIE_KEY, token, tokenCookieOption);
       res.json({ user: { name: user.name } });
-    } catch (err) {
-      res.status(500).json(err);
-    }
-  }
-
-  @PostMapping({ path: ['/user'] })
-  public async createUser(req: Request, res: Response) {
-    try {
-      await this.userService.createUser(req.body);
-
-      res.sendStatus(200);
     } catch (err) {
       res.status(500).json(err);
     }
@@ -77,7 +77,14 @@ export class ApiController {
 
       res.json({ user: { name } });
     } catch (err) {
-      res.status(500).json(err);
+      res.clearCookie(ACCESS_TOKEN_COOKIE_KEY);
+      res.status(403).json('invalid token');
     }
+  }
+
+  @GetMapping({ path: ['/logout'] })
+  public logout(req: Request, res: Response) {
+    res.clearCookie(ACCESS_TOKEN_COOKIE_KEY);
+    res.end();
   }
 }
