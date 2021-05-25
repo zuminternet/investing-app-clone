@@ -11,7 +11,7 @@ import User from '../../db/models/User';
 import { CheckUserProps, CreateUserProps } from '../../db/types';
 import { Repository } from 'typeorm';
 
-export default class MySQL extends Repository<User> {
+class MySQL extends Repository<User> {
   /**
    * checkDuplicated; email 중복 체크
    * @param email
@@ -112,3 +112,5 @@ export default class MySQL extends Repository<User> {
     }
   }
 }
+
+// export default new MySQL();

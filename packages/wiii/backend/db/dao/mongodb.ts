@@ -10,7 +10,7 @@ import User from '../../db/models/User';
 import { CreateReplyProps } from '../../db/types';
 import { getRepository, MongoRepository, ObjectID, UpdateResult } from 'typeorm';
 
-export default class MongoDB extends MongoRepository<Reply> {
+class MongoDB extends MongoRepository<Reply> {
   /**
    * createReply
    * @description
@@ -85,3 +85,5 @@ export default class MongoDB extends MongoRepository<Reply> {
     }
   }
 }
+
+// export default new MongoDB();

@@ -13,12 +13,14 @@
 import { RedisConnOptions, secretKey } from '../../config/db';
 import connector from 'connect-redis';
 import session from 'express-session';
-import redis from 'redis';
+// import redis from 'redis';
 
-const redisClient = redis.createClient();
-const redisStore = connector(session);
+// const redisClient = redis.createClient();
+// const redisStore = connector(session);
 
-const { host, port } = RedisConnOptions;
-const store = new redisStore({ host, port, client: redisClient });
+// const { host, port } = RedisConnOptions;
+// const store = new redisStore({ host, port, client: redisClient });
 
-export const sessionConfigs = { secret: secretKey, store, saveUninitialized: false, resave: false };
+// const sessionConfigs = { secret: secretKey, store, saveUninitialized: false, resave: false };
+
+// export {}

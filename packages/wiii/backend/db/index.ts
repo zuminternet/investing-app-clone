@@ -6,14 +6,15 @@
 
 import { MongoDBConnOptions, MySQLConnOptions } from '../config/db';
 import { Connection, createConnections } from 'typeorm';
-import MongoDBDao from './dao/mongodb';
-import MySQLDao from './dao/mysql';
+// import MongoDBDao from './dao/mongodb';
+// import MySQLDao from './dao/mysql';
+// import { getConnections } from './index';
 
-export const getConnections = async (): Promise<Connection[]> => {
+const getConnections = async (): Promise<Connection[]> => {
   try {
     const conn = await createConnections([MySQLConnOptions, MongoDBConnOptions]);
-    new MySQLDao();
-    new MongoDBDao();
+    // new MySQLDao();
+    // new MongoDBDao();
     return conn;
   } catch (e) {
     console.error(e);
@@ -21,6 +22,11 @@ export const getConnections = async (): Promise<Connection[]> => {
   }
 };
 
-export const getRedisConnection = () => {
+const getRedisConnection = () => {
   //
 };
+
+// export {
+// getConnections,
+// getRedisConnection
+// }
