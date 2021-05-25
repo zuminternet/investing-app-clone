@@ -1,18 +1,4 @@
 {
-  "compilerOptions": {
-    "sourceMap": true,
-    "target": "es5",
-    "module": "es2015",
-    "outDir": "./dist",
-    "baseUrl": "./",
-    "types": ["reflect-metadata", "node"],
-    "moduleResolution": "node",
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "allowJs": true,
-    "paths": {
-      "@/*": ["./frontend/*"]
-    }
-  },
-  "exclude": ["**/backend/**", "**/node_modules/**"]
+  "extends": "./tsconfig.json",
+  "exclude": ["**/backend/**", "node_modules/**"]
 }
