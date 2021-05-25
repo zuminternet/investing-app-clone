@@ -32,3 +32,5 @@ packages/wiii/frontend/config/index.ts
 
 # MacOS
 .DS_Store
+
+yarn.lock
