@@ -28,7 +28,7 @@
             <MarketStock></MarketStock>
           </div>
           <div class="swiper-slide">
-            <MarketCurrency></MarketCurrency>
+            <MarketCoin></MarketCoin>
           </div>
         </div>
       </div>
@@ -44,7 +44,7 @@ import { Header, HeaderTitle, HeaderNav } from '@/components/Header';
 import Layout from '@/components/Layout/Layout.vue';
 import BottomNav from '@/components/BottomNav/BottomNav.vue';
 import MarketIndex from '@/components/Market/MarketIndex.vue';
-import MarketCurrency from '@/components/Market/MarketCurrency.vue';
+import MarketCoin from '@/components/Market/MarketCoin.vue';
 import MarketStock from '@/components/Market/MarketStock.vue';
 import Swiper from 'swiper';
 
@@ -57,7 +57,7 @@ export default Vue.extend({
     BottomNav,
     Layout,
     MarketIndex,
-    MarketCurrency,
+    MarketCoin,
     MarketStock,
     HeaderNav,
   },
@@ -91,7 +91,7 @@ export default Vue.extend({
   },
 
   methods: {
-    ...mapActions(['getIndices']),
+    ...mapActions(['getIndices', 'getCoins', 'getStocks']),
 
     onClickHeaderNav(id) {
       const index = this.navRoutes.findIndex((route) => route.id === id) + 1;
