@@ -13,10 +13,11 @@
  * @description
  * Chart wrapper
  */
-import Vue from 'vue';
 import polygon from '@/services/chart/polygon';
-import { TimespanEnum, GetMultiDaysStockProps } from '@/type/apis';
+import { GetMultiDaysStockProps, TimespanEnum } from '@/type/apis';
+import { drawBasicCandleChart } from '@/utils/chart/candle';
 import { getDateString } from '@/utils/date';
+import Vue from 'vue';
 
 export default Vue.extend({
   /**
@@ -30,7 +31,7 @@ export default Vue.extend({
     },
     ticker: {
       type: String,
-      default: 'AAPL',
+      default: 'SPCE',
     },
     multiplier: {
       type: Number,
@@ -48,7 +49,7 @@ export default Vue.extend({
        * @todo
        * 좀더 빠르게 일자 계산할 수 있는 방법?
        */
-      default: getDateString(Date.now() - 200 * 60 * 60 * 24 * 1000),
+      default: getDateString(Date.now() - 400 * 3600 * 24 * 1000),
     },
     to: {
       type: [String, Number, Date],
@@ -56,14 +57,15 @@ export default Vue.extend({
     },
     query: {
       type: Object,
+
       default: () =>
         Object.freeze({
           /**
            * @description
            * 가장 최근 시세부터 호출하기 위해 sort-desc
            */
-          sort: 'desc',
-          limit: 120,
+          sort: 'asc',
+          limit: 300,
         }),
     },
   },
@@ -86,25 +88,60 @@ export default Vue.extend({
    * make chart
    */
   mounted() {
-    // const { ticker, multiplier, timespan, from, to, query } = this;
-    // const config = {
-    //   ticker,
-    //   multiplier,
-    //   timespan,
-    //   from,
-    //   to,
-    //   query,
-    // } as GetMultiDaysStockProps;
-
-    // this.stocksPromise = polygon.getMultiDaysStockData(config);
-    // const { results, resultsCount } = this.stocksPromise;
-    // this.candles = results;
-    // this.candlesCount = resultsCount;
-    // this.onReady = true;
+    /**
+     * @todo
+     * - Canvas 자체를 상하반전 시킬 수 있는 방법,,
+     */
     const chart = this.$refs.canvas;
     const ctx = chart.getContext('2d') as CanvasRenderingContext2D;
-    ctx.fillStyle = 'red';
-    ctx.fillRect(10, 10, 100, 100);
+
+    const { ticker, multiplier, timespan, from, to, query } = this;
+    const config = {
+      ticker,
+      multiplier,
+      timespan,
+      from,
+      to,
+      query,
+    } as GetMultiDaysStockProps;
+
+    /**
+     * 동일 요청에 대한 caching
+     * - 1분 단위
+     */
+    const limit = query.limit;
+    const storageKey = `${ticker}-${multiplier}${timespan}-${limit}-${new Date(Date.now()).getMinutes()}`;
+    const cached = sessionStorage.getItem(storageKey);
+
+    if (cached) {
+      this.onReady = true;
+      console.info(`using cached data`);
+      const { results, limit, resultsCount } = JSON.parse(cached);
+      drawBasicCandleChart({ ctx, results, limit, resultsCount });
+      return;
+    }
+
+    polygon
+      .getMultiDaysStockData(config)
+      .then(({ results, resultsCount }) => {
+        console.info(`data fetched`);
+
+        this.onReady = true;
+
+        drawBasicCandleChart({ ctx, results, limit, resultsCount });
+
+        return { results, resultsCount, limit };
+      })
+      .then((data) => {
+        sessionStorage.setItem(storageKey, JSON.stringify(data));
+      });
   },
 });
 </script>
+
+<style lang="scss" scoped>
+canvas {
+  padding: 15px;
+  box-shadow: 0 0 20px 5px $red-neon;
+}
+</style>
