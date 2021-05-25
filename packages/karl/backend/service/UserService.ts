@@ -18,7 +18,6 @@ export interface loginUserByEmailInfo {
 export default class UserService {
   constructor() {}
 
-
   public async createUser({ name, email, password }: createUserInfo) {
     const user = await User.findOne().or([{ name, email }])
 

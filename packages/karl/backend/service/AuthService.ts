@@ -24,6 +24,12 @@ export default class AuthService {
   }
 
   public verifyToken(token: string): (string | Object) {
-    return jsonwebtoken.verify(token, jwtSecret)
+    const decodedToken = jsonwebtoken.verify(token, jwtSecret)
+
+    if (decodedToken) {
+      return decodedToken
+    }
+    
+    throw new Error('Token was not decoded')
   }  
 }

@@ -17,13 +17,12 @@ export default {
   },
 
   mounted() {
-    // createUser({ name: 'test1', email: 'test2', password: 'test3' });
-
-    // if (loginUserByEmail({ email: 'test3', password: 'test2' })) {
-    //   this.routeToHome();
-    // }
-
-    console.log(getUser());
+    getUser().then((user) => {
+      if (user) {
+        console.log(user);
+        this.routeToHome();
+      }
+    });
   },
 };
 </script>

@@ -24,8 +24,9 @@ const createUser = async function({name, email, password}: createUserInfo) {
     });
 
     if (result) {
-      console.log(result)
+      return result
     }
+    
   } catch (error) {
     console.log(error);
   }
@@ -35,9 +36,8 @@ const getUser = async function () {
   try {
     const result = await axios.get(`${devURL}/api/user`, {withCredentials:true})
 
-    
     if (result) {
-      console.log(result, 'result')
+      return result
     }
 
   } catch (error) {
@@ -53,9 +53,7 @@ const loginUserByEmail = async function({email, password}: loginUserByEmailInfo)
     })
 
     if (result) {
-      console.log(result)
-
-      return true
+      return result
     }
   } catch (error) {
     console.log(error)
