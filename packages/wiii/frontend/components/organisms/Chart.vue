@@ -4,7 +4,6 @@
       <b>{{ typeName.toUpperCase() }}</b
       >: {{ ticker }}
     </p>
-
     <canvas ref="canvas" class="area"></canvas>
   </section>
 </template>
@@ -84,34 +83,24 @@ export default Vue.extend({
    * @todo
    * @description
    * API fetching
-   */
-  created() {
-    const { ticker, multiplier, timespan, from, to, query } = this;
-    const config = {
-      ticker,
-      multiplier,
-      timespan,
-      from,
-      to,
-      query,
-    } as GetMultiDaysStockProps;
-
-    this.stocksPromise = polygon.getMultiDaysStockData(config);
-  },
-
-  /**
-   * @todo
-   * @description
    * make chart
    */
-  async beforeMount() {
-    const { results, resultsCount } = await this.stocksPromise;
-    this.candles = results;
-    this.candlesCount = resultsCount;
-    this.onReady = true;
-  },
-
   mounted() {
+    // const { ticker, multiplier, timespan, from, to, query } = this;
+    // const config = {
+    //   ticker,
+    //   multiplier,
+    //   timespan,
+    //   from,
+    //   to,
+    //   query,
+    // } as GetMultiDaysStockProps;
+
+    // this.stocksPromise = polygon.getMultiDaysStockData(config);
+    // const { results, resultsCount } = this.stocksPromise;
+    // this.candles = results;
+    // this.candlesCount = resultsCount;
+    // this.onReady = true;
     const chart = this.$refs.canvas;
     const ctx = chart.getContext('2d') as CanvasRenderingContext2D;
     ctx.fillStyle = 'red';
