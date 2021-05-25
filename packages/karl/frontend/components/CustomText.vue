@@ -1,16 +1,16 @@
 <template>
-  <p>
-    {{message}}
-  </p>
+  <span>
+    <slot></slot>
+  </span>
 </template>
 
 <script>
 export default {
   name: "CustomText",
-  props: ['message', 'fontSize']
+  props: ['fontSize']
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 
 </style>

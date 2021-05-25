@@ -4,5 +4,6 @@ import Search from '@/views/Search.vue';
 import Setting from '@/views/Setting.vue';
 import News from '@/views/News.vue';
 import Bookmark from '@/views/Bookmark.vue';
+import Signup from '@/views/Signup.vue';
 
-export { Market, Login, Search, Setting, News, Bookmark };
+export { Market, Login, Search, Setting, News, Bookmark, Signup };

@@ -37,16 +37,17 @@
   </div>
 </template>
 
-<script>
-import HeaderBar from '@/components/HeaderBar/HeaderBar';
-import BottomNav from '@/components/BottomNav/BottomNav';
-import MarketExchange from '@/components/Market/MarketExchange';
-import MarketCurrency from '@/components/Market/MarketCurrency';
-import MarketStock from '@/components/Market/MarketStock';
-import HeaderNav from '@/components/HeaderNav/HeaderNav';
+<script lang="ts">
+import Vue from 'vue';
+import HeaderBar from '@/components/HeaderBar/HeaderBar.vue';
+import BottomNav from '@/components/BottomNav/BottomNav.vue';
+import MarketExchange from '@/components/Market/MarketExchange.vue';
+import MarketCurrency from '@/components/Market/MarketCurrency.vue';
+import MarketStock from '@/components/Market/MarketStock.vue';
+import HeaderNav from '@/components/HeaderNav/HeaderNav.vue';
 import Swiper from 'swiper';
 
-export default {
+export default Vue.extend({
   name: 'Index',
 
   components: {
@@ -76,7 +77,6 @@ export default {
       autoHeight: true,
       touchAngle: 20,
       threshold: 14,
-      iOSEdgeSwipeThreshold: 30,
       speed: 150,
       grabCursor: true,
     });
@@ -106,7 +106,7 @@ export default {
       this.currentNavId = this.navRoutes[index - 1].id;
     },
   },
-};
+});
 </script>
 
 <style lang="scss" scoped>

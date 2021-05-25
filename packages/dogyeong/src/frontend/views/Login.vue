@@ -2,27 +2,39 @@
   <div class="login-wrapper">
     <HeaderBar>로그인</HeaderBar>
     <div class="form-wrapper">
-      <router-link to="/">to home</router-link><br />
-      <button @click="onClickLoginBtn">Google</button>
+      <form>
+        <input v-model="email" type="email" />
+        <input v-model="password" type="password" />
+        <button type="submit" @click.prevent="login({ email, password })">login</button>
+      </form>
+      <RouterLink to="/">to home</RouterLink><br />
+      <button @click="googleLogin">Google</button>
+      <RouterLink to="/signup">sign up</RouterLink>
     </div>
   </div>
 </template>
 
-<script>
-import HeaderBar from '@/components/HeaderBar/HeaderBar';
-import Axios from 'axios';
+<script lang="ts">
+import Vue from 'vue';
+import { mapActions } from 'vuex';
+import HeaderBar from '@/components/HeaderBar/HeaderBar.vue';
 
-export default {
+export default Vue.extend({
   name: 'Login',
+
   components: { HeaderBar },
-  methods: {
-    onClickLoginBtn() {
-      Axios.get('/api/auth')
-        .then(({ data }) => (window.location = data.url))
-        .catch(console.error);
-    },
+
+  data() {
+    return {
+      email: '',
+      password: '',
+    };
   },
-};
+
+  methods: {
+    ...mapActions(['login', 'googleLogin']),
+  },
+});
 </script>
 
 <style lang="scss" scoped>

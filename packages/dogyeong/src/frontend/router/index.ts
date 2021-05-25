@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import { Market, Login, Search, Setting, Bookmark, News } from '@/views';
+import { Market, Login, Search, Setting, Bookmark, News, Signup } from '@/views';
 
 Vue.use(Router);
 
@@ -39,6 +39,11 @@ export default () => {
         path: '/bookmark',
         name: 'Bookmark',
         component: Bookmark,
+      },
+      {
+        path: '/signup',
+        name: 'Signup',
+        component: Signup,
       },
     ],
   });

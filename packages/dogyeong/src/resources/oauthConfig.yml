@@ -1,0 +1,15 @@
+default:
+  googleOAuthConfig:
+    baseUrl: 'https://accounts.google.com/o/oauth2/v2/auth'
+    redirectUrl: 'http%3A//localhost:3000/api/auth/redirect'
+    clientId: '266193407466-7qvkgbj34vr3k5dbf0o31gnsii3b78s4.apps.googleusercontent.com'
+    scope: 'https://www.googleapis.com/auth/userinfo.profile'
+    responseType: 'code'
+
+  googleOAuthAccessTokenConfig:
+    baseUrl: 'https://oauth2.googleapis.com/token'
+    clientSecret: 'GAQlVQYoHPkR_XvZm1cod_Ej'
+    grantType: 'authorization_code'
+    redirectUri: 'postmessage'
+
+  goolgeUserInfoApiUrl: 'https://www.googleapis.com/oauth2/v1/userinfo?alt=json'

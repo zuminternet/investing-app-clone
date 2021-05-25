@@ -1,12 +1,12 @@
 <template>
   <div id="app" :class="{ dark: $store.state.isDarkTheme }">
     <div class="wrapper">
-      <router-view></router-view>
+      <RouterView></RouterView>
     </div>
   </div>
 </template>
 
-<script>
+<script lang="ts">
 /*
  **********************************************************
  *
@@ -14,9 +14,25 @@
  *
  **********************************************************
  */
-export default {
+import Vue from 'vue';
+import { googleAuthInitConfig } from '@/config';
+
+export default Vue.extend({
   name: 'App',
-};
+
+  mounted() {
+    this.initGoogleApi();
+    this.$store.dispatch('fetchCurrentUser');
+  },
+
+  methods: {
+    initGoogleApi() {
+      const { lib, args } = googleAuthInitConfig;
+      const gapi = (window as any).gapi;
+      gapi.load(lib, () => gapi.auth2.init(args));
+    },
+  },
+});
 </script>
 
 <style lang="scss" scoped>

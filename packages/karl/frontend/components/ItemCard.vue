@@ -1,51 +1,53 @@
 <template>
-  <button class="item-card">
+  <div class="item-card" @click="$emit('route-to-item-detail')">
     <div class="item-information-except-price">
-      {{itemName}}
-
+      {{ itemName }}
       <div class="item-sub-information">
-        {{itemTime}} |
-        {{itemCategory}}
+        {{ itemTime }} |
+        {{ itemCategory }}
       </div>
     </div>
-    <div class="empty-space"></div>
+    <empty-space></empty-space>
     <div class="item-information-price">
-      {{itemPrice}}
+      {{ itemPrice }}
       <div class="item-sub-information">
-        {{fluctuationPrice}} 
-        ({{fluctuationRate}})
+        {{ fluctuationPrice }}
+        ({{ fluctuationRate }})
       </div>
     </div>
-  </button>
+  </div>
 </template>
 
 <script>
+import EmptySpace from '../../../common/frontend/components/karl/EmptySpace.vue';
+
 export default {
   name: 'ItemCard',
+  components: {
+    EmptySpace,
+  },
+  props: ['item'],
 
-  data: function() {
+  data() {
+    const { itemName, itemTime, itemCategory, itemPrice, fluctuationPrice, fluctuationRate } = this.item ? this.item : {};
+
     return {
-      itemName: '코스피 지수',
-      itemTime: '14:14:14',
-      itemCategory: '서울',
-      itemPrice: '3,136.10',
-      fluctuationPrice: '-1.32',
-      fluctuationRate: '-0.42%'
-    }
-  }
-}
+      itemName,
+      itemTime,
+      itemCategory,
+      itemPrice,
+      fluctuationPrice,
+      fluctuationRate,
+    };
+  },
+};
 </script>
 
-<style scoped>
-  .item-card {
-    display: flex;
-    flex: 0 0 auto;
-    height: 40px;
-    background-color: grey;
-  }
-
-  .empty-space {
-    flex:1
-  }
-
+<style scoped lang="scss">
+.item-card {
+  display: flex;
+  flex: 0 0 auto;
+  height: 40px;
+  background-color: grey;
+}
 </style>
