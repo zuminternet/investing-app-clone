@@ -1,6 +1,5 @@
 <template>
   <div class="login-wrapper">
-    <HeaderBar>로그인</HeaderBar>
     <div class="form-wrapper">
       <form>
         <input v-model="email" type="email" />
@@ -17,12 +16,11 @@
 <script lang="ts">
 import Vue from 'vue';
 import { mapActions } from 'vuex';
-import HeaderBar from '@/components/HeaderBar/HeaderBar.vue';
 
 export default Vue.extend({
   name: 'Login',
 
-  components: { HeaderBar },
+  components: {},
 
   data() {
     return {

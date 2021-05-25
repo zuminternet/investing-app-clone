@@ -1,6 +1,5 @@
 <template>
   <div>
-    <HeaderBar>회원가입</HeaderBar>
     <form>
       <label>name <input v-model="name" type="text"/></label>
       <label>email <input v-model="email" type="email"/></label>
@@ -13,13 +12,11 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import HeaderBar from '@/components/HeaderBar/HeaderBar.vue';
 import BottomNav from '@/components/BottomNav/BottomNav.vue';
 import * as authService from '@/services/authService';
 
 export default Vue.extend({
   components: {
-    HeaderBar,
     BottomNav,
   },
 
