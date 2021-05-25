@@ -31,6 +31,20 @@ const createUser = async function({name, email, password}: createUserInfo) {
   }
 }
 
+const getUser = async function () {
+  try {
+    const result = await axios.get(`${devURL}/api/user`, {withCredentials:true})
+
+    
+    if (result) {
+      console.log(result, 'result')
+    }
+
+  } catch (error) {
+    console.log(error)
+  }  
+}
+
 const loginUserByEmail = async function({email, password}: loginUserByEmailInfo) {
   try {
     const result = await axios.post(`${devURL}/api/auth/email`, {
@@ -40,6 +54,7 @@ const loginUserByEmail = async function({email, password}: loginUserByEmailInfo)
 
     if (result) {
       console.log(result)
+
       return true
     }
   } catch (error) {
@@ -48,4 +63,6 @@ const loginUserByEmail = async function({email, password}: loginUserByEmailInfo)
   }
 }
 
-export { createUser, loginUserByEmail }
+
+
+export { createUser, loginUserByEmail, getUser }

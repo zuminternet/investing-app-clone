@@ -33,7 +33,6 @@ export default class UserService {
     const user = await User.findOne({ email, password }).lean()
 
     if (user) {
-
       return user
     }
 

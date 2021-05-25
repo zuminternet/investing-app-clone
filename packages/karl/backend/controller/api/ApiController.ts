@@ -13,7 +13,21 @@ export class ApiController {
 
   @GetMapping({ path: '/user'})
   public async getUser(request: Request, response: Response) {
-    
+    try {
+
+      // 토큰 인증자리
+      // 토큰 인증되면 클라이언트에 user 정보 보내기
+      const token = request.cookies['jwt-token']
+      const decodedToken = this.authService.verifyToken(token)
+      const user = await this.userService.loginUserByEmail(decodedToken)
+
+      if (user) {
+        response.status(200).send(user)
+      }
+
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   @PostMapping({ path: '/user'})
@@ -33,9 +47,12 @@ export class ApiController {
       const user = await this.userService.loginUserByEmail(request.body)
       const token = this.authService.issueToken(user)
 
-      response.status(200).send({user, token})
+      response.cookie('jwt-token', token, { expires: new Date(Date.now() + 9000000), httpOnly: true})
+      response.status(200).send(user)
     } catch (error) {
       response.status(401).json(error)
     }
   }
+
+
 }

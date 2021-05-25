@@ -13,7 +13,7 @@ export interface issueTokenInfo {
 export default class AuthService {
   constructor() {}
 
-  public issueToken({email, password}: issueTokenInfo) {
+  public issueToken({email, password}: issueTokenInfo): (string | Error) {
     const token = jsonwebtoken.sign({ email, password }, jwtSecret)
 
     if (token) {
@@ -22,4 +22,8 @@ export default class AuthService {
 
     throw new Error('Token was not issued') 
   }
+
+  public verifyToken(token: string): (string | Object) {
+    return jsonwebtoken.verify(token, jwtSecret)
+  }  
 }
