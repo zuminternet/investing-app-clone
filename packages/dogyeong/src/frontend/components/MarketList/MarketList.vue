@@ -116,10 +116,10 @@ ul {
       font-weight: bold;
 
       &.red {
-        color: crimson;
+        color: var(--red-color);
       }
       &.blue {
-        color: dodgerblue;
+        color: var(--blue-color);
       }
     }
   }

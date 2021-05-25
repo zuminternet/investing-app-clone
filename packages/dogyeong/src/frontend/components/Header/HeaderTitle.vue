@@ -1,7 +1,7 @@
 <template>
-  <header>
+  <h1>
     <slot></slot>
-  </header>
+  </h1>
 </template>
 
 <script lang="ts">
@@ -13,13 +13,15 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
-header {
+h1 {
   background-color: var(--header-bg-color);
   width: 100%;
-  height: 48px;
+  height: 60px;
   padding: 6px 12px;
   display: flex;
   align-items: center;
   border-bottom: 1px solid var(--app-bg-color);
+  font-size: 20px;
+  font-weight: 600;
 }
 </style>
