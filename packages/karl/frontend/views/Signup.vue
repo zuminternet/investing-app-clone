@@ -5,14 +5,14 @@
 </template>
 
 <script lang="ts">
-import axios from 'axios';
-import { createUser } from '../apis';
+import { createUser, loginUserByEmail } from '../apis';
 
 export default {
   name: 'Signup',
 
   mounted() {
-    createUser('test1', 'test2', 'test3');
+    // createUser({ name: 'test1', email: 'test2', password: 'test3' });
+    loginUserByEmail({ email: 'test3', password: 'test2' });
   },
 };
 </script>

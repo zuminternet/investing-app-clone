@@ -2,16 +2,49 @@ import axios from 'axios'
 
 const devURL = 'http://localhost:3000/'
 
-const createUser = function(name, password, email) {
+
+export interface createUserInfo {
+  name: string,
+  email: string,
+  password:string
+}
+
+export interface loginUserByEmailInfo {
+  email:string,
+  password: string
+}
+
+
+const createUser = async function({name, email, password}: createUserInfo) {
   try {
-    axios.post(`${devURL}/api/user`, {
+    const result = await axios.post(`${devURL}/api/user`, {
       name,
-      password,
-      email
+      email,
+      password
     });
+
+    if (result) {
+      console.log(result)
+    }
   } catch (error) {
     console.log(error);
   }
 }
 
-export { createUser }
+const loginUserByEmail = async function({email, password}: loginUserByEmailInfo) {
+  try {
+    const result = await axios.post(`${devURL}/api/auth/email`, {
+      email,
+      password
+    })
+
+    if (result) {
+      console.log(result)
+    }
+  } catch (error) {
+    console.log(error)
+    
+  }
+}
+
+export { createUser, loginUserByEmail }

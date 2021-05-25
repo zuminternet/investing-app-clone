@@ -6,10 +6,10 @@
     <div class="oauth-buttons-box">
       <o-auth-button>{{ facebookLogin }}</o-auth-button>
       <o-auth-button>{{ googleLogin }}</o-auth-button>
-      <text-button>{{ emailLogin }}</text-button>
+      <text-button @handle-button-click="routeToSignup">{{ emailSignup }}</text-button>
       <div class="normal-login-box">
         <custom-text>{{ alreadyRegister }}</custom-text>
-        <text-button @handle-button-click="routeToSignup">{{ signIn }}</text-button>
+        <text-button>{{ signIn }}</text-button>
       </div>
       <text-button @handle-button-click="routeToHome">{{ passWithoutLogin }}</text-button>
     </div>
@@ -34,11 +34,11 @@ export default {
   },
 
   data: function() {
-    const { FACEBOOK_LOGIN, GOOGLE_LOGIN, EMAIL_LOGIN, ALREADY_REGISTER, SIGN_IN, PASS_WITHOUT_LOGIN } = text;
+    const { FACEBOOK_LOGIN, GOOGLE_LOGIN, EMAIL_SIGNUP, ALREADY_REGISTER, SIGN_IN, PASS_WITHOUT_LOGIN } = text;
     return {
       facebookLogin: FACEBOOK_LOGIN,
       googleLogin: GOOGLE_LOGIN,
-      emailLogin: EMAIL_LOGIN,
+      emailSignup: EMAIL_SIGNUP,
       alreadyRegister: ALREADY_REGISTER,
       signIn: SIGN_IN,
       passWithoutLogin: PASS_WITHOUT_LOGIN,
