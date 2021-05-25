@@ -40,6 +40,7 @@ const loginUserByEmail = async function({email, password}: loginUserByEmailInfo)
 
     if (result) {
       console.log(result)
+      return true
     }
   } catch (error) {
     console.log(error)

@@ -1,6 +1,8 @@
 import { User } from '../model'
 import { Service } from 'zum-portal-core/backend/decorator/Alias'
 
+
+
 export interface createUserInfo {
   name: string,
   email: string,
@@ -17,7 +19,7 @@ export default class UserService {
   constructor() {}
 
 
-  public async createUser({name, email, password}: createUserInfo) {
+  public async createUser({ name, email, password }: createUserInfo) {
     const user = await User.findOne().or([{ name, email }])
 
     if (user) {
@@ -31,7 +33,8 @@ export default class UserService {
     const user = await User.findOne({ email, password })
 
     if (user) {
-        return user
+
+      return user
     }
 
     throw new Error('user not exists')

@@ -10,9 +10,17 @@ import { createUser, loginUserByEmail } from '../apis';
 export default {
   name: 'Signup',
 
+  methods: {
+    routeToHome() {
+      this.$router.push('/home');
+    },
+  },
+
   mounted() {
     // createUser({ name: 'test1', email: 'test2', password: 'test3' });
-    loginUserByEmail({ email: 'test3', password: 'test2' });
+    if (loginUserByEmail({ email: 'test3', password: 'test2' })) {
+      this.routeToHome();
+    }
   },
 };
 </script>
