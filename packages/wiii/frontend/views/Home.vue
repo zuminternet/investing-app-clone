@@ -1,21 +1,21 @@
 <template>
   <div class="area">
     <Header />
-    <Main />
+    <HomeTemplate />
     <Footer />
   </div>
 </template>
 
 <script>
 import Header from '@/components/organisms/HomeHeader';
-import Main from '@/components/main/';
-import Footer from '@/components/footer/';
+import HomeTemplate from '@/components/templates/Home';
+import Footer from '@/components/organisms/HomeFooter';
 
 export default {
   name: 'Home',
   components: {
     Header,
-    Main,
+    HomeTemplate,
     Footer,
   },
 };
