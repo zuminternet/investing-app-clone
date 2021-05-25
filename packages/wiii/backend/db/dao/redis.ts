@@ -10,7 +10,7 @@
  * - express app.use(session(sessionConfigs))
  */
 // import express from 'express';
-import { RedisConnOptions, secretKey } from '$/config/db';
+import { RedisConnOptions, secretKey } from '../../config/db';
 import connector from 'connect-redis';
 import session from 'express-session';
 import redis from 'redis';

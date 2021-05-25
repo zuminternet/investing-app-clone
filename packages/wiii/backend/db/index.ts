@@ -4,7 +4,7 @@
  * - typeorm - connections
  */
 
-import { MongoDBConnOptions, MySQLConnOptions } from '$/config/db';
+import { MongoDBConnOptions, MySQLConnOptions } from '../config/db';
 import { Connection, createConnections } from 'typeorm';
 import MongoDBDao from './dao/mongodb';
 import MySQLDao from './dao/mysql';

@@ -1,7 +1,7 @@
 import { Controller, PostMapping } from 'zum-portal-core/backend/decorator/Controller';
 import { Inject } from 'zum-portal-core/backend/decorator/Alias';
 import { Request, Response } from 'express';
-import { HomeFacade } from '$/facade/HomeFacade';
+import { HomeFacade } from '../facade/HomeFacade';
 
 /**
  * @description
