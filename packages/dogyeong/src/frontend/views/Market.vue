@@ -22,7 +22,7 @@
         <div class="swiper-wrapper">
           <!-- Slides -->
           <div class="swiper-slide">
-            <MarketExchange></MarketExchange>
+            <MarketIndex></MarketIndex>
           </div>
           <div class="swiper-slide">
             <MarketStock></MarketStock>
@@ -41,7 +41,7 @@
 import Vue from 'vue';
 import HeaderBar from '@/components/HeaderBar/HeaderBar.vue';
 import BottomNav from '@/components/BottomNav/BottomNav.vue';
-import MarketExchange from '@/components/Market/MarketExchange.vue';
+import MarketIndex from '@/components/Market/MarketIndex.vue';
 import MarketCurrency from '@/components/Market/MarketCurrency.vue';
 import MarketStock from '@/components/Market/MarketStock.vue';
 import HeaderNav from '@/components/HeaderNav/HeaderNav.vue';
@@ -53,7 +53,7 @@ export default Vue.extend({
   components: {
     HeaderBar,
     BottomNav,
-    MarketExchange,
+    MarketIndex,
     MarketCurrency,
     MarketStock,
     HeaderNav,

@@ -28,7 +28,7 @@ export default Vue.extend({
   methods: {
     initGoogleApi() {
       const { lib, args } = googleAuthInitConfig;
-      const gapi = (window as any).gapi;
+      const gapi = window.gapi;
       gapi.load(lib, () => gapi.auth2.init(args));
     },
   },
