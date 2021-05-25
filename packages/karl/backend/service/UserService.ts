@@ -30,7 +30,7 @@ export default class UserService {
   }
 
   public async loginUserByEmail({email, password}: loginUserByEmailInfo) {
-    const user = await User.findOne({ email, password })
+    const user = await User.findOne({ email, password }).lean()
 
     if (user) {
 
