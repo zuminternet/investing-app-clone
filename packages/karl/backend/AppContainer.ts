@@ -3,7 +3,6 @@ import BaseAppContainer from 'zum-portal-core/backend/BaseAppContainer';
 import { Application } from 'express';
 import { Yml } from 'zum-portal-core/backend/decorator/Yml';
 import { container } from 'tsyringe';
-import logger from 'zum-portal-core/backend/util/Logger';
 import chalk from 'chalk';
 
 @Singleton()
@@ -20,7 +19,7 @@ export class AppContainer extends BaseAppContainer {
   public listen(): void {
     const port = this.application.port || 8080;
     this.app.listen(port, () => {
-      logger.info(`${chalk.bgYellow(process.env.NODE_ENV)} - ${chalk.bgGreen(process.env.ZUM_BACK_MODE)} Startup!`);
+      console.info(`${chalk.bgYellow(process.env.NODE_ENV)} - ${chalk.bgGreen(process.env.ZUM_BACK_MODE)} Startup!`);
     });
   }
 }

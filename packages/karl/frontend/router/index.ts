@@ -1,6 +1,10 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import { Home, Login } from '../views'
+import { Login, Home } from '../views'
+import ItemDetail from '../../../common/frontend/views/ItemDetail.vue'
+// import Login from '../views/Login.vue'
+// import Home from '../views/Home.vue'
+// import ItemDetail from '../views/ItemDetail.vue'
 Vue.use(Router);
 
 export default () => {
@@ -19,6 +23,11 @@ export default () => {
         name: 'Home',
         component: Home,
       },
+      {
+        path:'/item-detail',
+        name: 'ItemDetail',
+        component: ItemDetail
+      }
     ],
   });
 };

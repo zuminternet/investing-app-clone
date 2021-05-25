@@ -7,14 +7,15 @@
   </div>
 </template>
 
-<script>
-import HeaderBar from '@/components/HeaderBar/HeaderBar';
-import BottomNav from '@/components/BottomNav/BottomNav';
+<script lang="ts">
+import Vue from 'vue';
+import HeaderBar from '@/components/HeaderBar/HeaderBar.vue';
+import BottomNav from '@/components/BottomNav/BottomNav.vue';
 
-export default {
+export default Vue.extend({
   name: 'News',
   components: { BottomNav, HeaderBar },
-};
+});
 </script>
 
 <style lang="scss" scoped>

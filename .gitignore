@@ -32,3 +32,6 @@ packages/wiii/frontend/config/index.ts
 
 # MacOS
 .DS_Store
+
+# docker database data
+**/docker/data

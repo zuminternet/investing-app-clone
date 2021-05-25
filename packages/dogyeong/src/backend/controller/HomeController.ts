@@ -8,7 +8,7 @@ import { HomeFacade } from '../facade/HomeFacade';
 export class HomeController {
   constructor(@Yml('application') private application: any, @Inject(HomeFacade) private homeFacade: HomeFacade) {}
 
-  @GetMapping({ path: ['/'] })
+  @GetMapping({ path: ['/*'] })
   public async getHome(req: Request, res: Response) {
     //탬플릿처리
     await this.homeFacade.renderHtml();

@@ -1,41 +1,56 @@
 <template>
   <div id="home-page">
     <multipurpose-header></multipurpose-header>
-    <top-naviagtor></top-naviagtor>
-    <div class="contents-box">
-      <item-card-list></item-card-list>
-    </div>
-    <bottom-naviagtor></bottom-naviagtor>
+    <custom-swiper :navigatorButtonNames="swiperNavigatorButtonNames">
+      <swiper-slide v-for="(items, index) in itemCollections" :key="index">
+        <item-card-list :items="items" :excludingHeight="150"></item-card-list>
+      </swiper-slide>
+    </custom-swiper>
+    <bottom-naviagtor :navigatorButtonNames="bottomNavigatorButtonNames"></bottom-naviagtor>
   </div>
 </template>
 
 <script>
+import { SwiperSlide } from 'vue-awesome-swiper';
+import { mapState, mapGetters } from 'vuex';
 
-import BottomNaviagtor from '../components/BottomNaviagtor.vue'
-import TopNaviagtor from '../components/TopNaviagtor.vue'
-import MultipurposeHeader from '../components/MultipurposeHeader.vue';
-import ItemCardList from '../components/ItemCardList.vue'
+import BottomNaviagtor from '../../../common/frontend/components/BottomNaviagtor.vue';
+import MultipurposeHeader from '../../../common/frontend/components/MultipurposeHeader.vue';
+import ItemCardList from '../components/ItemCardList.vue';
+import CustomSwiper from '../../../common/frontend/components/CustomSwiper.vue';
+
+import { text } from '../../../common/frontend/constants';
 
 export default {
   name: 'Home',
   components: {
     BottomNaviagtor,
-    TopNaviagtor,
     MultipurposeHeader,
-    ItemCardList
-  }
+    CustomSwiper,
+    ItemCardList,
+  },
+  computed: {
+    ...mapState({
+      stockItems: (state) => state.market.stockItems,
+    }),
+    ...mapGetters('market', {
+      itemCollections: 'itemCollections',
+    }),
+  },
+
+  data() {
+    return {
+      swiperNavigatorButtonNames: [text.INDICES, text.STOCK, text.CRYPTO_CURRENCY],
+      bottomNavigatorButtonNames: [text.MARKET, text.NEWS, text.CALENDAR, text.FAVORITES, text.MORE],
+    };
+  },
 };
 </script>
 
-<style>
-  #home-page {
-    display:flex;
-    flex-direction: column;
-    flex:1
-  }
-
-  .contents-box {
-    flex:1
-  }
-
+<style scoped lang="scss">
+#home-page {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
 </style>

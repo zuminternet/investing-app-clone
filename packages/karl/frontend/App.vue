@@ -16,20 +16,7 @@ export default {
   name: 'App',
 };
 </script>
-<style>
-  body {
-    margin: 0;
-    background-color: greenyellow;
-    
-
-
-  }
-  #app {
-    display: flex;
-    flex-direction: column;
-    position: absolute;
-    height: 100%;
-    width: 100%;
-  }
-
+<style scoped lang="scss">
+#app {
+}
 </style>
