@@ -9,7 +9,9 @@ interface InvestingData {
 
 export interface InvestingApiResponse {
   key: string;
-  result: InvestingData;
+  value: number;
+  diff: number;
+  growthRate: number;
 }
 
 export interface CandleChartData {
@@ -102,12 +104,18 @@ export default class MarketService {
   private callInvesting([key, investingId]) {
     return new Promise<InvestingApiResponse>((resolve, reject) => {
       investing(investingId)
-        .then((result) => resolve({ key, result }))
+        .then((result: InvestingData[]) => {
+          const { value: newValue } = result.pop();
+          const { value: oldValue } = result.pop();
+          const diff = newValue - oldValue;
+          const growthRate = (diff / newValue) * 100;
+          resolve({ key, value: newValue, diff, growthRate });
+        })
         .catch(reject);
     });
   }
 
-  public getIndices() {
+  public async getIndices() {
     return Promise.all(Object.entries(Indices).map(this.callInvesting));
   }
 
