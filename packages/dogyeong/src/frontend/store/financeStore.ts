@@ -36,47 +36,35 @@ export default () => {
         indices.isLoading = false;
         indices.isError = true;
       },
-      setCoins(state, coins) {
+      setCoins(state, { coins = [] }) {
         state.coins = {
           data: coins,
           isLoading: false,
           isError: false,
         };
       },
-      setCoinsLoading(state) {
-        state.coins = {
-          ...state.coins,
-          isLoading: true,
-          isError: false,
-        };
+      setCoinsLoading({ coins }) {
+        coins.isLoading = true;
+        coins.isError = false;
       },
-      setCoinsError(state) {
-        state.coins = {
-          ...state.coins,
-          isLoading: false,
-          isError: true,
-        };
+      setCoinsError({ coins }) {
+        coins.isLoading = false;
+        coins.isError = true;
       },
-      setStocks(state, stocks) {
+      setStocks(state, { stocks = [] }) {
         state.stocks = {
           data: stocks,
           isLoading: false,
           isError: false,
         };
       },
-      setStocksLoading(state) {
-        state.stocks = {
-          ...state.stocks,
-          isLoading: true,
-          isError: false,
-        };
+      setStocksLoading({ stocks }) {
+        stocks.isLoading = true;
+        stocks.isError = false;
       },
-      setStocksError(state) {
-        state.stocks = {
-          ...state.stocks,
-          isLoading: false,
-          isError: true,
-        };
+      setStocksError({ stocks }) {
+        stocks.isLoading = false;
+        stocks.isError = true;
       },
     },
 
