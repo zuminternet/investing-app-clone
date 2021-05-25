@@ -1,6 +1,8 @@
-import axios from 'axios';
+import { AxiosStatic } from 'axios';
 import { apiEndpoints } from '@/config';
 import { InvestingApiResponse, CandleChartData, SummaryDetail } from '../../backend/service/MarketService';
+
+declare const axios: AxiosStatic;
 
 interface IndicesResponse {
   indices: InvestingApiResponse[];

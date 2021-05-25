@@ -1,5 +1,7 @@
-import axios from 'axios';
+import { AxiosStatic } from 'axios';
 import { apiEndpoints, googleAuthHeader } from '@/config';
+
+declare const axios: AxiosStatic;
 
 interface LoginProps {
   email: string;
