@@ -1,6 +1,6 @@
 **/node_modules/
 /logs/
-/dist/
+dist
 **/resources/static/js/
 **/resources/static/css/
 **/resources/static/img/
@@ -25,6 +25,13 @@ yarn-error.log
 
 # test coverage directory
 coverage/
+
+# envs/configuration files
+*.env
+packages/wiii/frontend/config/index.ts
+
+# MacOS
+.DS_Store
 
 # docker database data
 **/docker/data

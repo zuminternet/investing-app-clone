@@ -1,8 +1,9 @@
 # [Feat/Fix/Chore 등]: Title
-Feat: 제목
+Feat|Refactor|Fix|Chore: 제목
 
 # Body
 # 구현한 내용 디테일
+- 
 
 # Tail
 # Todo, PR/Commit id 등

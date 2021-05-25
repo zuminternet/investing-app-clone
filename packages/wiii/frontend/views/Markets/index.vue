@@ -9,7 +9,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { markets } from '@/type/views';
+import { marketsType } from '@/type/views';
 import Indexes from './Indexes';
 import Stocks from './Stocks';
 import Coins from './Coins';
@@ -22,7 +22,7 @@ export default Vue.extend({
   },
 
   computed: {
-    currentMarketComponent(): markets {
+    currentMarketComponent(): marketsType {
       return this.$route.params.detail;
     },
   },

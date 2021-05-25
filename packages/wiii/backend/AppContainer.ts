@@ -10,12 +10,18 @@ import chalk from 'chalk';
 export class AppContainer extends BaseAppContainer {
   public app: Application;
 
+  /**
+   * @todo
+   * - middleware 등록
+   * - constructor initMiddleware로 middleware 넘길 수 있음; BaseAppContainer 코드 참고
+   */
   constructor(@Yml('application') private application) {
     super();
   }
 
   /**
-   * 서버 시작 메소드
+   * @description
+   * 서버 실행
    */
   public listen(): void {
     const port = this.application.port || 8080;
