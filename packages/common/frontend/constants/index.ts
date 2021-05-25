@@ -27,4 +27,8 @@ export const text = {
     CHART:'차트',
     INDICES: '지수',
     STOCK:'주식',
+    EMAIL:'이메일',
+    PASSWORD:'비밀번호',
+    EMAIL_LOGIN:'이메일로 로그인',
+    REGISTER: '등록'
 }

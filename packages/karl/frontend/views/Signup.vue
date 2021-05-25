@@ -14,16 +14,11 @@ export default {
     routeToHome() {
       this.$router.push('/home');
     },
+
+    test() {},
   },
 
-  mounted() {
-    getUser().then((user) => {
-      if (user) {
-        console.log(user);
-        this.routeToHome();
-      }
-    });
-  },
+  mounted() {},
 };
 </script>
 

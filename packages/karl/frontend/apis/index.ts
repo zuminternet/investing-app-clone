@@ -1,4 +1,7 @@
-import axios from 'axios'
+import { AxiosStatic } from 'axios'
+
+declare const Axios: AxiosStatic;
+
 
 const devURL = 'http://localhost:3000/'
 
@@ -9,6 +12,7 @@ export interface createUserInfo {
   password:string
 }
 
+
 export interface loginUserByEmailInfo {
   email:string,
   password: string
@@ -17,7 +21,7 @@ export interface loginUserByEmailInfo {
 
 const createUser = async function({name, email, password}: createUserInfo) {
   try {
-    const result = await axios.post(`${devURL}/api/user`, {
+    const result = await Axios.post(`${devURL}/api/user`, {
       name,
       email,
       password
@@ -34,7 +38,7 @@ const createUser = async function({name, email, password}: createUserInfo) {
 
 const getUser = async function () {
   try {
-    const result = await axios.get(`${devURL}/api/user`, {withCredentials:true})
+    const result = await Axios.get(`${devURL}/api/user`, {withCredentials:true})
 
     if (result) {
       return result
@@ -47,12 +51,13 @@ const getUser = async function () {
 
 const loginUserByEmail = async function({email, password}: loginUserByEmailInfo) {
   try {
-    const result = await axios.post(`${devURL}/api/auth/email`, {
+    const result = await Axios.post(`${devURL}/api/auth/email`, {
       email,
       password
     })
 
     if (result) {
+      console.log(result, "result")
       return result
     }
   } catch (error) {
@@ -60,7 +65,5 @@ const loginUserByEmail = async function({email, password}: loginUserByEmailInfo)
     
   }
 }
-
-
 
 export { createUser, loginUserByEmail, getUser }
