@@ -2,22 +2,26 @@ $theme-dark: (
   'app-bg-color': #090c10,
   'bg-color': #161b22,
   'header-bg-color': #090c10,
-  'header-nav-bg-color': #161b22,
+  'header-nav-bg-color': #20242a,
   'border-color': #30363d,
   'text-color': #c9d1d9,
   'sub-text-color': #8b949e,
   'primary-color': #eda31b,
+  'red-color': #ed143d,
+  'blue-color': #1e90ff,
 );
 
 $theme-light: (
   'app-bg-color': #eef0f2,
   'bg-color': #fff,
   'header-bg-color': #fff,
-  'header-nav-bg-color': #fff,
+  'header-nav-bg-color': rgb(255, 255, 255),
   'border-color': #00000029,
   'text-color': #000000de,
   'sub-text-color': #00000061,
   'primary-color': #1b52ed,
+  'red-color': #f10c0c,
+  'blue-color': #1e53ff,
 );
 
 #app {
