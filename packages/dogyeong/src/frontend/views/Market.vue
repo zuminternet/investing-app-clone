@@ -126,6 +126,13 @@ main {
   overflow-x: hidden;
   overflow-y: scroll;
   height: 100%;
+
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+
+  &::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+  }
 }
 .header-nav-list {
   display: flex;
