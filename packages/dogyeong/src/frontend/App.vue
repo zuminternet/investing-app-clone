@@ -38,6 +38,7 @@ export default Vue.extend({
 <style lang="scss" scoped>
 #app {
   background-color: var(--app-bg-color);
+  overflow: hidden;
 
   .wrapper {
     width: 100%;

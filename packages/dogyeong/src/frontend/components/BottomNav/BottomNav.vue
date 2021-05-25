@@ -17,13 +17,10 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 nav {
-  position: fixed;
-  bottom: 0;
   background-color: var(--bg-color);
   width: 100%;
   max-width: var(--app-width);
   height: 48px;
-  z-index: 1;
   border-top: 1px solid var(--border-color);
   display: flex;
 
