@@ -12,6 +12,7 @@ export interface InvestingApiResponse {
   value: number;
   diff: number;
   growthRate: number;
+  date: string;
 }
 
 export interface CandleChartData {
@@ -105,26 +106,26 @@ export default class MarketService {
     return new Promise<InvestingApiResponse>((resolve, reject) => {
       investing(investingId)
         .then((result: InvestingData[]) => {
-          const { value: newValue } = result.pop();
+          const { value: newValue, date } = result.pop();
           const { value: oldValue } = result.pop();
           const diff = newValue - oldValue;
           const growthRate = (diff / newValue) * 100;
-          resolve({ key, value: newValue, diff, growthRate });
+          resolve({ key, value: newValue, diff, growthRate, date: this.getDateString(date) });
         })
         .catch(reject);
     });
   }
 
   public async getIndices() {
-    return Promise.all(Object.entries(Indices).map(this.callInvesting));
+    return Promise.all(Object.entries(Indices).map(this.callInvesting.bind(this)));
   }
 
   public getCoins() {
-    return Promise.all(Object.entries(Cryptos).map(this.callInvesting));
+    return Promise.all(Object.entries(Cryptos).map(this.callInvesting.bind(this)));
   }
 
   public getStocks() {
-    return Promise.all(Object.entries(Stocks).map(this.callInvesting));
+    return Promise.all(Object.entries(Stocks).map(this.callInvesting.bind(this)));
   }
 
   public getSummaryDetail(symbol: string): Promise<SummaryDetail> {
