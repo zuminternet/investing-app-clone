@@ -9,13 +9,21 @@
 <script lang="ts">
 import Vue from 'vue';
 
+/**
+ * @description 뉴스 리스트의 개별 row 컴포넌트
+ * @author dogyeong
+ *
+ * @property {String} to 클릭하면 이동할 url
+ * @property {Object, String} listStyle 커스터마이징을 위해 전달할 수 있는 스타일 객체
+ */
+
 export default Vue.extend({
   name: 'NewsListItem',
 
   props: {
     to: {
       type: String,
-      default: () => '#',
+      required: true,
     },
     listStyle: {
       type: [Object, String],

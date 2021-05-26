@@ -7,6 +7,11 @@
 <script lang="ts">
 import Vue from 'vue';
 
+/**
+ * @description 뉴스 리스트 텍스트 박스의 제목영역
+ * @author dogyeong
+ */
+
 export default Vue.extend({
   name: 'NewsTextBoxTitle',
 });
