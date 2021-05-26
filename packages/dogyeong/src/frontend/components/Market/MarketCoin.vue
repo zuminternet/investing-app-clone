@@ -1,12 +1,12 @@
 <template>
   <div>
     <div v-if="isLoading">
-      지수 불러오는중..
+      가상화폐 불러오는중..
     </div>
     <div v-else-if="isError">
       Error!
     </div>
-    <MarketList v-else :list-data="indices"></MarketList>
+    <MarketList v-else :list-data="coins"></MarketList>
   </div>
 </template>
 
@@ -16,16 +16,20 @@ import { mapState } from 'vuex';
 import MarketList from '@/components/MarketList/MarketList.vue';
 
 export default Vue.extend({
-  name: 'MarketIndex',
+  name: 'MarketCoin',
 
   components: { MarketList },
 
   computed: {
-    ...mapState({ indices: ({ finance }) => finance.indices.data }),
-    ...mapState({ isLoading: ({ finance }) => finance.indices.isLoading }),
-    ...mapState({ isError: ({ finance }) => finance.indices.isError }),
+    ...mapState({ coins: ({ finance }) => finance.coins.data }),
+    ...mapState({ isLoading: ({ finance }) => finance.coins.isLoading }),
+    ...mapState({ isError: ({ finance }) => finance.coins.isError }),
   },
 });
 </script>
 
-<style></style>
+<style scoped>
+h2 {
+  background-color: aqua;
+}
+</style>

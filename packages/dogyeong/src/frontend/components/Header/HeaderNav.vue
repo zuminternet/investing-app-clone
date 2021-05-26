@@ -13,9 +13,13 @@ export default Vue.extend({});
 <style lang="scss" scoped>
 nav {
   border-bottom: 1px solid var(--app-bg-color);
-  height: 40px;
-  line-height: 40px;
+  height: 48px;
+  line-height: 48px;
   padding: 0 12px;
   background-color: var(--header-nav-bg-color);
+
+  li {
+    cursor: pointer;
+  }
 }
 </style>

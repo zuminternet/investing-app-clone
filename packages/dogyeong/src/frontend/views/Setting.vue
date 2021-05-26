@@ -1,8 +1,5 @@
 <template>
   <div>
-    <HeaderBar>
-      더보기
-    </HeaderBar>
     {{ user }}
     <div class="setting-item"><input v-model="isDark" type="checkbox" /> 어두운 테마</div>
     <div v-if="!user" class="setting-item"><RouterLink to="/login">로그인</RouterLink></div>
@@ -14,13 +11,12 @@
 <script lang="ts">
 import Vue from 'vue';
 import { mapMutations, mapActions } from 'vuex';
-import HeaderBar from '@/components/HeaderBar/HeaderBar.vue';
 import BottomNav from '@/components/BottomNav/BottomNav.vue';
 
 export default Vue.extend({
   name: 'Setting',
 
-  components: { BottomNav, HeaderBar },
+  components: { BottomNav },
 
   computed: {
     isDark: {
