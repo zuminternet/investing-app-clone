@@ -1,24 +1,38 @@
 <template>
-  <form class="input-form" @submit.prevent="submitForEmailLogin">
+  <form class="input-form" @submit.prevent="$emit('handle-submit', { $data })">
+    <template v-if="this.isRegister">
+      <input class="input" :placeholder="nameText" v-model="name" />
+    </template>
     <input class="input" :placeholder="emailText" v-model="email" />
     <input class="input" :placeholder="passwordText" v-model="password" />
-    <input class="submit" type="submit" :value="emailLogin" />
+    <input class="submit" type="submit" :value="this.submitButtonText" />
   </form>
 </template>
 
 <script>
 import { text } from '../../../common/frontend/constants';
-import { loginUserByEmail, getUser } from '../apis';
 
 export default {
   name: 'LoginPasswordInputForm',
+  props: {
+    submitButtonText: {
+      type: String,
+      required: true,
+    },
+    isRegister: {
+      type: Boolean,
+      required: false,
+    },
+  },
 
   data() {
-    const { EMAIL, PASSWORD, EMAIL_LOGIN } = text;
+    const { EMAIL, PASSWORD, EMAIL_LOGIN, NAME } = text;
     return {
+      name: '',
       email: '',
       password: '',
 
+      nameText: NAME,
       emailText: EMAIL,
       passwordText: PASSWORD,
       emailLogin: EMAIL_LOGIN,
@@ -32,23 +46,6 @@ export default {
 
     routeToSignup() {
       this.$router.push('/signup');
-    },
-    async submitForEmailLogin(event) {
-      try {
-        const result = await loginUserByEmail({ email: this.email, password: this.password });
-
-        if (result.status === 200) {
-          this.routeToHome();
-
-          // 여기에 이후 dispatch 문이 들어감
-          return;
-        }
-
-        throw new Error('invalid user');
-      } catch (error) {
-        console.log(error);
-        alert(error);
-      }
     },
   },
 };

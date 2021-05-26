@@ -30,6 +30,7 @@ export default class UserService {
   }
 
   public async loginUserByEmail({ email, password }: loginUserByEmailInfo) {
+    // console.log(email, password, 'call');
     const user = await User.findOne({ email, password }).lean();
 
     if (user) {

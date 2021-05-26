@@ -15,7 +15,7 @@ export default {
     OAuthButton,
   },
 
-  data: function() {
+  data() {
     const { FACEBOOK_LOGIN, GOOGLE_LOGIN } = text;
     return {
       facebookLogin: FACEBOOK_LOGIN,

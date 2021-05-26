@@ -3,7 +3,10 @@
     <template v-if="isEmailLogin">
       <o-auth-buttons-box></o-auth-buttons-box>
       <div class="email-login-input-form-box">
-        <login-password-input-form></login-password-input-form>
+        <login-password-input-form
+          :submitButtonText="emailLogin"
+          @handle-submit="submitForEmailLogin"
+        ></login-password-input-form>
         <text-button @handle-button-click="routeToSignup">{{ register }}</text-button>
       </div>
     </template>
@@ -34,7 +37,7 @@ import OAuthButtonsBox from '../components/OAuthButtonsBox.vue';
 import LoginPasswordInputForm from '../components/LoginPasswordInputForm.vue';
 
 import { text } from '../../../common/frontend/constants';
-import { loginUserByEmail, getUser } from '../apis';
+import { getUser, loginUserByEmail } from '../apis';
 
 export default {
   name: 'Login',
@@ -76,7 +79,8 @@ export default {
 
     async submitForEmailLogin(event) {
       try {
-        const result = await loginUserByEmail({ email: this.email, password: this.password });
+        const { email, password } = event.$data;
+        const result = await loginUserByEmail({ email, password });
 
         if (result.status === 200) {
           this.routeToHome();
