@@ -26,6 +26,15 @@ module.exports = {
       globalComponents: [],
     },
     {
+      // 프로젝트 위치
+      root: './packages/karl',
+      package: './package.json',
+      // tsconfig 파일 위치 (root 속성의 상대경로)
+      tsconfig: './tsconfig.json',
+      snippetFolder: './.vscode/vetur/snippets',
+      globalComponents: [],
+    },
+    {
       root: './packages/wiii',
       package: './package.json',
       tsconfig: './tsconfig.frontend.json',

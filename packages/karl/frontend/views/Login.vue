@@ -1,10 +1,7 @@
 <template>
   <div class="login-page">
     <template v-if="isEmailLogin">
-      <div class="email-login-oauth-buttons-box">
-        <o-auth-button>{{ facebookLogin }}</o-auth-button>
-        <o-auth-button>{{ googleLogin }}</o-auth-button>
-      </div>
+      <o-auth-buttons-box></o-auth-buttons-box>
       <div class="email-login-input-form-box">
         <form class="email-login-input-form" @submit.prevent="submitForEmailLogin">
           <input class="email-login-input" :placeholder="emailText" v-model="email" />
@@ -18,13 +15,14 @@
       <div class="swiper-box">
         <login-swiper></login-swiper>
       </div>
-      <div class="oauth-buttons-box">
-        <o-auth-button>{{ facebookLogin }}</o-auth-button>
-        <o-auth-button>{{ googleLogin }}</o-auth-button>
-        <text-button @handle-button-click="routeToSignup">{{ emailSignup }}</text-button>
-        <div class="normal-login-box">
-          <custom-text>{{ alreadyRegister }}</custom-text>
-          <text-button @handle-button-click="changeToEmailLogin">{{ signIn }}</text-button>
+      <div class="login-wrapper">
+        <o-auth-buttons-box></o-auth-buttons-box>
+        <div class="login-options-box">
+          <text-button @handle-button-click="routeToSignup">{{ emailSignup }}</text-button>
+          <div>
+            <custom-text>{{ alreadyRegister }}</custom-text>
+            <text-button @handle-button-click="changeToEmailLogin">{{ signIn }}</text-button>
+          </div>
         </div>
         <text-button @handle-button-click="routeToHome">{{ passWithoutLogin }}</text-button>
       </div>
@@ -37,9 +35,10 @@ import OAuthButton from '../components/OAuthButton.vue';
 import TextButton from '../components/TextButton.vue';
 import CustomText from '../../../common/frontend/components/CustomText.vue';
 import LoginSwiper from '../components/LoginSwiper.vue';
+import OAuthButtonsBox from '../components/OAuthButtonsBox.vue';
 
 import { text } from '../../../common/frontend/constants';
-import { createUser, loginUserByEmail, getUser } from '../apis';
+import { loginUserByEmail, getUser } from '../apis';
 
 export default {
   name: 'Login',
@@ -48,6 +47,7 @@ export default {
     TextButton,
     CustomText,
     LoginSwiper,
+    OAuthButtonsBox,
   },
 
   data: function() {
@@ -132,22 +132,13 @@ export default {
   align-items: center;
 }
 
-.oauth-buttons-box {
+.login-wrapper {
   display: flex;
-  width: 80%;
   flex: 1;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-}
-
-.email-login-oauth-buttons-box {
-  display: flex;
-  width: 80%;
-  flex: 1;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  width: 100%;
 }
 
 .email-login-input-form {
@@ -173,8 +164,9 @@ export default {
   margin-top: 10px;
 }
 
-.normal-login-box {
+.login-options-box {
   display: flex;
+  flex-direction: column;
   align-items: center;
 }
 
