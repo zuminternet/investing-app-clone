@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="area">
     <h1>Markets</h1>
     <keep-alive>
       <component :is="currentMarketComponent"></component>
@@ -28,7 +28,3 @@ export default Vue.extend({
   },
 });
 </script>
-
-<style lang="scss" scoped>
-//
-</style>

@@ -35,3 +35,5 @@ packages/wiii/frontend/config/index.ts
 
 # docker database data
 **/docker/data
+
+yarn.lock

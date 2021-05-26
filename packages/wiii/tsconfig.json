@@ -12,8 +12,9 @@
     "allowJs": true,
     "esModuleInterop": true,
     "paths": {
+      "@/*": ["./frontend/*"],
       "$/*": ["./backend/*"]
     }
   },
-  "exclude": ["frontend/**", "node_modules/**"]
+  "exclude": ["node_modules/**", "**/__tests__/**"]
 }

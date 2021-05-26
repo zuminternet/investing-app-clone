@@ -3,8 +3,8 @@
  * @description
  * - for MySQL User table
  */
-import { DBName } from '$/config/db';
-import { CreateUserProps } from '$/db/types';
+import { DBName } from '../../config/db';
+import { CreateUserProps } from '../../db/types';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import Base from './Base';
 

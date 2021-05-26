@@ -3,8 +3,8 @@
  * @description
  * - for MongoDB Reply table
  */
-import { DBName } from '$/config/db';
-import { ReplyProps } from '$/db/types';
+import { DBName } from '../../config/db';
+import { ReplyProps } from '../../db/types';
 import { Column, Entity, ManyToOne, ObjectID, ObjectIdColumn } from 'typeorm';
 import Base from './Base';
 

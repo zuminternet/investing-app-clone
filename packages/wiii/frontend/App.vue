@@ -9,6 +9,9 @@ export default {
   name: 'App',
 
   computed: {
+    /**
+     * @todo
+     */
     isDark() {
       // return this.isDark ? 'dark' : null;
       return null;

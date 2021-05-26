@@ -2,7 +2,7 @@ import { Controller, GetMapping } from 'zum-portal-core/backend/decorator/Contro
 import { Request, Response } from 'express';
 import { Inject } from 'zum-portal-core/backend/decorator/Alias';
 import { Yml } from 'zum-portal-core/backend/decorator/Yml';
-import { HomeFacade } from '$/facade/HomeFacade';
+import { HomeFacade } from '../facade/HomeFacade';
 
 @Controller({ path: '/' })
 export class HomeController {

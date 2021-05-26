@@ -5,12 +5,12 @@ import { Connection } from 'typeorm';
  * - 댓글 CRUD
  *  - 댓글 생성/수정시 useremail 받아서 userid 조회 후 입력
  */
-import Reply from '$/db/models/Reply';
-import User from '$/db/models/User';
-import { CreateReplyProps } from '$/db/types';
+import Reply from '../../db/models/Reply';
+import User from '../../db/models/User';
+import { CreateReplyProps } from '../../db/types';
 import { getRepository, MongoRepository, ObjectID, UpdateResult } from 'typeorm';
 
-export default class MongoDB extends MongoRepository<Reply> {
+class MongoDB extends MongoRepository<Reply> {
   /**
    * createReply
    * @description
@@ -85,3 +85,5 @@ export default class MongoDB extends MongoRepository<Reply> {
     }
   }
 }
+
+// export default new MongoDB();
