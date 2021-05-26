@@ -1,7 +1,7 @@
 export const text = {
     FACEBOOK_LOGIN: 'Facebook 계정으로 계속',
     GOOGLE_LOGIN: 'Google 계정으로 계속',
-    EMAIL_LOGIN:'혹은 이메일로 가입',
+    EMAIL_SIGNUP:'혹은 이메일로 가입',
     ALREADY_REGISTER: '이미 가입하셨나요?',
     SIGN_IN: '로그인',
     REAL_TIME_PRICE: '실시간 시세',
@@ -27,4 +27,8 @@ export const text = {
     CHART:'차트',
     INDICES: '지수',
     STOCK:'주식',
+    EMAIL:'이메일',
+    PASSWORD:'비밀번호',
+    EMAIL_LOGIN:'이메일로 로그인',
+    REGISTER: '등록'
 }
