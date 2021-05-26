@@ -3,11 +3,7 @@
     <template v-if="isEmailLogin">
       <o-auth-buttons-box></o-auth-buttons-box>
       <div class="email-login-input-form-box">
-        <form class="email-login-input-form" @submit.prevent="submitForEmailLogin">
-          <input class="email-login-input" :placeholder="emailText" v-model="email" />
-          <input class="email-login-input" :placeholder="passwordText" v-model="password" />
-          <input class="email-login-submit" type="submit" :value="emailLogin" />
-        </form>
+        <login-password-input-form></login-password-input-form>
         <text-button @handle-button-click="routeToSignup">{{ register }}</text-button>
       </div>
     </template>
@@ -31,11 +27,11 @@
 </template>
 
 <script>
-import OAuthButton from '../components/OAuthButton.vue';
 import TextButton from '../components/TextButton.vue';
 import CustomText from '../../../common/frontend/components/CustomText.vue';
 import LoginSwiper from '../components/LoginSwiper.vue';
 import OAuthButtonsBox from '../components/OAuthButtonsBox.vue';
+import LoginPasswordInputForm from '../components/LoginPasswordInputForm.vue';
 
 import { text } from '../../../common/frontend/constants';
 import { loginUserByEmail, getUser } from '../apis';
@@ -43,39 +39,23 @@ import { loginUserByEmail, getUser } from '../apis';
 export default {
   name: 'Login',
   components: {
-    OAuthButton,
     TextButton,
     CustomText,
     LoginSwiper,
     OAuthButtonsBox,
+    LoginPasswordInputForm,
   },
-
-  data: function() {
-    const {
-      FACEBOOK_LOGIN,
-      GOOGLE_LOGIN,
-      EMAIL_SIGNUP,
-      ALREADY_REGISTER,
-      SIGN_IN,
-      PASS_WITHOUT_LOGIN,
-      EMAIL,
-      PASSWORD,
-      EMAIL_LOGIN,
-      REGISTER,
-    } = text;
+  data() {
+    const { EMAIL_SIGNUP, ALREADY_REGISTER, SIGN_IN, PASS_WITHOUT_LOGIN, EMAIL_LOGIN, REGISTER } = text;
     return {
       email: '',
       password: '',
 
       isEmailLogin: false,
-      facebookLogin: FACEBOOK_LOGIN,
-      googleLogin: GOOGLE_LOGIN,
       emailSignup: EMAIL_SIGNUP,
       alreadyRegister: ALREADY_REGISTER,
       signIn: SIGN_IN,
       passWithoutLogin: PASS_WITHOUT_LOGIN,
-      emailText: EMAIL,
-      passwordText: PASSWORD,
       emailLogin: EMAIL_LOGIN,
       register: REGISTER,
     };
@@ -130,6 +110,7 @@ export default {
   flex: 1;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
 }
 
 .login-wrapper {
@@ -141,27 +122,11 @@ export default {
   width: 100%;
 }
 
-.email-login-input-form {
-  display: flex;
-  width: 80%;
-  flex-direction: column;
-  align-items: center;
-}
-
 .email-login-input-form-box {
   display: flex;
   width: 80%;
-  flex: 1;
   flex-direction: column;
   align-items: center;
-}
-
-.email-login-input {
-  margin-top: 5px;
-}
-
-.email-login-submit {
-  margin-top: 10px;
 }
 
 .login-options-box {
