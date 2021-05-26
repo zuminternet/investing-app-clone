@@ -1,9 +1,7 @@
 import { Service } from 'zum-portal-core/backend/decorator/Alias';
 import { Yml } from 'zum-portal-core/backend/decorator/Yml';
-import { AxiosStatic } from 'axios';
+import Axios from 'axios';
 import { GoogleUserInfo } from './UserService';
-
-declare const axios: AxiosStatic;
 
 @Service()
 export default class AuthService {
@@ -33,14 +31,14 @@ export default class AuthService {
       // code로 access token 받아오기
       const {
         data: { access_token },
-      } = await axios.post(baseUrl, accessTokenRequestBody);
+      } = await Axios.post(baseUrl, accessTokenRequestBody);
 
       const userInfoRequestBody = {
         headers: { Authorization: `Bearer ${access_token}` },
       };
 
       // access token으로 user info 받아오기
-      const { data } = await axios.get(goolgeUserInfoApiUrl, userInfoRequestBody);
+      const { data } = await Axios.get(goolgeUserInfoApiUrl, userInfoRequestBody);
 
       return data as GoogleUserInfo;
     } catch (e) {
