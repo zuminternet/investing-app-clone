@@ -1,6 +1,8 @@
 <template>
-  <article>
-    <slot></slot>
+  <article class="news-headline">
+    <RouterLink :to="to" :style="headlineStyle">
+      <slot></slot>
+    </RouterLink>
   </article>
 </template>
 
@@ -14,19 +16,33 @@ import Vue from 'vue';
 
 export default Vue.extend({
   name: 'NewsHeadline',
+
+  props: {
+    to: {
+      type: String,
+      required: true,
+    },
+    headlineStyle: {
+      type: [Object, String],
+      default: () => '',
+    },
+  },
 });
 </script>
 
-<style lang="scss" scoped>
-article {
-  border-bottom: 1px solid gray;
-  background-color: white;
+<style lang="scss">
+.news-headline {
+  a {
+    border-bottom: 1px solid gray;
+    background-color: white;
+    display: block;
 
-  .news-img-container {
-    width: 100%;
-  }
-  .news-text-container {
-    padding: 12px;
+    .news-img-container {
+      width: 100%;
+    }
+    .news-text-container {
+      padding: 12px;
+    }
   }
 }
 </style>

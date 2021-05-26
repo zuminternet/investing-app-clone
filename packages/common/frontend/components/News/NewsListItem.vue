@@ -1,8 +1,10 @@
 <template>
   <li class="news-list-item">
-    <RouterLink class="news-link" :to="to" :style="listStyle">
-      <slot></slot>
-    </RouterLink>
+    <article>
+      <RouterLink class="news-link" :to="to" :style="listStyle">
+        <slot></slot>
+      </RouterLink>
+    </article>
   </li>
 </template>
 
