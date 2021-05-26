@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import { Login, Home, Signup } from '../views'
-import ItemDetail from '../../../common/frontend/views/ItemDetail.vue'
+import { Login, Home, Signup } from '../views';
+import ItemDetail from '../../../common/frontend/views/ItemDetail.vue';
 // import Login from '../views/Login.vue'
 // import Home from '../views/Home.vue'
 // import ItemDetail from '../views/ItemDetail.vue'
@@ -29,10 +29,10 @@ export default () => {
         component: Home,
       },
       {
-        path:'/item-detail',
+        path: '/item-detail',
         name: 'ItemDetail',
-        component: ItemDetail
-      }
+        component: ItemDetail,
+      },
     ],
   });
 };

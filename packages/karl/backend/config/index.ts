@@ -1,3 +1,3 @@
-const jwtSecret = 'zuminvestingappclonekarlsecret'
+const jwtSecret = 'zuminvestingappclonekarlsecret';
 
-export { jwtSecret }
+export { jwtSecret };

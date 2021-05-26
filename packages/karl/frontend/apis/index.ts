@@ -1,69 +1,62 @@
-import { AxiosStatic } from 'axios'
+import { AxiosStatic } from 'axios';
 
 declare const Axios: AxiosStatic;
 
-
-const devURL = 'http://localhost:3000/'
-
+const devURL = 'http://localhost:3000/';
 
 export interface createUserInfo {
-  name: string,
-  email: string,
-  password:string
+  name: string;
+  email: string;
+  password: string;
 }
-
 
 export interface loginUserByEmailInfo {
-  email:string,
-  password: string
+  email: string;
+  password: string;
 }
 
-
-const createUser = async function({name, email, password}: createUserInfo) {
+const createUser = async ({ name, email, password }: createUserInfo) => {
   try {
     const result = await Axios.post(`${devURL}/api/user`, {
       name,
       email,
-      password
+      password,
     });
 
     if (result) {
-      return result
+      return result;
     }
-    
   } catch (error) {
     console.log(error);
   }
-}
+};
 
-const getUser = async function () {
+const getUser = async () => {
   try {
-    const result = await Axios.get(`${devURL}/api/user`, {withCredentials:true})
+    const result = await Axios.get(`${devURL}/api/user`, { withCredentials: true });
 
     if (result) {
-      return result
+      return result;
     }
-
   } catch (error) {
-    console.log(error)
-  }  
-}
+    console.log(error);
+  }
+};
 
-const loginUserByEmail = async function({email, password}: loginUserByEmailInfo) {
+const loginUserByEmail = async ({ email, password }: loginUserByEmailInfo) => {
   try {
     const result = await Axios.post(`${devURL}/api/auth/email`, {
       email,
-      password
-    })
+      password,
+    });
 
     if (result) {
-      console.log(result, "result")
-      return result
+      console.log(result, 'result');
+      return result;
     }
   } catch (error) {
-    console.log(error)
-    
+    console.log(error);
   }
-}
+};
 
-export { createUser, loginUserByEmail, getUser }
+export { createUser, loginUserByEmail, getUser };
