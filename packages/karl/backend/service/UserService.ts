@@ -22,10 +22,8 @@ export default class UserService {
       $or: [{ name, email }],
     });
 
-    console.log(user, 'create user');
-
     if (user) {
-      throw new Error('user already exists');
+      throw new Error('User already exists');
     }
 
     return await User.create({ name, email, password });
@@ -38,6 +36,6 @@ export default class UserService {
       return user;
     }
 
-    throw new Error('user not exists');
+    throw new Error('User not exists');
   }
 }

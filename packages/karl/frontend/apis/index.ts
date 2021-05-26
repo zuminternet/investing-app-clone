@@ -26,6 +26,8 @@ const createUser = async ({ name, email, password }: createUserInfo) => {
     if (result) {
       return result;
     }
+
+    throw new Error('User was not created');
   } catch (error) {
     console.log(error);
   }
@@ -38,6 +40,8 @@ const getUser = async () => {
     if (result) {
       return result;
     }
+
+    throw new Error('Getting user was failed ');
   } catch (error) {
     console.log(error);
   }
@@ -54,6 +58,8 @@ const loginUserByEmail = async ({ email, password }: loginUserByEmailInfo) => {
       console.log(result, 'result');
       return result;
     }
+
+    throw new Error('Email login was failed');
   } catch (error) {
     console.log(error);
   }
