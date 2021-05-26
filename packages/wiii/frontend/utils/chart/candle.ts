@@ -6,23 +6,54 @@ const setColor = (o: number, c: number) => {
   if (o < c) return CandleColorEnum.up;
 };
 
-const basicCandle = ({ ctx, x, y, high, low, open, close, width, height }: BasicCandleOptionProps) => {
+const BASE_RADIAN = Math.PI / 180;
+
+const basicCandle = ({
+  ctx,
+  x,
+  y,
+  high,
+  low,
+  open,
+  close,
+  width,
+  height,
+  timestamp,
+  highest,
+  lowest,
+  canvasWidth,
+  canvasHeight,
+  hRatio,
+}: BasicCandleOptionProps) => {
+  const color = setColor(open, close);
+  ctx.strokeStyle = color;
+  ctx.fillStyle = color;
+  ctx.save();
+  ctx.translate(0, canvasHeight);
+
+  ctx.strokeText('기준', 0, 0);
   /**
    * @todo
    * 비율 맞추기
+   * - canvasHeight에 따라 ratio 변화되어야 함
    */
-  const color = setColor(open, close);
-  ctx.fillStyle = color;
-  ctx.fillRect(x, y, width, height);
+  ctx.fillRect(x, (-y - height + lowest * 0.8) * hRatio, width, height * hRatio);
 
   const lineCenter = x + width / 2;
-  ctx.strokeStyle = color;
-  ctx.lineWidth = 3;
+  ctx.lineWidth = 1;
   ctx.beginPath();
-  ctx.moveTo(lineCenter, low);
-  ctx.lineTo(lineCenter, high);
+  ctx.moveTo(lineCenter, (+lowest * 0.8 - low) * hRatio);
+  ctx.lineTo(lineCenter, (lowest * 0.8 - high) * hRatio);
   ctx.closePath();
   ctx.stroke();
+
+  /**
+   * @todo
+   * 일자
+   */
+  // ctx.textAlign = 'center';
+  // ctx.fillText(String(timestamp), x, -30);
+  ctx.restore();
 };
 
 /**
@@ -34,7 +65,7 @@ const basicCandle = ({ ctx, x, y, high, low, open, close, width, height }: Basic
  */
 export const drawBasicCandleChart = ({ ctx, results, resultsCount, limit }: DrawCandleChartOptions) => {
   const timerLabel = `draw Chart`;
-  console.info(timerLabel);
+  console.warn(timerLabel);
   console.time(timerLabel);
 
   /**
@@ -42,10 +73,10 @@ export const drawBasicCandleChart = ({ ctx, results, resultsCount, limit }: Draw
    * 캔버스 dpi 강제로 높이기
    * 변수화 필요..
    */
-  const width = (ctx.canvas.width = 1000);
-  const height = (ctx.canvas.height = 600);
-  ctx.canvas.style.width = `${width / 2}px`;
-  ctx.canvas.style.height = `${height / 2}px`;
+  const canvasWidth = (ctx.canvas.width = 1200);
+  const canvasHeight = (ctx.canvas.height = 600);
+  ctx.canvas.style.width = `${canvasWidth / 2}px`;
+  ctx.canvas.style.height = `${canvasHeight / 2}px`;
 
   let highest = 0,
     lowest = Number.MAX_SAFE_INTEGER;
@@ -55,10 +86,10 @@ export const drawBasicCandleChart = ({ ctx, results, resultsCount, limit }: Draw
     if (lowest > l) lowest = l;
   }
 
-  // const numToShow = Math.min(resultsCount, limit);
-  const numToShow = 50;
-  const w = width / numToShow;
-  // const hRatio = 600 / (highest - lowest);
+  const numToShow = Math.min(resultsCount, limit);
+  // const numToShow = 50;
+  const w = canvasWidth / numToShow;
+  const hRatio = canvasHeight / (highest - lowest);
 
   for (let i = 0, cnt = numToShow; cnt--; ) {
     const { close, low, open, high, timestamp } = results[i++];
@@ -71,8 +102,13 @@ export const drawBasicCandleChart = ({ ctx, results, resultsCount, limit }: Draw
       low,
       high,
       width: w * 0.8,
-      height: high - low,
-      timestamp: timestamp.toLocaleString(),
+      height: Math.abs(close - open),
+      timestamp: new Date(timestamp).getDate(),
+      canvasWidth,
+      canvasHeight,
+      highest,
+      lowest,
+      hRatio,
     });
   }
 

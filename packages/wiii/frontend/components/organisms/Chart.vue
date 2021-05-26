@@ -39,7 +39,7 @@ export default Vue.extend({
        * @description
        * 기본 limit 120일 데이터 요청하지만, 휴장일 데이터 제외하고 가져오므로 넉넉하게 200일 요청
        */
-      default: getDateString(Date.now() - 250 * 3600 * 24 * 1000),
+      default: getDateString(Date.now() - 500 * 3600 * 24 * 1000),
     },
     to: {
       type: [String, Number, Date],
@@ -52,10 +52,10 @@ export default Vue.extend({
         Object.freeze({
           /**
            * @description
-           * 가장 최근 시세부터 호출하기 위해 sort-desc
+           * 가장 최근 시세부터 호출하기 위해 sort-asc
            */
           sort: 'asc',
-          limit: 150,
+          limit: 300,
         }),
     },
   },
@@ -91,12 +91,18 @@ export default Vue.extend({
   async mounted() {
     const chart = this.$refs.canvas;
     this.ctx = chart.getContext('2d') as CanvasRenderingContext2D;
+
+    /**@todo console 삭제 */
+    const timerLabel = `api-chart timer`;
+    console.warn(timerLabel);
+    console.time(timerLabel);
     try {
       await this.getStockData(this.options);
       this.getChart(this.options);
     } catch (e) {
       console.error(e);
     }
+    console.timeEnd(timerLabel);
   },
 
   /**

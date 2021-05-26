@@ -16,7 +16,13 @@ export interface BasicCandleOptionProps {
   high: number;
   width: number;
   height: number;
-  timestamp?: string;
+  timestamp?: number;
+
+  highest: number;
+  lowest: number;
+  canvasWidth?: number;
+  canvasHeight?: number;
+  hRatio: number;
 }
 
 export interface DrawCandleChartOptions {
