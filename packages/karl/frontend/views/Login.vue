@@ -6,7 +6,7 @@
         <o-auth-button>{{ googleLogin }}</o-auth-button>
       </div>
       <div class="email-login-input-form-box">
-        <form class="email-login-input-form" @submit="submitForEmailLogin">
+        <form class="email-login-input-form" @submit.prevent="submitForEmailLogin">
           <input class="email-login-input" :placeholder="emailText" v-model="email" />
           <input class="email-login-input" :placeholder="passwordText" v-model="password" />
           <input class="email-login-submit" type="submit" :value="emailLogin" />
@@ -94,10 +94,8 @@ export default {
       this.$router.push('/signup');
     },
 
-    submitForEmailLogin: async function(event) {
+    async submitForEmailLogin(event) {
       try {
-        event.preventDefault();
-
         const result = await loginUserByEmail({ email: this.email, password: this.password });
 
         if (result.status === 200) {

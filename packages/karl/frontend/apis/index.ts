@@ -55,7 +55,6 @@ const loginUserByEmail = async ({ email, password }: loginUserByEmailInfo) => {
     });
 
     if (result) {
-      console.log(result, 'result');
       return result;
     }
 
