@@ -18,7 +18,9 @@ export default {
     test() {},
   },
 
-  mounted() {},
+  mounted() {
+    createUser({ name: 'karl6', email: 'karl5', password: 'karl6' });
+  },
 };
 </script>
 

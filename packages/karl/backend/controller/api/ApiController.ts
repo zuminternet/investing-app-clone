@@ -15,12 +15,24 @@ export class ApiController {
       // 토큰 인증자리
       // 토큰 인증되면 클라이언트에 user 정보 보내기
       const token = request.cookies['jwt-token'];
+
+      // 토큰이 없으면
+      if (!token) {
+        response.sendStatus(401);
+
+        return false;
+      }
+
       const decodedToken = this.authService.verifyToken(token);
       const user = await this.userService.loginUserByEmail(decodedToken);
 
       if (user) {
         response.status(200).send(user);
+
+        return true;
       }
+
+      response.sendStatus(404);
     } catch (error) {
       console.log(error);
     }
@@ -29,10 +41,17 @@ export class ApiController {
   @PostMapping({ path: '/user' })
   public async createUser(reqeust: Request, response: Response) {
     try {
-      await this.userService.createUser(reqeust.body);
+      const user = await this.userService.createUser(reqeust.body);
 
-      response.sendStatus(200);
+      if (user) {
+        response.sendStatus(200);
+
+        return true;
+      }
+
+      response.sendStatus(409);
     } catch (error) {
+      console.log(error);
       response.status(500).json(error);
     }
   }
@@ -43,9 +62,16 @@ export class ApiController {
       const user = await this.userService.loginUserByEmail(request.body);
       const token = this.authService.issueToken(user);
 
-      response.cookie('jwt-token', token, { expires: new Date(Date.now() + 9000000), httpOnly: true });
-      response.status(200).send(user);
+      if (token) {
+        response.cookie('jwt-token', token, { expires: new Date(Date.now() + 9000000), httpOnly: true });
+        response.status(200).send(user);
+
+        return true;
+      }
+
+      response.sendStatus(401);
     } catch (error) {
+      console.log(error);
       response.status(401).json(error);
     }
   }

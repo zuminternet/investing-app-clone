@@ -17,7 +17,12 @@ export default class UserService {
   constructor() {}
 
   public async createUser({ name, email, password }: createUserInfo) {
-    const user = await User.findOne().or([{ name, email }]);
+    console.log(name, email, password);
+    const user = await User.findOne({
+      $or: [{ name, email }],
+    });
+
+    console.log(user, 'create user');
 
     if (user) {
       throw new Error('user already exists');
