@@ -1,10 +1,10 @@
 import { polygonAPIKey } from '@/config/index';
 import { GetMultiDaysStockProps } from '@/type/apis';
-import { getDateString } from '@/utils/date';
-import { IAggResponseFormatted, ICryptoClient, IStocksClient, restClient } from '@polygon.io/client-js';
+import { MultidaysStockData } from '@/type/chart';
+import { ICryptoClient, IStocksClient, restClient } from '@polygon.io/client-js';
 
 /**
- * @classdesc
+ * @class
  * polygon.io RESTful API를 사용해 주가, Crypto 시세 및 종목정보 데이터 가져오는 class
  * - free-tier 관련 API만 활용
  */
@@ -37,18 +37,19 @@ class PolygonAPI {
    * - https://polygon.io/docs/get_v2_aggs_ticker__stocksTicker__range__multiplier___timespan___from___to__anchor
    * - https://github.com/polygon-io/client-js/blob/master/src/rest/stocks/aggregates.ts
    */
-  public async getMultiDaysStockData(props: GetMultiDaysStockProps) {
-    const { ticker, multiplier, timespan, from, to = getDateString(), query } = props;
+  public async getMultiDaysStockData(props: GetMultiDaysStockProps): Promise<MultidaysStockData> {
+    const { ticker, multiplier, timespan, from, to, query } = props;
     if (!ticker) return;
     try {
       const { results, resultsCount } = await this.stocks.aggregates(ticker, multiplier, timespan, from, to, query);
 
+      const dataKey = `${ticker}-${multiplier}${timespan}-${new Date().getMinutes()}`;
       /**
        * @todo
        * 예외 처리 또는 추가 로직?
        */
 
-      return { results, resultsCount };
+      return { dataKey, results, resultsCount };
     } catch (e) {
       console.error(e);
       return;

@@ -1,29 +1,4 @@
-import { IAggV2Formatted } from '@polygon.io/client-js/lib/rest/stocks/aggregates';
-
-interface BasicCandleOptionProps {
-  ctx: CanvasRenderingContext2D;
-  x: number;
-  y: number;
-  o: number;
-  c: number;
-  l: number;
-  h: number;
-  w: number;
-  height: number;
-}
-
-export interface DrawCandleChartOptions {
-  ctx: CanvasRenderingContext2D;
-  results: IAggV2Formatted[];
-  resultsCount: number;
-  limit: number;
-}
-
-export enum CandleColorEnum {
-  up = 'red',
-  down = 'blue',
-  same = 'black',
-}
+import { BasicCandleOptionProps, CandleColorEnum, DrawCandleChartOptions } from '@/type/chart';
 
 const setColor = (o: number, c: number) => {
   if (o === c) return CandleColorEnum.same;
@@ -31,9 +6,23 @@ const setColor = (o: number, c: number) => {
   if (o < c) return CandleColorEnum.up;
 };
 
-const basicCandle = ({ x, y, w, h, l, o, c, height, ctx }: BasicCandleOptionProps) => {
-  ctx.fillStyle = setColor(o, c);
-  ctx.fillRect(x, y, w, height);
+const basicCandle = ({ ctx, x, y, high, low, open, close, width, height }: BasicCandleOptionProps) => {
+  /**
+   * @todo
+   * 비율 맞추기
+   */
+  const color = setColor(open, close);
+  ctx.fillStyle = color;
+  ctx.fillRect(x, y, width, height);
+
+  const lineCenter = x + width / 2;
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(lineCenter, low);
+  ctx.lineTo(lineCenter, high);
+  ctx.closePath();
+  ctx.stroke();
 };
 
 /**
@@ -45,8 +34,18 @@ const basicCandle = ({ x, y, w, h, l, o, c, height, ctx }: BasicCandleOptionProp
  */
 export const drawBasicCandleChart = ({ ctx, results, resultsCount, limit }: DrawCandleChartOptions) => {
   const timerLabel = `draw Chart`;
-  console.log(timerLabel);
+  console.info(timerLabel);
   console.time(timerLabel);
+
+  /**
+   * @todo
+   * 캔버스 dpi 강제로 높이기
+   * 변수화 필요..
+   */
+  const width = (ctx.canvas.width = 1000);
+  const height = (ctx.canvas.height = 600);
+  ctx.canvas.style.width = `${width / 2}px`;
+  ctx.canvas.style.height = `${height / 2}px`;
 
   let highest = 0,
     lowest = Number.MAX_SAFE_INTEGER;
@@ -56,16 +55,31 @@ export const drawBasicCandleChart = ({ ctx, results, resultsCount, limit }: Draw
     if (lowest > l) lowest = l;
   }
 
-  const numToShow = Math.min(resultsCount, limit);
-  const w = 300 / numToShow;
-  const hRatio = 600 / (highest - lowest);
+  // const numToShow = Math.min(resultsCount, limit);
+  const numToShow = 50;
+  const w = width / numToShow;
+  // const hRatio = 600 / (highest - lowest);
 
-  // ctx.save();
-  for (let i = numToShow; i--; ) {
-    const { c, l, o, h } = results[i];
-    basicCandle({ ctx, x: i * w + 1, y: o, c, l, o, h, w: w * 0.8, height: h - l });
-    // ctx.restore();
+  for (let i = 0, cnt = numToShow; cnt--; ) {
+    const { close, low, open, high, timestamp } = results[i++];
+    basicCandle({
+      ctx,
+      x: i * w + 1,
+      y: open,
+      open,
+      close,
+      low,
+      high,
+      width: w * 0.8,
+      height: high - low,
+      timestamp: timestamp.toLocaleString(),
+    });
   }
 
+  /**
+   * @todo
+   * - base64로 store 저장, caching
+   */
+  // ctx.canvas.toDataURL('image/png', 1);
   console.timeEnd(timerLabel);
 };
