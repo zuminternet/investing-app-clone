@@ -29,8 +29,8 @@ export default class CandleChart {
     this.barWidth = 7;
     this.colorOptions = {
       bgColor: 'white',
-      redColor: 'red',
-      blueColor: 'blue',
+      redColor: '#26a69a',
+      blueColor: '#ef5350',
     };
 
     this.initializeEvents();
