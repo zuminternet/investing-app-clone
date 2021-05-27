@@ -1,3 +1,5 @@
+import { crispPixel, drawHelper } from '@/chart/utils';
+
 interface ColorOptions {
   bgColor: string;
   redColor: string;
@@ -104,10 +106,10 @@ export default class Graph {
   public draw(minPrice, maxPrice) {
     const ctx = this.getCtx();
 
-    ctx.save();
-    ctx.fillStyle = this.colorOptions.bgColor;
-    ctx.fillRect(0, 0, this.width, this.height);
-    ctx.restore();
+    drawHelper(ctx, () => {
+      ctx.fillStyle = this.colorOptions.bgColor;
+      ctx.fillRect(0, 0, this.width, this.height);
+    });
 
     this.candles.forEach((candle, i) => {
       this.drawWick(ctx, i, minPrice, maxPrice);
@@ -125,8 +127,10 @@ export default class Graph {
     const left = this.barWidth * i + this.leftOffset;
     const right = left + this.barWidth - 1;
 
-    ctx.fillStyle = this.getCandleColor(open, close);
-    ctx.fillRect(left, height - topY, right - left, topY - bottomY);
+    drawHelper(ctx, () => {
+      ctx.fillStyle = this.getCandleColor(open, close);
+      ctx.fillRect(left, height - topY, right - left, topY - bottomY);
+    });
   }
 
   private drawWick(ctx, i, minPrice, maxPrice) {
@@ -138,15 +142,14 @@ export default class Graph {
     const bottomY = Math.round(((bottom - minPrice) / (maxPrice - minPrice)) * height);
     let left = this.barWidth * i + Math.floor(this.barWidth * 0.5) + this.leftOffset;
 
-    // 보정
-    left = (Number.isInteger(left) ? left : Math.round(left - 0.5)) + 0.5;
+    left = crispPixel(left);
 
-    ctx.strokeStyle = this.getCandleColor(open, close);
-    ctx.save();
-    ctx.beginPath();
-    ctx.moveTo(left, height - topY);
-    ctx.lineTo(left, height - bottomY);
-    ctx.stroke();
-    ctx.restore();
+    drawHelper(ctx, () => {
+      ctx.strokeStyle = this.getCandleColor(open, close);
+      ctx.beginPath();
+      ctx.moveTo(left, height - topY);
+      ctx.lineTo(left, height - bottomY);
+      ctx.stroke();
+    });
   }
 }

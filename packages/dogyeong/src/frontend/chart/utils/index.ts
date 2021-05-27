@@ -16,3 +16,14 @@ export const createCanvas = ($container: HTMLElement) => {
 
   return canvas;
 };
+
+export const crispPixel = (pixel) => {
+  const halfThickness = 0.5;
+  return (Number.isInteger(pixel) ? pixel : Math.round(pixel - halfThickness)) + halfThickness;
+};
+
+export const drawHelper = (ctx, fn) => {
+  ctx.save();
+  fn();
+  ctx.restore();
+};
