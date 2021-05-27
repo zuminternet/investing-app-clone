@@ -8,7 +8,6 @@ interface ColorOptions {
 
 export default class CandleChart {
   private readonly canvas: HTMLCanvasElement;
-  private readonly pixelRatio: number;
   private width: number;
   private height: number;
   private candles: any[];
@@ -18,11 +17,10 @@ export default class CandleChart {
   private barWidth: number;
   private colorOptions: ColorOptions;
 
-  constructor(canvas: HTMLCanvasElement, pixelRatio: number) {
+  constructor(canvas: HTMLCanvasElement) {
     this.canvas = canvas;
     this.width = this.canvas.width;
     this.height = this.canvas.height;
-    this.pixelRatio = pixelRatio;
     this.minPrice = 0;
     this.maxPrice = 1000;
     this.leftOffset = 0;
