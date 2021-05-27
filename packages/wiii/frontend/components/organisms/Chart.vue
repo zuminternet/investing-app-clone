@@ -9,7 +9,7 @@
  */
 import { ChartModuleMapperEnums } from '@/store/types';
 import { TimespanEnum } from '@/type/apis';
-import { MultidaysStockData } from '@/type/chart';
+import { MultidaysStockData, CanvasOptionEnum } from '@/type/chart';
 import { drawBasicCandleChart } from '@/utils/chart/candle';
 import { getDateString } from '@/utils/date';
 import Vue from 'vue';
@@ -91,7 +91,7 @@ export default Vue.extend({
    */
   async mounted() {
     const chart = this.$refs.canvas;
-    this.ctx = chart.getContext('2d') as CanvasRenderingContext2D;
+    this.ctx = chart.getContext(CanvasOptionEnum.context2d, { alpha: 1 }) as CanvasRenderingContext2D;
 
     /**@todo console 삭제 */
     const timerLabel = `api-chart timer`;
@@ -141,6 +141,8 @@ canvas {
   width: 600px;
   height: 300px;
   padding: 15px;
+  margin: 20px;
   box-shadow: 0 0 20px 5px $red-neon;
+  background-color: white;
 }
 </style>

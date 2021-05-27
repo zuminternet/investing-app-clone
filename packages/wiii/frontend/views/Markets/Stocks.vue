@@ -1,5 +1,8 @@
 <template>
-  <Chart :typeName="`stock`" />
+  <main class="area">
+    <Chart :typeName="`stock`" />
+    <Chart :typeName="`stock`" :timespan="`week`" :from="`2017-01-24`" />
+  </main>
 </template>
 
 <script lang="ts">

@@ -1,4 +1,5 @@
-import { BasicCandleOptionProps, CandleColorEnum, DrawCandleChartOptions } from '@/type/chart';
+import { BasicCandleOptionProps, CandleColorEnum, CanvasOptionEnum, DrawCandleChartOptions, MAColorEnum } from '@/type/chart';
+import { setSMA } from './sma';
 
 const { PI, min, abs } = Math;
 
@@ -51,9 +52,7 @@ const setPricePartition = (
   ctx.strokeStyle = CandleColorEnum.partition;
   ctx.fillStyle = CandleColorEnum.grey900;
   ctx.font = `italic 20px sans-serif`;
-  ctx.textAlign = 'right';
-
-  // const partitionYs = adjustY(lowest - padding)(hRatio)([...Array(partitionNum+1).keys()].map(n => -(n*ratio)*))
+  ctx.textAlign = CanvasOptionEnum.textAlignRight;
 
   for (let n = partitionNum + 1; n--; ) {
     /** 구분선 */
@@ -96,9 +95,8 @@ const basicCandle = ({
 }: BasicCandleOptionProps) => {
   /** @description  기본 설정 */
   const color = setColor(open, close);
-  ctx.textAlign = 'right';
-  ctx.textBaseline = 'alphabetic';
-  ctx.font = `20px sans-serif`;
+
+  ctx.globalCompositeOperation = CanvasOptionEnum.globalCompositeOperation;
 
   /**
    * @todo
@@ -107,7 +105,6 @@ const basicCandle = ({
 
   /** @description text 위치 조정 */
   const dateHeight = 0,
-    // monthHeight = 18,
     textBase = -2,
     textHRatio = 1;
   const adjustTextY = (origins: number[]): number[] => adjustY(textBase)(textHRatio)(origins);
@@ -116,31 +113,9 @@ const basicCandle = ({
   /** @description 캔들 위치 조정 */
   const adjustCandleY = (origins: number[]): number[] => adjustY(lowest)(/** hRatio */ 1)(origins);
   /** @constant adjX adjusted X, 오른쪽부터 최신순 */
-  const adjX = -idx * bodyWidth - 30;
+  const adjX = -idx * bodyWidth - 60;
   const [adjOpen, adjClose, adjLow, adjHigh] = adjustCandleY([open, close, low, high]);
   const bodyHeight = adjClose - adjOpen;
-  ctx.save();
-
-  /** @description 일자구분선 */
-
-  const dateX = adjX + bodyWidth;
-
-  if (idx % 5 === 0) {
-    ctx.lineWidth = 1;
-    if (idx % 10 === 0) ctx.lineWidth = 5;
-    ctx.strokeStyle = CandleColorEnum.partition;
-    ctx.beginPath();
-    ctx.moveTo(dateX, 0);
-    ctx.lineTo(dateX, -canvasHeight);
-    ctx.closePath();
-    ctx.stroke();
-  }
-
-  /** @description 일자구분선 월/일 표시 */
-  ctx.fillStyle = CandleColorEnum.grey900;
-  const [curDate, curMonth] = [timestamp.getDate(), timestamp.getMonth()];
-  if (idx % 10 === 0) ctx.fillText(`${(curMonth + 1).toString()} / ${curDate.toString()}`, dateX, adjDayH);
-  ctx.restore();
   ctx.save();
 
   ctx.strokeStyle = color;
@@ -152,16 +127,45 @@ const basicCandle = ({
   ctx.fillRect(adjX, adjOpen, bodyWidth * bodyWidthRatio, bodyHeight);
 
   /** @description 캔들 꼬리 */
-  const lineCenter = adjX + (bodyWidth * bodyWidthRatio) / 2;
+  const candleCenter = adjX + (bodyWidth * bodyWidthRatio) / 2;
   ctx.lineWidth = 2;
   ctx.strokeStyle = color;
   ctx.beginPath();
-  ctx.moveTo(lineCenter, adjLow);
-  ctx.lineTo(lineCenter, adjHigh);
+  ctx.moveTo(candleCenter, adjLow);
+  ctx.lineTo(candleCenter, adjHigh);
   ctx.closePath();
   ctx.stroke();
 
   ctx.restore();
+  ctx.save();
+
+  /** @description 일자구분선 */
+  const dateX = adjX + bodyWidth;
+
+  if (idx % 5 === 0) {
+    ctx.lineWidth = 1;
+    if (idx % 10 === 0 && idx > 0) {
+      ctx.lineWidth = 5;
+
+      /** @description 일자구분선 월/일 표시 */
+      ctx.textAlign = CanvasOptionEnum.textAlignLeft;
+      ctx.textBaseline = CanvasOptionEnum.textBaseTop;
+      ctx.font = `20px sans-serif`;
+      ctx.fillStyle = CandleColorEnum.grey900;
+      const [curDate, curMonth] = [timestamp.getDate(), timestamp.getMonth()];
+      ctx.fillText(`${(curMonth + 1).toString()} / ${curDate.toString()}`, dateX, adjDayH);
+    }
+    ctx.strokeStyle = CandleColorEnum.partition;
+    ctx.beginPath();
+    ctx.moveTo(dateX, 0);
+    ctx.lineTo(dateX, -canvasHeight);
+    ctx.closePath();
+    ctx.stroke();
+  }
+
+  ctx.restore();
+
+  return { adjClose, candleCenter };
 };
 
 /**
@@ -183,11 +187,11 @@ export const drawBasicCandleChart = ({ ctx, results, resultsCount, limit }: Draw
   const padding = 10;
   const canvasWidth = (cvs.width = window.screenX * 3);
   const canvasHeight = (cvs.height = 900);
-  cvs.style.width = `${canvasWidth / 3}px`;
-  cvs.style.height = `${canvasHeight / 3}px`;
+  cvs.style.width = `${canvasWidth / 3 - padding}px`;
+  cvs.style.height = `${canvasHeight / 3 - padding}px`;
   cvs.style.padding = `${padding}px`;
   cvs.style.overflow = 'auto';
-  ctx.textBaseline = `top`;
+  // ctx.textBaseline = CanvasOptionEnum.textBaseTop;
 
   /** @constant numToShow 현재 화면에 보여지는 캔들 갯수  */
   const numToShow = min(resultsCount, limit);
@@ -212,14 +216,12 @@ export const drawBasicCandleChart = ({ ctx, results, resultsCount, limit }: Draw
   /** @description 계산 편리 위해 우하단으로 이동 */
   ctx.translate(canvasWidth, canvasHeight);
 
-  /**@todo 가격 구분선 */
-  const partitionNum = 5;
-  setPricePartition(ctx, hRatio, partitionNum, hRange, canvasWidth, canvasHeight, lowest, padding);
+  const adjCloses = [];
 
   let idx = 0;
   for (const day of showingData) {
     const { close, low, open, high, timestamp } = day;
-    basicCandle({
+    const adjData = basicCandle({
       ctx,
       idx: idx++,
       open,
@@ -235,7 +237,18 @@ export const drawBasicCandleChart = ({ ctx, results, resultsCount, limit }: Draw
       hRatio,
       padding,
     });
+    adjCloses.push(adjData);
   }
+
+  /** @todo SMA custom */
+  setSMA(ctx, { data: adjCloses, duration: 9, hRatio, color: MAColorEnum.red500 });
+  setSMA(ctx, { data: adjCloses, duration: 20, hRatio, color: MAColorEnum.green500 });
+  setSMA(ctx, { data: adjCloses, duration: 55, hRatio, color: MAColorEnum.blue500 });
+  setSMA(ctx, { data: adjCloses, duration: 112, hRatio, color: MAColorEnum.grey500 });
+
+  /**@todo 가격 구분선 */
+  const partitionNum = 5;
+  setPricePartition(ctx, hRatio, partitionNum, hRange, canvasWidth, canvasHeight, lowest, padding);
 
   console.timeEnd(timerLabel);
 
