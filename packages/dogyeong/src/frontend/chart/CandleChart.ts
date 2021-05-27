@@ -1,18 +1,34 @@
-import { CandleChartData } from '../../backend/service/MarketService';
 import Graph from '@/chart/Graph';
+import PriceAxis from '@/chart/PriceAxis';
 import { createCanvas } from '@/chart/utils';
+import { CandleChartData } from '../../backend/service/MarketService';
 
 export default class CandleChart {
   private minPrice: number;
   private maxPrice: number;
   private graph: Graph;
+  private priceAxis: PriceAxis;
 
   constructor($container: HTMLElement) {
     this.minPrice = 0;
     this.maxPrice = 1000;
 
-    const canvas = createCanvas($container);
-    this.graph = new Graph(canvas);
+    const $table = document.createElement('table');
+
+    $table.style.width = '100%';
+    $table.style.height = '100%';
+    $table.style.borderCollapse = 'collapse';
+    $table.innerHTML = '<tbody><tr><td></td><td></td></tr></tbody>';
+
+    const $graphContainer = $table.querySelector<HTMLElement>('tr td:first-child');
+    const $priceAxisContainer = $table.querySelector<HTMLElement>('tr td:last-child');
+
+    $priceAxisContainer.style.width = '100px';
+
+    $container.appendChild($table);
+
+    this.graph = new Graph(createCanvas($graphContainer));
+    this.priceAxis = new PriceAxis(createCanvas($priceAxisContainer));
 
     this.graph.subscribe(this.draw.bind(this));
   }
@@ -48,5 +64,6 @@ export default class CandleChart {
   private draw() {
     this.caculatePriceScale();
     this.graph.draw(this.minPrice, this.maxPrice);
+    this.priceAxis.draw(this.minPrice, this.maxPrice);
   }
 }
