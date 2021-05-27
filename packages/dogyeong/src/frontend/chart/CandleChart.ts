@@ -28,7 +28,7 @@ export default class CandleChart {
     this.leftOffset = 0;
     this.barWidth = 7;
     this.colorOptions = {
-      bgColor: 'white',
+      bgColor: '#131722',
       redColor: '#26a69a',
       blueColor: '#ef5350',
     };
@@ -73,13 +73,17 @@ export default class CandleChart {
     };
   }
 
-  public getCtx() {
+  private getCtx() {
     return this.canvas.getContext('2d');
   }
 
-  public draw() {
+  private draw() {
     const ctx = this.getCtx();
-    ctx.clearRect(0, 0, this.width, this.height);
+
+    ctx.save();
+    ctx.fillStyle = this.colorOptions.bgColor;
+    ctx.fillRect(0, 0, this.width, this.height);
+    ctx.restore();
 
     this.candles.forEach((candle, i) => {
       this.drawWick(ctx, candle, i);
@@ -87,28 +91,28 @@ export default class CandleChart {
     });
   }
 
-  public drawBody(ctx, candle, i) {
+  private drawBody(ctx, candle, i) {
     const { open, close } = candle;
     const height = this.canvas.height;
     const top = Math.max(open, close);
     const bottom = Math.min(open, close);
     const topY = Math.round(((top - this.minPrice) / (this.maxPrice - this.minPrice)) * height);
     const bottomY = Math.round(((bottom - this.minPrice) / (this.maxPrice - this.minPrice)) * height);
-    const left = this.barWidth * (this.candles.length - i) + this.leftOffset;
+    const left = this.barWidth * i + this.leftOffset;
     const right = left + this.barWidth - 1;
 
     ctx.fillStyle = candle.open > candle.close ? this.colorOptions.blueColor : this.colorOptions.redColor;
     ctx.fillRect(left, height - topY, right - left, topY - bottomY);
   }
 
-  public drawWick(ctx: CanvasRenderingContext2D, candle, i) {
+  private drawWick(ctx: CanvasRenderingContext2D, candle, i) {
     const { high, low } = candle;
     const height = this.canvas.height;
     const top = Math.max(high, low);
     const bottom = Math.min(high, low);
     const topY = Math.round(((top - this.minPrice) / (this.maxPrice - this.minPrice)) * height);
     const bottomY = Math.round(((bottom - this.minPrice) / (this.maxPrice - this.minPrice)) * height);
-    let left = this.barWidth * (this.candles.length - i) + Math.floor(this.barWidth * 0.5) + this.leftOffset;
+    let left = this.barWidth * i + Math.floor(this.barWidth * 0.5) + this.leftOffset;
 
     // 보정
     left = (Number.isInteger(left) ? left : Math.round(left - 0.5)) + 0.5;
@@ -122,28 +126,44 @@ export default class CandleChart {
     ctx.restore();
   }
 
+  private caculatePriceScale() {
+    // 보이는 첫 캔들 구함 (right > 0)
+    // -1이면 차트가 화면 위에 없음
+    const firstCandleIndex = this.candles.findIndex((_, i) => this.barWidth * i + this.leftOffset + this.barWidth > 0);
+
+    // 보이는 마지막 캔들 구함 (left > width)
+    // 인덱스가 음수면 차트 끝이 화면 안에 있음
+    let lastCandleIndex = this.candles.findIndex((_, i) => this.barWidth * i + this.leftOffset > this.width) - 1;
+
+    // 차트가 화면 바깥에 있는 경우
+    if (firstCandleIndex < 0) return;
+
+    // 차트의 마지막 캔들이 화면 안에 있는 경우
+    if (lastCandleIndex < 0) lastCandleIndex = this.candles.length - 1;
+
+    const [min, max] = this.candles
+      .slice(firstCandleIndex, lastCandleIndex + 1)
+      .reduce(([min, max], { low, high }) => [Math.min(min, low), Math.max(max, high)], [Infinity, 0]);
+
+    this.minPrice = Math.max(min - 100, 0);
+    this.maxPrice = max + 100;
+  }
+
   public setCandles(candles: CandleChartData[]) {
-    this.candles = candles;
+    this.candles = candles.reverse();
+    this.caculatePriceScale();
     this.draw();
   }
 
-  public increaseMaxPrice(amount = 100) {
-    this.maxPrice += amount;
-    this.draw();
-  }
-
-  public decreaseMaxPrice(amount = 100) {
-    this.maxPrice -= amount;
-    this.draw();
-  }
-
-  public zoom(amount) {
+  private zoom(amount) {
     this.barWidth += amount;
+    this.caculatePriceScale();
     this.draw();
   }
 
-  public verticalScroll(offset) {
+  private verticalScroll(offset) {
     this.leftOffset += offset;
+    this.caculatePriceScale();
     this.draw();
   }
 }
