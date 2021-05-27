@@ -41,7 +41,7 @@ const getUser = async () => {
       return result;
     }
 
-    throw new Error('Getting user was failed ');
+    throw new Error('Getting user was failed in front api');
   } catch (error) {
     console.log(error);
   }

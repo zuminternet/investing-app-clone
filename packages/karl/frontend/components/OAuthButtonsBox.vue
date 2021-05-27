@@ -1,7 +1,7 @@
 <template>
   <div class="oauth-buttons-box">
     <o-auth-button>{{ facebookLogin }}</o-auth-button>
-    <o-auth-button>{{ googleLogin }}</o-auth-button>
+    <o-auth-button @handle-auth-click="this.handleAuthClick">{{ googleLogin }}</o-auth-button>
   </div>
 </template>
 
@@ -15,8 +15,16 @@ export default {
     OAuthButton,
   },
 
+  props: {
+    handleAuthClick: {
+      type: Function,
+      required: true,
+    },
+  },
+
   data() {
     const { FACEBOOK_LOGIN, GOOGLE_LOGIN } = text;
+
     return {
       facebookLogin: FACEBOOK_LOGIN,
       googleLogin: GOOGLE_LOGIN,

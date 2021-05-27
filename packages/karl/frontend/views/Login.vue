@@ -1,7 +1,8 @@
 <template>
   <div class="login-page">
     <template v-if="isEmailLogin">
-      <o-auth-buttons-box></o-auth-buttons-box>
+      <o-auth-buttons-box :handleAuthClick="handleAuthClick.bind(this)"></o-auth-buttons-box>
+
       <div class="email-login-input-form-box">
         <login-password-input-form
           :submitButtonText="emailLogin"
@@ -15,7 +16,7 @@
         <login-swiper></login-swiper>
       </div>
       <div class="login-wrapper">
-        <o-auth-buttons-box></o-auth-buttons-box>
+        <o-auth-buttons-box :handleAuthClick="handleAuthClick.bind(this)"></o-auth-buttons-box>
         <div class="login-options-box">
           <text-button @handle-button-click="routeToSignup">{{ emailSignup }}</text-button>
           <div>
@@ -30,12 +31,15 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+
 import TextButton from '../components/TextButton.vue';
 import CustomText from '../../../common/frontend/components/CustomText.vue';
 import LoginSwiper from '../components/LoginSwiper.vue';
 import OAuthButtonsBox from '../components/OAuthButtonsBox.vue';
 import LoginPasswordInputForm from '../components/LoginPasswordInputForm.vue';
 
+import { googleAuthInitConfig } from '../configs';
 import { text } from '../../../common/frontend/constants';
 import { getUser, loginUserByEmail } from '../apis';
 
@@ -61,10 +65,69 @@ export default {
       passWithoutLogin: PASS_WITHOUT_LOGIN,
       emailLogin: EMAIL_LOGIN,
       register: REGISTER,
+
+      user: null,
+      isAuthorized: false,
+      currentApiRequest: {},
+      googleAuth: null,
     };
   },
 
   methods: {
+    ...mapActions('user', ['getUser']),
+    handleClientLoad() {
+      gapi.load('client:auth2', this.googleInitClient);
+    },
+
+    handleAuthClick() {
+      if (this.googleAuth.isSignedIn.get()) {
+        this.googleAuth.signOut();
+      } else {
+        this.googleAuth.signIn();
+      }
+    },
+
+    sendAuthorizedApiRequest(requestDetails) {
+      this.currentApiRequest = requestDetails;
+
+      if (this.isAuthorized) {
+        // gapi.client.request(requestDetails)
+
+        this.currentApiRequest = {};
+      } else {
+        this.googleAuth.signIn();
+      }
+    },
+
+    updateSigninStatus(isSignedIn) {
+      console.log(isSignedIn, 'call isSignedIn');
+      if (isSignedIn) {
+        this.isAuthorized = true;
+
+        console.log(this.user, 'login user');
+        this.routeToHome();
+      } else {
+        this.isAuthorized = false;
+        this.user = this.googleAuth.currentUser.get();
+
+        console.log(this.user, 'logout user');
+      }
+    },
+
+    googleInitClient() {
+      let that = this;
+
+      gapi.client.init(googleAuthInitConfig).then(function() {
+        that.googleAuth = gapi.auth2.getAuthInstance();
+        that.googleAuth.isSignedIn.listen(that.updateSigninStatus);
+
+        that.user = that.googleAuth.currentUser.get();
+        console.log(that.user, 'user');
+        that.isAuthorized = that.user.hasGrantedScopes(googleAuthInitConfig.scope);
+        console.log(that.isAuthorized);
+      });
+    },
+
     changeToEmailLogin() {
       this.isEmailLogin = true;
     },
@@ -97,13 +160,14 @@ export default {
     },
   },
 
-  beforeCreate() {
-    getUser().then((user) => {
-      if (user) {
-        console.log(user);
-        this.routeToHome();
-      }
-    });
+  async mounted() {
+    this.handleClientLoad();
+
+    if (await this.getUser()) {
+      this.routeToHome();
+    }
+
+    // this.googleInitClient();
   },
 };
 </script>
