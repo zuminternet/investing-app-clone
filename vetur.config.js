@@ -28,7 +28,7 @@ module.exports = {
     {
       root: './packages/dogyeong',
       package: './package.json',
-      tsconfig: './tsconfig.frontend.json',
+      tsconfig: './src/frontend/tsconfig.json',
       snippetFolder: './.vscode/vetur/snippets',
       globalComponents: [],
     },
