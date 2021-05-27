@@ -1,11 +1,5 @@
 <template>
-  <section class="area">
-    <p>
-      <b>{{ typeName.toUpperCase() }}</b
-      >: {{ ticker }}
-    </p>
-    <canvas ref="canvas" class="area"></canvas>
-  </section>
+  <canvas ref="canvas" class="area"></canvas>
 </template>
 
 <script lang="ts">
@@ -13,17 +7,15 @@
  * @description
  * Chart wrapper
  */
-import polygon from '@/services/chart/polygon';
-import { GetMultiDaysStockProps, TimespanEnum } from '@/type/apis';
+import { ChartModuleMapperEnums } from '@/store/types';
+import { TimespanEnum } from '@/type/apis';
+import { MultidaysStockData } from '@/type/chart';
 import { drawBasicCandleChart } from '@/utils/chart/candle';
 import { getDateString } from '@/utils/date';
 import Vue from 'vue';
+import { mapActions, mapGetters } from 'vuex';
 
 export default Vue.extend({
-  /**
-   * @todo
-   * 다듬으면서 default는 삭제 예정
-   */
   props: {
     typeName: {
       type: String,
@@ -46,10 +38,8 @@ export default Vue.extend({
       /**
        * @description
        * 기본 limit 120일 데이터 요청하지만, 휴장일 데이터 제외하고 가져오므로 넉넉하게 200일 요청
-       * @todo
-       * 좀더 빠르게 일자 계산할 수 있는 방법?
        */
-      default: getDateString(Date.now() - 400 * 3600 * 24 * 1000),
+      default: getDateString(Date.now() - 500 * 3600 * 24 * 1000),
     },
     to: {
       type: [String, Number, Date],
@@ -62,23 +52,34 @@ export default Vue.extend({
         Object.freeze({
           /**
            * @description
-           * 가장 최근 시세부터 호출하기 위해 sort-desc
+           * 가장 최근 시세부터 호출하기 위해 sort-asc
            */
           sort: 'asc',
           limit: 300,
         }),
     },
   },
+
   /**
    * 차트 데이터 저장
    */
   data() {
     return {
       onReady: false,
-      stocksPromise: null,
-      candles: [],
-      candlesCount: 0,
+      ctx: null,
+      options: {
+        ticker: this.ticker,
+        multiplier: this.multiplier,
+        timespan: this.timespan,
+        from: this.from,
+        to: this.to,
+        query: this.query,
+      },
     };
+  },
+
+  computed: {
+    ...mapGetters([ChartModuleMapperEnums.getterCheckStockLoaded]),
   },
 
   /**
@@ -87,54 +88,49 @@ export default Vue.extend({
    * API fetching
    * make chart
    */
-  mounted() {
-    /**
-     * @todo
-     * - Canvas 자체를 상하반전 시킬 수 있는 방법,,
-     */
+  async mounted() {
     const chart = this.$refs.canvas;
-    const ctx = chart.getContext('2d') as CanvasRenderingContext2D;
+    this.ctx = chart.getContext('2d') as CanvasRenderingContext2D;
 
-    const { ticker, multiplier, timespan, from, to, query } = this;
-    const config = {
-      ticker,
-      multiplier,
-      timespan,
-      from,
-      to,
-      query,
-    } as GetMultiDaysStockProps;
-
-    /**
-     * 동일 요청에 대한 caching
-     * - 1분 단위
-     */
-    const limit = query.limit;
-    const storageKey = `${ticker}-${multiplier}${timespan}-${limit}-${new Date(Date.now()).getMinutes()}`;
-    const cached = sessionStorage.getItem(storageKey);
-
-    if (cached) {
-      this.onReady = true;
-      console.info(`using cached data`);
-      const { results, limit, resultsCount } = JSON.parse(cached);
-      drawBasicCandleChart({ ctx, results, limit, resultsCount });
-      return;
+    /**@todo console 삭제 */
+    const timerLabel = `api-chart timer`;
+    console.warn(timerLabel);
+    console.time(timerLabel);
+    try {
+      await this.getStockData(this.options);
+      this.getChart(this.options);
+    } catch (e) {
+      console.error(e);
     }
+    console.timeEnd(timerLabel);
+  },
 
-    polygon
-      .getMultiDaysStockData(config)
-      .then(({ results, resultsCount }) => {
-        console.info(`data fetched`);
+  /**
+   * @todo
+   * SSR creat chart
+   */
+  // serverPrefetch() {
+  //   const { getStockData } = getModule(Chart);
+  //   const options = this.$props.options;
+  //   return getStockData(options).then(/** @todo */);
+  // },
 
-        this.onReady = true;
-
-        drawBasicCandleChart({ ctx, results, limit, resultsCount });
-
-        return { results, resultsCount, limit };
-      })
-      .then((data) => {
-        sessionStorage.setItem(storageKey, JSON.stringify(data));
-      });
+  /**
+   * @todo
+   *
+   * Component에서 비동기 작업은 SSR build 과정에서 계속 에러
+   * 일반적인 example 따라서 Vuex store로 이동..
+   * 했는데 그래도 에러...
+   * 일단은 CSR 위주로 작업하고
+   * 추후 Backend에서 데이터 넘겨주는 방식으로 변경 예정
+   */
+  methods: {
+    ...mapActions([ChartModuleMapperEnums.actionGetStockData]),
+    getChart(options) {
+      const { results, resultsCount, dataKey } = this[ChartModuleMapperEnums.getterCheckStockLoaded] as MultidaysStockData;
+      drawBasicCandleChart({ ctx: this.ctx, limit: options.query.limit, results, resultsCount });
+      this.onReady = true;
+    },
   },
 });
 </script>

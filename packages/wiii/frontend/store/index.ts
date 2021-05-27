@@ -3,6 +3,7 @@ import Vuex from 'vuex';
 
 import { views } from '@/type/views';
 import { actionTypes } from '@/store/types';
+import chart from '@/store/modules/chart';
 
 Vue.use(Vuex);
 
@@ -21,5 +22,7 @@ export default () =>
         return context.commit(actionTypes.setCurrentView, selectedView);
       },
     },
-    modules: {},
+    modules: {
+      chart,
+    },
   });
