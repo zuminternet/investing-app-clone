@@ -1,63 +1,12 @@
-import { getUser } from '../../apis';
+import { googleAuthInitConfig } from '../../configs';
+import { getUser, loginUserByEmail, loginUserByGoogleOAuth, createUser } from '../../apis';
 
 // 초기 state 값 설정
 const state = () => ({
-  // stockItems: [
-  //   {
-  //     itemName: '코스피 지수',
-  //     itemTime: '14:14:14',
-  //     itemCategory: '서울',
-  //     itemPrice: '3,136.10',
-  //     fluctuationPrice: '-1.32',
-  //     fluctuationRate: '-0.42%',
-  //   },
-  // ],
-  // indexItems: [
-  //   {
-  //     itemName: '코스피 주식',
-  //     itemTime: '14:14:14',
-  //     itemCategory: '서울',
-  //     itemPrice: '3,136.10',
-  //     itemCurrency: 'KRW',
-  //     fluctuationPrice: '-1.32',
-  //     fluctuationRate: '-0.42%',
-  //   },
-  // ],
-  // cryptoItems: [
-  //   {
-  //     itemName: '코스피 가상화폐',
-  //     itemTime: '14:14:14',
-  //     itemCategory: '서울',
-  //     itemPrice: '3,136.10',
-  //     itemCurrency: 'KRW',
-  //     fluctuationPrice: '-1.32',
-  //     fluctuationRate: '-0.42%',
-  //   },
-  // ],
-  // itemDetailInformations: {
-  //   itemName: '코스피 상세페이지',
-  //   itemTime: '14:14:14',
-  //   itemCategory: '서울',
-  //   itemPrice: '3,136.10',
-  //   itemCurrency: 'KRW',
-  //   fluctuationPrice: '-1.32',
-  //   fluctuationRate: '-0.42%',
-  //   itemOverallInformations: {
-  //     daysRange: ['일일 변동폭', '79,100 - 79,700'],
-  //     fiftyTwoRange: ['52주 가격변동폭', '1111'],
-  //     marketCap: ['총 시가', '1111'],
-  //     bidAndAsk: ['매수가/매도가', '1111'],
-  //     volume: ['거래량', '1111'],
-  //     averageVolume: ['평균 거래량', '1111'],
-  //     previousClose: ['이전종가', '1111'],
-  //     open: ['시가', '1111'],
-  //     priceEarningRatio: ['주가수익비율', '1111'],
-  //     eps: ['주당 순이익', '1111'],
-  //   },
-  // },
   userName: '',
   userEmail: '',
   userFavorites: [],
+  isAuthorizedByOAuth: false,
 });
 
 // getter 설정
@@ -68,9 +17,77 @@ const getters = {
   },
 };
 
+// google OAuth에 필요한 객체
+let googleAuth = null;
+let googleUser = null;
+
 // actions 설정
 const actions = {
-  async getUser({ commit }) {
+  /**
+   * @author karl
+   */
+
+  /**
+   *
+   * @description signIn 여부에 따라 토큰을 재발급하거나 signIn 하도록하는 action.
+   */
+  checkSignInOrSignOut({ dispatch }) {
+    if (googleAuth.isSignedIn.get()) {
+      dispatch('loginUserByGoogleOAuthOrCreateUser');
+    } else {
+      googleAuth.signIn();
+    }
+  },
+
+  /**
+   *
+   * @description OAuth flow action. googleAuth 객체를 이용해 signIn 여부를 감지한다.
+   *
+   */
+  async googleInitClient({ dispatch }) {
+    await gapi.client.init(googleAuthInitConfig);
+    googleAuth = gapi.auth2.getAuthInstance();
+    googleUser = googleAuth.currentUser.get();
+
+    googleAuth.isSignedIn.listen(async (isSignedIn) => {
+      googleUser = googleAuth.currentUser.get();
+
+      if (isSignedIn) {
+        dispatch('loginUserByGoogleOAuthOrCreateUser');
+      }
+    });
+  },
+
+  /**
+   *
+   * @description googleId를 사용해 서버에서 사용자를 찾아 로그인하거나 사용자를 등록하는 action,
+   */
+  async loginUserByGoogleOAuthOrCreateUser({ commit }) {
+    const googleId = googleUser.Aa;
+    let result = await loginUserByGoogleOAuth({ googleId });
+
+    if (result) {
+      commit('changeIsAuthorizedByOAuth', true);
+
+      return;
+    }
+
+    result = await createUser({ googleId });
+
+    if (result) {
+      result = await loginUserByGoogleOAuth({ googleId });
+      commit('changeIsAuthorizedByOAuth', true);
+
+      return;
+    }
+  },
+
+  /**
+   *
+   * @description JWT를 이용하여 자동로그인을 수행하는 action. 성공하면 유저 정보를 가져온다.
+   *
+   */
+  async getUser() {
     try {
       const user = await getUser();
 
@@ -83,10 +100,35 @@ const actions = {
       console.log(error);
     }
   },
+
+  /**
+   *
+   * @description 이메일 로그인을 요청하는 action. 성공시 서버로 부터 JWT가 담긴 쿠키를 받아오고 유저 정보를 가져온다.
+   *
+   */
+  async requestEmailLogin({ commit }, event) {
+    try {
+      const { email, password } = event.$data;
+      const result = await loginUserByEmail({ email, password });
+
+      if (result.status === 200) {
+        return true;
+      }
+
+      throw new Error('invalid user');
+    } catch (error) {
+      console.log(error);
+      alert(error);
+    }
+  },
 };
 
 // mutatuons 설정
-const mutations = {};
+const mutations = {
+  changeIsAuthorizedByOAuth(state, judge) {
+    state.isAuthorizedByOAuth = judge;
+  },
+};
 
 export default {
   namespaced: true,

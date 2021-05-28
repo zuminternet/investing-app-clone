@@ -27,6 +27,7 @@ export default {
 
   data() {
     const { EMAIL, PASSWORD, EMAIL_LOGIN, NAME } = text;
+
     return {
       name: '',
       email: '',

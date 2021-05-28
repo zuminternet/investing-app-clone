@@ -1,7 +1,7 @@
 <template>
   <div class="login-page">
     <template v-if="isEmailLogin">
-      <o-auth-buttons-box :handleAuthClick="handleAuthClick.bind(this)"></o-auth-buttons-box>
+      <o-auth-buttons-box :handleAuthClick="handleAuthClick"></o-auth-buttons-box>
 
       <div class="email-login-input-form-box">
         <login-password-input-form
@@ -16,7 +16,7 @@
         <login-swiper></login-swiper>
       </div>
       <div class="login-wrapper">
-        <o-auth-buttons-box :handleAuthClick="handleAuthClick.bind(this)"></o-auth-buttons-box>
+        <o-auth-buttons-box :handleAuthClick="handleAuthClick"></o-auth-buttons-box>
         <div class="login-options-box">
           <text-button @handle-button-click="routeToSignup">{{ emailSignup }}</text-button>
           <div>
@@ -30,8 +30,8 @@
   </div>
 </template>
 
-<script>
-import { mapActions } from 'vuex';
+<script lang="ts">
+import { mapActions, mapState } from 'vuex';
 
 import TextButton from '../components/TextButton.vue';
 import CustomText from '../../../common/frontend/components/CustomText.vue';
@@ -39,9 +39,7 @@ import LoginSwiper from '../components/LoginSwiper.vue';
 import OAuthButtonsBox from '../components/OAuthButtonsBox.vue';
 import LoginPasswordInputForm from '../components/LoginPasswordInputForm.vue';
 
-import { googleAuthInitConfig } from '../configs';
 import { text } from '../../../common/frontend/constants';
-import { getUser, loginUserByEmail } from '../apis';
 
 export default {
   name: 'Login',
@@ -52,6 +50,7 @@ export default {
     OAuthButtonsBox,
     LoginPasswordInputForm,
   },
+
   data() {
     const { EMAIL_SIGNUP, ALREADY_REGISTER, SIGN_IN, PASS_WITHOUT_LOGIN, EMAIL_LOGIN, REGISTER } = text;
     return {
@@ -73,59 +72,17 @@ export default {
     };
   },
 
+  computed: {
+    ...mapState({
+      isAuthorizedByOAuth: (state) => state.user.isAuthorizedByOAuth,
+    }),
+  },
+
   methods: {
-    ...mapActions('user', ['getUser']),
-    handleClientLoad() {
-      gapi.load('client:auth2', this.googleInitClient);
-    },
+    ...mapActions('user', ['googleInitClient', 'getUser', 'requestEmailLogin', 'checkSignInOrSignOut']),
 
     handleAuthClick() {
-      if (this.googleAuth.isSignedIn.get()) {
-        this.googleAuth.signOut();
-      } else {
-        this.googleAuth.signIn();
-      }
-    },
-
-    sendAuthorizedApiRequest(requestDetails) {
-      this.currentApiRequest = requestDetails;
-
-      if (this.isAuthorized) {
-        // gapi.client.request(requestDetails)
-
-        this.currentApiRequest = {};
-      } else {
-        this.googleAuth.signIn();
-      }
-    },
-
-    updateSigninStatus(isSignedIn) {
-      console.log(isSignedIn, 'call isSignedIn');
-      if (isSignedIn) {
-        this.isAuthorized = true;
-
-        console.log(this.user, 'login user');
-        this.routeToHome();
-      } else {
-        this.isAuthorized = false;
-        this.user = this.googleAuth.currentUser.get();
-
-        console.log(this.user, 'logout user');
-      }
-    },
-
-    googleInitClient() {
-      let that = this;
-
-      gapi.client.init(googleAuthInitConfig).then(function() {
-        that.googleAuth = gapi.auth2.getAuthInstance();
-        that.googleAuth.isSignedIn.listen(that.updateSigninStatus);
-
-        that.user = that.googleAuth.currentUser.get();
-        console.log(that.user, 'user');
-        that.isAuthorized = that.user.hasGrantedScopes(googleAuthInitConfig.scope);
-        console.log(that.isAuthorized);
-      });
+      this.checkSignInOrSignOut();
     },
 
     changeToEmailLogin() {
@@ -141,33 +98,29 @@ export default {
     },
 
     async submitForEmailLogin(event) {
-      try {
-        const { email, password } = event.$data;
-        const result = await loginUserByEmail({ email, password });
-
-        if (result.status === 200) {
-          this.routeToHome();
-
-          // 여기에 이후 dispatch 문이 들어감
-          return;
-        }
-
-        throw new Error('invalid user');
-      } catch (error) {
-        console.log(error);
-        alert(error);
+      if (await this.requestEmailLogin(event)) {
+        this.routeToHome();
       }
     },
   },
 
   async mounted() {
-    this.handleClientLoad();
-
     if (await this.getUser()) {
       this.routeToHome();
+
+      return;
     }
 
-    // this.googleInitClient();
+    const gapi = window.gapi;
+    gapi.load('client:auth2', this.googleInitClient);
+  },
+
+  watch: {
+    isAuthorizedByOAuth(value) {
+      if (value) {
+        this.routeToHome();
+      }
+    },
   },
 };
 </script>

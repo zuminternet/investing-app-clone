@@ -1,6 +1,6 @@
 <template>
   <div class="signup-page">
-    <o-auth-buttons-box></o-auth-buttons-box>
+    <o-auth-buttons-box :handleAuthClick="handleAuthClick"></o-auth-buttons-box>
     <login-password-input-form
       :submitButtonText="emailRegister"
       :isRegister="true"
@@ -10,6 +10,8 @@
 </template>
 
 <script lang="ts">
+import { mapActions, mapState } from 'vuex';
+
 import OAuthButtonsBox from '../components/OAuthButtonsBox.vue';
 import LoginPasswordInputForm from '../components/LoginPasswordInputForm.vue';
 
@@ -28,7 +30,19 @@ export default {
     };
   },
 
+  computed: {
+    ...mapState({
+      isAuthorizedByOAuth: (state) => state.user.isAuthorizedByOAuth,
+    }),
+  },
+
   methods: {
+    ...mapActions('user', ['checkSignInOrSignOut']),
+
+    handleAuthClick() {
+      this.checkSignInOrSignOut();
+    },
+
     routeToHome() {
       this.$router.push('/home');
     },
@@ -55,6 +69,14 @@ export default {
       } catch (error) {
         console.log(error);
         alert(error);
+      }
+    },
+  },
+
+  watch: {
+    isAuthorizedByOAuth(value) {
+      if (value) {
+        this.routeToHome();
       }
     },
   },
