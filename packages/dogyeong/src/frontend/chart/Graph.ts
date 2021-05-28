@@ -58,7 +58,7 @@ export default class Graph {
 
       const scale = e.deltaY * -0.005;
 
-      this.zoom(scale);
+      this.zoom(scale, e.offsetX);
     };
   }
 
@@ -82,7 +82,9 @@ export default class Graph {
     this.listeners.forEach((listener) => listener());
   }
 
-  private zoom(amount: number) {
+  private zoom(amount: number, mouseOffsetX: number) {
+    const scrollOffset = -(this.rightOffset - this.width + mouseOffsetX); // 마우스와 rightOffset간의 거리
+    this.verticalScroll(scrollOffset * 0.01 * (amount > 0 ? 1 : -1));
     this.barWidth += amount;
     this.publish();
   }
