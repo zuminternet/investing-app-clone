@@ -5,6 +5,7 @@ export interface createUserInfo {
   name: string;
   email: string;
   password: string;
+  googleId: string;
 }
 
 export interface loginUserByEmailInfo {
@@ -12,21 +13,29 @@ export interface loginUserByEmailInfo {
   password: string;
 }
 
+export interface loginUserByGoogleOAuthInfo {
+  email: string;
+  googleId: string;
+}
+
 @Service()
 export default class UserService {
   constructor() {}
 
-  public async createUser({ name, email, password }: createUserInfo) {
-    console.log(name, email, password);
-    const user = await User.findOne({
-      $or: [{ name, email }],
-    });
+  public async createUser({ name, email, password, googleId }: createUserInfo) {
+    const user = await User.findOne(
+      googleId
+        ? { googleId }
+        : {
+            email,
+          },
+    );
 
     if (user) {
       throw new Error('User already exists');
     }
 
-    return await User.create({ name, email, password });
+    return await User.create(googleId ? { googleId } : { name, email, password });
   }
 
   public async loginUserByEmail({ email, password }: loginUserByEmailInfo) {
@@ -36,6 +45,16 @@ export default class UserService {
       return user;
     }
 
-    throw new Error('User not exists');
+    throw new Error('User not exists (email login)');
+  }
+
+  public async loginUserByGoogleOAuth({ googleId }: loginUserByGoogleOAuthInfo) {
+    const user = await User.findOne({ googleId }).lean();
+
+    if (user) {
+      return user;
+    }
+
+    throw new Error('User not exists (Google Auth login)');
   }
 }

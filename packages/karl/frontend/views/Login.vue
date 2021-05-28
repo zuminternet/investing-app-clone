@@ -1,16 +1,13 @@
 <template>
   <div class="login-page">
     <template v-if="isEmailLogin">
-      <div class="email-login-oauth-buttons-box">
-        <o-auth-button>{{ facebookLogin }}</o-auth-button>
-        <o-auth-button>{{ googleLogin }}</o-auth-button>
-      </div>
+      <o-auth-buttons-box :handleAuthClick="handleAuthClick"></o-auth-buttons-box>
+
       <div class="email-login-input-form-box">
-        <form class="email-login-input-form" @submit.prevent="submitForEmailLogin">
-          <input class="email-login-input" :placeholder="emailText" v-model="email" />
-          <input class="email-login-input" :placeholder="passwordText" v-model="password" />
-          <input class="email-login-submit" type="submit" :value="emailLogin" />
-        </form>
+        <login-password-input-form
+          :submitButtonText="emailLogin"
+          @handle-submit="submitForEmailLogin"
+        ></login-password-input-form>
         <text-button @handle-button-click="routeToSignup">{{ register }}</text-button>
       </div>
     </template>
@@ -18,13 +15,14 @@
       <div class="swiper-box">
         <login-swiper></login-swiper>
       </div>
-      <div class="oauth-buttons-box">
-        <o-auth-button>{{ facebookLogin }}</o-auth-button>
-        <o-auth-button>{{ googleLogin }}</o-auth-button>
-        <text-button @handle-button-click="routeToSignup">{{ emailSignup }}</text-button>
-        <div class="normal-login-box">
-          <custom-text>{{ alreadyRegister }}</custom-text>
-          <text-button @handle-button-click="changeToEmailLogin">{{ signIn }}</text-button>
+      <div class="login-wrapper">
+        <o-auth-buttons-box :handleAuthClick="handleAuthClick"></o-auth-buttons-box>
+        <div class="login-options-box">
+          <text-button @handle-button-click="routeToSignup">{{ emailSignup }}</text-button>
+          <div>
+            <custom-text>{{ alreadyRegister }}</custom-text>
+            <text-button @handle-button-click="changeToEmailLogin">{{ signIn }}</text-button>
+          </div>
         </div>
         <text-button @handle-button-click="routeToHome">{{ passWithoutLogin }}</text-button>
       </div>
@@ -32,56 +30,61 @@
   </div>
 </template>
 
-<script>
-import OAuthButton from '../components/OAuthButton.vue';
+<script lang="ts">
+import { mapActions, mapState } from 'vuex';
+
 import TextButton from '../components/TextButton.vue';
 import CustomText from '../../../common/frontend/components/CustomText.vue';
 import LoginSwiper from '../components/LoginSwiper.vue';
+import OAuthButtonsBox from '../components/OAuthButtonsBox.vue';
+import LoginPasswordInputForm from '../components/LoginPasswordInputForm.vue';
 
 import { text } from '../../../common/frontend/constants';
-import { createUser, loginUserByEmail, getUser } from '../apis';
 
 export default {
   name: 'Login',
   components: {
-    OAuthButton,
     TextButton,
     CustomText,
     LoginSwiper,
+    OAuthButtonsBox,
+    LoginPasswordInputForm,
   },
 
-  data: function() {
-    const {
-      FACEBOOK_LOGIN,
-      GOOGLE_LOGIN,
-      EMAIL_SIGNUP,
-      ALREADY_REGISTER,
-      SIGN_IN,
-      PASS_WITHOUT_LOGIN,
-      EMAIL,
-      PASSWORD,
-      EMAIL_LOGIN,
-      REGISTER,
-    } = text;
+  data() {
+    const { EMAIL_SIGNUP, ALREADY_REGISTER, SIGN_IN, PASS_WITHOUT_LOGIN, EMAIL_LOGIN, REGISTER } = text;
     return {
       email: '',
       password: '',
 
       isEmailLogin: false,
-      facebookLogin: FACEBOOK_LOGIN,
-      googleLogin: GOOGLE_LOGIN,
       emailSignup: EMAIL_SIGNUP,
       alreadyRegister: ALREADY_REGISTER,
       signIn: SIGN_IN,
       passWithoutLogin: PASS_WITHOUT_LOGIN,
-      emailText: EMAIL,
-      passwordText: PASSWORD,
       emailLogin: EMAIL_LOGIN,
       register: REGISTER,
+
+      user: null,
+      isAuthorized: false,
+      currentApiRequest: {},
+      googleAuth: null,
     };
   },
 
+  computed: {
+    ...mapState({
+      isAuthorizedByOAuth: (state) => state.user.isAuthorizedByOAuth,
+    }),
+  },
+
   methods: {
+    ...mapActions('user', ['googleInitClient', 'getUser', 'requestEmailLogin', 'checkSignInOrSignOut']),
+
+    handleAuthClick() {
+      this.checkSignInOrSignOut();
+    },
+
     changeToEmailLogin() {
       this.isEmailLogin = true;
     },
@@ -95,31 +98,29 @@ export default {
     },
 
     async submitForEmailLogin(event) {
-      try {
-        const result = await loginUserByEmail({ email: this.email, password: this.password });
-
-        if (result.status === 200) {
-          this.routeToHome();
-
-          // 여기에 이후 dispatch 문이 들어감
-          return;
-        }
-
-        throw new Error('invalid user');
-      } catch (error) {
-        console.log(error);
-        alert(error);
+      if (await this.requestEmailLogin(event)) {
+        this.routeToHome();
       }
     },
   },
 
-  beforeCreate() {
-    getUser().then((user) => {
-      if (user) {
-        console.log(user);
+  async mounted() {
+    if (await this.getUser()) {
+      this.routeToHome();
+
+      return;
+    }
+
+    const gapi = window.gapi;
+    gapi.load('client:auth2', this.googleInitClient);
+  },
+
+  watch: {
+    isAuthorizedByOAuth(value) {
+      if (value) {
         this.routeToHome();
       }
-    });
+    },
   },
 };
 </script>
@@ -130,51 +131,28 @@ export default {
   flex: 1;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
 }
 
-.oauth-buttons-box {
+.login-wrapper {
   display: flex;
-  width: 80%;
   flex: 1;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-}
-
-.email-login-oauth-buttons-box {
-  display: flex;
-  width: 80%;
-  flex: 1;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.email-login-input-form {
-  display: flex;
-  width: 80%;
-  flex-direction: column;
-  align-items: center;
+  width: 100%;
 }
 
 .email-login-input-form-box {
   display: flex;
   width: 80%;
-  flex: 1;
   flex-direction: column;
   align-items: center;
 }
 
-.email-login-input {
-  margin-top: 5px;
-}
-
-.email-login-submit {
-  margin-top: 10px;
-}
-
-.normal-login-box {
+.login-options-box {
   display: flex;
+  flex-direction: column;
   align-items: center;
 }
 

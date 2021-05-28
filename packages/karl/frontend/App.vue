@@ -12,10 +12,12 @@
  *
  **********************************************************
  */
+
 export default {
   name: 'App',
 };
 </script>
+
 <style scoped lang="scss">
 #app {
 }

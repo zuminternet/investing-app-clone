@@ -75,4 +75,24 @@ export class ApiController {
       response.status(401).json(error);
     }
   }
+
+  @PostMapping({ path: '/auth/google-oauth' })
+  public async loginUserByGoogleOAuth(request: Request, response: Response) {
+    try {
+      const user = await this.userService.loginUserByGoogleOAuth(request.body);
+      const token = this.authService.issueToken(user);
+
+      if (token) {
+        response.cookie('jwt-token', token, { expires: new Date(Date.now() + 9000000), httpOnly: true });
+        response.status(200).send(user);
+
+        return true;
+      }
+
+      response.sendStatus(401);
+    } catch (error) {
+      console.log(error);
+      response.status(401).json(error);
+    }
+  }
 }

@@ -1,5 +1,5 @@
 <template>
-  <button class="oauth-button">
+  <button class="oauth-button" @click="$emit('handle-auth-click')">
     <slot></slot>
   </button>
 </template>

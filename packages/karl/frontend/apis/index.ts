@@ -2,12 +2,13 @@ import { AxiosStatic } from 'axios';
 
 declare const Axios: AxiosStatic;
 
-const devURL = 'http://localhost:3000/';
+const devURL = 'http://localhost:3000';
 
 export interface createUserInfo {
   name: string;
   email: string;
   password: string;
+  googleId: string;
 }
 
 export interface loginUserByEmailInfo {
@@ -15,13 +16,23 @@ export interface loginUserByEmailInfo {
   password: string;
 }
 
-const createUser = async ({ name, email, password }: createUserInfo) => {
+export interface loginUserByOAuthInfo {
+  googleId: string;
+  password: string;
+}
+
+const createUser = async ({ name, email, password, googleId }: createUserInfo) => {
   try {
-    const result = await Axios.post(`${devURL}/api/user`, {
-      name,
-      email,
-      password,
-    });
+    const result = await Axios.post(
+      `${devURL}/api/user`,
+      googleId
+        ? { googleId }
+        : {
+            name,
+            email,
+            password,
+          },
+    );
 
     if (result) {
       return result;
@@ -41,7 +52,7 @@ const getUser = async () => {
       return result;
     }
 
-    throw new Error('Getting user was failed ');
+    throw new Error('Getting user was failed in front api');
   } catch (error) {
     console.log(error);
   }
@@ -58,10 +69,26 @@ const loginUserByEmail = async ({ email, password }: loginUserByEmailInfo) => {
       return result;
     }
 
-    throw new Error('Email login was failed');
+    throw new Error('Email login was failed in front api');
   } catch (error) {
     console.log(error);
   }
 };
 
-export { createUser, loginUserByEmail, getUser };
+const loginUserByGoogleOAuth = async ({ googleId }) => {
+  try {
+    const reuslt = await Axios.post(`${devURL}/api/auth/google-oauth`, {
+      googleId,
+    });
+
+    if (reuslt) {
+      return reuslt;
+    }
+
+    throw new Error('OAuth login was failed in front api');
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export { createUser, loginUserByEmail, getUser, loginUserByGoogleOAuth };

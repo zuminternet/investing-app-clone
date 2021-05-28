@@ -6,14 +6,15 @@ import { jwtSecret } from '../config';
 export interface issueTokenInfo {
   email: string;
   password: string;
+  googleId: string;
 }
 
 @Service()
 export default class AuthService {
   constructor() {}
 
-  public issueToken({ email, password }: issueTokenInfo): string | Error {
-    const token = jsonwebtoken.sign({ email, password }, jwtSecret);
+  public issueToken({ email, password, googleId }: issueTokenInfo): string | Error {
+    const token = jsonwebtoken.sign(googleId ? { googleId } : { email, password }, jwtSecret);
 
     if (token) {
       return token;
