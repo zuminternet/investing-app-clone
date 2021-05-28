@@ -1,8 +1,22 @@
-import Graph from '@/chart/Graph';
+import Graph, { GraphColorOptions } from '@/chart/Graph';
 import PriceAxis from '@/chart/PriceAxis';
-import TimeAxis from '@/chart/TimeAxis';
+import TimeAxis, { AxisColorOptions } from '@/chart/TimeAxis';
 import { createCanvas, crispPixel } from '@/chart/utils';
 import { CandleChartData } from '../../backend/service/MarketService';
+
+export interface CandleChartColorOptions extends GraphColorOptions, AxisColorOptions {}
+
+interface CandleChartProps {
+  $container: HTMLElement;
+  colorOptions?: CandleChartColorOptions;
+}
+
+const defaultColors: CandleChartColorOptions = {
+  bgColor: '#131722',
+  redColor: '#26a69a',
+  blueColor: '#ef5350',
+  textColor: '#efefef',
+};
 
 export default class CandleChart {
   private readonly $container: HTMLElement;
@@ -15,30 +29,31 @@ export default class CandleChart {
   private priceAxis: PriceAxis;
   private timeAxis: TimeAxis;
 
-  constructor($container: HTMLElement) {
+  constructor({ $container, colorOptions = defaultColors }: CandleChartProps) {
     this.$container = $container;
     this.minPrice = 0;
     this.maxPrice = 1000;
 
-    const $table = this.createTable();
+    const $table = this.createTable(colorOptions);
     const $graphContainer = $table.querySelector<HTMLElement>('tr td:first-child');
     const $priceAxisContainer = $table.querySelector<HTMLElement>('tr td:last-child');
     const $timeAxisContainer = $table.querySelector<HTMLElement>('tr:last-child td:first-child');
 
     $container.appendChild($table);
 
-    this.graph = new Graph(createCanvas($graphContainer));
-    this.priceAxis = new PriceAxis(createCanvas($priceAxisContainer));
-    this.timeAxis = new TimeAxis(createCanvas($timeAxisContainer));
+    this.graph = new Graph({ canvas: createCanvas($graphContainer), colorOptions });
+    this.priceAxis = new PriceAxis({ canvas: createCanvas($priceAxisContainer), colorOptions });
+    this.timeAxis = new TimeAxis({ canvas: createCanvas($timeAxisContainer), colorOptions });
 
     this.graph.subscribe(this.draw.bind(this));
   }
 
-  private createTable() {
+  private createTable({ bgColor }: CandleChartColorOptions) {
     const $table = document.createElement('table');
 
     $table.style.width = '100%';
     $table.style.height = '100%';
+    $table.style.backgroundColor = bgColor;
     $table.innerHTML = `
       <tr>
         <td></td><td style="width: 100px;"></td>

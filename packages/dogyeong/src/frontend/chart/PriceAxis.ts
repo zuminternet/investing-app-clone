@@ -1,8 +1,9 @@
 import { crispPixel, drawHelper } from '@/chart/utils';
+import { AxisColorOptions } from '@/chart/TimeAxis';
 
-interface ColorOptions {
-  bgColor: string;
-  textColor: string;
+interface PriceAxisProps {
+  canvas: HTMLCanvasElement;
+  colorOptions: AxisColorOptions;
 }
 
 export default class PriceAxis {
@@ -12,18 +13,15 @@ export default class PriceAxis {
   private minPrice: number;
   private maxPrice: number;
   private innerPrices: number[];
-  private colorOptions: ColorOptions;
+  private colorOptions: AxisColorOptions;
   private readonly font = '12px sans-serif';
   private readonly textBaseline = 'middle';
 
-  constructor(canvas: HTMLCanvasElement) {
+  constructor({ canvas, colorOptions }: PriceAxisProps) {
     this.canvas = canvas;
     this.width = this.canvas.width;
     this.height = this.canvas.height;
-    this.colorOptions = {
-      bgColor: '#131722',
-      textColor: '#efefef',
-    };
+    this.colorOptions = colorOptions;
   }
 
   public draw(minPrice, maxPrice) {

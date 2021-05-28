@@ -1,8 +1,13 @@
 import { drawHelper } from '@/chart/utils';
 
-interface ColorOptions {
+export interface AxisColorOptions {
   bgColor: string;
   textColor: string;
+}
+
+interface TimeAxisProps {
+  canvas: HTMLCanvasElement;
+  colorOptions: AxisColorOptions;
 }
 
 const day = 3600 * 24 * 1000;
@@ -18,19 +23,16 @@ export default class TimeAxis {
   private firstCandleIndex: number;
   private lastCandleIndex: number;
   private timeGapUnit: number;
-  private colorOptions: ColorOptions;
+  private colorOptions: AxisColorOptions;
   private readonly font = '12px sans-serif';
   private readonly textBaseline = 'middle';
   private readonly textAlign = 'center';
 
-  constructor(canvas: HTMLCanvasElement) {
+  constructor({ canvas, colorOptions }: TimeAxisProps) {
     this.canvas = canvas;
     this.width = this.canvas.width;
     this.height = this.canvas.height;
-    this.colorOptions = {
-      bgColor: '#131722',
-      textColor: '#efefef',
-    };
+    this.colorOptions = colorOptions;
   }
 
   private getCtx() {

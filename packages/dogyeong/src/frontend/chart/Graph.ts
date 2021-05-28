@@ -1,6 +1,6 @@
-import { crispPixel, drawHelper } from '@/chart/utils';
+import { drawHelper } from '@/chart/utils';
 
-interface ColorOptions {
+export interface GraphColorOptions {
   bgColor: string;
   redColor: string;
   blueColor: string;
@@ -13,20 +13,16 @@ export default class Graph {
   public candles: any[];
   public rightOffset: number;
   public barWidth: number;
-  private colorOptions: ColorOptions;
+  private colorOptions: GraphColorOptions;
   private listeners: any[];
 
-  constructor(canvas: HTMLCanvasElement) {
+  constructor({ canvas, colorOptions }) {
     this.canvas = canvas;
     this.width = this.canvas.width;
     this.height = this.canvas.height;
     this.rightOffset = 0;
     this.barWidth = 7;
-    this.colorOptions = {
-      bgColor: '#131722',
-      redColor: '#26a69a',
-      blueColor: '#ef5350',
-    };
+    this.colorOptions = colorOptions;
     this.listeners = [];
 
     this.initializeEvents();
