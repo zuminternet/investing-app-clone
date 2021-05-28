@@ -99,6 +99,14 @@ export default class Graph {
     return open > close ? this.colorOptions.blueColor : this.colorOptions.redColor;
   }
 
+  public getCandleBodyLeft(index) {
+    return this.width - this.barWidth * (index + 1) - this.rightOffset;
+  }
+
+  public getCandleBodyRight(index) {
+    return this.getCandleBodyLeft(index) + this.barWidth - 1;
+  }
+
   public draw(candles, minPrice, maxPrice) {
     const ctx = this.getCtx();
 
@@ -107,10 +115,11 @@ export default class Graph {
       ctx.fillRect(0, 0, this.width, this.height);
     });
 
-    candles.forEach((candle, i) => {
-      this.drawWick(ctx, candle, i, minPrice, maxPrice);
-      this.drawBody(ctx, candle, i, minPrice, maxPrice);
-    });
+    for (let i = candles.length - 1; i >= 0; i--) {
+      const candle = candles[i];
+      this.drawWick(ctx, candle, candles.length - i, minPrice, maxPrice);
+      this.drawBody(ctx, candle, candles.length - i, minPrice, maxPrice);
+    }
   }
 
   private drawBody(ctx, candle, i, minPrice, maxPrice) {
@@ -120,8 +129,8 @@ export default class Graph {
     const bottom = Math.min(open, close);
     const topY = Math.round(((top - minPrice) / (maxPrice - minPrice)) * height);
     const bottomY = Math.round(((bottom - minPrice) / (maxPrice - minPrice)) * height);
-    const left = this.barWidth * i - this.rightOffset;
-    const right = left + this.barWidth - 1;
+    const left = this.getCandleBodyLeft(i);
+    const right = this.getCandleBodyRight(i);
 
     drawHelper(ctx, () => {
       ctx.fillStyle = this.getCandleColor(open, close);
@@ -136,7 +145,7 @@ export default class Graph {
     const bottom = Math.min(high, low);
     const topY = Math.round(((top - minPrice) / (maxPrice - minPrice)) * height);
     const bottomY = Math.round(((bottom - minPrice) / (maxPrice - minPrice)) * height);
-    let left = this.barWidth * i + Math.floor(this.barWidth * 0.5) - this.rightOffset;
+    let left = this.width - this.barWidth * (i + 1) - this.rightOffset + this.barWidth * 0.5;
 
     left = crispPixel(left);
 

@@ -51,28 +51,39 @@ export default class CandleChart {
     return $table;
   }
 
+  // 보이는 첫 캔들의 인덱스를 구함
   private getFirstVisibleCandleIndex() {
-    return this.candles.findIndex((_, i) => this.graph.barWidth * i - this.graph.rightOffset + this.graph.barWidth > 0);
+    let firstIndex = -1;
+
+    for (let i = this.candles.length - 1; i >= 0; i--) {
+      const index = this.candles.length - i;
+      const left = this.graph.getCandleBodyLeft(index);
+      const right = this.graph.getCandleBodyRight(index);
+
+      if (right < 0) return i + 1;
+      if (left < this.graph.width) firstIndex = i;
+    }
+    return firstIndex;
   }
 
+  // 보이는 마지막 캔들의 인덱스를 구함
   private getLastVisibleCandleIndex() {
-    return this.candles.findIndex((_, i) => this.graph.barWidth * i - this.graph.rightOffset > this.graph.width) - 1;
+    for (let i = this.candles.length - 1; i >= 0; i--) {
+      const index = this.candles.length - i;
+      const left = this.graph.getCandleBodyLeft(index);
+      const right = this.graph.getCandleBodyRight(index);
+
+      if (left < this.graph.width) return right > 0 ? i : -1;
+    }
+    return -1;
   }
 
   private caculateScale() {
-    // 보이는 첫 캔들 구함 (right > 0)
-    // -1이면 차트가 화면 위에 없음
     const firstCandleIndex = this.getFirstVisibleCandleIndex();
+    const lastCandleIndex = this.getLastVisibleCandleIndex();
 
-    // 보이는 마지막 캔들 구함 (left > width)
-    // 인덱스가 음수면 차트 끝이 화면 안에 있음
-    let lastCandleIndex = this.getLastVisibleCandleIndex();
-
-    // 차트가 화면 바깥에 있는 경우
+    // 차트가 화면에 보이지 않는 경우
     if (firstCandleIndex < 0) return;
-
-    // 차트의 마지막 캔들이 화면 안에 있는 경우
-    if (lastCandleIndex < 0) lastCandleIndex = this.candles.length - 1;
 
     const [min, max] = this.candles
       .slice(firstCandleIndex, lastCandleIndex + 1)
@@ -83,8 +94,8 @@ export default class CandleChart {
 
     this.minPrice = Math.max(min - spacing, 0);
     this.maxPrice = max + spacing;
-    this.minTime = this.candles[firstCandleIndex].date;
-    this.maxTime = this.candles[lastCandleIndex].date;
+    this.minTime = this.candles[firstCandleIndex]?.date ?? this.minTime;
+    this.maxTime = this.candles[lastCandleIndex]?.date ?? this.maxTime;
   }
 
   public setCandles(candles: CandleChartData[]) {
