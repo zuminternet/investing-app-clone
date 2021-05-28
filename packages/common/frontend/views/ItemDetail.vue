@@ -1,6 +1,6 @@
 <template>
-  <div id="item-detail-page">
-    <multipurpose-header :itemDetailInformations="itemDetailInformations"></multipurpose-header>
+  <div class="item-detail-page">
+    <multipurpose-header :itemDetailInformations="itemDetailInformations" isItemDetail></multipurpose-header>
     <item-detail-price-box :itemDetailInformations="itemDetailInformations"></item-detail-price-box>
     <custom-swiper :navigatorButtonNames="swiperNavigatorButtonNames">
       <swiper-slide>
@@ -77,7 +77,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-#item-detail-page {
+.item-detail-page {
   display: flex;
   flex-direction: column;
   flex: 1;

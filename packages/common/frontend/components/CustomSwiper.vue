@@ -27,7 +27,13 @@ export default {
     Swiper,
     SwiperNavigator,
   },
-  props: ['navigatorButtonNames'],
+  props: {
+    navigatorButtonNames: {
+      type: Array,
+      required: true,
+    },
+  },
+
   computed: {
     swiper() {
       return this.$refs.customSwiper.$swiper;

@@ -1,37 +1,35 @@
 <template>
-  <div>
-    <template v-if="itemDetailInformations">
-      <div class="multipurpose-header">
-        <div class="header-button-box">
-          <button class="header-button"></button>
-        </div>
+  <div class="multipurpose-header">
+    <template v-if="isItemDetail">
+      <div class="header-button-box">
+        <button class="header-button"></button>
+      </div>
+      <div>
         <div>
-          <div>
-            <custom-text>{{ itemName }}</custom-text>
-          </div>
+          <custom-text>{{ itemName }}</custom-text>
+        </div>
 
-          <div>
-            <custom-text>{{ itemCategory }}</custom-text>
-          </div>
+        <div>
+          <custom-text>{{ itemCategory }}</custom-text>
         </div>
-        <empty-space></empty-space>
-        <div class="header-button-box">
-          <button class="header-button"></button>
-          <button class="header-button"></button>
-          <button class="header-button"></button>
-        </div>
+      </div>
+      <empty-space></empty-space>
+      <div class="header-button-box">
+        <button class="header-button"></button>
+        <button class="header-button"></button>
+        <button class="header-button"></button>
       </div>
     </template>
 
-    <template v-else>
-      <div class="multipurpose-header">
-        <div class="header-title-box">
-          <p>{{ title }}</p>
-        </div>
-        <empty-space></empty-space>
-        <div class="header-button-box">
-          <button class="header-button"></button>
-        </div>
+    <template v-if="isSearch"> </template>
+
+    <template v-if="isHome">
+      <div class="header-title-box">
+        <p>{{ title }}</p>
+      </div>
+      <empty-space></empty-space>
+      <div class="header-button-box">
+        <button class="header-button"></button>
       </div>
     </template>
   </div>
@@ -47,7 +45,28 @@ export default {
     CustomText,
     EmptySpace,
   },
-  props: ['itemDetailInformations'],
+
+  props: {
+    isSearch: {
+      type: Boolean,
+      required: false,
+    },
+
+    isItemDetail: {
+      type: Boolean,
+      requied: false,
+    },
+
+    isHome: {
+      type: Boolean,
+      required: false,
+    },
+
+    itemDetailInformations: {
+      type: Object,
+      required: false,
+    },
+  },
 
   data() {
     const { itemName, itemCategory } = this.itemDetailInformations ? this.itemDetailInformations : {};
