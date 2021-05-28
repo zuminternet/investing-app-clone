@@ -59,19 +59,20 @@ export enum MAColorEnum {
   grey500 = `rgba(158, 158, 158, 0.5)`,
 }
 
+export type adjustedData = {
+  adjClose: number;
+  candleCenter: number;
+}[];
+
 /**
  * setSMA 단순이동평균선 Option
  * @property `data` 조정된 종가, 캔들 중앙값 데이터
  * @property `duration`? 평균낼 기간, default 20
  * @property `color` 이동평균선 색
  * @property `hRatio` 비율
- * @property `duration` 평균 기간
  */
 export interface SetSMAOptions {
-  data: Array<{
-    adjClose: number;
-    candleCenter: number;
-  }>;
+  data: adjustedData;
   color: string;
   hRatio: number;
   duration: number;

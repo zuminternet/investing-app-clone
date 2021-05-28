@@ -1,9 +1,10 @@
 import { BasicCandleOptionProps, CandleColorEnum, CanvasOptionEnum, DrawCandleChartOptions, MAColorEnum } from '@/type/chart';
 import { setSMA } from './sma';
 
-const { PI, min, abs } = Math;
+const { PI, min } = Math;
 
-const BASE_RADIAN = PI / 180;
+/** @description ctx.rotate() 사용시 필요 */
+// const BASE_RADIAN = PI / 180;
 
 /**
  * adjustedY 세로y 위치 조정 함수, 구간 최저가 기준
@@ -13,7 +14,7 @@ const BASE_RADIAN = PI / 180;
  * @returns rest 순서대로 조정된 높이값 배열
  */
 
-const adjustY = (base: number) => (hRatio: number) => (origins: number[]): number[] => origins.map((n) => (-n + base) * hRatio);
+const adjustY = (base: number, hRatio: number, origins: number[]): number[] => origins.map((n) => (-n + base) * hRatio);
 
 /**
  * setColor
@@ -31,10 +32,14 @@ const setColor = (o: number, c: number) => {
 /**
  * setPricePartition
  * 좌상단 (0,0)에서 시작
- * @param ctx
+ * @param ctx CanvasContext
+ * @param partitionNum 가격 구분 개수
+ * @param hRatio 비율 조정
+ * @param hRange 가격구간 높이
+ * @param canvasWidth 캔버스 너비
+ * @param canvasHeight 캔버스 높이
  * @param lowest 구간 최저가
- * @param highest 구간 최고가
- * @param canvasWidth 캔버스 영역
+ * @param padding Canvas Padding
  */
 const setPricePartition = (
   ctx: CanvasRenderingContext2D,
@@ -76,6 +81,8 @@ const setPricePartition = (
  *
  * @todo
  * 기능별 함수 분리
+ * 비율 맞추기
+ * scale 조정 없이 절대값으로 변경 - 이평선 굵기 및 해상도 문제
  */
 const basicCandle = ({
   ctx,
@@ -95,26 +102,18 @@ const basicCandle = ({
 }: BasicCandleOptionProps) => {
   /** @description  기본 설정 */
   const color = setColor(open, close);
-
   ctx.globalCompositeOperation = CanvasOptionEnum.globalCompositeOperation;
-
-  /**
-   * @todo
-   * 비율 맞추기
-   */
 
   /** @description text 위치 조정 */
   const dateHeight = 0,
     textBase = -2,
     textHRatio = 1;
-  const adjustTextY = (origins: number[]): number[] => adjustY(textBase)(textHRatio)(origins);
-  const [adjDayH] = adjustTextY([dateHeight]);
+  const [adjDayH] = adjustY(textBase, textHRatio, [dateHeight]);
 
   /** @description 캔들 위치 조정 */
-  const adjustCandleY = (origins: number[]): number[] => adjustY(lowest)(/** hRatio */ 1)(origins);
   /** @constant adjX adjusted X, 오른쪽부터 최신순 */
   const adjX = -idx * bodyWidth - 60;
-  const [adjOpen, adjClose, adjLow, adjHigh] = adjustCandleY([open, close, low, high]);
+  const [adjOpen, adjClose, adjLow, adjHigh] = adjustY(lowest, /** hRatio */ 1, [open, close, low, high]);
   const bodyHeight = adjClose - adjOpen;
   ctx.save();
 
