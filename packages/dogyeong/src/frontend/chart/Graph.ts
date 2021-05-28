@@ -1,4 +1,5 @@
 import { drawHelper } from '@/chart/utils';
+import { Candle } from '@/chart/CandleChart';
 
 export interface GraphColorOptions {
   bgColor: string;
@@ -10,7 +11,7 @@ export default class Graph {
   private readonly canvas: HTMLCanvasElement;
   public width: number;
   public height: number;
-  public candles: any[];
+  public candles: Candle[];
   public rightOffset: number;
   public barWidth: number;
   private colorOptions: GraphColorOptions;
@@ -65,11 +66,11 @@ export default class Graph {
     return this.canvas.getContext('2d');
   }
 
-  public setCandles(candles) {
+  public setCandles(candles: Candle[]) {
     this.candles = candles;
   }
 
-  public getCandle(index) {
+  public getCandle(index: number) {
     return this.candles[index];
   }
 
@@ -81,29 +82,29 @@ export default class Graph {
     this.listeners.forEach((listener) => listener());
   }
 
-  private zoom(amount) {
+  private zoom(amount: number) {
     this.barWidth += amount;
     this.publish();
   }
 
-  private verticalScroll(offset) {
+  private verticalScroll(offset: number) {
     this.rightOffset -= offset;
     this.publish();
   }
 
-  private getCandleColor(open, close) {
+  private getCandleColor(open: number, close: number) {
     return open > close ? this.colorOptions.blueColor : this.colorOptions.redColor;
   }
 
-  public getCandleBodyLeft(index) {
+  public getCandleBodyLeft(index: number) {
     return this.width - this.barWidth * (index + 1) - this.rightOffset;
   }
 
-  public getCandleBodyRight(index) {
+  public getCandleBodyRight(index: number) {
     return this.getCandleBodyLeft(index) + this.barWidth - 1;
   }
 
-  public draw(candles) {
+  public draw(candles: Candle[]) {
     const ctx = this.getCtx();
 
     drawHelper(ctx, () => {
@@ -117,7 +118,7 @@ export default class Graph {
     });
   }
 
-  private drawBody(ctx: CanvasRenderingContext2D, candle) {
+  private drawBody(ctx: CanvasRenderingContext2D, candle: Candle) {
     const { open, close, bodyX, bodyY, bodyW, bodyH } = candle;
 
     drawHelper(ctx, () => {
@@ -126,7 +127,7 @@ export default class Graph {
     });
   }
 
-  private drawWick(ctx, candle) {
+  private drawWick(ctx: CanvasRenderingContext2D, candle: Candle) {
     const { open, close, wickCenter, wickTop, wickBottom } = candle;
 
     drawHelper(ctx, () => {

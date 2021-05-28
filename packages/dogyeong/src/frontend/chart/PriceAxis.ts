@@ -6,6 +6,13 @@ interface PriceAxisProps {
   colorOptions: AxisColorOptions;
 }
 
+interface DrawPriceProps {
+  ctx: CanvasRenderingContext2D;
+  price: number;
+  minPrice: number;
+  maxPrice: number;
+}
+
 export default class PriceAxis {
   private readonly canvas: HTMLCanvasElement;
   private width: number;
@@ -24,7 +31,7 @@ export default class PriceAxis {
     this.colorOptions = colorOptions;
   }
 
-  public draw(minPrice, maxPrice) {
+  public draw(minPrice: number, maxPrice: number) {
     this.setPrices(minPrice, maxPrice);
 
     const ctx = this.getCtx();
@@ -65,7 +72,7 @@ export default class PriceAxis {
     return 1000;
   }
 
-  private drawBackground(ctx) {
+  private drawBackground(ctx: CanvasRenderingContext2D) {
     drawHelper(ctx, () => {
       ctx.strokeStyle = this.colorOptions.textColor;
       ctx.fillStyle = this.colorOptions.bgColor;
@@ -77,7 +84,7 @@ export default class PriceAxis {
     });
   }
 
-  private drawPrice({ ctx, price, minPrice, maxPrice }) {
+  private drawPrice({ ctx, price, minPrice, maxPrice }: DrawPriceProps) {
     const priceY = Math.round(((price - minPrice) / (maxPrice - minPrice)) * this.height);
     const lineY = crispPixel(this.height - priceY);
 

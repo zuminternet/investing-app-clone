@@ -1,4 +1,5 @@
 import { drawHelper } from '@/chart/utils';
+import { Candle } from '@/chart/CandleChart';
 
 export interface AxisColorOptions {
   bgColor: string;
@@ -8,6 +9,11 @@ export interface AxisColorOptions {
 interface TimeAxisProps {
   canvas: HTMLCanvasElement;
   colorOptions: AxisColorOptions;
+}
+
+interface DrawTimeProps {
+  ctx: CanvasRenderingContext2D;
+  candle: Candle;
 }
 
 const day = 3600 * 24 * 1000;
@@ -20,8 +26,6 @@ export default class TimeAxis {
   private height: number;
   private minTime: number;
   private maxTime: number;
-  private firstCandleIndex: number;
-  private lastCandleIndex: number;
   private timeGapUnit: number;
   private colorOptions: AxisColorOptions;
   private readonly font = '12px sans-serif';
@@ -40,8 +44,6 @@ export default class TimeAxis {
   }
 
   public draw(candles, firstCandleIndex, lastCandleIndex) {
-    this.firstCandleIndex = firstCandleIndex;
-    this.lastCandleIndex = lastCandleIndex;
     this.minTime = new Date(candles[firstCandleIndex].date).getTime();
     this.maxTime = new Date(candles[lastCandleIndex].date).getTime();
     this.timeGapUnit = this.getTimeGapUnit();
@@ -55,7 +57,7 @@ export default class TimeAxis {
     visibleCandles.forEach((candle) => this.drawTime({ ctx, candle }));
   }
 
-  private drawTime({ ctx, candle }) {
+  private drawTime({ ctx, candle }: DrawTimeProps) {
     const date = new Date(candle.date);
     const m = date.getMonth() + 1;
     const d = date.getDate();
@@ -78,7 +80,7 @@ export default class TimeAxis {
     });
   }
 
-  private drawBackground(ctx) {
+  private drawBackground(ctx: CanvasRenderingContext2D) {
     drawHelper(ctx, () => {
       ctx.strokeStyle = this.colorOptions.textColor;
       ctx.fillStyle = this.colorOptions.bgColor;

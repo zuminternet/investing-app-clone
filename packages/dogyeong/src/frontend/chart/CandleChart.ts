@@ -6,6 +6,21 @@ import { CandleChartData } from '../../backend/service/MarketService';
 
 export interface CandleChartColorOptions extends GraphColorOptions, AxisColorOptions {}
 
+export interface Candle {
+  date: string;
+  low: number;
+  high: number;
+  open: number;
+  close: number;
+  bodyX?: number;
+  bodyY?: number;
+  bodyW?: number;
+  bodyH?: number;
+  wickCenter?: number;
+  wickTop?: number;
+  wickBottom?: number;
+}
+
 interface CandleChartProps {
   $container: HTMLElement;
   colorOptions?: CandleChartColorOptions;
@@ -20,7 +35,7 @@ const defaultColors: CandleChartColorOptions = {
 
 export default class CandleChart {
   private readonly $container: HTMLElement;
-  private candles: any[];
+  private candles: Candle[];
   private minPrice: number;
   private maxPrice: number;
   private firstCandleIndex: number;
