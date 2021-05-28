@@ -1,6 +1,6 @@
 <template>
   <div class="search-page">
-    <multipurpose-header></multipurpose-header>
+    <multipurpose-header isSearch></multipurpose-header>
     <custom-swiper :navigatorButtonNames="swiperNavigatorButtonNames">
       <swiper-slide>
         <item-card-list :items="searchedItems" :excludingHeight="150"></item-card-list>
@@ -34,6 +34,7 @@ export default {
     CustomSwiper,
     ItemCard,
     ItemCardList,
+    SwiperSlide,
   },
 
   computed: {

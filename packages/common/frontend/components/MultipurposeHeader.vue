@@ -2,26 +2,28 @@
   <div class="multipurpose-header">
     <template v-if="isItemDetail">
       <div class="header-button-box">
-        <button class="header-button"></button>
+        <header-button></header-button>
       </div>
       <div>
         <div>
           <custom-text>{{ itemName }}</custom-text>
         </div>
-
         <div>
           <custom-text>{{ itemCategory }}</custom-text>
         </div>
       </div>
       <empty-space></empty-space>
       <div class="header-button-box">
-        <button class="header-button"></button>
-        <button class="header-button"></button>
-        <button class="header-button"></button>
+        <header-button></header-button>
+        <header-button></header-button>
+        <header-button></header-button>
       </div>
     </template>
 
-    <template v-if="isSearch"> </template>
+    <template v-if="isSearch">
+      <header-button isBackButton></header-button>
+      <search-input />
+    </template>
 
     <template v-if="isHome">
       <div class="header-title-box">
@@ -29,7 +31,7 @@
       </div>
       <empty-space></empty-space>
       <div class="header-button-box">
-        <button class="header-button"></button>
+        <header-button></header-button>
       </div>
     </template>
   </div>
@@ -38,12 +40,16 @@
 <script>
 import CustomText from '../components/CustomText.vue';
 import EmptySpace from '../components/karl/EmptySpace.vue';
+import SearchInput from '../components/Search/SearchInput.vue';
+import HeaderButton from '../components/HeaderButton.vue';
 
 export default {
   name: 'MultipurposeHeader',
   components: {
     CustomText,
     EmptySpace,
+    SearchInput,
+    HeaderButton,
   },
 
   props: {
@@ -85,6 +91,7 @@ export default {
 .multipurpose-header {
   display: flex;
   height: 50px;
+  align-items: center;
 }
 
 .header-title-box {
@@ -95,12 +102,5 @@ export default {
 .header-button-box {
   display: flex;
   align-items: center;
-}
-
-.header-button {
-  width: 30px;
-  height: 30px;
-  background-color: green;
-  margin-right: 10px;
 }
 </style>

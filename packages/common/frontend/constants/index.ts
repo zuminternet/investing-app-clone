@@ -35,4 +35,5 @@ export const text = {
   REGISTER: '등록',
   NAME: '이름',
   ITEM: '종목',
+  SEARCH: '검색',
 };
