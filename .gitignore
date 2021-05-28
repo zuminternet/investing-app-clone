@@ -37,3 +37,6 @@ packages/wiii/frontend/config/index.ts
 **/docker/data
 
 yarn.lock
+
+# vscode configs
+.vscode/
