@@ -9,7 +9,7 @@
  */
 import { ChartModuleMapperEnums } from '@/store/types';
 import { TimespanEnum } from '@/type/apis';
-import { MultidaysStockData } from '@/type/chart';
+import { MultidaysStockData, CanvasOptionEnum } from '@/type/chart';
 import { drawBasicCandleChart } from '@/utils/chart/candle';
 import { getDateString } from '@/utils/date';
 import Vue from 'vue';
@@ -37,7 +37,8 @@ export default Vue.extend({
       type: [String, Date],
       /**
        * @description
-       * 기본 limit 120일 데이터 요청하지만, 휴장일 데이터 제외하고 가져오므로 넉넉하게 200일 요청
+       * 휴장일 데이터 제외하고 가져오므로
+       * 기본 limit 보다 넉넉하게 요청
        */
       default: getDateString(Date.now() - 500 * 3600 * 24 * 1000),
     },
@@ -52,10 +53,10 @@ export default Vue.extend({
         Object.freeze({
           /**
            * @description
-           * 가장 최근 시세부터 호출하기 위해 sort-asc
+           * 가장 최근 시세부터 호출하기 위해 sort-desc
            */
-          sort: 'asc',
-          limit: 300,
+          sort: 'desc',
+          limit: 200,
         }),
     },
   },
@@ -90,7 +91,7 @@ export default Vue.extend({
    */
   async mounted() {
     const chart = this.$refs.canvas;
-    this.ctx = chart.getContext('2d') as CanvasRenderingContext2D;
+    this.ctx = chart.getContext(CanvasOptionEnum.context2d, { alpha: 1 }) as CanvasRenderingContext2D;
 
     /**@todo console 삭제 */
     const timerLabel = `api-chart timer`;
@@ -137,7 +138,11 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 canvas {
+  width: 600px;
+  height: 300px;
   padding: 15px;
+  margin: 20px;
   box-shadow: 0 0 20px 5px $red-neon;
+  background-color: white;
 }
 </style>

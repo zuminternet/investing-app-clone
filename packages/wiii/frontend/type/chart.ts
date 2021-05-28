@@ -6,23 +6,26 @@ export interface MultidaysStockData {
   resultsCount?: number;
 }
 
+/** @todo 개발 편의 위해 일단 모두 optional로 지정 */
 export interface BasicCandleOptionProps {
   ctx: CanvasRenderingContext2D;
-  x: number;
-  y: number;
-  open: number;
-  close: number;
-  low: number;
-  high: number;
-  width: number;
-  height: number;
-  timestamp?: number;
+  idx?: number;
+  x?: number;
+  y?: number;
+  open?: number;
+  close?: number;
+  low?: number;
+  high?: number;
+  bodyWidth?: number;
+  height?: number;
+  timestamp?: Date;
 
-  highest: number;
-  lowest: number;
+  highest?: number;
+  lowest?: number;
   canvasWidth?: number;
   canvasHeight?: number;
-  hRatio: number;
+  hRatio?: number;
+  padding?: number;
 }
 
 export interface DrawCandleChartOptions {
@@ -32,8 +35,45 @@ export interface DrawCandleChartOptions {
   limit: number;
 }
 
+export enum CanvasOptionEnum {
+  context2d = `2d`,
+  textAlignRight = `right`,
+  textAlignLeft = `left`,
+  textBaseAlphabetic = `alphabetic`,
+  textBaseTop = `top`,
+  globalCompositeOperation = `destination-over`,
+}
+
 export enum CandleColorEnum {
-  up = 'red',
-  down = 'blue',
-  same = 'black',
+  up = 'rgba(255, 23, 68, 1)',
+  down = 'rgba(33, 150, 243, 1)',
+  same = 'rgba(97, 97, 97, 1)',
+  partition = `rgba(224, 224, 224, 1)`,
+  grey900 = `rgba(33, 33, 33, 1)`,
+}
+
+export enum MAColorEnum {
+  red500 = `rgba(244, 67, 54, 0.5)`,
+  green500 = `rgba(0, 150, 136, 0.5)`,
+  blue500 = `rgba(33, 150, 243, 0.5)`,
+  grey500 = `rgba(158, 158, 158, 0.5)`,
+}
+
+export type adjustedData = {
+  adjClose: number;
+  candleCenter: number;
+}[];
+
+/**
+ * setSMA 단순이동평균선 Option
+ * @property `data` 조정된 종가, 캔들 중앙값 데이터
+ * @property `duration`? 평균낼 기간, default 20
+ * @property `color` 이동평균선 색
+ * @property `hRatio` 비율
+ */
+export interface SetSMAOptions {
+  data: adjustedData;
+  color: string;
+  hRatio: number;
+  duration: number;
 }
