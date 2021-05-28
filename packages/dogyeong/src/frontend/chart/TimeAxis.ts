@@ -40,7 +40,6 @@ export default class TimeAxis {
     const ctx = this.getCtx();
 
     this.drawBackground(ctx);
-    console.log(this.innerTimeStamps);
     this.innerTimeStamps.forEach((time) => this.drawTime({ ctx, time }));
   }
 

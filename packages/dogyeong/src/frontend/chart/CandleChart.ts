@@ -6,6 +6,7 @@ import { CandleChartData } from '../../backend/service/MarketService';
 
 export default class CandleChart {
   private readonly $container: HTMLElement;
+  private candles: any[];
   private minPrice: number;
   private maxPrice: number;
   private minTime: number;
@@ -47,22 +48,30 @@ export default class CandleChart {
     this.graph.subscribe(this.draw.bind(this));
   }
 
+  private getFirstCandleIndex() {
+    return this.candles.findIndex((_, i) => this.graph.barWidth * i + this.graph.leftOffset + this.graph.barWidth > 0);
+  }
+
+  private getLastCandleIndex() {
+    return this.candles.findIndex((_, i) => this.graph.barWidth * i + this.graph.leftOffset > this.graph.width) - 1;
+  }
+
   private caculateScale() {
     // 보이는 첫 캔들 구함 (right > 0)
     // -1이면 차트가 화면 위에 없음
-    const firstCandleIndex = this.graph.getFirstCandleIndex();
+    const firstCandleIndex = this.getFirstCandleIndex();
 
     // 보이는 마지막 캔들 구함 (left > width)
     // 인덱스가 음수면 차트 끝이 화면 안에 있음
-    let lastCandleIndex = this.graph.getLastCandleIndex();
+    let lastCandleIndex = this.getLastCandleIndex();
 
     // 차트가 화면 바깥에 있는 경우
     if (firstCandleIndex < 0) return;
 
     // 차트의 마지막 캔들이 화면 안에 있는 경우
-    if (lastCandleIndex < 0) lastCandleIndex = this.graph.candles.length - 1;
+    if (lastCandleIndex < 0) lastCandleIndex = this.candles.length - 1;
 
-    const [min, max] = this.graph.candles
+    const [min, max] = this.candles
       .slice(firstCandleIndex, lastCandleIndex + 1)
       .reduce(([min, max], { low, high }) => [Math.min(min, low), Math.max(max, high)], [Infinity, 0]);
 
@@ -71,18 +80,18 @@ export default class CandleChart {
 
     this.minPrice = Math.max(min - spacing, 0);
     this.maxPrice = max + spacing;
-    this.minTime = this.graph.getCandle(firstCandleIndex).date;
-    this.maxTime = this.graph.getCandle(lastCandleIndex).date;
+    this.minTime = this.candles[firstCandleIndex].date;
+    this.maxTime = this.candles[lastCandleIndex].date;
   }
 
   public setCandles(candles: CandleChartData[]) {
-    this.graph.setCandles(candles);
+    this.candles = candles.reverse();
     this.draw();
   }
 
   private draw() {
     this.caculateScale();
-    this.graph.draw(this.minPrice, this.maxPrice);
+    this.graph.draw(this.candles, this.minPrice, this.maxPrice);
     this.priceAxis.draw(this.minPrice, this.maxPrice);
     this.timeAxis.draw(this.minTime, this.maxTime);
   }

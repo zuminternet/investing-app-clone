@@ -8,8 +8,8 @@ interface ColorOptions {
 
 export default class Graph {
   private readonly canvas: HTMLCanvasElement;
-  private width: number;
-  private height: number;
+  public width: number;
+  public height: number;
   public candles: any[];
   public leftOffset: number;
   public barWidth: number;
@@ -69,16 +69,8 @@ export default class Graph {
     return this.canvas.getContext('2d');
   }
 
-  public getFirstCandleIndex() {
-    return this.candles.findIndex((_, i) => this.barWidth * i + this.leftOffset + this.barWidth > 0);
-  }
-
-  public getLastCandleIndex() {
-    return this.candles.findIndex((_, i) => this.barWidth * i + this.leftOffset > this.width) - 1;
-  }
-
   public setCandles(candles) {
-    this.candles = candles.reverse();
+    this.candles = candles;
   }
 
   public getCandle(index) {
@@ -107,7 +99,7 @@ export default class Graph {
     return open > close ? this.colorOptions.blueColor : this.colorOptions.redColor;
   }
 
-  public draw(minPrice, maxPrice) {
+  public draw(candles, minPrice, maxPrice) {
     const ctx = this.getCtx();
 
     drawHelper(ctx, () => {
@@ -115,14 +107,14 @@ export default class Graph {
       ctx.fillRect(0, 0, this.width, this.height);
     });
 
-    this.candles.forEach((candle, i) => {
-      this.drawWick(ctx, i, minPrice, maxPrice);
-      this.drawBody(ctx, i, minPrice, maxPrice);
+    candles.forEach((candle, i) => {
+      this.drawWick(ctx, candle, i, minPrice, maxPrice);
+      this.drawBody(ctx, candle, i, minPrice, maxPrice);
     });
   }
 
-  private drawBody(ctx, i, minPrice, maxPrice) {
-    const { open, close } = this.candles[i];
+  private drawBody(ctx, candle, i, minPrice, maxPrice) {
+    const { open, close } = candle;
     const height = this.canvas.height;
     const top = Math.max(open, close);
     const bottom = Math.min(open, close);
@@ -137,8 +129,8 @@ export default class Graph {
     });
   }
 
-  private drawWick(ctx, i, minPrice, maxPrice) {
-    const { high, low, open, close } = this.candles[i];
+  private drawWick(ctx, candle, i, minPrice, maxPrice) {
+    const { high, low, open, close } = candle;
     const height = this.canvas.height;
     const top = Math.max(high, low);
     const bottom = Math.min(high, low);
