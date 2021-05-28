@@ -16,9 +16,13 @@ interface DrawTimeProps {
   candle: Candle;
 }
 
-const day = 3600 * 24 * 1000;
-const month = day * 30;
-const year = month * 12;
+const timeUnit = {
+  day: 86400000,
+  month: 2592000000,
+  year: 31536000000,
+} as const;
+
+type TimeUnit = typeof timeUnit[keyof typeof timeUnit];
 
 export default class TimeAxis {
   private readonly canvas: HTMLCanvasElement;
@@ -26,7 +30,7 @@ export default class TimeAxis {
   private height: number;
   private minTime: number;
   private maxTime: number;
-  private timeGapUnit: number;
+  private timeGapUnit: TimeUnit;
   private colorOptions: AxisColorOptions;
   private readonly font = '12px sans-serif';
   private readonly textBaseline = 'middle';
@@ -61,6 +65,7 @@ export default class TimeAxis {
     const date = new Date(candle.date);
     const m = date.getMonth() + 1;
     const d = date.getDate();
+    const { year, month } = timeUnit;
 
     /** @TODO 날짜 체크 어떻게 함? */
     if (this.timeGapUnit === year && (m !== 1 || d !== 1)) return;
@@ -93,7 +98,8 @@ export default class TimeAxis {
     });
   }
 
-  private getTimeGapUnit() {
+  private getTimeGapUnit(): TimeUnit {
+    const { year, month, day } = timeUnit;
     const diff = this.maxTime - this.minTime;
     if (diff < year / 4) return day;
     if (diff < year) return month;
