@@ -9,8 +9,8 @@ export default class CandleChart {
   private candles: any[];
   private minPrice: number;
   private maxPrice: number;
-  private minTime: number;
-  private maxTime: number;
+  private firstCandleIndex: number;
+  private lastCandleIndex: number;
   private graph: Graph;
   private priceAxis: PriceAxis;
   private timeAxis: TimeAxis;
@@ -43,7 +43,7 @@ export default class CandleChart {
       <tr>
         <td></td><td style="width: 100px;"></td>
       </tr>
-      <tr style="height: 80px;">
+      <tr style="height: 60px;">
         <td></td><td style="width: 100px;"></td>
       </tr>
     `;
@@ -79,8 +79,8 @@ export default class CandleChart {
   }
 
   private calculateScale() {
-    const firstCandleIndex = this.getFirstVisibleCandleIndex();
-    const lastCandleIndex = this.getLastVisibleCandleIndex();
+    const firstCandleIndex = (this.firstCandleIndex = this.getFirstVisibleCandleIndex());
+    const lastCandleIndex = (this.lastCandleIndex = this.getLastVisibleCandleIndex());
 
     // 차트가 화면에 보이지 않는 경우
     if (firstCandleIndex < 0) return;
@@ -94,8 +94,6 @@ export default class CandleChart {
 
     this.minPrice = Math.max(min - spacing, 0);
     this.maxPrice = max + spacing;
-    this.minTime = this.candles[firstCandleIndex]?.date ?? this.minTime;
-    this.maxTime = this.candles[lastCandleIndex]?.date ?? this.maxTime;
   }
 
   private calculateCoordinates() {
@@ -142,6 +140,6 @@ export default class CandleChart {
     this.calculateCoordinates();
     this.graph.draw(this.candles);
     this.priceAxis.draw(this.minPrice, this.maxPrice);
-    this.timeAxis.draw(this.minTime, this.maxTime);
+    this.timeAxis.draw(this.candles, this.firstCandleIndex, this.lastCandleIndex);
   }
 }

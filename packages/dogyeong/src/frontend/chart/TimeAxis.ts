@@ -15,10 +15,13 @@ export default class TimeAxis {
   private height: number;
   private minTime: number;
   private maxTime: number;
-  private innerTimeStamps: number[];
+  private firstCandleIndex: number;
+  private lastCandleIndex: number;
+  private timeGapUnit: number;
   private colorOptions: ColorOptions;
   private readonly font = '12px sans-serif';
   private readonly textBaseline = 'middle';
+  private readonly textAlign = 'center';
 
   constructor(canvas: HTMLCanvasElement) {
     this.canvas = canvas;
@@ -34,28 +37,42 @@ export default class TimeAxis {
     return this.canvas.getContext('2d');
   }
 
-  public draw(minTime, maxTime) {
-    this.setTimes(minTime, maxTime);
+  public draw(candles, firstCandleIndex, lastCandleIndex) {
+    this.firstCandleIndex = firstCandleIndex;
+    this.lastCandleIndex = lastCandleIndex;
+    this.minTime = new Date(candles[firstCandleIndex].date).getTime();
+    this.maxTime = new Date(candles[lastCandleIndex].date).getTime();
+    this.timeGapUnit = this.getTimeGapUnit();
 
     const ctx = this.getCtx();
 
     this.drawBackground(ctx);
-    this.innerTimeStamps.forEach((time) => this.drawTime({ ctx, time }));
+
+    const visibleCandles = candles.slice(firstCandleIndex, lastCandleIndex + 1);
+
+    visibleCandles.forEach((candle) => this.drawTime({ ctx, candle }));
   }
 
-  private drawTime({ ctx, time }) {
-    const left = ((time - this.minTime) / (this.maxTime - this.minTime)) * this.width;
+  private drawTime({ ctx, candle }) {
+    const date = new Date(candle.date);
+    const m = date.getMonth() + 1;
+    const d = date.getDate();
+
+    if (this.timeGapUnit === year && (m !== 1 || d !== 1)) return;
+    if (this.timeGapUnit === month && d !== 1) return;
+    if (![1, 10, 20, 30].includes(d)) return;
 
     drawHelper(ctx, () => {
       ctx.strokeStyle = this.colorOptions.textColor;
       ctx.fillStyle = this.colorOptions.textColor;
       ctx.font = this.font;
       ctx.textBaseline = this.textBaseline;
+      ctx.textAlign = this.textAlign;
       ctx.beginPath();
-      ctx.moveTo(left, 0);
-      ctx.lineTo(left, 20);
+      ctx.moveTo(candle.wickCenter, 0);
+      ctx.lineTo(candle.wickCenter, 20);
       ctx.stroke();
-      ctx.fillText(`${new Date(time).toLocaleDateString()}`, left, 40);
+      ctx.fillText(date.toLocaleDateString(), candle.wickCenter, 35);
     });
   }
 
@@ -71,58 +88,10 @@ export default class TimeAxis {
     });
   }
 
-  private setTimes(minTime, maxTime) {
-    const timeGapUnit = this.getTimeGapUnit();
-    const timeFnMap = {
-      [day]: this.getNextDay.bind(this),
-      [month]: this.getNextMonth.bind(this),
-      [year]: this.getNextYear.bind(this),
-    };
-    const nextTimeFn = timeFnMap[timeGapUnit];
-
-    this.minTime = new Date(minTime).getTime();
-    this.maxTime = new Date(maxTime).getTime();
-    this.innerTimeStamps = this.getTimeStampsInRange({
-      startDate: new Date(minTime),
-      endDate: new Date(maxTime),
-      nextTimeFn,
-    });
-  }
-
   private getTimeGapUnit() {
     const diff = this.maxTime - this.minTime;
     if (diff < month) return day;
     if (diff < year) return month;
     return year;
-  }
-
-  private getTimeStampsInRange({ startDate, endDate, nextTimeFn }) {
-    const dates = [];
-    let currentDate = startDate;
-
-    while (currentDate <= endDate) {
-      dates.push(currentDate);
-      currentDate = nextTimeFn(currentDate);
-    }
-
-    return dates.map((date) => date.getTime());
-  }
-
-  private getNextDay(date) {
-    const next = new Date(date);
-    next.setDate(next.getDate() + 1);
-    return next;
-  }
-
-  private getNextMonth(date) {
-    const next = new Date(date);
-    next.setMonth(next.getMonth() + 1);
-    return next;
-  }
-
-  private getNextYear(date) {
-    const next = new Date(date);
-    next.setFullYear(next.getFullYear() + 1);
-    return next;
   }
 }
