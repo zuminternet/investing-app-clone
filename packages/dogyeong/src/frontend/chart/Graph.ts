@@ -81,6 +81,10 @@ export default class Graph {
     this.candles = candles.reverse();
   }
 
+  public getCandle(index) {
+    return this.candles[index];
+  }
+
   public subscribe(listener) {
     this.listeners.push(listener);
   }
