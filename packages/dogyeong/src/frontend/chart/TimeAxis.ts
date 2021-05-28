@@ -62,9 +62,10 @@ export default class TimeAxis {
     const m = date.getMonth() + 1;
     const d = date.getDate();
 
+    /** @TODO 날짜 체크 어떻게 함? */
     if (this.timeGapUnit === year && (m !== 1 || d !== 1)) return;
     if (this.timeGapUnit === month && d !== 1) return;
-    if (![1, 10, 20, 30].includes(d)) return;
+    if (![1, 10, 20].includes(d)) return;
 
     drawHelper(ctx, () => {
       ctx.strokeStyle = this.colorOptions.textColor;
@@ -94,7 +95,7 @@ export default class TimeAxis {
 
   private getTimeGapUnit() {
     const diff = this.maxTime - this.minTime;
-    if (diff < month) return day;
+    if (diff < year / 4) return day;
     if (diff < year) return month;
     return year;
   }
