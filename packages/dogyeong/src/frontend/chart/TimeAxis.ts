@@ -72,12 +72,13 @@ export default class TimeAxis {
   }
 
   private setTimes(minTime, maxTime) {
+    const timeGapUnit = this.getTimeGapUnit();
     const timeFnMap = {
       [day]: this.getNextDay.bind(this),
       [month]: this.getNextMonth.bind(this),
       [year]: this.getNextYear.bind(this),
     };
-    const nextTimeFn = timeFnMap[this.getTimeGapUnit()];
+    const nextTimeFn = timeFnMap[timeGapUnit];
 
     this.minTime = new Date(minTime).getTime();
     this.maxTime = new Date(maxTime).getTime();

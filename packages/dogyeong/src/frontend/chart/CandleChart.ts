@@ -20,6 +20,21 @@ export default class CandleChart {
     this.minPrice = 0;
     this.maxPrice = 1000;
 
+    const $table = this.createTable();
+    const $graphContainer = $table.querySelector<HTMLElement>('tr td:first-child');
+    const $priceAxisContainer = $table.querySelector<HTMLElement>('tr td:last-child');
+    const $timeAxisContainer = $table.querySelector<HTMLElement>('tr:last-child td:first-child');
+
+    $container.appendChild($table);
+
+    this.graph = new Graph(createCanvas($graphContainer));
+    this.priceAxis = new PriceAxis(createCanvas($priceAxisContainer));
+    this.timeAxis = new TimeAxis(createCanvas($timeAxisContainer));
+
+    this.graph.subscribe(this.draw.bind(this));
+  }
+
+  private createTable() {
     const $table = document.createElement('table');
 
     $table.style.width = '100%';
@@ -33,37 +48,25 @@ export default class CandleChart {
       </tr>
     `;
 
-    const $graphContainer = $table.querySelector<HTMLElement>('tr td:first-child');
-    const $priceAxisContainer = $table.querySelector<HTMLElement>('tr td:last-child');
-    const $timeAxisContainer = $table.querySelector<HTMLElement>('tr:last-child td:first-child');
-
-    $container.appendChild($table);
-
-    console.log($graphContainer.getBoundingClientRect());
-
-    this.graph = new Graph(createCanvas($graphContainer));
-    this.priceAxis = new PriceAxis(createCanvas($priceAxisContainer));
-    this.timeAxis = new TimeAxis(createCanvas($timeAxisContainer));
-
-    this.graph.subscribe(this.draw.bind(this));
+    return $table;
   }
 
-  private getFirstCandleIndex() {
-    return this.candles.findIndex((_, i) => this.graph.barWidth * i + this.graph.leftOffset + this.graph.barWidth > 0);
+  private getFirstVisibleCandleIndex() {
+    return this.candles.findIndex((_, i) => this.graph.barWidth * i - this.graph.rightOffset + this.graph.barWidth > 0);
   }
 
-  private getLastCandleIndex() {
-    return this.candles.findIndex((_, i) => this.graph.barWidth * i + this.graph.leftOffset > this.graph.width) - 1;
+  private getLastVisibleCandleIndex() {
+    return this.candles.findIndex((_, i) => this.graph.barWidth * i - this.graph.rightOffset > this.graph.width) - 1;
   }
 
   private caculateScale() {
     // 보이는 첫 캔들 구함 (right > 0)
     // -1이면 차트가 화면 위에 없음
-    const firstCandleIndex = this.getFirstCandleIndex();
+    const firstCandleIndex = this.getFirstVisibleCandleIndex();
 
     // 보이는 마지막 캔들 구함 (left > width)
     // 인덱스가 음수면 차트 끝이 화면 안에 있음
-    let lastCandleIndex = this.getLastCandleIndex();
+    let lastCandleIndex = this.getLastVisibleCandleIndex();
 
     // 차트가 화면 바깥에 있는 경우
     if (firstCandleIndex < 0) return;

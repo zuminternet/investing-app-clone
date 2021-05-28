@@ -11,7 +11,7 @@ export default class Graph {
   public width: number;
   public height: number;
   public candles: any[];
-  public leftOffset: number;
+  public rightOffset: number;
   public barWidth: number;
   private colorOptions: ColorOptions;
   private listeners: any[];
@@ -20,7 +20,7 @@ export default class Graph {
     this.canvas = canvas;
     this.width = this.canvas.width;
     this.height = this.canvas.height;
-    this.leftOffset = 0;
+    this.rightOffset = 0;
     this.barWidth = 7;
     this.colorOptions = {
       bgColor: '#131722',
@@ -91,7 +91,7 @@ export default class Graph {
   }
 
   private verticalScroll(offset) {
-    this.leftOffset += offset;
+    this.rightOffset -= offset;
     this.publish();
   }
 
@@ -120,7 +120,7 @@ export default class Graph {
     const bottom = Math.min(open, close);
     const topY = Math.round(((top - minPrice) / (maxPrice - minPrice)) * height);
     const bottomY = Math.round(((bottom - minPrice) / (maxPrice - minPrice)) * height);
-    const left = this.barWidth * i + this.leftOffset;
+    const left = this.barWidth * i - this.rightOffset;
     const right = left + this.barWidth - 1;
 
     drawHelper(ctx, () => {
@@ -136,7 +136,7 @@ export default class Graph {
     const bottom = Math.min(high, low);
     const topY = Math.round(((top - minPrice) / (maxPrice - minPrice)) * height);
     const bottomY = Math.round(((bottom - minPrice) / (maxPrice - minPrice)) * height);
-    let left = this.barWidth * i + Math.floor(this.barWidth * 0.5) + this.leftOffset;
+    let left = this.barWidth * i + Math.floor(this.barWidth * 0.5) - this.rightOffset;
 
     left = crispPixel(left);
 
