@@ -1,7 +1,7 @@
 import Graph from '@/chart/Graph';
 import PriceAxis from '@/chart/PriceAxis';
 import TimeAxis from '@/chart/TimeAxis';
-import { createCanvas } from '@/chart/utils';
+import { createCanvas, crispPixel } from '@/chart/utils';
 import { CandleChartData } from '../../backend/service/MarketService';
 
 export default class CandleChart {
@@ -78,7 +78,7 @@ export default class CandleChart {
     return -1;
   }
 
-  private caculateScale() {
+  private calculateScale() {
     const firstCandleIndex = this.getFirstVisibleCandleIndex();
     const lastCandleIndex = this.getLastVisibleCandleIndex();
 
@@ -98,14 +98,49 @@ export default class CandleChart {
     this.maxTime = this.candles[lastCandleIndex]?.date ?? this.maxTime;
   }
 
+  private calculateCoordinates() {
+    for (let i = this.candles.length - 1; i >= 0; i--) {
+      const index = this.candles.length - 1 - i;
+      const { open, close, high, low } = this.candles[i];
+
+      // body
+      const height = this.graph.height;
+      const bodyTop = Math.max(open, close);
+      const bodyBottom = Math.min(open, close);
+      const bodyTopY = Math.round(((bodyTop - this.minPrice) / (this.maxPrice - this.minPrice)) * height);
+      const bodyBottomY = Math.round(((bodyBottom - this.minPrice) / (this.maxPrice - this.minPrice)) * height);
+      const bodyLeft = this.graph.getCandleBodyLeft(index);
+      const bodyRight = this.graph.getCandleBodyRight(index);
+
+      // wick
+      const wickTop = Math.max(high, low);
+      const wickBottom = Math.min(high, low);
+      const wickTopY = Math.round(((wickTop - this.minPrice) / (this.maxPrice - this.minPrice)) * height);
+      const wickBottomY = Math.round(((wickBottom - this.minPrice) / (this.maxPrice - this.minPrice)) * height);
+      const wickCenter = crispPixel(bodyLeft + this.graph.barWidth * 0.5);
+
+      this.candles[i] = {
+        ...this.candles[i],
+        bodyX: bodyLeft,
+        bodyY: height - bodyTopY,
+        bodyW: bodyRight - bodyLeft,
+        bodyH: bodyTopY - bodyBottomY,
+        wickCenter,
+        wickTop: height - wickTopY,
+        wickBottom: height - wickBottomY,
+      };
+    }
+  }
+
   public setCandles(candles: CandleChartData[]) {
     this.candles = candles.reverse();
     this.draw();
   }
 
   private draw() {
-    this.caculateScale();
-    this.graph.draw(this.candles, this.minPrice, this.maxPrice);
+    this.calculateScale();
+    this.calculateCoordinates();
+    this.graph.draw(this.candles);
     this.priceAxis.draw(this.minPrice, this.maxPrice);
     this.timeAxis.draw(this.minTime, this.maxTime);
   }

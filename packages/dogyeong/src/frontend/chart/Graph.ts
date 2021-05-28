@@ -107,7 +107,7 @@ export default class Graph {
     return this.getCandleBodyLeft(index) + this.barWidth - 1;
   }
 
-  public draw(candles, minPrice, maxPrice) {
+  public draw(candles) {
     const ctx = this.getCtx();
 
     drawHelper(ctx, () => {
@@ -115,45 +115,29 @@ export default class Graph {
       ctx.fillRect(0, 0, this.width, this.height);
     });
 
-    for (let i = candles.length - 1; i >= 0; i--) {
-      const candle = candles[i];
-      this.drawWick(ctx, candle, candles.length - i, minPrice, maxPrice);
-      this.drawBody(ctx, candle, candles.length - i, minPrice, maxPrice);
-    }
-  }
-
-  private drawBody(ctx, candle, i, minPrice, maxPrice) {
-    const { open, close } = candle;
-    const height = this.canvas.height;
-    const top = Math.max(open, close);
-    const bottom = Math.min(open, close);
-    const topY = Math.round(((top - minPrice) / (maxPrice - minPrice)) * height);
-    const bottomY = Math.round(((bottom - minPrice) / (maxPrice - minPrice)) * height);
-    const left = this.getCandleBodyLeft(i);
-    const right = this.getCandleBodyRight(i);
-
-    drawHelper(ctx, () => {
-      ctx.fillStyle = this.getCandleColor(open, close);
-      ctx.fillRect(left, height - topY, right - left, topY - bottomY);
+    candles.forEach((candle) => {
+      this.drawWick(ctx, candle);
+      this.drawBody(ctx, candle);
     });
   }
 
-  private drawWick(ctx, candle, i, minPrice, maxPrice) {
-    const { high, low, open, close } = candle;
-    const height = this.canvas.height;
-    const top = Math.max(high, low);
-    const bottom = Math.min(high, low);
-    const topY = Math.round(((top - minPrice) / (maxPrice - minPrice)) * height);
-    const bottomY = Math.round(((bottom - minPrice) / (maxPrice - minPrice)) * height);
-    let left = this.width - this.barWidth * (i + 1) - this.rightOffset + this.barWidth * 0.5;
+  private drawBody(ctx: CanvasRenderingContext2D, candle) {
+    const { open, close, bodyX, bodyY, bodyW, bodyH } = candle;
 
-    left = crispPixel(left);
+    drawHelper(ctx, () => {
+      ctx.fillStyle = this.getCandleColor(open, close);
+      ctx.fillRect(bodyX, bodyY, bodyW, bodyH);
+    });
+  }
+
+  private drawWick(ctx, candle) {
+    const { open, close, wickCenter, wickTop, wickBottom } = candle;
 
     drawHelper(ctx, () => {
       ctx.strokeStyle = this.getCandleColor(open, close);
       ctx.beginPath();
-      ctx.moveTo(left, height - topY);
-      ctx.lineTo(left, height - bottomY);
+      ctx.moveTo(wickCenter, wickTop);
+      ctx.lineTo(wickCenter, wickBottom);
       ctx.stroke();
     });
   }
