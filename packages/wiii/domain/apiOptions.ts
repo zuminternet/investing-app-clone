@@ -10,7 +10,7 @@ export interface GetHistoricalOptions {
   /** - 기간 종점 */
   dateTo: string;
   /** - 간격; 1 (default) */
-  interval: number;
+  interval: string;
   /** interval 적용할 단위; day(default), hour, min, week */
   duration: string;
   /** - sort: DESC (default), ASC */
