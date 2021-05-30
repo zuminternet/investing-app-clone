@@ -43,7 +43,7 @@ export class MarketService {
    */
   @Caching({
     /** 1분 단위 실행 */
-    // refreshCron: `0/60 * * * * *`,
+    refreshCron: `0/60 * * * * *`,
     /** 1분 단위 캐싱 */
     ttl: times.caching,
     runOnStart: false,
