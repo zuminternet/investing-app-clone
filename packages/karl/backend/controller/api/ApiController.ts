@@ -4,10 +4,15 @@ import { Inject } from 'zum-portal-core/backend/decorator/Alias';
 
 import UserService from '../../service/UserService';
 import AuthService from '../../service/AuthService';
+import SearchService from '../../../../common/backend/service/SearchService';
 
 @Controller({ path: '/api' })
 export class ApiController {
-  constructor(@Inject(UserService) private userService: UserService, @Inject(AuthService) private authService: AuthService) {}
+  constructor(
+    @Inject(UserService) private userService: UserService,
+    @Inject(AuthService) private authService: AuthService,
+    @Inject(SearchService) private searchService: SearchService,
+  ) {}
 
   @GetMapping({ path: '/user' })
   public async getUser(request: Request, response: Response) {
@@ -95,4 +100,27 @@ export class ApiController {
       response.status(401).json(error);
     }
   }
+
+  @GetMapping({ path: '/search/items' })
+  public async getSearchedItems(request: Request, response: Response) {
+    try {
+      const { keyword } = request.query;
+      const items = await this.searchService.getSearchedItems({ keyword });
+
+      if (items) {
+        response.status(200).send(items);
+
+        return true;
+      }
+
+      response.sendStatus(404);
+    } catch (error) {
+      console.log(error);
+      response.status(404).json(error);
+    }
+  }
+
+  // @GetMapping({ path: '/search/stocks' })
+
+  // @GetMapping({ path: '/search/analysis' })
 }

@@ -26,6 +26,9 @@ const state = () => ({
       fluctuationRate: '-0.42%',
     },
   ],
+
+  searchedNews: [],
+  searchedAnalysis: [],
 });
 
 // getter 설정

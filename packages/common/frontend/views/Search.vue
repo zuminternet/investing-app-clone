@@ -25,6 +25,7 @@ import ItemCard from '../components/Search/ItemCard.vue';
 import ItemCardList from '../components/Search/ItemCardList.vue';
 
 import { text } from '../../../common/frontend/constants';
+import { getSearchedItems } from '../../../karl/frontend/apis';
 
 export default {
   name: 'Search',
@@ -47,6 +48,10 @@ export default {
     return {
       swiperNavigatorButtonNames: [text.ITEM, text.NEWS, text.ANALYSIS],
     };
+  },
+
+  async mounted() {
+    console.log(getSearchedItems({ keyword: 'Taiwan' }));
   },
 };
 </script>
