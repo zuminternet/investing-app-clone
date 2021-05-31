@@ -15,7 +15,7 @@ export default () => {
 
     routes: [
       {
-        path: '/ssss',
+        path: '/',
         name: 'Login',
         component: Login,
       },
@@ -35,7 +35,7 @@ export default () => {
         component: ItemDetail,
       },
       {
-        path: '/',
+        path: '/search',
         name: 'Search',
         component: Search,
       },

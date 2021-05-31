@@ -31,7 +31,7 @@
       </div>
       <empty-space></empty-space>
       <div class="header-button-box">
-        <header-button></header-button>
+        <header-button @handle-header-button-click="goSearch"></header-button>
       </div>
     </template>
   </div>
@@ -83,6 +83,12 @@ export default {
       title: 'investing.com',
       marketName: '홍콩',
     };
+  },
+
+  methods: {
+    goSearch() {
+      this.$router.push('search');
+    },
   },
 };
 </script>
