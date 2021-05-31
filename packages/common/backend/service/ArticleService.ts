@@ -1,3 +1,4 @@
+import { isValidObjectId, ObjectId } from 'mongoose';
 import { Service } from 'zum-portal-core/backend/decorator/Alias';
 import Article, { ArticleType, ArticleDoc } from '../model/ArticleModel';
 
@@ -20,5 +21,11 @@ export default class ArticleService {
       .skip(offset)
       .limit(limit)
       .lean<ArticleDoc[]>();
+  }
+
+  public async getArticleById(id: ObjectId | string): Promise<ArticleDoc> {
+    if (!isValidObjectId(id)) throw new Error('invalid id');
+
+    return Article.findById(id).lean<ArticleDoc>();
   }
 }
