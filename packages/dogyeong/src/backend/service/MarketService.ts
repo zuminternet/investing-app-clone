@@ -16,7 +16,7 @@ export interface InvestingApiResponse {
 }
 
 export interface CandleChartData {
-  date: Date;
+  date: string;
   open: number;
   high: number;
   low: number;

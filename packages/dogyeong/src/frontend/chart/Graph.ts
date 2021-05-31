@@ -1,6 +1,7 @@
-import { crispPixel, drawHelper } from '@/chart/utils';
+import { drawHelper } from '@/chart/utils';
+import { Candle } from '@/chart/CandleChart';
 
-interface ColorOptions {
+export interface GraphColorOptions {
   bgColor: string;
   redColor: string;
   blueColor: string;
@@ -8,25 +9,21 @@ interface ColorOptions {
 
 export default class Graph {
   private readonly canvas: HTMLCanvasElement;
-  private width: number;
-  private height: number;
-  public candles: any[];
-  public leftOffset: number;
+  public width: number;
+  public height: number;
+  public candles: Candle[];
+  public rightOffset: number;
   public barWidth: number;
-  private colorOptions: ColorOptions;
+  private colorOptions: GraphColorOptions;
   private listeners: any[];
 
-  constructor(canvas: HTMLCanvasElement) {
+  constructor({ canvas, colorOptions }) {
     this.canvas = canvas;
     this.width = this.canvas.width;
     this.height = this.canvas.height;
-    this.leftOffset = 0;
+    this.rightOffset = 0;
     this.barWidth = 7;
-    this.colorOptions = {
-      bgColor: '#131722',
-      redColor: '#26a69a',
-      blueColor: '#ef5350',
-    };
+    this.colorOptions = colorOptions;
     this.listeners = [];
 
     this.initializeEvents();
@@ -61,7 +58,7 @@ export default class Graph {
 
       const scale = e.deltaY * -0.005;
 
-      this.zoom(scale);
+      this.zoom(scale, e.offsetX);
     };
   }
 
@@ -69,16 +66,12 @@ export default class Graph {
     return this.canvas.getContext('2d');
   }
 
-  public getFirstCandleIndex() {
-    return this.candles.findIndex((_, i) => this.barWidth * i + this.leftOffset + this.barWidth > 0);
+  public setCandles(candles: Candle[]) {
+    this.candles = candles;
   }
 
-  public getLastCandleIndex() {
-    return this.candles.findIndex((_, i) => this.barWidth * i + this.leftOffset > this.width) - 1;
-  }
-
-  public setCandles(candles) {
-    this.candles = candles.reverse();
+  public getCandle(index: number) {
+    return this.candles[index];
   }
 
   public subscribe(listener) {
@@ -89,21 +82,31 @@ export default class Graph {
     this.listeners.forEach((listener) => listener());
   }
 
-  private zoom(amount) {
+  private zoom(amount: number, mouseOffsetX: number) {
+    const scrollOffset = -(this.rightOffset - this.width + mouseOffsetX); // 마우스와 rightOffset간의 거리
+    this.verticalScroll(scrollOffset * 0.01 * (amount > 0 ? 1 : -1));
     this.barWidth += amount;
     this.publish();
   }
 
-  private verticalScroll(offset) {
-    this.leftOffset += offset;
+  private verticalScroll(offset: number) {
+    this.rightOffset -= offset;
     this.publish();
   }
 
-  private getCandleColor(open, close) {
+  private getCandleColor(open: number, close: number) {
     return open > close ? this.colorOptions.blueColor : this.colorOptions.redColor;
   }
 
-  public draw(minPrice, maxPrice) {
+  public getCandleBodyLeft(index: number) {
+    return this.width - this.barWidth * (index + 1) - this.rightOffset;
+  }
+
+  public getCandleBodyRight(index: number) {
+    return this.getCandleBodyLeft(index) + this.barWidth - 1;
+  }
+
+  public draw(candles: Candle[]) {
     const ctx = this.getCtx();
 
     drawHelper(ctx, () => {
@@ -111,44 +114,29 @@ export default class Graph {
       ctx.fillRect(0, 0, this.width, this.height);
     });
 
-    this.candles.forEach((candle, i) => {
-      this.drawWick(ctx, i, minPrice, maxPrice);
-      this.drawBody(ctx, i, minPrice, maxPrice);
+    candles.forEach((candle) => {
+      this.drawWick(ctx, candle);
+      this.drawBody(ctx, candle);
     });
   }
 
-  private drawBody(ctx, i, minPrice, maxPrice) {
-    const { open, close } = this.candles[i];
-    const height = this.canvas.height;
-    const top = Math.max(open, close);
-    const bottom = Math.min(open, close);
-    const topY = Math.round(((top - minPrice) / (maxPrice - minPrice)) * height);
-    const bottomY = Math.round(((bottom - minPrice) / (maxPrice - minPrice)) * height);
-    const left = this.barWidth * i + this.leftOffset;
-    const right = left + this.barWidth - 1;
+  private drawBody(ctx: CanvasRenderingContext2D, candle: Candle) {
+    const { open, close, bodyX, bodyY, bodyW, bodyH } = candle;
 
     drawHelper(ctx, () => {
       ctx.fillStyle = this.getCandleColor(open, close);
-      ctx.fillRect(left, height - topY, right - left, topY - bottomY);
+      ctx.fillRect(bodyX, bodyY, bodyW, bodyH);
     });
   }
 
-  private drawWick(ctx, i, minPrice, maxPrice) {
-    const { high, low, open, close } = this.candles[i];
-    const height = this.canvas.height;
-    const top = Math.max(high, low);
-    const bottom = Math.min(high, low);
-    const topY = Math.round(((top - minPrice) / (maxPrice - minPrice)) * height);
-    const bottomY = Math.round(((bottom - minPrice) / (maxPrice - minPrice)) * height);
-    let left = this.barWidth * i + Math.floor(this.barWidth * 0.5) + this.leftOffset;
-
-    left = crispPixel(left);
+  private drawWick(ctx: CanvasRenderingContext2D, candle: Candle) {
+    const { open, close, wickCenter, wickTop, wickBottom } = candle;
 
     drawHelper(ctx, () => {
       ctx.strokeStyle = this.getCandleColor(open, close);
       ctx.beginPath();
-      ctx.moveTo(left, height - topY);
-      ctx.lineTo(left, height - bottomY);
+      ctx.moveTo(wickCenter, wickTop);
+      ctx.lineTo(wickCenter, wickBottom);
       ctx.stroke();
     });
   }

@@ -2,6 +2,7 @@
   padding: 0;
   margin: 0;
   box-sizing: border-box;
+  border-collapse: collapse;
 }
 
 html,
@@ -25,4 +26,8 @@ a {
 
 li {
   list-style: none;
+}
+
+canvas {
+  display: block;
 }
