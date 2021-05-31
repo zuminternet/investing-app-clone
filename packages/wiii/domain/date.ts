@@ -1,3 +1,19 @@
+/** 밀리세컨 단위 */
+const SEC_ONE = 1000;
+const HOUR_ONE = 60 * 60 * SEC_ONE;
+const DAY_ONE = 24 * HOUR_ONE;
+const WEEK_ONE = DAY_ONE * 7;
+const YEAR_ONE = DAY_ONE * 365;
+
+export const times = {
+  /** server data caching 60s (s 단위) */
+  caching: 60,
+  /** server-sent-event 15s (s 단위) */
+  sse: 15,
+  /** 2 years (ms 단위) */
+  year2: 2 * YEAR_ONE,
+} as const;
+
 const addPadToStr = (num: number) => (str: string | number): string => String(str).padStart(num, '0');
 const add4Pad = addPadToStr(4);
 const add2Pad = addPadToStr(2);

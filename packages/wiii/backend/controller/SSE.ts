@@ -1,7 +1,7 @@
 import { Response } from 'express'
 
 import { MarketService } from '../service/MarketService'
-import { times } from '../config/market'
+import { times } from '../../domain/date'
 
 /**
  * SSE
@@ -13,13 +13,17 @@ import { times } from '../config/market'
 export default class SSE {
   res: Response<any, Record<string, any>>;
   options: any;
+  service: MarketService;
 
   constructor(res: Response, options) {
-    /** @todo */
     this.res = res;
     this.options = options;
 
-    this.res.status(200).set({
+    this.setHeader();
+  }
+
+  private setHeader() {
+    this.res.writeHead(200, {
       /** EventSource 활용 위한 연결 지속 */
       Connection: 'keep-alive',
       /** EventSource 활용 위한 text타입 전송 */
@@ -27,23 +31,11 @@ export default class SSE {
       /** 지정 초(15s)까지 public caching 허용 */
       'Cache-Control': `public, max-age=${times.sse}`,
       /** CORS 허용 */
-      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Origin': 'http://localhost:3000',
     });
-
-    this.write();
-    // (async () => await this.write())();
-
-    /** 15초 간격 SSE */
-    const eventSourceInterval = setInterval(() => {
-      this.write();
-    }, /** 15s */ times.sse * 1_000);
-
-    /** 연결 끊어지는 경우 */
-    this.res.end(() => clearInterval(eventSourceInterval));
   }
 
-  private async write() {
-    let data = await MarketService.getHistorical(this.options);
+  public write(data) {
     this.res.write(`data: ${JSON.stringify(data)}\n\n`);
   }
 }
