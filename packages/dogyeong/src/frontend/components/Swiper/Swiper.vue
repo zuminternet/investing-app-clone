@@ -28,6 +28,12 @@ export default Vue.extend({
   beforeDestroy() {
     this.swiper.destroy();
   },
+
+  methods: {
+    slideTo(index) {
+      this.swiper.slideTo(index);
+    },
+  },
 });
 </script>
 

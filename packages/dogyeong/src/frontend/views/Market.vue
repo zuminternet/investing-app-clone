@@ -16,7 +16,7 @@
       </HeaderNav>
     </Header>
     <main>
-      <Swiper @endSlide="onEndSlide">
+      <Swiper ref="swiper" @endSlide="onEndSlide">
         <SwiperSlide>
           <MarketIndex></MarketIndex>
         </SwiperSlide>
@@ -92,7 +92,7 @@ export default Vue.extend({
     },
 
     slideTo(index) {
-      this.swiper.slideTo(index);
+      this.$refs.swiper.slideTo(index);
       this.getMarketData();
     },
 
