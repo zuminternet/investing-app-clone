@@ -2,9 +2,10 @@
   <div v-if="isSearch" class="item-card-list" :style="style">
     <item-card v-for="(item, index) in items" :key="index" :item="item" @route-to-page="routeToItemDetail" isSearch></item-card>
   </div>
-  <div v-else class="item-card-list" :style="style">
-    <item-card v-for="(item, index) in items" :key="index" :item="item" @route-to-page="routeToItemDetail"></item-card>
+  <div v-else-if="isHome" class="item-card-list" :style="style">
+    <item-card v-for="(item, index) in items" :key="index" :item="item" @route-to-page="routeToItemDetail" isHome></item-card>
   </div>
+  <div v-else></div>
 </template>
 
 <script>
@@ -25,7 +26,13 @@ export default {
       type: Array,
       required: true,
     },
+
     isSearch: {
+      type: Boolean,
+      default: false,
+    },
+
+    isHome: {
       type: Boolean,
       default: false,
     },

@@ -23,8 +23,8 @@ const actions = {
       const result = await getSearchedItems({ keyword });
       const data = result.data.data;
 
-      const items = data.map((element) => {
-        return element;
+      const items = data.map((item) => {
+        return item;
       });
 
       if (items) {
@@ -33,7 +33,7 @@ const actions = {
         return true;
       }
 
-      throw new Error('Getting searched items was failed in user store');
+      throw new Error('Getting searched items was failed in search store');
     } catch (error) {
       console.log(error);
     }

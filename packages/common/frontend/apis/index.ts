@@ -12,8 +12,6 @@ const getSearchedItems = async ({ keyword }: getSearchedItemsInfo) => {
   try {
     const result = await Axios.get(`${devURL}/api/search/items?keyword=${keyword}`);
 
-    console.log(result);
-
     if (result) {
       return result;
     }

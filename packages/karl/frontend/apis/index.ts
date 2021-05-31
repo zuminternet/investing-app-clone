@@ -99,4 +99,18 @@ const loginUserByGoogleOAuth = async ({ googleId }: loginUserByGoogleOAuthInfo) 
   }
 };
 
-export { createUser, loginUserByEmail, getUser, loginUserByGoogleOAuth };
+const getStocks = async () => {
+  try {
+    const result = await Axios.get(`${devURL}/api/market/stock`);
+
+    if (result) {
+      return result;
+    }
+
+    throw new Error('Getting stocks was failed in front api');
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export { createUser, loginUserByEmail, getUser, loginUserByGoogleOAuth, getStocks };

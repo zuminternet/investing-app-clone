@@ -5,6 +5,7 @@ import { Inject } from 'zum-portal-core/backend/decorator/Alias';
 import UserService from '../../service/UserService';
 import AuthService from '../../service/AuthService';
 import SearchService from '../../../../common/backend/service/SearchService';
+import MarketService from '../../service/MarketService';
 
 @Controller({ path: '/api' })
 export class ApiController {
@@ -12,6 +13,7 @@ export class ApiController {
     @Inject(UserService) private userService: UserService,
     @Inject(AuthService) private authService: AuthService,
     @Inject(SearchService) private searchService: SearchService,
+    @Inject(MarketService) private marketService: MarketService,
   ) {}
 
   @GetMapping({ path: '/user' })
@@ -98,6 +100,31 @@ export class ApiController {
     } catch (error) {
       console.log(error);
       response.status(401).json(error);
+    }
+  }
+
+  /**
+   *
+   * @description Home page에 렌더링할 stocks들을 가져오는 controller
+   * @param request
+   * @param resposne
+   */
+
+  @GetMapping({ path: '/market/stock' })
+  public async getStocks(request: Request, resposne: Response) {
+    try {
+      const stocks = await this.marketService.getStocks();
+
+      if (stocks) {
+        resposne.status(200).send(stocks);
+
+        return true;
+      }
+
+      resposne.sendStatus(404);
+    } catch (error) {
+      console.log(error);
+      resposne.status(404).json(error);
     }
   }
 
