@@ -12,6 +12,8 @@
           <custom-text v-if="itemCategory"> | {{ itemCategory }} </custom-text>
         </div>
       </div>
+      <empty-space></empty-space>
+      <item-card-button></item-card-button>
     </template>
 
     <template v-else>
@@ -44,12 +46,14 @@
 <script>
 import EmptySpace from '../karl/EmptySpace.vue';
 import CustomText from '../CustomText.vue';
+import ItemCardButton from '../Search/ItemCardButton.vue';
 
 export default {
   name: 'ItemCard',
   components: {
     EmptySpace,
     CustomText,
+    ItemCardButton,
   },
   props: {
     item: {

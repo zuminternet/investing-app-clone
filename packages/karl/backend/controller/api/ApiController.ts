@@ -121,6 +121,8 @@ export class ApiController {
   }
 
   // @GetMapping({ path: '/search/stocks' })
+  // 검색 뉴스 가져오는 controller
 
   // @GetMapping({ path: '/search/analysis' })
+  // 검색 분석 가져오는 controller
 }
