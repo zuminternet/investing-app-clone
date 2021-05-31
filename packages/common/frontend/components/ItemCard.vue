@@ -3,36 +3,36 @@
     <template v-if="isSearch">
       <div class="item-information">
         <custom-text>
-          {{ itemName }}
+          {{ name }}
         </custom-text>
 
         <div class="item-sub-infortmation">
-          <custom-text> {{ itemSymbol }}</custom-text>
+          <custom-text> {{ symbol }}</custom-text>
 
-          <custom-text v-if="itemCategory"> | {{ itemCategory }} </custom-text>
+          <custom-text v-if="category"> | {{ category }} </custom-text>
         </div>
       </div>
       <empty-space></empty-space>
       <item-card-button></item-card-button>
     </template>
 
-    <template v-else>
+    <template v-if="isHome">
       <div class="item-information-except-price">
         <custom-text>
-          {{ itemName }}
+          {{ name }}
         </custom-text>
 
         <div class="item-sub-information">
-          <custom-text>{{ itemTime }}</custom-text>
+          <custom-text>{{ time }}</custom-text>
           |
           <custom-text>
-            {{ itemCategory }}
+            {{ category }}
           </custom-text>
         </div>
       </div>
       <empty-space></empty-space>
       <div class="item-information-price">
-        <custom-text>{{ itemPrice }}</custom-text>
+        <custom-text>{{ price }}</custom-text>
 
         <div class="item-sub-information">
           <custom-text>{{ fluctuationPrice }}</custom-text>
@@ -44,9 +44,9 @@
 </template>
 
 <script>
-import EmptySpace from '../karl/EmptySpace.vue';
-import CustomText from '../CustomText.vue';
-import ItemCardButton from '../Search/ItemCardButton.vue';
+import EmptySpace from './karl/EmptySpace.vue';
+import CustomText from './CustomText.vue';
+import ItemCardButton from './ItemCardButton.vue';
 
 export default {
   name: 'ItemCard',
@@ -61,6 +61,11 @@ export default {
       default: {},
     },
 
+    isHome: {
+      type: Boolean,
+      default: false,
+    },
+
     isSearch: {
       type: Boolean,
       default: false,
@@ -68,44 +73,46 @@ export default {
   },
 
   computed: {
-    itemName() {
-      if (this.isSearch) {
-        return this.item.name;
-      }
-
-      return this.item.itemName;
+    name() {
+      return this.item.name;
     },
 
-    itemCategory() {
-      if (this.isSearch) {
-        return this.item.country;
+    category() {
+      if ((this.isSearch || this.isHome) && this.item.stock_exchange) {
+        return this.item.stock_exchange.acronym;
       }
 
-      return this.item.itemCategory;
+      return 'DUMMY';
     },
 
-    itemSymbol() {
-      if (this.isSearch) {
+    symbol() {
+      if (this.isSearch || this.isHome) {
         return this.item.symbol;
       }
     },
 
-    itemPrice() {
-      if (!this.isSearch) {
-        return this.item.itemPrice;
-      }
+    price() {
+      return 10;
+    },
+
+    time() {
+      return 10;
     },
 
     fluctuationPrice() {
-      if (!this.isSearch) {
-        return this.item.fluctuationPrice;
-      }
+      // if (!this.isSearch) {
+      //   return this.item.fluctuationPrice;
+      // }
+
+      return 10;
     },
 
     fluctuationRate() {
-      if (!this.isSearch) {
-        return this.item.fluctuationRate;
-      }
+      // if (!this.isSearch) {
+      //   return this.item.fluctuationRate;
+      // }
+
+      return 10;
     },
   },
 };

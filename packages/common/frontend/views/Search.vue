@@ -21,8 +21,8 @@ import { mapState, mapGetters } from 'vuex';
 
 import MultipurposeHeader from '../components/MultipurposeHeader.vue';
 import CustomSwiper from '../components/CustomSwiper.vue';
-import ItemCard from '../components/Search/ItemCard.vue';
-import ItemCardList from '../components/Search/ItemCardList.vue';
+import ItemCard from '../components/ItemCard.vue';
+import ItemCardList from '../components/ItemCardList.vue';
 
 import { text } from '../../../common/frontend/constants';
 
@@ -47,10 +47,6 @@ export default {
     return {
       swiperNavigatorButtonNames: [text.ITEM, text.NEWS, text.ANALYSIS],
     };
-  },
-
-  async mounted() {
-    // console.log(getSearchedItems({ keyword: 'Taiwan' }));
   },
 };
 </script>

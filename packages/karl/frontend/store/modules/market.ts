@@ -1,15 +1,7 @@
+import { getStocks } from '../../apis';
+
 // 초기 state 값 설정
 const state = () => ({
-  stockItems: [
-    {
-      itemName: '코스피 지수',
-      itemTime: '14:14:14',
-      itemCategory: '서울',
-      itemPrice: '3,136.10',
-      fluctuationPrice: '-1.32',
-      fluctuationRate: '-0.42%',
-    },
-  ],
   indexItems: [
     {
       itemName: '코스피 주식',
@@ -21,6 +13,8 @@ const state = () => ({
       fluctuationRate: '-0.42%',
     },
   ],
+  stockItems: [],
+
   cryptoItems: [
     {
       itemName: '코스피 가상화폐',
@@ -59,15 +53,40 @@ const state = () => ({
 
 const getters = {
   itemCollections: (state) => {
-    return [state.stockItems, state.indexItems, state.cryptoItems];
+    return [state.indexItems, state.stockItems, state.cryptoItems];
   },
 };
 
 // actions 설정
-const actions = {};
+const actions = {
+  async getStocks({ commit }) {
+    try {
+      const result = await getStocks();
+      const data = result.data.data;
+
+      const stocks = data.map((stock) => {
+        return stock;
+      });
+
+      if (stocks) {
+        commit('changeStockItems', stocks);
+
+        return true;
+      }
+
+      throw new Error('Getting stocks was failed in market store');
+    } catch (error) {
+      console.log(error);
+    }
+  },
+};
 
 // mutatuons 설정
-const mutations = {};
+const mutations = {
+  changeStockItems(state, stocks) {
+    state.stockItems = stocks;
+  },
+};
 
 export default {
   namespaced: true,

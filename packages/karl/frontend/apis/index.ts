@@ -99,4 +99,42 @@ const loginUserByGoogleOAuth = async ({ googleId }: loginUserByGoogleOAuthInfo) 
   }
 };
 
-export { createUser, loginUserByEmail, getUser, loginUserByGoogleOAuth };
+/**
+ * @description home page 렌더링에 필요한 stock들을 가져오는 front-side API 호출 함수
+ * @returns
+ */
+const getStocks = async () => {
+  try {
+    const result = await Axios.get(`${devURL}/api/market/stock`);
+
+    if (result) {
+      return result;
+    }
+
+    throw new Error('Getting stocks was failed in front api');
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+/**
+ * @description home page 렌더링에 필요한 indices를 가져오는 front-side API 호출 함수
+ */
+const getIndices = async () => {
+  try {
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+/**
+ * @description home page 렌더링에 필요한 cpyto currencies를 가져오는 front-side API 호출 함수
+ */
+const getCryptoCurrencies = async () => {
+  try {
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export { createUser, loginUserByEmail, getUser, loginUserByGoogleOAuth, getStocks, getIndices, getCryptoCurrencies };
