@@ -34,8 +34,8 @@ export default class SSE {
     // (async () => await this.write())();
 
     /** 15초 간격 SSE */
-    const eventSourceInterval = setInterval(async () => {
-      await this.write();
+    const eventSourceInterval = setInterval(() => {
+      this.write();
     }, /** 15s */ times.sse * 1_000);
 
     /** 연결 끊어지는 경우 */
@@ -43,7 +43,6 @@ export default class SSE {
   }
 
   private async write() {
-    console.info('%c[SSE] Writing..', 'color: red;');
     let data = await MarketService.getHistorical(this.options);
     this.res.write(`data: ${JSON.stringify(data)}\n\n`);
   }

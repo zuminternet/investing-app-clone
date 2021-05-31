@@ -1,13 +1,9 @@
-import Logger from 'zum-portal-core/backend/util/Logger'
-import { Controller, GetMapping } from 'zum-portal-core/backend/decorator/Controller'
 import { Request, Response } from 'express'
-import { Inject } from 'zum-portal-core/backend/decorator/Alias'
+import { Controller, GetMapping } from 'zum-portal-core/backend/decorator/Controller'
 
 import SSE from './SSE'
-import { apiIndex, marketHome, marketName, marketSubpaths } from '../../domain/apiUrls'
 import { GetHistoricalOptions } from '../../domain/apiOptions'
-import { times } from '../config/market'
-import { MarketService } from '../service/MarketService'
+import { marketHome, marketName, marketSubpaths } from '../../domain/apiUrls'
 
 /**
  * parseQueryToOptions
@@ -29,7 +25,7 @@ const parseQueryToOptions = (path: marketName, param): GetHistoricalOptions => {
       sort,
       limit,
       offset,
-    };
+    } as GetHistoricalOptions;
   }
 
   /** @todo stocks, indexes, coins options */
@@ -80,13 +76,13 @@ export class MarketController {
   @GetMapping({ path: [marketSubpaths.historical] })
   public async sendHistoricalData(req: Request, res: Response) {
     try {
-      const options = parseQueryToOptions(marketName.historical, req.query) as GetHistoricalOptions;
-
+      const options = parseQueryToOptions(marketName.historical, req.query);
       /** Exceptions */
-      if (!isOptionsValidate(options)) return res.status(404).end();
+      if (!isOptionsValidate(options)) return res.sendStatus(404);
 
       /** SSE Response Instance 생성 */
-      const SSEResponse = new SSE(res, options);
+      // const SSEResponse =
+      new SSE(res, options);
 
       /** @todo SSE 클래스에서 전부 처리 가능한지 클라이언트 연동 확인 필요 */
       // let data = await MarketService.getHistorical(options);

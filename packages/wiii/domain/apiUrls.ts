@@ -34,5 +34,3 @@ export const marketsFullUrl = {
   indexes: new URL(marketName.indexes, MARKET_BASE_URL).href,
   coins: new URL(marketName.coins, MARKET_BASE_URL).href,
 } as const;
-
-console.log(marketsFullUrl);

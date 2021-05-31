@@ -1,13 +1,36 @@
-import axios, { AxiosRequestConfig, AxiosStatic } from 'axios'
+import axios, { AxiosRequestConfig } from 'axios';
 
-import { GetHistoricalOptions } from '../../domain/apiOptions'
-import { MarketStackConfigs } from '../config/market'
-import { pipe } from '../utils/HOF'
-import { getDateString } from '../../domain/date'
-
-// declare const axios: AxiosStatic;
+import { GetHistoricalOptions } from '../../domain/apiOptions';
+import { getDateString } from '../../domain/date';
+import { MarketStackConfigs, MarketStackQueies, times } from '../config/market';
+import { pipe } from '../utils/HOF';
 
 const { access_key, baseUrl } = MarketStackConfigs;
+
+/**
+ * adjustKeyName
+ * - querystring 에서 undefined value 제거
+ * - MarketStack API에서 사용되는 key 이름으로 변경
+ * @param options client에서 입력된 querystring(options) object
+ * @returns undefined 제외한 나머지 query 모음
+ */
+const adjustKeyName = (options: GetHistoricalOptions) => {
+  const entries = Object.entries(options);
+  if (!entries.length) return {};
+
+  const { symbols, date_from, date_to } = MarketStackQueies;
+  const { ticker, dateTo, dateFrom } = options;
+  entries.push([symbols, ticker]);
+  entries.push([date_to, dateTo]);
+  entries.push([date_from, dateFrom]);
+
+  const adjusted = {};
+  for (const [key, value] of entries) {
+    /** value는 모두 string으로 들어오므로 `0`도 true로 인식 */
+    if (value && key in MarketStackQueies) adjusted[key] = value;
+  }
+  return adjusted;
+};
 
 /**
  * setSymbols
@@ -17,9 +40,9 @@ const { access_key, baseUrl } = MarketStackConfigs;
  * @param options
  * @returns
  */
-const setSymbols = (options: GetHistoricalOptions) => {
-  const { ticker } = options;
-  let trimed = ticker.trim();
+const setSymbols = (options) => {
+  const { symbols } = options;
+  const trimed = symbols.trim();
 
   /** 예외처리 */
   const symbolLength = 6;
@@ -39,19 +62,19 @@ const setSymbols = (options: GetHistoricalOptions) => {
 const setDefaultValues = (options) => {
   if (!Object.keys(options).length) return {};
 
-  let { dateFrom, dateTo } = options;
+  let { date_from, date_to } = options;
   const curDate = new Date();
   const curDateStr = getDateString(curDate);
 
   /** 현재 날짜로 */
-  if (!dateTo || !dateTo.trim()) dateTo = curDateStr;
+  if (!date_to || !date_to.trim()) date_to = curDateStr;
   /** 오늘로부터 2년전 데이터; 유료 API => 잦은 요청보다는 한번에 최대한 많은 데이터 요청이 낫다고 판단 */
-  if (!dateFrom || !dateFrom.trim()) dateFrom = getDateString(Number(curDate) - 2 * 365 * 24 * 60 * 60 * 1000);
+  if (!date_from || !date_from.trim()) date_from = getDateString(Number(curDate) - times.year2);
 
   return {
     ...options,
-    date_to: dateTo,
-    date_from: dateFrom,
+    date_to,
+    date_from,
     /** 한국거래소 */
     exchange: `XKRX`,
   };
@@ -66,18 +89,10 @@ const setDefaultValues = (options) => {
  */
 const addAccessKey = (options) => {
   if (!Object.keys(options).length) return {};
-  const { symbols, exchange, date_to, date_from, interval, duration, sort, limit, offset } = options;
+
   return {
+    ...options,
     access_key,
-    symbols,
-    exchange,
-    date_to,
-    date_from,
-    interval,
-    duration,
-    sort,
-    limit,
-    offset,
   };
 };
 
@@ -86,7 +101,7 @@ const addAccessKey = (options) => {
  * @param options GetHistoricalOptions 그대로 입력
  * @returns API가 요구하는 params에 맞게 변형하는 pipe 함수
  */
-const setParams = (options: GetHistoricalOptions) => pipe(options, setSymbols, setDefaultValues, addAccessKey);
+const setParams = (options: GetHistoricalOptions) => pipe(options, adjustKeyName, setSymbols, setDefaultValues, addAccessKey);
 
 /**
  * adjustPrices

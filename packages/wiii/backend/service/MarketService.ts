@@ -12,8 +12,6 @@ const fetchers = {
   [marketName.coins]: undefined,
 };
 
-const getFetcherByType = (type: string) => fetchers[type];
-
 const resultValidator = (data, status: number, statusText: string) => {
   if (status >= 400 || !data || !Object.keys(data).length) throw new Error(statusText);
   return;
@@ -52,7 +50,7 @@ export class MarketService {
   public static async getHistorical(options: GetHistoricalOptions) {
     try {
       const { type } = options;
-      const { data, status, statusText } = await getFetcherByType(type)(options);
+      const { data, status, statusText } = await fetchers[type](options);
       console.log({ status, statusText });
       resultValidator(data, status, statusText);
       return data;
