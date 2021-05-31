@@ -7,7 +7,7 @@ export const enum ArticleType {
   opinions = 'opinions',
 }
 
-export interface IArticle extends mongoose.Document {
+export interface ArticleDoc extends mongoose.Document {
   image_url: string;
   title: string;
   text: string;
@@ -34,6 +34,6 @@ const ArticleSchema = new Schema({
   },
 });
 
-const Article = model<IArticle>('Articles', ArticleSchema);
+const Article = model<ArticleDoc>('Articles', ArticleSchema);
 
 export default Article;
