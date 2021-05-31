@@ -29,7 +29,6 @@ export default {
   components: {
     EmptySpace,
   },
-  // props: ['item'],
   props: {
     item: {
       type: Object,

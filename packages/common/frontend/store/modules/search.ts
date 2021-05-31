@@ -45,10 +45,15 @@ const getters = {
 const actions = {
   async getSearchedItems({ commit }, keyword) {
     try {
-      const items = await getSearchedItems({ keyword });
+      const result = await getSearchedItems({ keyword });
+      const data = result.data.data;
+
+      const items = data.map((element) => {
+        return element;
+      });
 
       if (items) {
-        commit('searchedItems', items);
+        commit('changeSearchedItems', items);
 
         return true;
       }
@@ -61,7 +66,11 @@ const actions = {
 };
 
 // mutatuons 설정
-const mutations = {};
+const mutations = {
+  changeSearchedItems(state, items) {
+    state.searchedItems = items;
+  },
+};
 
 export default {
   namespaced: true,

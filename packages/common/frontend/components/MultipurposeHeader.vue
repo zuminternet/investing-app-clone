@@ -22,7 +22,7 @@
 
     <template v-if="isSearch">
       <header-button isBackButton></header-button>
-      <search-input />
+      <search-input @search-input-value-change="requestSearchedItems" />
     </template>
 
     <template v-if="isHome">
@@ -34,10 +34,13 @@
         <header-button @handle-header-button-click="goSearch"></header-button>
       </div>
     </template>
+    {{ searchInputValue }}
   </div>
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+
 import CustomText from '../components/CustomText.vue';
 import EmptySpace from '../components/karl/EmptySpace.vue';
 import SearchInput from '../components/Search/SearchInput.vue';
@@ -82,12 +85,23 @@ export default {
       itemCategory,
       title: 'investing.com',
       marketName: '홍콩',
+      searchInputValue: '',
     };
   },
 
   methods: {
+    ...mapActions('search', ['getSearchedItems']),
     goSearch() {
       this.$router.push('search');
+    },
+
+    requestSearchedItems(event) {
+      const keyword = event.target.value;
+
+      if (keyword) {
+        console.log('ca;;');
+        this.getSearchedItems(keyword);
+      }
     },
   },
 };
