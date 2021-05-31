@@ -66,24 +66,28 @@ export default Vue.extend({
     return {
       swiper: null,
       navRoutes: [
-        { id: 'index', title: '지수' },
-        { id: 'stock', title: '주식' },
-        { id: 'coin', title: '가상화폐' },
+        { id: 'index', title: '지수', index: 0 },
+        { id: 'stock', title: '주식', index: 1 },
+        { id: 'coin', title: '가상화폐', index: 2 },
       ],
       currentNavId: 'index',
     };
   },
 
+  created() {
+    this.getMarketData();
+  },
+
   mounted() {
     this.swiper = new Swiper(this.$refs.swiperContainer, {
-      loop: true,
+      loop: false,
       touchAngle: 20,
       threshold: 14,
       speed: 150,
       grabCursor: true,
     });
 
-    this.swiper.on('slideChangeTransitionEnd', (swiper) => this.slideTo(swiper.activeIndex));
+    this.swiper.on('slideChangeTransitionEnd', this.onEndSlide.bind(this));
   },
 
   beforeDestroy() {
@@ -94,21 +98,23 @@ export default Vue.extend({
     ...mapActions(['getIndices', 'getCoins', 'getStocks']),
 
     onClickHeaderNav(id) {
-      const index = this.navRoutes.findIndex((route) => route.id === id) + 1;
-
-      if (!index) return;
-
+      const { index } = this.navRoutes.find((route) => route.id === id);
+      this.currentNavId = id;
       this.slideTo(index);
     },
+
+    onEndSlide({ activeIndex }) {
+      const { id } = this.navRoutes.find((route) => route.index === activeIndex);
+      this.currentNavId = id;
+      this.getMarketData();
+    },
+
     slideTo(index) {
       this.swiper.slideTo(index);
+      this.getMarketData();
+    },
 
-      // currentNavId 설정을 위한 index 처리. index를 1~3으로 유지시켜준다
-      if (index === 0) index = this.navRoutes.length;
-      else if (index > this.navRoutes.length) index = 1;
-
-      this.currentNavId = this.navRoutes[index - 1].id;
-
+    getMarketData() {
       if (this.currentNavId === 'index') this.getIndices();
       if (this.currentNavId === 'stock') this.getStocks();
       if (this.currentNavId === 'coin') this.getCoins();
