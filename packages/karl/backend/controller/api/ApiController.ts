@@ -6,6 +6,7 @@ import UserService from '../../service/UserService';
 import AuthService from '../../service/AuthService';
 import SearchService from '../../../../common/backend/service/SearchService';
 import MarketService from '../../service/MarketService';
+import ItemDetailService from '../../../../common/backend/service/ItemDetailService';
 
 @Controller({ path: '/api' })
 export class ApiController {
@@ -14,6 +15,7 @@ export class ApiController {
     @Inject(AuthService) private authService: AuthService,
     @Inject(SearchService) private searchService: SearchService,
     @Inject(MarketService) private marketService: MarketService,
+    @Inject(ItemDetailService) private itemDetailService: ItemDetailService,
   ) {}
 
   @GetMapping({ path: '/user' })
@@ -147,6 +149,25 @@ export class ApiController {
   @GetMapping({ path: '/market/cpyto-currencies' })
   public async getCryptoCurrencies(request: Request, resposne: Response) {
     try {
+    } catch (error) {
+      console.log(error);
+      resposne.status(404).json(error);
+    }
+  }
+
+  @GetMapping({ path: '/item-detail' })
+  public async getItemDetailInfo(request: Request, resposne: Response) {
+    try {
+      const { symbols } = request.query;
+      const itemDetailInfo = await this.itemDetailService.getItemDetailInfo({ symbols });
+
+      if (itemDetailInfo) {
+        resposne.status(200).send(itemDetailInfo);
+
+        return true;
+      }
+
+      resposne.sendStatus(404);
     } catch (error) {
       console.log(error);
       resposne.status(404).json(error);
