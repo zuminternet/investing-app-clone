@@ -6,6 +6,10 @@ import axios from 'axios';
 export default class MarketService {
   constructor() {}
 
+  /**
+   * @description home page에 렌더링할 stock들을 가져오는 service
+   * @returns stock과 pagination을 담은 Object
+   */
   public async getStocks() {
     try {
       const { accessKey } = marketStackConfig;
@@ -16,6 +20,27 @@ export default class MarketService {
       }
 
       throw new Error('getting stocks was failed in MarketService');
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  /**
+   * @description home page에 렌더링할 indices를 가져오는 service
+   */
+
+  public async getIndices() {
+    try {
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  /**
+   * @description home page에 렌더링할 crypto currencies를 가져오는 service
+   */
+  public async getCryptoCurrencies() {
+    try {
     } catch (error) {
       console.log(error);
     }

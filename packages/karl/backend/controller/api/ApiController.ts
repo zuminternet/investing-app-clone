@@ -19,11 +19,8 @@ export class ApiController {
   @GetMapping({ path: '/user' })
   public async getUser(request: Request, response: Response) {
     try {
-      // 토큰 인증자리
-      // 토큰 인증되면 클라이언트에 user 정보 보내기
       const token = request.cookies['jwt-token'];
 
-      // 토큰이 없으면
       if (!token) {
         response.sendStatus(401);
 
@@ -128,6 +125,40 @@ export class ApiController {
     }
   }
 
+  /**
+   * @description Home page에 렌더링할 indices를 가져오는 controller
+   * @param request
+   * @param resposne
+   */
+  @GetMapping({ path: '/market/indices' })
+  public async getIndices(request: Request, resposne: Response) {
+    try {
+    } catch (error) {
+      console.log(error);
+      resposne.status(404).json(error);
+    }
+  }
+
+  /**
+   * @description Home page에 렌더링할 cpyto currencies를 가져오는 controller
+   * @param request
+   * @param resposne
+   */
+  @GetMapping({ path: '/market/cpyto-currencies' })
+  public async getCryptoCurrencies(request: Request, resposne: Response) {
+    try {
+    } catch (error) {
+      console.log(error);
+      resposne.status(404).json(error);
+    }
+  }
+
+  /**
+   * @description search page에 렌더링할 searched items들을 가져오는 controller
+   * @param request
+   * @param response
+   * @returns
+   */
   @GetMapping({ path: '/search/items' })
   public async getSearchedItems(request: Request, response: Response) {
     try {
@@ -146,10 +177,4 @@ export class ApiController {
       response.status(404).json(error);
     }
   }
-
-  // @GetMapping({ path: '/search/stocks' })
-  // 검색 뉴스 가져오는 controller
-
-  // @GetMapping({ path: '/search/analysis' })
-  // 검색 분석 가져오는 controller
 }
