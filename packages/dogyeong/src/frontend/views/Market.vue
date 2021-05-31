@@ -43,6 +43,7 @@ import MarketCoin from '@/components/Market/MarketCoin.vue';
 import MarketStock from '@/components/Market/MarketStock.vue';
 import Swiper from '@/components/Swiper/Swiper.vue';
 import SwiperSlide from '@/components/Swiper/SwiperSlide.vue';
+import swiperMixin from '@/mixin/swiperMixin';
 
 export default Vue.extend({
   name: 'Index',
@@ -60,9 +61,18 @@ export default Vue.extend({
     SwiperSlide,
   },
 
+  mixins: [
+    swiperMixin({
+      fetchData() {
+        if (this.currentNavId === 'index') this.getIndices();
+        if (this.currentNavId === 'stock') this.getStocks();
+        if (this.currentNavId === 'coin') this.getCoins();
+      },
+    }),
+  ],
+
   data() {
     return {
-      swiper: null,
       navRoutes: [
         { id: 'index', title: '지수', index: 0 },
         { id: 'stock', title: '주식', index: 1 },
@@ -72,34 +82,15 @@ export default Vue.extend({
     };
   },
 
-  created() {
-    this.getMarketData();
-  },
-
   methods: {
     ...mapActions(['getIndices', 'getCoins', 'getStocks']),
 
     onClickHeaderNav(id) {
-      const { index } = this.navRoutes.find((route) => route.id === id);
-      this.currentNavId = id;
-      this.slideTo(index);
+      this.handleHeaderNavClick(id);
     },
 
-    onEndSlide({ activeIndex }) {
-      const { id } = this.navRoutes.find((route) => route.index === activeIndex);
-      this.currentNavId = id;
-      this.getMarketData();
-    },
-
-    slideTo(index) {
-      this.$refs.swiper.slideTo(index);
-      this.getMarketData();
-    },
-
-    getMarketData() {
-      if (this.currentNavId === 'index') this.getIndices();
-      if (this.currentNavId === 'stock') this.getStocks();
-      if (this.currentNavId === 'coin') this.getCoins();
+    onEndSlide(swiper) {
+      this.handleEndSlide(swiper);
     },
   },
 });
