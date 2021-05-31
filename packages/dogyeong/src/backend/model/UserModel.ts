@@ -1,4 +1,6 @@
-import { Schema, model } from 'mongoose';
+import mongoose from 'common/backend/mongoose';
+
+const { Schema, model } = mongoose;
 
 const UserSchema = new Schema({
   email: String,

@@ -1,7 +1,9 @@
 import 'reflect-metadata';
 import { appContainer } from 'common/backend/AppContainer';
-import * as mongoose from 'mongoose';
+import mongoose from 'common/backend/mongoose';
 import { mongoConfig } from './config';
+
+mongoose.set('debug', true);
 
 mongoose
   .connect(mongoConfig.uri, mongoConfig.options)
