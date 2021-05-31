@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import { Login, Home, Signup } from '../views';
 import ItemDetail from '../../../common/frontend/views/ItemDetail.vue';
+import Search from '../../../common/frontend/views/Search.vue';
 // import Login from '../views/Login.vue'
 // import Home from '../views/Home.vue'
 // import ItemDetail from '../views/ItemDetail.vue'
@@ -14,7 +15,7 @@ export default () => {
 
     routes: [
       {
-        path: '/',
+        path: '/ssss',
         name: 'Login',
         component: Login,
       },
@@ -32,6 +33,11 @@ export default () => {
         path: '/item-detail',
         name: 'ItemDetail',
         component: ItemDetail,
+      },
+      {
+        path: '/',
+        name: 'Search',
+        component: Search,
       },
     ],
   });

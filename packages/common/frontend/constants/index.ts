@@ -34,4 +34,6 @@ export const text = {
   EMAIL_REGISTER: '이메일로 등록',
   REGISTER: '등록',
   NAME: '이름',
+  ITEM: '종목',
+  SEARCH: '검색',
 };

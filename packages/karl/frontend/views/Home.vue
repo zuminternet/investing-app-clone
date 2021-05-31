@@ -1,6 +1,6 @@
 <template>
   <div id="home-page">
-    <multipurpose-header></multipurpose-header>
+    <multipurpose-header isHome></multipurpose-header>
     <custom-swiper :navigatorButtonNames="swiperNavigatorButtonNames">
       <swiper-slide v-for="(items, index) in itemCollections" :key="index">
         <item-card-list :items="items" :excludingHeight="150"></item-card-list>

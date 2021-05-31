@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import market from './modules/market';
 import user from './modules/user';
+import search from '../../../common/frontend/store/modules/search';
 
 Vue.use(Vuex);
 
@@ -11,6 +12,7 @@ export default () => {
     modules: {
       market,
       user,
+      search,
     },
 
     // 글로벌 영역 상태값.
