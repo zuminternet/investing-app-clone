@@ -1,5 +1,8 @@
 <template>
-  <div class="item-card-list" :style="style">
+  <div v-if="isSearch" class="item-card-list" :style="style">
+    <item-card v-for="(item, index) in items" :key="index" :item="item" @route-to-page="routeToItemDetail" isSearch></item-card>
+  </div>
+  <div v-else class="item-card-list" :style="style">
     <item-card v-for="(item, index) in items" :key="index" :item="item" @route-to-page="routeToItemDetail"></item-card>
   </div>
 </template>
@@ -12,7 +15,21 @@ export default {
   components: {
     ItemCard,
   },
-  props: ['excludingHeight', 'items'],
+
+  props: {
+    excludingHeight: {
+      type: Number,
+      required: true,
+    },
+    items: {
+      type: Array,
+      required: true,
+    },
+    isSearch: {
+      type: Boolean,
+      default: false,
+    },
+  },
 
   computed: {
     style() {

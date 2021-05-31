@@ -2,32 +2,7 @@ import { getSearchedItems } from '../../apis';
 
 // 초기 state 값 설정
 const state = () => ({
-  searchedItems: [
-    {
-      itemName: '코스피 지수',
-      itemTime: '14:14:14',
-      itemCategory: '서울',
-      itemPrice: '3,136.10',
-      fluctuationPrice: '-1.32',
-      fluctuationRate: '-0.42%',
-    },
-    {
-      itemName: '코스피 지수',
-      itemTime: '14:14:14',
-      itemCategory: '서울',
-      itemPrice: '3,136.10',
-      fluctuationPrice: '-1.32',
-      fluctuationRate: '-0.42%',
-    },
-    {
-      itemName: '코스피 지수',
-      itemTime: '14:14:14',
-      itemCategory: '서울',
-      itemPrice: '3,136.10',
-      fluctuationPrice: '-1.32',
-      fluctuationRate: '-0.42%',
-    },
-  ],
+  searchedItems: [],
 
   searchedNews: [],
   searchedAnalysis: [],
