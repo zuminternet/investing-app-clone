@@ -16,22 +16,17 @@
       </HeaderNav>
     </Header>
     <main>
-      <!-- Slider main container -->
-      <div ref="swiperContainer" class="swiper-container">
-        <!-- Additional required wrapper -->
-        <div class="swiper-wrapper">
-          <!-- Slides -->
-          <div class="swiper-slide">
-            <MarketIndex></MarketIndex>
-          </div>
-          <div class="swiper-slide">
-            <MarketStock></MarketStock>
-          </div>
-          <div class="swiper-slide">
-            <MarketCoin></MarketCoin>
-          </div>
-        </div>
-      </div>
+      <Swiper @endSlide="onEndSlide">
+        <SwiperSlide>
+          <MarketIndex></MarketIndex>
+        </SwiperSlide>
+        <SwiperSlide>
+          <MarketStock></MarketStock>
+        </SwiperSlide>
+        <SwiperSlide>
+          <MarketCoin></MarketCoin>
+        </SwiperSlide>
+      </Swiper>
     </main>
     <BottomNav></BottomNav>
   </Layout>
@@ -46,7 +41,8 @@ import BottomNav from '@/components/BottomNav/BottomNav.vue';
 import MarketIndex from '@/components/Market/MarketIndex.vue';
 import MarketCoin from '@/components/Market/MarketCoin.vue';
 import MarketStock from '@/components/Market/MarketStock.vue';
-import Swiper from 'swiper';
+import Swiper from '@/components/Swiper/Swiper.vue';
+import SwiperSlide from '@/components/Swiper/SwiperSlide.vue';
 
 export default Vue.extend({
   name: 'Index',
@@ -60,6 +56,8 @@ export default Vue.extend({
     MarketCoin,
     MarketStock,
     HeaderNav,
+    Swiper,
+    SwiperSlide,
   },
 
   data() {
@@ -76,22 +74,6 @@ export default Vue.extend({
 
   created() {
     this.getMarketData();
-  },
-
-  mounted() {
-    this.swiper = new Swiper(this.$refs.swiperContainer, {
-      loop: false,
-      touchAngle: 20,
-      threshold: 14,
-      speed: 150,
-      grabCursor: true,
-    });
-
-    this.swiper.on('slideChangeTransitionEnd', this.onEndSlide.bind(this));
-  },
-
-  beforeDestroy() {
-    this.swiper.destroy();
   },
 
   methods: {
@@ -124,22 +106,6 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
-main {
-  flex: 1;
-  overflow: hidden;
-}
-.swiper-container {
-  overflow-x: hidden;
-  overflow-y: scroll;
-  height: 100%;
-
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
-
-  &::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, Opera */
-  }
-}
 .header-nav-list {
   display: flex;
 
