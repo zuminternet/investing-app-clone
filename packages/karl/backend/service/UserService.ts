@@ -45,7 +45,7 @@ export default class UserService {
       return user;
     }
 
-    throw new Error('User not exists (email login)');
+    throw new Error('User not exists (email login in user service)');
   }
 
   public async loginUserByGoogleOAuth({ googleId }: loginUserByGoogleOAuthInfo) {
@@ -55,6 +55,6 @@ export default class UserService {
       return user;
     }
 
-    throw new Error('User not exists (Google Auth login)');
+    throw new Error('User not exists (Google Auth login in user service)');
   }
 }

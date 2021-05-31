@@ -1,6 +1,6 @@
 <template>
   <input v-if="isBackButton" class="header-button" type="button" @click="goBack" />
-  <input v-else class="header-button" type="button" />
+  <input v-else class="header-button" type="button" @click="$emit('handle-header-button-click')" />
 </template>
 
 <script>

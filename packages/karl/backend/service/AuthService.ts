@@ -1,4 +1,3 @@
-import { User } from '../model';
 import { Service } from 'zum-portal-core/backend/decorator/Alias';
 import * as jsonwebtoken from 'jsonwebtoken';
 import { jwtSecret } from '../config';

@@ -21,6 +21,14 @@ export interface loginUserByOAuthInfo {
   password: string;
 }
 
+export interface loginUserByGoogleOAuthInfo {
+  googleId: string;
+}
+
+export interface getSearchedItemsInfo {
+  keyword: string;
+}
+
 const createUser = async ({ name, email, password, googleId }: createUserInfo) => {
   try {
     const result = await Axios.post(
@@ -75,7 +83,7 @@ const loginUserByEmail = async ({ email, password }: loginUserByEmailInfo) => {
   }
 };
 
-const loginUserByGoogleOAuth = async ({ googleId }) => {
+const loginUserByGoogleOAuth = async ({ googleId }: loginUserByGoogleOAuthInfo) => {
   try {
     const reuslt = await Axios.post(`${devURL}/api/auth/google-oauth`, {
       googleId,

@@ -1,44 +1,112 @@
 <template>
-  <div class="item-card" @click="$emit('route-to-item-detail')">
-    <div class="item-information-except-price">
-      {{ itemName }}
-      <div class="item-sub-information">
-        {{ itemTime }} |
-        {{ itemCategory }}
+  <div class="item-card" @click="$emit('route-to-page')">
+    <template v-if="isSearch">
+      <div class="item-information">
+        <custom-text>
+          {{ itemName }}
+        </custom-text>
+
+        <div class="item-sub-infortmation">
+          <custom-text> {{ itemSymbol }}</custom-text>
+
+          <custom-text v-if="itemCategory"> | {{ itemCategory }} </custom-text>
+        </div>
       </div>
-    </div>
-    <empty-space></empty-space>
-    <div class="item-information-price">
-      {{ itemPrice }}
-      <div class="item-sub-information">
-        {{ fluctuationPrice }}
-        ({{ fluctuationRate }})
+      <empty-space></empty-space>
+      <item-card-button></item-card-button>
+    </template>
+
+    <template v-else>
+      <div class="item-information-except-price">
+        <custom-text>
+          {{ itemName }}
+        </custom-text>
+
+        <div class="item-sub-information">
+          <custom-text>{{ itemTime }}</custom-text>
+          |
+          <custom-text>
+            {{ itemCategory }}
+          </custom-text>
+        </div>
       </div>
-    </div>
+      <empty-space></empty-space>
+      <div class="item-information-price">
+        <custom-text>{{ itemPrice }}</custom-text>
+
+        <div class="item-sub-information">
+          <custom-text>{{ fluctuationPrice }}</custom-text>
+          <custom-text>({{ fluctuationRate }})</custom-text>
+        </div>
+      </div>
+    </template>
   </div>
 </template>
 
 <script>
 import EmptySpace from '../karl/EmptySpace.vue';
+import CustomText from '../CustomText.vue';
+import ItemCardButton from '../Search/ItemCardButton.vue';
 
 export default {
   name: 'ItemCard',
   components: {
     EmptySpace,
+    CustomText,
+    ItemCardButton,
   },
-  props: ['item'],
+  props: {
+    item: {
+      type: Object,
+      default: {},
+    },
 
-  data() {
-    const { itemName, itemTime, itemCategory, itemPrice, fluctuationPrice, fluctuationRate } = this.item ? this.item : {};
+    isSearch: {
+      type: Boolean,
+      default: false,
+    },
+  },
 
-    return {
-      itemName,
-      itemTime,
-      itemCategory,
-      itemPrice,
-      fluctuationPrice,
-      fluctuationRate,
-    };
+  computed: {
+    itemName() {
+      if (this.isSearch) {
+        return this.item.name;
+      }
+
+      return this.item.itemName;
+    },
+
+    itemCategory() {
+      if (this.isSearch) {
+        return this.item.country;
+      }
+
+      return this.item.itemCategory;
+    },
+
+    itemSymbol() {
+      if (this.isSearch) {
+        return this.item.symbol;
+      }
+    },
+
+    itemPrice() {
+      if (!this.isSearch) {
+        return this.item.itemPrice;
+      }
+    },
+
+    fluctuationPrice() {
+      if (!this.isSearch) {
+        return this.item.fluctuationPrice;
+      }
+    },
+
+    fluctuationRate() {
+      if (!this.isSearch) {
+        return this.item.fluctuationRate;
+      }
+    },
   },
 };
 </script>
