@@ -55,17 +55,17 @@ export default {
   props: {
     isSearch: {
       type: Boolean,
-      required: false,
+      default: false,
     },
 
     isItemDetail: {
       type: Boolean,
-      requied: false,
+      default: false,
     },
 
     isHome: {
       type: Boolean,
-      required: false,
+      default: false,
     },
 
     itemDetailInformations: {

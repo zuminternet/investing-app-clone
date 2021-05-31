@@ -1,13 +1,6 @@
 <template>
-  <div>
-    <template v-if="isBackButton">
-      <input class="header-button" type="button" @click="goBack" />
-    </template>
-
-    <template v-else>
-      <input class="header-button" type="button" />
-    </template>
-  </div>
+  <input v-if="isBackButton" class="header-button" type="button" @click="goBack" />
+  <input v-else class="header-button" type="button" />
 </template>
 
 <script>
