@@ -1,6 +1,9 @@
 <template>
-  <div class="item-card" @click="$emit('route-to-item-detail')">
-    <div class="item-information-except-price">
+  <div class="item-card" @click="$emit('route-to-page')">
+    <div v-if="isSearch">
+      hi
+    </div>
+    <div v-else class="item-information-except-price">
       {{ itemName }}
       <div class="item-sub-information">
         {{ itemTime }} |
@@ -26,7 +29,18 @@ export default {
   components: {
     EmptySpace,
   },
-  props: ['item'],
+  // props: ['item'],
+  props: {
+    item: {
+      type: Object,
+      default: {},
+    },
+
+    isSearch: {
+      type: Boolean,
+      default: false,
+    },
+  },
 
   data() {
     const { itemName, itemTime, itemCategory, itemPrice, fluctuationPrice, fluctuationRate } = this.item ? this.item : {};

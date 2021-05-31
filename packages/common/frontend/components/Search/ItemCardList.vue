@@ -1,6 +1,6 @@
 <template>
   <div class="item-card-list" :style="style">
-    <item-card v-for="(item, index) in items" :key="index" :item="item" @route-to-item-detail="routeToItemDetail"></item-card>
+    <item-card v-for="(item, index) in items" :key="index" :item="item" @route-to-page="routeToItemDetail"></item-card>
   </div>
 </template>
 

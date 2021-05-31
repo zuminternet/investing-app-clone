@@ -1,3 +1,5 @@
+import { getSearchedItems } from '../../apis';
+
 // 초기 state 값 설정
 const state = () => ({
   searchedItems: [
@@ -40,7 +42,23 @@ const getters = {
 };
 
 // actions 설정
-const actions = {};
+const actions = {
+  async getSearchedItems({ commit }, keyword) {
+    try {
+      const items = await getSearchedItems({ keyword });
+
+      if (items) {
+        commit('searchedItems', items);
+
+        return true;
+      }
+
+      throw new Error('Getting searched items was failed in user store');
+    } catch (error) {
+      console.log(error);
+    }
+  },
+};
 
 // mutatuons 설정
 const mutations = {};

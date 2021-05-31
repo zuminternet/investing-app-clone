@@ -21,6 +21,14 @@ export interface loginUserByOAuthInfo {
   password: string;
 }
 
+export interface loginUserByGoogleOAuthInfo {
+  googleId: string;
+}
+
+export interface getSearchedItemsInfo {
+  keyword: string;
+}
+
 const createUser = async ({ name, email, password, googleId }: createUserInfo) => {
   try {
     const result = await Axios.post(
@@ -75,7 +83,7 @@ const loginUserByEmail = async ({ email, password }: loginUserByEmailInfo) => {
   }
 };
 
-const loginUserByGoogleOAuth = async ({ googleId }) => {
+const loginUserByGoogleOAuth = async ({ googleId }: loginUserByGoogleOAuthInfo) => {
   try {
     const reuslt = await Axios.post(`${devURL}/api/auth/google-oauth`, {
       googleId,
@@ -91,20 +99,4 @@ const loginUserByGoogleOAuth = async ({ googleId }) => {
   }
 };
 
-const getSearchedItems = async ({ keyword }) => {
-  try {
-    const result = await Axios.get(`${devURL}/api/search/items?keyword=${keyword}`);
-
-    console.log(result);
-
-    if (result) {
-      return result;
-    }
-
-    throw new Error('getting searched items was failed in front api');
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-export { createUser, loginUserByEmail, getUser, loginUserByGoogleOAuth, getSearchedItems };
+export { createUser, loginUserByEmail, getUser, loginUserByGoogleOAuth };
