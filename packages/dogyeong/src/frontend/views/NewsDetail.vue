@@ -9,11 +9,14 @@
       </HeaderTitle>
     </Header>
     <main>
-      <h3>{{ article.title }}</h3>
-      <p>{{ article.source }}</p>
-      <p>{{ article.date }}</p>
-      <img :src="article.image_url" />
-      <p>{{ article.text }}</p>
+      <section class="article-header">
+        <h3 class="article-title">{{ article.title }}</h3>
+        <p class="article-info">{{ article.source }} | {{ article.date }}</p>
+      </section>
+      <section class="article-main">
+        <img class="article-img" :src="article.image_url" />
+        <p class="article-text">{{ article.text }}</p>
+      </section>
     </main>
     <BottomNav></BottomNav>
   </Layout>
@@ -63,4 +66,30 @@ export default Vue.extend({
 });
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+main {
+  .article-header {
+    padding: 12px;
+
+    .article-title {
+      margin-bottom: 12px;
+    }
+    .article-info {
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 8px;
+      word-break: keep-all;
+    }
+  }
+
+  .article-main {
+    padding: 12px;
+
+    .article-img {
+      width: 100%;
+    }
+    .article-text {
+      padding: 20px 0;
+    }
+  }
+}
+</style>
