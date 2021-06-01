@@ -50,11 +50,11 @@ export class MarketService {
   })
   public async getHistorical(options: GetHistoricalOptions) {
     try {
-      const { type } = options;
+      const { type, ticker } = options;
 
       /** response: data, status, statusText, headers, config */
       const { data, status, statusText } = await fetchers[type](options);
-      console.log({ status, statusText });
+      console.log({ type, ticker, status, statusText });
       resultValidator(data, status, statusText);
 
       return data;
