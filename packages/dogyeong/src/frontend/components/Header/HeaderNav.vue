@@ -1,6 +1,8 @@
 <template>
   <nav>
-    <slot></slot>
+    <ul class="header-nav-list">
+      <slot></slot>
+    </ul>
   </nav>
 </template>
 
@@ -18,8 +20,12 @@ nav {
   padding: 0 12px;
   background-color: var(--header-nav-bg-color);
 
-  li {
-    cursor: pointer;
+  .header-nav-list {
+    display: flex;
+
+    li {
+      cursor: pointer;
+    }
   }
 }
 </style>
