@@ -1,11 +1,12 @@
-import { Request, Response } from 'express'
-import { Controller, GetMapping } from 'zum-portal-core/backend/decorator/Controller'
+import { Request, Response } from 'express';
+import { Controller, GetMapping } from 'zum-portal-core/backend/decorator/Controller';
 
-import SSE from './SSE'
-import { GetHistoricalOptions } from '../../domain/apiOptions'
-import { marketHome, marketName, marketSubpaths } from '../../domain/apiUrls'
-import { MarketService } from '../service/MarketService'
-import { times } from '../../domain/date'
+import SSE from './SSE';
+import { GetHistoricalOptions } from '../../domain/apiOptions';
+import { marketHome, marketName, marketSubpaths } from '../../domain/apiUrls';
+import { MarketService } from '../service/MarketService';
+import { times } from '../../domain/date';
+import { Inject } from 'zum-portal-core/backend/decorator/Alias';
 
 /**
  * parseQueryToOptions
@@ -59,8 +60,7 @@ const isOptionsValidate = (options: GetHistoricalOptions): boolean => {
  */
 @Controller({ path: marketHome })
 export class MarketController {
-  constructor() // @Inject(MarketService) private marketService: MarketService
-  {
+  constructor(@Inject(MarketService) private marketService: MarketService) {
     /** @todo Yml 또는 Injection 있는 경우 */
   }
 
@@ -86,13 +86,13 @@ export class MarketController {
       /** SSE Response Instance 생성 */
       new SSE(res, options);
 
-      const data = await MarketService.getHistorical(options);
+      const data = await this.marketService.getHistorical(options);
       this.writeData(data, res);
 
       /** 15초 간격 SSE, @todo 조정해도 계속 3초 간격 요청..? => debounce 처리해야.. */
       const intervalTime = times.sse * 3000;
       const eventSourceInterval = setInterval(async () => {
-        const data = await MarketService.getHistorical(options);
+        const data = await this.marketService.getHistorical(options);
         this.writeData(data, res);
       }, /** 15s */ intervalTime);
 
