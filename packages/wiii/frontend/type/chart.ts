@@ -1,10 +1,6 @@
-import { IAggV2Formatted } from '@polygon.io/client-js/lib/rest/stocks/aggregates';
+import { IAggV2Formatted } from '@polygon.io/client-js/lib/rest/stocks/aggregates'
 
-export interface MultidaysStockData {
-  dataKey?: string;
-  results?: IAggV2Formatted[];
-  resultsCount?: number;
-}
+import { CandleData } from '../../domain/marketData'
 
 /** @todo 개발 편의 위해 일단 모두 optional로 지정 */
 export interface BasicCandleOptionProps {
@@ -22,17 +18,25 @@ export interface BasicCandleOptionProps {
 
   highest?: number;
   lowest?: number;
-  canvasWidth?: number;
-  canvasHeight?: number;
+  clientWidth?: number;
+  clientHeight?: number;
   hRatio?: number;
   padding?: number;
 }
 
+export const enum ChartTypeEnums {
+  line = `line`,
+  candle = `candle`,
+}
+
 export interface DrawCandleChartOptions {
   ctx: CanvasRenderingContext2D;
-  results: IAggV2Formatted[];
-  resultsCount: number;
-  limit: number;
+  results: CandleData;
+  count: number;
+  payload: {
+    [key: string]: any;
+  };
+  type: ChartTypeEnums;
 }
 
 export enum CanvasOptionEnum {
