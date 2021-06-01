@@ -1,4 +1,4 @@
-import { IAggV2Formatted } from '@polygon.io/client-js/lib/rest/stocks/aggregates'
+import { IAggV2Formatted } from '@polygon.io/client-js/lib/rest/stocks/aggregates';
 
 /**
  * @description
@@ -21,18 +21,35 @@ export interface CandleOne {
   date: string;
 }
 
+export interface ClientWH {
+  ratio: number;
+  canvasWidth: number;
+  canvasHeight?: number;
+}
+
+export interface refinerOptions extends ClientWH {
+  count: number;
+  range: Generator<number, void, any>;
+  total?: number;
+  customNumToShow?: number;
+}
+
 /** Chart 만들기 편하게 전처리된 캔들 데이터 */
 export interface RefinedCandle {
   startX: number;
   centerX: number;
-  openY: string;
-  closeY: string;
-  highY: string;
-  lowY: string;
+  openY: number;
+  rectH: number;
+  highY: number;
+  lowY: number;
+  color: string;
 }
 
 export type CandleData = CandleOne[];
-export type RefinedCandleData = RefinedCandle[];
+export interface RefinedCandleData {
+  data: RefinedCandle[];
+  candleWidth: number;
+}
 
 /**
  * Polygon Multiday

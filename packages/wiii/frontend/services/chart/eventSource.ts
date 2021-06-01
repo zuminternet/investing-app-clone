@@ -60,6 +60,7 @@ export default class EsService {
   private onMessage({ data }) {
     /** 페이지 이동시 종료 */
     if (this.location !== location.href) this.onClose();
+    /** @todo 새로고침 시 종료 */
 
     try {
       this.observer['data'] = Object.freeze(JSON.parse(data));

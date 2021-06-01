@@ -1,6 +1,6 @@
-import { IAggV2Formatted } from '@polygon.io/client-js/lib/rest/stocks/aggregates'
+import { IAggV2Formatted } from '@polygon.io/client-js/lib/rest/stocks/aggregates';
 
-import { CandleData } from '../../domain/marketData'
+import { CandleData } from '../../domain/marketData';
 
 /** @todo 개발 편의 위해 일단 모두 optional로 지정 */
 export interface BasicCandleOptionProps {
@@ -36,7 +36,7 @@ export interface DrawCandleChartOptions {
   payload: {
     [key: string]: any;
   };
-  type: ChartTypeEnums;
+  type?: ChartTypeEnums;
 }
 
 export enum CanvasOptionEnum {

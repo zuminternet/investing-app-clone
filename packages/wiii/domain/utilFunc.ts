@@ -1,4 +1,4 @@
-import chalk from 'chalk'
+import chalk from 'chalk';
 
 /**
  * generator range
@@ -6,7 +6,7 @@ import chalk from 'chalk'
  * @param end 종료 index
  * @param step
  */
-export const range = function*(start = 0, end: number, step = 1) {
+export const _range = function*(start = 0, end: number, step = 1) {
   while (start < end) {
     yield start;
     start += step;
@@ -38,3 +38,5 @@ export const devPrint = () => {
     console.dir(result);
   };
 };
+
+devPrint()({ IS_PRO_MODE });

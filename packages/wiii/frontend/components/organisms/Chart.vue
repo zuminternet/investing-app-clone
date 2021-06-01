@@ -7,7 +7,9 @@ import EsService from '@/services/chart/eventSource';
 import { TimespanEnum } from '@/type/apis';
 import { CanvasOptionEnum } from '@/type/chart';
 import { Candle } from '@/utils/chart';
+import { drawBasicCandleChart } from '@/utils/chart/candle';
 import timer from '@/utils/timer';
+import { devPrint } from '../../../domain/utilFunc';
 import Vue from 'vue';
 import { GetHistoricalOptions } from '../../../domain/apiOptions';
 import { getDateString, times } from '../../../domain/date';
@@ -128,26 +130,34 @@ export default Vue.extend({
     },
     getChart() {
       console.info(`[Chart] Start to create a Chart`);
-      console.assert(this.ctx);
       /**
        * @todo
        * @see
        * MarketStack-KRX에서 가져오는 데이터
        * {  results: adjusted, count, payload: { total } }
        */
-      const { results, count, payload } = this.histData;
+      const {
+        data: {
+          results,
+          count,
+          payload: { total },
+        },
+      } = this.histData;
+
+      devPrint()({ total, count });
 
       /** Chart Caching */
-      const cachedChart = Candle.drawBasicCandleChart({
+      const cachedChart = timer(
+        drawBasicCandleChart,
+        `drawBasicCandleChart`,
+      )({
         ctx: this.ctx,
         results,
         count,
-        payload,
+        payload: { total, customNumToShow: 300 },
       });
 
-      /** @todo 삭제 */
-      console.log(cachedChart);
-      this.cachedChart[this.typeName][this.ticker] = cachedChart;
+      this.cachedChart[this.ticker] = cachedChart;
     },
   },
 });
@@ -155,10 +165,6 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 canvas {
-  width: 100%;
-  height: 300px;
-  padding: 15px;
-  margin: 20px;
   box-shadow: 0 0 20px 5px $red-neon;
   background-color: white;
 }
