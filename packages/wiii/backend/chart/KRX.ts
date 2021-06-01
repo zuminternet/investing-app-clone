@@ -2,7 +2,7 @@ import axios, { AxiosRequestConfig } from 'axios';
 
 import { GetHistoricalOptions, MarketStackQueries } from '../../domain/apiOptions';
 import { getDateString, times } from '../../domain/date';
-import { pipe } from '../../domain/HOF';
+import { pipe } from '../../domain/utilFunc';
 import { CandleData } from '../../domain/marketData';
 import { MarketStackConfigs } from '../config/market';
 
