@@ -1,15 +1,16 @@
 <template>
   <div class="item-detail-overall-info-row">
-    <custom-text>{{ rowName }}</custom-text>
+    <custom-text>{{ name }}</custom-text>
     <empty-space></empty-space>
 
-    <custom-text>{{ rowValue }}</custom-text>
+    <custom-text>{{ value }}</custom-text>
   </div>
 </template>
 
 <script>
 import CustomText from '../components/CustomText.vue';
 import EmptySpace from '../components/karl/EmptySpace.vue';
+import { text } from '../constants';
 
 export default {
   name: 'ItemDetailOverallInfoRow',
@@ -17,14 +18,21 @@ export default {
     CustomText,
     EmptySpace,
   },
-  props: ['information'],
-  data() {
-    const [rowName, rowValue] = this.information;
-    return {
-      rowName,
-      rowValue,
-      EmptySpace,
-    };
+  props: {
+    element: {
+      type: Array,
+      required: true,
+    },
+  },
+
+  computed: {
+    name() {
+      return this.element[0];
+    },
+
+    value() {
+      return this.element[1] ? this.element[1] : text.NO_INFO;
+    },
   },
 };
 </script>

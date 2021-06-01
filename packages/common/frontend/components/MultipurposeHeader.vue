@@ -2,20 +2,20 @@
   <div class="multipurpose-header">
     <template v-if="isItemDetail">
       <div class="header-button-box">
-        <header-button></header-button>
+        <header-button isBackButton></header-button>
       </div>
       <div>
         <div>
-          <custom-text>{{ itemName }}</custom-text>
+          <custom-text>{{ name }}</custom-text>
         </div>
         <div>
-          <custom-text>{{ itemCategory }}</custom-text>
+          <custom-text>{{ category }} ({{ symbol }})</custom-text>
         </div>
       </div>
       <empty-space></empty-space>
       <div class="header-button-box">
-        <header-button></header-button>
-        <header-button></header-button>
+        <header-button isGoSearchButton></header-button>
+
         <header-button></header-button>
       </div>
     </template>
@@ -31,10 +31,9 @@
       </div>
       <empty-space></empty-space>
       <div class="header-button-box">
-        <header-button @handle-header-button-click="goSearch"></header-button>
+        <header-button isGoSearchButton></header-button>
       </div>
     </template>
-    {{ searchInputValue }}
   </div>
 </template>
 
@@ -45,6 +44,8 @@ import CustomText from '../components/CustomText.vue';
 import EmptySpace from '../components/karl/EmptySpace.vue';
 import SearchInput from '../components/Search/SearchInput.vue';
 import HeaderButton from '../components/HeaderButton.vue';
+
+import { text } from '../constants';
 
 export default {
   name: 'MultipurposeHeader',
@@ -71,35 +72,39 @@ export default {
       default: false,
     },
 
-    itemDetailInformations: {
+    itemDetail: {
       type: Object,
       required: false,
     },
   },
 
-  data() {
-    const { itemName, itemCategory } = this.itemDetailInformations ? this.itemDetailInformations : {};
+  computed: {
+    name() {
+      return this.itemDetail.name;
+    },
 
+    category() {
+      return this.itemDetail.category;
+    },
+
+    symbol() {
+      return this.itemDetail.symbol;
+    },
+  },
+
+  data() {
     return {
-      itemName,
-      itemCategory,
-      title: 'investing.com',
-      marketName: '홍콩',
-      searchInputValue: '',
+      title: text.INVESTING_COM,
     };
   },
 
   methods: {
     ...mapActions('search', ['getSearchedItems']),
-    goSearch() {
-      this.$router.push('search');
-    },
 
     requestSearchedItems(event) {
       const keyword = event.target.value;
 
       if (keyword) {
-        console.log('ca;;');
         this.getSearchedItems(keyword);
       }
     },
