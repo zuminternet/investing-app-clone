@@ -3,12 +3,12 @@
     <div class="up-and-down-icon"></div>
     <div>
       <div>
-        <custom-text>{{ itemPrice }}</custom-text>
-        <custom-text>{{ fluctuationPrice }}</custom-text>
+        <custom-text>{{ price }}</custom-text>
+        <custom-text>{{ upDownPrice }}</custom-text>
       </div>
       <div>
-        <custom-text>{{ itemTime }}</custom-text>
-        <custom-text>{{ itemCurrency }}</custom-text>
+        <custom-text>{{ time }}</custom-text>
+        <custom-text>{{ currency }}</custom-text>
       </div>
     </div>
     <empty-space></empty-space>
@@ -28,17 +28,30 @@ export default {
     CustomText,
     EmptySpace,
   },
-  props: ['itemDetailInformations'],
 
-  data() {
-    const { itemPrice, fluctuationPrice, itemTime, itemCurrency } = this.itemDetailInformations;
+  props: {
+    itemDetail: {
+      type: Object,
+      required: true,
+    },
+  },
 
-    return {
-      itemPrice,
-      fluctuationPrice,
-      itemTime,
-      itemCurrency,
-    };
+  computed: {
+    price() {
+      return this.itemDetail.price;
+    },
+
+    upDownPrice() {
+      return this.itemDetail.upDownPrice;
+    },
+
+    time() {
+      return this.itemDetail.time;
+    },
+
+    currency() {
+      return this.itemDetail.currency;
+    },
   },
 };
 </script>

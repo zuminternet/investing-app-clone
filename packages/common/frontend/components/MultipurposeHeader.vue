@@ -76,18 +76,6 @@ export default {
     },
   },
 
-  data() {
-    const { itemName, itemCategory } = this.itemDetail ? this.itemDetail : {};
-
-    return {
-      itemName,
-      itemCategory,
-      title: 'investing.com',
-      marketName: '홍콩',
-      searchInputValue: '',
-    };
-  },
-
   computed: {
     name() {
       return this.itemDetail.name;

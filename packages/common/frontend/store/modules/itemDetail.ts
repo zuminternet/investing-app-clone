@@ -15,6 +15,10 @@ const state = () => ({
     acronym: '', //
     high: '', // 최고가
     low: '', // 최저가
+    price: '100',
+    upDownPrice: '100',
+    time: '100',
+    currency: 'dallor',
   },
 });
 
@@ -52,6 +56,7 @@ const mutations = {
     console.log(itemDetail);
     const { name, symbol, country, adj_close, adj_high, adj_low, close, open, volume, stock_exchange, high, low } = itemDetail;
     state.itemDetail = {
+      ...state.itemDetail,
       name,
       symbol,
       category: stock_exchange.acronym,

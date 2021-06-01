@@ -1,9 +1,12 @@
 <template>
   <div class="item-detail-page">
     <multipurpose-header :itemDetail="itemDetail" isItemDetail></multipurpose-header>
-    <item-detail-price-box :itemDetailInformations="itemDetail"></item-detail-price-box>
+    <item-detail-price-box :itemDetail="itemDetail"></item-detail-price-box>
     <custom-swiper :navigatorButtonNames="swiperNavigatorButtonNames">
       <swiper-slide>
+        <item-detail-overall-content :itemDetail="itemDetail" :excludingHeight="210"></item-detail-overall-content>
+      </swiper-slide>
+      <!-- <swiper-slide>
         <item-detail-overall-content :itemDetailInformations="itemDetail" :excludingHeight="210"></item-detail-overall-content>
       </swiper-slide>
       <swiper-slide>
@@ -14,10 +17,7 @@
       </swiper-slide>
       <swiper-slide>
         <item-detail-overall-content :itemDetailInformations="itemDetail" :excludingHeight="210"></item-detail-overall-content>
-      </swiper-slide>
-      <swiper-slide>
-        <item-detail-overall-content :itemDetailInformations="itemDetail" :excludingHeight="210"></item-detail-overall-content>
-      </swiper-slide>
+      </swiper-slide> -->
     </custom-swiper>
     <bottom-naviagtor :navigatorButtonNames="bottomNavigatorButtonNames"></bottom-naviagtor>
   </div>
