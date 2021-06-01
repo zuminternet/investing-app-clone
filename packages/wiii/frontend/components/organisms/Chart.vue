@@ -9,6 +9,7 @@ import { CanvasOptionEnum } from '@/type/chart';
 import Vue from 'vue';
 import { GetHistoricalOptions } from '../../../domain/apiOptions';
 import { getDateString, times } from '../../../domain/date';
+import { drawBasicCandleChart } from '../../utils/chart/candle';
 
 /**
  * @description
@@ -18,6 +19,7 @@ export default Vue.extend({
   props: {
     typeName: {
       type: String,
+      required: true,
       default: 'stock',
     },
     ticker: {
@@ -42,7 +44,6 @@ export default Vue.extend({
     },
     query: {
       type: Object,
-
       default: () =>
         Object.freeze({
           /**
@@ -69,7 +70,7 @@ export default Vue.extend({
         from: this.from,
         to: this.to,
       },
-      histData: null,
+      histData: {},
     };
   },
 
@@ -98,27 +99,43 @@ export default Vue.extend({
     this.getES();
   },
 
-  watch: {
-    /** ES 호출 -> histData 변경 -> getChart */
-    histData: `getChart`,
-  },
-
   methods: {
+    /**
+     * proxy observer 생성
+     * @description
+     * ES Class 내부 onMessage에서 변경된 값을 밖으로 push 하기 위함
+     * - 단순 객체 넘길 경우, 메모리 주소값이 그대로여서인지 vue-watch로는 적용안됨
+     */
     getES() {
       try {
-        const es = new EsService(this.queryString);
-        this.histData = es.data;
-        console.info(`[Chart] Success to get data; ${this.histData?.data?.length} `);
+        const $ = this;
+        const dataCarrier = new Proxy(this.histData, {
+          /** data 값만 변경가능하도록 */
+          set(target, key, value) {
+            if (key !== `data`) return;
+            target.data = value;
+            $.getChart();
+            return true;
+          },
+        });
+
+        new EsService(this.queryString, dataCarrier);
       } catch (e) {
         console.error(e);
       }
     },
-    /**
-     * @todo
-     */
     getChart() {
       console.info(`[Chart] Start to create a Chart`);
       console.assert(this.ctx);
+      console.assert(this.histData.data.length);
+      console.table(this.histData.data);
+      /**  @todo */
+      // drawBasicCandleChart({
+      //   ctx: this.ctx,
+      //   results: this.histData.data,
+      //   resultsCount: this.histData.data.length,
+      //   limit: this.limit,
+      // });
     },
   },
 });

@@ -10,12 +10,13 @@ import { GetHistoricalOptions } from '../../../domain/apiOptions';
  */
 export default class EsService {
   url: string;
+  private observer: object;
   private es: EventSource;
   private location: string;
-  private _data: object;
 
-  constructor(query: GetHistoricalOptions) {
+  constructor(query: GetHistoricalOptions, dataCarrier: ProxyConstructor) {
     this.url = this.setUrl(query);
+    this.observer = dataCarrier;
     this.location = location.href;
 
     /**
@@ -25,10 +26,6 @@ export default class EsService {
     this.es = new EventSource(this.url);
 
     this.addEventListers();
-  }
-
-  public get data() {
-    return Object.freeze(this._data);
   }
 
   /**
@@ -55,8 +52,8 @@ export default class EsService {
     this.es.addEventListener(`message`, this.onMessage.bind(this));
   }
 
+  /** 서버 연결 시 로직.. */
   private onOpen() {
-    /** @todo 서버 연결 시 로직.. */
     console.info(`[SSR:Client] Connection Opened`);
   }
 
@@ -65,8 +62,8 @@ export default class EsService {
     if (this.location !== location.href) this.onClose();
 
     try {
-      const result = JSON.parse(data);
-      this._data = result;
+      const result = Object.freeze(JSON.parse(data));
+      this.observer['data'] = result;
     } catch (e) {
       console.error(e);
     }

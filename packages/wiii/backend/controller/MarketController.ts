@@ -1,11 +1,11 @@
-import { Request, Response } from 'express'
-import { Controller, GetMapping } from 'zum-portal-core/backend/decorator/Controller'
+import { Request, Response } from 'express';
+import { Controller, GetMapping } from 'zum-portal-core/backend/decorator/Controller';
 
-import SSE from './SSE'
-import { GetHistoricalOptions } from '../../domain/apiOptions'
-import { marketHome, marketName, marketSubpaths } from '../../domain/apiUrls'
-import { MarketService } from '../service/MarketService'
-import { times } from '../../domain/date'
+import SSE from './SSE';
+import { GetHistoricalOptions } from '../../domain/apiOptions';
+import { marketHome, marketName, marketSubpaths } from '../../domain/apiUrls';
+import { MarketService } from '../service/MarketService';
+import { times } from '../../domain/date';
 
 /**
  * parseQueryToOptions
