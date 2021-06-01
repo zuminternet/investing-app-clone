@@ -110,14 +110,47 @@ const setParams = (options: GetHistoricalOptions) => pipe(options, adjustKeyName
 
 /**
  * adjustPrices
- * @param data axiosResponse data, API에서 제공하는 원본 데이터
- * @returns 원본 데이터 + Chart 그리기 편하도록 조정된 데이터
+ * @param result axiosResponse data, API에서 제공하는 원본 데이터
+ *   - response: `{ data, status, statusText, headers, config }`
+ * @returns 필요한 데이터만 추출/가공
  */
-const adjustPrices = (data: object) => {
-  const adjusted = {
-    /** @todo */
-  };
-  return { origin: data, adjusted };
+const adjustPrices = (result, ...rest) => {
+  console.log(rest);
+
+  const {
+    pagination: { count, total },
+    data,
+  } = JSON.parse(result);
+
+  /**
+   * @description
+   * 원본 response 개별 데이터
+   * adj_close: 80500
+   * adj_high: null
+   * adj_low: null
+   * adj_open: null
+   * adj_volume: null
+   * close: 80500
+   * date: "2021-05-31T00:00:00+0000"
+   * exchange: "XKRX"
+   * high: 80600
+   * low: 79600
+   * open: 80300
+   * split_factor: 1
+   * symbol: "005930.XKRX"
+   * volume: 13263445
+   */
+  const adjusted = data.map(({ adj_close, open, close, high, low, volume, date }) => ({
+    adj_close,
+    open,
+    close,
+    high,
+    low,
+    volume,
+    date,
+  }));
+
+  return { results: adjusted, count, payload: { total } };
 };
 
 /**
@@ -145,7 +178,7 @@ export const fetchHistoricalData = (options: GetHistoricalOptions) => {
     params,
     responseType: 'json',
     maxRedirects: 1,
-    // transformResponse: [adjustPrices],
+    transformResponse: [adjustPrices],
   } as AxiosRequestConfig;
 
   return axios.get(baseUrl, config);
