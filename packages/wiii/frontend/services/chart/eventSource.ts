@@ -62,8 +62,7 @@ export default class EsService {
     if (this.location !== location.href) this.onClose();
 
     try {
-      const result = Object.freeze(JSON.parse(data));
-      this.observer['data'] = result;
+      this.observer['data'] = Object.freeze(JSON.parse(data));
     } catch (e) {
       console.error(e);
     }

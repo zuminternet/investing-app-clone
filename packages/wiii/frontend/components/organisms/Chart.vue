@@ -127,7 +127,6 @@ export default Vue.extend({
     getChart() {
       console.info(`[Chart] Start to create a Chart`);
       console.assert(this.ctx);
-      console.assert(this.histData.data.length);
       console.table(this.histData.data);
       /**  @todo */
       // drawBasicCandleChart({
