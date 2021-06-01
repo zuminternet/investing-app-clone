@@ -20,6 +20,7 @@ import ItemCardList from '../../../common/frontend/components/ItemCardList.vue';
 import CustomSwiper from '../../../common/frontend/components/CustomSwiper.vue';
 
 import { text } from '../../../common/frontend/constants';
+import { createArticles } from '../apis';
 
 export default {
   name: 'Home',
@@ -50,9 +51,7 @@ export default {
     ...mapActions('market', ['getStocks']),
   },
 
-  mounted() {
-    this.getStocks();
-  },
+  async mounted() {},
 };
 </script>
 

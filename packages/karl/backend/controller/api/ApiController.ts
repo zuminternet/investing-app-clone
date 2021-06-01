@@ -7,6 +7,7 @@ import AuthService from '../../service/AuthService';
 import SearchService from '../../../../common/backend/service/SearchService';
 import MarketService from '../../service/MarketService';
 import ItemDetailService from '../../../../common/backend/service/ItemDetailService';
+import ArticleService from '../../service/ArticleService';
 
 @Controller({ path: '/api' })
 export class ApiController {
@@ -16,6 +17,7 @@ export class ApiController {
     @Inject(SearchService) private searchService: SearchService,
     @Inject(MarketService) private marketService: MarketService,
     @Inject(ItemDetailService) private itemDetailService: ItemDetailService,
+    @Inject(ArticleService) private articleService: ArticleService,
   ) {}
 
   @GetMapping({ path: '/user' })
@@ -202,6 +204,23 @@ export class ApiController {
     } catch (error) {
       console.log(error);
       response.status(404).json(error);
+    }
+  }
+
+  @PostMapping({ path: '/articles' })
+  public async createArticles(request: Request, response: Response) {
+    try {
+      const result = await this.articleService.createArticles(request.body);
+
+      if (result) {
+        response.sendStatus(200);
+
+        return true;
+      }
+      response.sendStatus(409);
+    } catch (error) {
+      console.log(error);
+      response.status(500).json(error);
     }
   }
 }
