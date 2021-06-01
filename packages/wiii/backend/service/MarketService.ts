@@ -4,9 +4,8 @@ import { Caching } from 'zum-portal-core/backend/decorator/Caching';
 import { GetHistoricalOptions } from '../../domain/apiOptions';
 import { marketName } from '../../domain/apiUrls';
 import { times } from '../../domain/date';
+import { devPrint, IS_PRO_MODE } from '../../domain/utilFunc';
 import { fetchHistoricalData as historicalKoreanData } from '../chart/KRX';
-
-const IS_PRO_MODE = process.env.NODE_ENV === `production`;
 
 const fetchers = {
   [marketName.stocks]: historicalKoreanData,
@@ -54,7 +53,8 @@ export class MarketService {
 
       /** response: data, status, statusText, headers, config */
       const { data, status, statusText } = await fetchers[type](options);
-      console.log({ type, ticker, status, statusText });
+      devPrint()({ type, ticker, status, statusText }, `getHistorical fetchers`);
+
       resultValidator(data, status, statusText);
 
       return data;
