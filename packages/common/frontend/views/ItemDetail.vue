@@ -1,37 +1,22 @@
 <template>
   <div class="item-detail-page">
-    <multipurpose-header :itemDetailInformations="itemDetailInformations" isItemDetail></multipurpose-header>
-    <item-detail-price-box :itemDetailInformations="itemDetailInformations"></item-detail-price-box>
+    <multipurpose-header :itemDetail="itemDetail" isItemDetail></multipurpose-header>
+    <item-detail-price-box :itemDetailInformations="itemDetail"></item-detail-price-box>
     <custom-swiper :navigatorButtonNames="swiperNavigatorButtonNames">
       <swiper-slide>
-        <item-detail-overall-content
-          :itemDetailInformations="itemDetailInformations"
-          :excludingHeight="210"
-        ></item-detail-overall-content>
+        <item-detail-overall-content :itemDetailInformations="itemDetail" :excludingHeight="210"></item-detail-overall-content>
       </swiper-slide>
       <swiper-slide>
-        <item-detail-overall-content
-          :itemDetailInformations="itemDetailInformations"
-          :excludingHeight="210"
-        ></item-detail-overall-content>
+        <item-detail-overall-content :itemDetailInformations="itemDetail" :excludingHeight="210"></item-detail-overall-content>
       </swiper-slide>
       <swiper-slide>
-        <item-detail-overall-content
-          :itemDetailInformations="itemDetailInformations"
-          :excludingHeight="210"
-        ></item-detail-overall-content>
+        <item-detail-overall-content :itemDetailInformations="itemDetail" :excludingHeight="210"></item-detail-overall-content>
       </swiper-slide>
       <swiper-slide>
-        <item-detail-overall-content
-          :itemDetailInformations="itemDetailInformations"
-          :excludingHeight="210"
-        ></item-detail-overall-content>
+        <item-detail-overall-content :itemDetailInformations="itemDetail" :excludingHeight="210"></item-detail-overall-content>
       </swiper-slide>
       <swiper-slide>
-        <item-detail-overall-content
-          :itemDetailInformations="itemDetailInformations"
-          :excludingHeight="210"
-        ></item-detail-overall-content>
+        <item-detail-overall-content :itemDetailInformations="itemDetail" :excludingHeight="210"></item-detail-overall-content>
       </swiper-slide>
     </custom-swiper>
     <bottom-naviagtor :navigatorButtonNames="bottomNavigatorButtonNames"></bottom-naviagtor>
@@ -39,7 +24,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import { SwiperSlide } from 'vue-awesome-swiper';
 import { text } from '../constants';
 
@@ -70,8 +55,17 @@ export default {
 
   computed: {
     ...mapState({
-      itemDetailInformations: (state) => state.market.itemDetailInformations,
+      itemDetail: (state) => state.itemDetail.itemDetail,
     }),
+  },
+
+  methods: {
+    ...mapActions('itemDetail', ['getItemDetail']),
+  },
+
+  async mounted() {
+    // console.log(await getItemDetail({ symbols: 'AAPL' }));
+    await this.getItemDetail({ symbols: 'AAPL' });
   },
 };
 </script>

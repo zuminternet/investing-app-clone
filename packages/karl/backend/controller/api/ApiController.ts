@@ -154,12 +154,18 @@ export class ApiController {
       resposne.status(404).json(error);
     }
   }
+  /**
+   * @description item detail page에 렌더링할 item datail info를 가져오는 controller
+   * @param request
+   * @param resposne
+   * @returns
+   */
 
   @GetMapping({ path: '/item-detail' })
-  public async getItemDetailInfo(request: Request, resposne: Response) {
+  public async getItemDetail(request: Request, resposne: Response) {
     try {
       const { symbols } = request.query;
-      const itemDetailInfo = await this.itemDetailService.getItemDetailInfo({ symbols });
+      const itemDetailInfo = await this.itemDetailService.getItemDetail({ symbols });
 
       if (itemDetailInfo) {
         resposne.status(200).send(itemDetailInfo);

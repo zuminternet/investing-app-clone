@@ -6,10 +6,10 @@
       </div>
       <div>
         <div>
-          <custom-text>{{ itemName }}</custom-text>
+          <custom-text>{{ name }}</custom-text>
         </div>
         <div>
-          <custom-text>{{ itemCategory }}</custom-text>
+          <custom-text>{{ category }}</custom-text>
         </div>
       </div>
       <empty-space></empty-space>
@@ -34,7 +34,6 @@
         <header-button @handle-header-button-click="goSearch"></header-button>
       </div>
     </template>
-    {{ searchInputValue }}
   </div>
 </template>
 
@@ -71,14 +70,14 @@ export default {
       default: false,
     },
 
-    itemDetailInformations: {
+    itemDetail: {
       type: Object,
       required: false,
     },
   },
 
   data() {
-    const { itemName, itemCategory } = this.itemDetailInformations ? this.itemDetailInformations : {};
+    const { itemName, itemCategory } = this.itemDetail ? this.itemDetail : {};
 
     return {
       itemName,
@@ -87,6 +86,16 @@ export default {
       marketName: '홍콩',
       searchInputValue: '',
     };
+  },
+
+  computed: {
+    name() {
+      return this.itemDetail.name;
+    },
+
+    category() {
+      return this.itemDetail.category;
+    },
   },
 
   methods: {
