@@ -95,13 +95,9 @@ export default Vue.extend({
 
   mixins: [
     swiperMixin({
-      init() {
-        this.getNewNews(true);
-        this.getNewOpinions(true);
-      },
       fetchData() {
-        if (this.currentNavId === 'new') this.getNewNews();
-        if (this.currentNavId === 'popular') this.getNewOpinions();
+        if (this.currentNavId === 'new') this.getInitialNewArticles();
+        if (this.currentNavId === 'popular') this.getInitialPopularArticles();
       },
     }),
   ],
@@ -130,7 +126,14 @@ export default Vue.extend({
   },
 
   methods: {
-    ...mapActions(['getNewNews', 'getNewOpinions', 'getPopularNews', 'getPopularOpinions']),
+    ...mapActions([
+      'getNewNews',
+      'getNewOpinions',
+      'getPopularNews',
+      'getPopularOpinions',
+      'getInitialNewArticles',
+      'getInitialPopularArticles',
+    ]),
 
     onClickHeaderNav(id) {
       this.handleHeaderNavClick(id);

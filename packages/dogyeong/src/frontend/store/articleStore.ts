@@ -93,6 +93,16 @@ export default () => {
     },
 
     actions: {
+      async getInitialNewArticles({ state, dispatch }) {
+        const { news, opinions } = state.new;
+        if (!news.data.length) dispatch('getNewNews');
+        if (!opinions.data.length) dispatch('getNewOpinions');
+      },
+      async getInitialPopularArticles({ state, dispatch }) {
+        const { news, opinions } = state.popular;
+        if (!news.data.length) dispatch('getPopularNews');
+        if (!opinions.data.length) dispatch('getPopularOpinions');
+      },
       async getNewNews({ state, commit }, reset = false) {
         try {
           const { news } = state.new;
