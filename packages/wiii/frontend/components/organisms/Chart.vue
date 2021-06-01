@@ -54,7 +54,8 @@ export default Vue.extend({
            * 가장 최근 시세부터 호출하기 위해 sort-desc
            */
           sort: 'desc',
-          limit: 500,
+          limit: 1000,
+          offset: 0,
         }),
     },
   },
@@ -80,7 +81,7 @@ export default Vue.extend({
 
   computed: {
     queryString(): GetHistoricalOptions {
-      const { sort, limit } = this.options;
+      const { sort, limit, offset } = this.query;
 
       /** @todo type에 따라 property 다른 부분 처리, 일단 국내주식(MarketStack)에 맞춰서 */
       return {
@@ -92,7 +93,7 @@ export default Vue.extend({
         interval: `${this.multiplier}${this.timespan}`,
         sort,
         limit,
-        offset: this.offset,
+        offset,
       };
     },
   } /** end of computed */,
@@ -143,8 +144,6 @@ export default Vue.extend({
           payload: { total },
         },
       } = this.histData;
-
-      devPrint()({ total, count });
 
       /** Chart Caching */
       const cachedChart = timer(
