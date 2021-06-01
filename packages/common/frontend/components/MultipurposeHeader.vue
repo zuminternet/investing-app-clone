@@ -2,20 +2,20 @@
   <div class="multipurpose-header">
     <template v-if="isItemDetail">
       <div class="header-button-box">
-        <header-button></header-button>
+        <header-button isBackButton></header-button>
       </div>
       <div>
         <div>
           <custom-text>{{ name }}</custom-text>
         </div>
         <div>
-          <custom-text>{{ category }}</custom-text>
+          <custom-text>{{ category }} ({{ symbol }})</custom-text>
         </div>
       </div>
       <empty-space></empty-space>
       <div class="header-button-box">
-        <header-button></header-button>
-        <header-button></header-button>
+        <header-button isGoSearchButton></header-button>
+
         <header-button></header-button>
       </div>
     </template>
@@ -31,7 +31,7 @@
       </div>
       <empty-space></empty-space>
       <div class="header-button-box">
-        <header-button @handle-header-button-click="goSearch"></header-button>
+        <header-button isGoSearchButton></header-button>
       </div>
     </template>
   </div>
@@ -44,6 +44,8 @@ import CustomText from '../components/CustomText.vue';
 import EmptySpace from '../components/karl/EmptySpace.vue';
 import SearchInput from '../components/Search/SearchInput.vue';
 import HeaderButton from '../components/HeaderButton.vue';
+
+import { text } from '../constants';
 
 export default {
   name: 'MultipurposeHeader',
@@ -84,19 +86,25 @@ export default {
     category() {
       return this.itemDetail.category;
     },
+
+    symbol() {
+      return this.itemDetail.symbol;
+    },
+  },
+
+  data() {
+    return {
+      title: text.INVESTING_COM,
+    };
   },
 
   methods: {
     ...mapActions('search', ['getSearchedItems']),
-    goSearch() {
-      this.$router.push('search');
-    },
 
     requestSearchedItems(event) {
       const keyword = event.target.value;
 
       if (keyword) {
-        console.log('ca;;');
         this.getSearchedItems(keyword);
       }
     },

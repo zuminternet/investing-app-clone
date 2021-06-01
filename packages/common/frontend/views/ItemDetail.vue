@@ -6,18 +6,9 @@
       <swiper-slide>
         <item-detail-overall-content :itemDetail="itemDetail" :excludingHeight="210"></item-detail-overall-content>
       </swiper-slide>
-      <!-- <swiper-slide>
-        <item-detail-overall-content :itemDetailInformations="itemDetail" :excludingHeight="210"></item-detail-overall-content>
-      </swiper-slide>
       <swiper-slide>
-        <item-detail-overall-content :itemDetailInformations="itemDetail" :excludingHeight="210"></item-detail-overall-content>
+        <item-detail-overall-content :itemDetail="itemDetail" :excludingHeight="210"></item-detail-overall-content>
       </swiper-slide>
-      <swiper-slide>
-        <item-detail-overall-content :itemDetailInformations="itemDetail" :excludingHeight="210"></item-detail-overall-content>
-      </swiper-slide>
-      <swiper-slide>
-        <item-detail-overall-content :itemDetailInformations="itemDetail" :excludingHeight="210"></item-detail-overall-content>
-      </swiper-slide> -->
     </custom-swiper>
     <bottom-naviagtor :navigatorButtonNames="bottomNavigatorButtonNames"></bottom-naviagtor>
   </div>
@@ -64,8 +55,8 @@ export default {
   },
 
   async mounted() {
-    // console.log(await getItemDetail({ symbols: 'AAPL' }));
-    await this.getItemDetail({ symbols: 'AAPL' });
+    const { symbols } = this.$route.query;
+    await this.getItemDetail({ symbols });
   },
 };
 </script>

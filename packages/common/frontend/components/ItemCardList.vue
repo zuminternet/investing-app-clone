@@ -1,9 +1,9 @@
 <template>
   <div v-if="isSearch" class="item-card-list" :style="style">
-    <item-card v-for="(item, index) in items" :key="index" :item="item" @route-to-page="routeToItemDetail" isSearch></item-card>
+    <item-card v-for="(item, index) in items" :key="index" :item="item" isSearch></item-card>
   </div>
   <div v-else-if="isHome" class="item-card-list" :style="style">
-    <item-card v-for="(item, index) in items" :key="index" :item="item" @route-to-page="routeToItemDetail" isHome></item-card>
+    <item-card v-for="(item, index) in items" :key="index" :item="item" isHome></item-card>
   </div>
   <div v-else></div>
 </template>
@@ -43,12 +43,6 @@ export default {
       return {
         height: `calc(100vh - ${this.excludingHeight}px)`,
       };
-    },
-  },
-
-  methods: {
-    routeToItemDetail() {
-      this.$router.push('/item-detail');
     },
   },
 };

@@ -1,5 +1,6 @@
 <template>
   <input v-if="isBackButton" class="header-button" type="button" @click="goBack" />
+  <input v-else-if="isGoSearchButton" class="header-button" type="button" @click="goSearch" />
   <input v-else class="header-button" type="button" @click="$emit('handle-header-button-click')" />
 </template>
 
@@ -9,13 +10,23 @@ export default {
   props: {
     isBackButton: {
       type: Boolean,
-      required: false,
+      default: false,
+    },
+
+    isGoSearchButton: {
+      type: Boolean,
+      default: false,
     },
   },
 
   methods: {
     goBack() {
       this.$router.back();
+    },
+
+    goSearch() {
+      console.log('test');
+      this.$router.push('search');
     },
   },
 };

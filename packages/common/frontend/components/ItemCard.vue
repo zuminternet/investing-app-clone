@@ -1,5 +1,5 @@
 <template>
-  <div class="item-card" @click="$emit('route-to-page')">
+  <div class="item-card" @click="routeToItemDetail">
     <template v-if="isSearch">
       <div class="item-information">
         <custom-text>
@@ -113,6 +113,12 @@ export default {
       // }
 
       return 10;
+    },
+  },
+
+  methods: {
+    routeToItemDetail() {
+      this.$router.push({ path: 'item-detail', query: { symbols: this.symbol } });
     },
   },
 };
