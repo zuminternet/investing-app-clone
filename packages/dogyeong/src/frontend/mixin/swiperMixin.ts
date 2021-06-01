@@ -1,6 +1,6 @@
-export default ({ fetchData }) => ({
+export default ({ init, fetchData }) => ({
   created() {
-    this.fetchData();
+    init.bind(this)();
   },
 
   methods: {

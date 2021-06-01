@@ -61,6 +61,9 @@ export default Vue.extend({
 
   mixins: [
     swiperMixin({
+      init() {
+        this.fetchData();
+      },
       fetchData() {
         if (this.currentNavId === 'index') this.getIndices();
         if (this.currentNavId === 'stock') this.getStocks();

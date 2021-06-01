@@ -36,8 +36,8 @@
           </section>
           <section class="opinions-section">
             <h2 class="section-title">분석 및 의견</h2>
-            <NewsList v-if="opinions">
-              <NewsListItem v-for="opinion in opinions" :key="opinion._id" :to="`/news/${opinion._id}`">
+            <NewsList v-if="newOpinions">
+              <NewsListItem v-for="opinion in newOpinions" :key="opinion._id" :to="`/news/${opinion._id}`">
                 <NewsImage :src="opinion.image_url" rounded />
                 <NewsTextBox>
                   <NewsTextBoxTitle>{{ opinion.title }}</NewsTextBoxTitle>
@@ -70,7 +70,7 @@ import {
 } from 'common/frontend/components/News';
 import { Swiper, SwiperSlide } from '@/components/Swiper';
 import swiperMixin from '@/mixin/swiperMixin';
-import * as articleService from '@/services/articleService';
+import { mapActions, mapState } from 'vuex';
 
 export default Vue.extend({
   name: 'News',
@@ -95,10 +95,13 @@ export default Vue.extend({
 
   mixins: [
     swiperMixin({
+      init() {
+        this.getNewNews(true);
+        this.getNewOpinions(true);
+      },
       fetchData() {
-        /** @TODO 수정 */
-        if (this.currentNavId === 'new') this.getNews();
-        if (this.currentNavId === 'popular') this.getOpinions();
+        if (this.currentNavId === 'new') this.getNewNews();
+        if (this.currentNavId === 'popular') this.getNewOpinions();
       },
     }),
   ],
@@ -117,28 +120,24 @@ export default Vue.extend({
 
   computed: {
     headline() {
-      return this.news[0];
+      return this.newNews[0];
     },
     normalNews() {
-      return this.news.slice(1);
+      return this.newNews.slice(1);
     },
+    ...mapState({ newNews: ({ article }) => article.new.news.data }),
+    ...mapState({ newOpinions: ({ article }) => article.new.opinions.data }),
   },
 
   methods: {
+    ...mapActions(['getNewNews', 'getNewOpinions', 'getPopularNews', 'getPopularOpinions']),
+
     onClickHeaderNav(id) {
       this.handleHeaderNavClick(id);
     },
 
     onEndSlide(swiper) {
       this.handleEndSlide(swiper);
-    },
-
-    getNews() {
-      articleService.getNews().then((news) => (this.news = news));
-    },
-
-    getOpinions() {
-      articleService.getOpinions().then((opinions) => (this.opinions = opinions));
     },
   },
 });
