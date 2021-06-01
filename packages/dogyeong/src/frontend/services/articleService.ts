@@ -3,12 +3,21 @@ import { apiEndpoints } from '@/config';
 
 declare const Axios: AxiosStatic;
 
-export const getNews = async () => {
-  const { data } = await Axios.get(apiEndpoints.getNews);
+interface Query {
+  offset?: number;
+  limit?: number;
+}
+
+export const getNews = async ({ offset = 0, limit = 10 }: Query = {}) => {
+  const { data } = await Axios.get(apiEndpoints.getNews, {
+    params: { offset, limit },
+  });
   return data;
 };
 
-export const getOpinions = async () => {
-  const { data } = await Axios.get(apiEndpoints.getOpinions);
+export const getOpinions = async ({ offset = 0, limit = 10 }: Query = {}) => {
+  const { data } = await Axios.get(apiEndpoints.getOpinions, {
+    params: { offset, limit },
+  });
   return data;
 };
