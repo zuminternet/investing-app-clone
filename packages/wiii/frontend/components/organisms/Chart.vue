@@ -3,18 +3,17 @@
 </template>
 
 <script lang="ts">
+import EsService from '@/services/chart/eventSource';
+import { TimespanEnum } from '@/type/apis';
+import { CanvasOptionEnum } from '@/type/chart';
+import Vue from 'vue';
+import { GetHistoricalOptions } from '../../../domain/apiOptions';
+import { getDateString, times } from '../../../domain/date';
+
 /**
  * @description
  * Chart wrapper
  */
-import { ChartModuleMapperEnums } from '@/store/types';
-import { TimespanEnum } from '@/type/apis';
-import { MultidaysStockData, CanvasOptionEnum } from '@/type/chart';
-import { drawBasicCandleChart } from '@/utils/chart/candle';
-import { getDateString } from '@/utils/date';
-import Vue from 'vue';
-import { mapActions, mapGetters } from 'vuex';
-
 export default Vue.extend({
   props: {
     typeName: {
@@ -23,11 +22,11 @@ export default Vue.extend({
     },
     ticker: {
       type: String,
-      default: 'SPCE',
+      default: '005930' /** MarketStack 국내주식 모드, 삼성전자 */,
     },
     multiplier: {
       type: Number,
-      default: 1,
+      default: 1 /** MarketStack => default 1hour => 24hour로  */,
     },
     timespan: {
       type: String,
@@ -35,12 +34,7 @@ export default Vue.extend({
     },
     from: {
       type: [String, Date],
-      /**
-       * @description
-       * 휴장일 데이터 제외하고 가져오므로
-       * 기본 limit 보다 넉넉하게 요청
-       */
-      default: getDateString(Date.now() - 500 * 3600 * 24 * 1000),
+      default: getDateString(Date.now() - times.year2),
     },
     to: {
       type: [String, Number, Date],
@@ -56,7 +50,7 @@ export default Vue.extend({
            * 가장 최근 시세부터 호출하기 위해 sort-desc
            */
           sort: 'desc',
-          limit: 200,
+          limit: 500,
         }),
     },
   },
@@ -74,63 +68,57 @@ export default Vue.extend({
         timespan: this.timespan,
         from: this.from,
         to: this.to,
-        query: this.query,
       },
+      histData: null,
     };
   },
 
   computed: {
-    ...mapGetters([ChartModuleMapperEnums.getterCheckStockLoaded]),
+    queryString(): GetHistoricalOptions {
+      const { sort, limit } = this.options;
+
+      /** @todo type에 따라 property 다른 부분 처리, 일단 국내주식(MarketStack)에 맞춰서 */
+      return {
+        type: this.typeName,
+        ticker: this.ticker,
+        exchange: this.exchange,
+        dateFrom: this.from,
+        dateTo: this.to,
+        interval: `${this.multiplier}${this.timespan}`,
+        sort,
+        limit,
+        offset: this.offset,
+      };
+    },
+  } /** end of computed */,
+
+  mounted() {
+    const chart = this.$refs.canvas as HTMLCanvasElement;
+    this.ctx = chart.getContext(CanvasOptionEnum.context2d);
+    this.getES();
   },
 
-  /**
-   * @todo
-   * @description
-   * API fetching
-   * make chart
-   */
-  async mounted() {
-    const chart = this.$refs.canvas;
-    this.ctx = chart.getContext(CanvasOptionEnum.context2d, { alpha: 1 }) as CanvasRenderingContext2D;
-
-    /**@todo console 삭제 */
-    const timerLabel = `api-chart timer`;
-    console.warn(timerLabel);
-    console.time(timerLabel);
-    try {
-      await this.getStockData(this.options);
-      this.getChart(this.options);
-    } catch (e) {
-      console.error(e);
-    }
-    console.timeEnd(timerLabel);
+  watch: {
+    /** ES 호출 -> histData 변경 -> getChart */
+    histData: `getChart`,
   },
 
-  /**
-   * @todo
-   * SSR creat chart
-   */
-  // serverPrefetch() {
-  //   const { getStockData } = getModule(Chart);
-  //   const options = this.$props.options;
-  //   return getStockData(options).then(/** @todo */);
-  // },
-
-  /**
-   * @todo
-   *
-   * Component에서 비동기 작업은 SSR build 과정에서 계속 에러
-   * 일반적인 example 따라서 Vuex store로 이동..
-   * 했는데 그래도 에러...
-   * 일단은 CSR 위주로 작업하고
-   * 추후 Backend에서 데이터 넘겨주는 방식으로 변경 예정
-   */
   methods: {
-    ...mapActions([ChartModuleMapperEnums.actionGetStockData]),
-    getChart(options) {
-      const { results, resultsCount, dataKey } = this[ChartModuleMapperEnums.getterCheckStockLoaded] as MultidaysStockData;
-      drawBasicCandleChart({ ctx: this.ctx, limit: options.query.limit, results, resultsCount });
-      this.onReady = true;
+    getES() {
+      try {
+        const es = new EsService(this.queryString);
+        this.histData = es.data;
+        console.info(`[Chart] Success to get data; ${this.histData?.data?.length} `);
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    /**
+     * @todo
+     */
+    getChart() {
+      console.info(`[Chart] Start to create a Chart`);
+      console.assert(this.ctx);
     },
   },
 });

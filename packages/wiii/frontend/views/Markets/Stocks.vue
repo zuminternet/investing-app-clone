@@ -1,7 +1,7 @@
 <template>
   <main class="area">
     <Chart :typeName="`stock`" />
-    <Chart :typeName="`stock`" :timespan="`week`" :from="`2017-01-24`" />
+    <!-- <Chart :typeName="`stock`" :timespan="`week`" :from="`2017-01-24`" /> -->
   </main>
 </template>
 

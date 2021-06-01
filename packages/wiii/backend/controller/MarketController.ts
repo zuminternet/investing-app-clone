@@ -4,6 +4,8 @@ import { Controller, GetMapping } from 'zum-portal-core/backend/decorator/Contro
 import SSE from './SSE'
 import { GetHistoricalOptions } from '../../domain/apiOptions'
 import { marketHome, marketName, marketSubpaths } from '../../domain/apiUrls'
+import { MarketService } from '../service/MarketService'
+import { times } from '../../domain/date'
 
 /**
  * parseQueryToOptions
@@ -13,7 +15,7 @@ import { marketHome, marketName, marketSubpaths } from '../../domain/apiUrls'
  */
 const parseQueryToOptions = (path: marketName, param): GetHistoricalOptions => {
   if (path === marketName.historical) {
-    const { type, ticker, exchange, dateFrom, dateTo, interval, duration, sort, limit, offset } = param;
+    const { type, ticker, exchange, dateFrom, dateTo, interval, sort, limit, offset } = param;
     return {
       type,
       ticker,
@@ -21,7 +23,6 @@ const parseQueryToOptions = (path: marketName, param): GetHistoricalOptions => {
       dateFrom,
       dateTo,
       interval,
-      duration,
       sort,
       limit,
       offset,
@@ -31,20 +32,22 @@ const parseQueryToOptions = (path: marketName, param): GetHistoricalOptions => {
   /** @todo stocks, indexes, coins options */
 };
 
+const intervalReg = /^\d{0,2}(hour)|(min)|(day)|(week)$/;
+
 /**
  * isOptionsValidate
  * @param options API 요청에 사용될 options 객체
  * @returns 유효한 경우 true, 유효하지 않은 경우 false
  */
 const isOptionsValidate = (options: GetHistoricalOptions): boolean => {
-  const { type, ticker, exchange, dateFrom, dateTo, interval, duration, sort, limit, offset } = options;
+  const { type, ticker, exchange, dateFrom, dateTo, interval, sort, limit, offset } = options;
   if (!type.trim() || !ticker.trim()) return false;
 
-  if (interval && isNaN(Number(interval))) return false;
+  if (interval && !intervalReg.test(interval)) return false;
   if (limit && isNaN(Number(limit))) return false;
   if (offset && isNaN(Number(offset))) return false;
 
-  /** @todo duration, sort enum type checking?? */
+  /** @todo sort enum type checking?? */
 
   /** @todo stocks, indexes, coins options */
   return true;
@@ -77,29 +80,33 @@ export class MarketController {
   public async sendHistoricalData(req: Request, res: Response) {
     try {
       const options = parseQueryToOptions(marketName.historical, req.query);
-      /** Exceptions */
+
       if (!isOptionsValidate(options)) return res.sendStatus(404);
 
       /** SSE Response Instance 생성 */
-      // const SSEResponse =
       new SSE(res, options);
 
-      /** @todo SSE 클래스에서 전부 처리 가능한지 클라이언트 연동 확인 필요 */
-      // let data = await MarketService.getHistorical(options);
-      // SSEResponse.write(data);
+      const data = await MarketService.getHistorical(options);
+      this.writeData(data, res);
 
-      // /** 15초 간격 SSE */
-      // const eventSourceInterval = setInterval(async () => {
-      //   data = await MarketService.getHistorical(options);
-      //   SSEResponse.write(data);
-      // }, /** 15s */ times.sse * 1_000);
+      /** 15초 간격 SSE, @todo 조정해도 계속 3초 간격 요청..? => debounce 처리해야.. */
+      const intervalTime = times.sse * 3000;
+      const eventSourceInterval = setInterval(async () => {
+        const data = await MarketService.getHistorical(options);
+        this.writeData(data, res);
+      }, /** 15s */ intervalTime);
 
-      // /** 연결 끊어지는 경우 */
-      // res.end(() => clearInterval(eventSourceInterval));
+      /** 연결 끊어지는 경우 */
+      res.end(() => clearInterval(eventSourceInterval));
     } catch (e) {
       console.error(e);
       res.sendStatus(500);
     }
+  }
+
+  private async writeData(data, res) {
+    res.write(`id: ${new Date()}\n`);
+    res.write(`data: ${JSON.stringify(data)}\n\n`);
   }
 
   @GetMapping({ path: [marketSubpaths.stocks] })

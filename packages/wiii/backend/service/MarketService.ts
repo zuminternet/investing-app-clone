@@ -3,14 +3,14 @@ import { Caching } from 'zum-portal-core/backend/decorator/Caching'
 
 import { GetHistoricalOptions } from '../../domain/apiOptions'
 import { marketName } from '../../domain/apiUrls'
-import { times } from '../config/market'
+import { times } from '../../domain/date'
 import { fetchHistoricalData as historicalKoreanData } from '../chart/KRX'
 
 const fetchers = {
   [marketName.stocks]: historicalKoreanData,
   [marketName.indexes]: undefined,
   [marketName.coins]: undefined,
-};
+} as const;
 
 const resultValidator = (data, status: number, statusText: string) => {
   if (status >= 400 || !data || !Object.keys(data).length) throw new Error(statusText);
@@ -40,8 +40,7 @@ export class MarketService {
    * 파일럿 프로젝트에서는 무료 api를 사용하므로 사용량 제한 위해 캐싱 사용,
    */
   @Caching({
-    /** 1분 단위 실행 */
-    refreshCron: `0/60 * * * * *`,
+    refreshCron: `30 * * * * *`,
     /** 1분 단위 캐싱 */
     ttl: times.caching,
     runOnStart: false,

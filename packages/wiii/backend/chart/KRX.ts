@@ -1,8 +1,8 @@
 import axios, { AxiosRequestConfig } from 'axios';
 
-import { GetHistoricalOptions } from '../../domain/apiOptions';
-import { getDateString } from '../../domain/date';
-import { MarketStackConfigs, MarketStackQueies, times } from '../config/market';
+import { GetHistoricalOptions, MarketStackQueries } from '../../domain/apiOptions';
+import { getDateString, times } from '../../domain/date';
+import { MarketStackConfigs } from '../config/market';
 import { pipe } from '../utils/HOF';
 
 const { access_key, baseUrl } = MarketStackConfigs;
@@ -11,6 +11,7 @@ const { access_key, baseUrl } = MarketStackConfigs;
  * adjustKeyName
  * - querystring 에서 undefined value 제거
  * - MarketStack API에서 사용되는 key 이름으로 변경
+ * - Polygon.io interval과 다름에 주의!!
  * @param options client에서 입력된 querystring(options) object
  * @returns undefined 제외한 나머지 query 모음
  */
@@ -18,7 +19,7 @@ const adjustKeyName = (options: GetHistoricalOptions) => {
   const entries = Object.entries(options);
   if (!entries.length) return {};
 
-  const { symbols, date_from, date_to } = MarketStackQueies;
+  const { symbols, date_from, date_to } = MarketStackQueries;
   const { ticker, dateTo, dateFrom } = options;
   entries.push([symbols, ticker]);
   entries.push([date_to, dateTo]);
@@ -27,7 +28,7 @@ const adjustKeyName = (options: GetHistoricalOptions) => {
   const adjusted = {};
   for (const [key, value] of entries) {
     /** value는 모두 string으로 들어오므로 `0`도 true로 인식 */
-    if (value && key in MarketStackQueies) adjusted[key] = value;
+    if (value && key in MarketStackQueries) adjusted[key] = value;
   }
   return adjusted;
 };
@@ -55,14 +56,15 @@ const setSymbols = (options) => {
  * setDefaultValues
  * @description
  * params 기본값 설정
- * - interval, sort, limit, offset은 없어도 API default값 사용하게 됨
+ * - sort, limit, offset은 없어도 API default값 사용하게 됨
+ * - MarketStackAPI에서 interval은 반드시 hour || min
  * @param options
  * @returns
  */
 const setDefaultValues = (options) => {
   if (!Object.keys(options).length) return {};
 
-  let { date_from, date_to } = options;
+  let { date_from, date_to, interval } = options;
   const curDate = new Date();
   const curDateStr = getDateString(curDate);
 
@@ -70,6 +72,8 @@ const setDefaultValues = (options) => {
   if (!date_to || !date_to.trim()) date_to = curDateStr;
   /** 오늘로부터 2년전 데이터; 유료 API => 잦은 요청보다는 한번에 최대한 많은 데이터 요청이 낫다고 판단 */
   if (!date_from || !date_from.trim()) date_from = getDateString(Number(curDate) - times.year2);
+  /** interval 시간 단위 변경 */
+  if (interval?.match(`day`)) interval = `24hour`;
 
   return {
     ...options,
@@ -77,6 +81,7 @@ const setDefaultValues = (options) => {
     date_from,
     /** 한국거래소 */
     exchange: `XKRX`,
+    interval,
   };
 };
 
@@ -110,7 +115,7 @@ const setParams = (options: GetHistoricalOptions) => pipe(options, adjustKeyName
  */
 const adjustPrices = (data: object) => {
   const adjusted = {
-    //
+    /** @todo */
   };
   return { origin: data, adjusted };
 };
@@ -139,8 +144,8 @@ export const fetchHistoricalData = (options: GetHistoricalOptions) => {
   const config = {
     params,
     responseType: 'json',
-    maxRedirects: 3,
-    transformResponse: [adjustPrices],
+    maxRedirects: 1,
+    // transformResponse: [adjustPrices],
   } as AxiosRequestConfig;
 
   return axios.get(baseUrl, config);

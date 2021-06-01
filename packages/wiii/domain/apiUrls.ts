@@ -8,14 +8,15 @@ export const enum marketName {
   /** 개별 historical 시세 */
   historical = `hist`,
   /** stocks 리스트 */
-  stocks = `stocks`,
-  indexes = `indexes`,
-  coins = `coins`,
+  stocks = `stock`,
+  indexes = `index`,
+  coins = `coin`,
 }
 
 export const SERVER_BASE_URL = `http://localhost:8080` as const;
 /**
- * marketAPI home url
+ * marketAPI home path
+ * - /api/markets
  */
 export const marketHome = setUrl(apiIndex, MARKET);
 
@@ -26,11 +27,14 @@ export const marketSubpaths = {
   coins: setUrl(``, marketName.coins),
 };
 
-const MARKET_BASE_URL = new URL(marketHome, SERVER_BASE_URL);
+/** http://localhost:8080/api/markets */
+const MARKET_BASE_URL = new URL(marketHome, SERVER_BASE_URL).href;
+
 /** enum에서는 원시값만 입력가능하므로 readonly 객체로 생성 */
 export const marketsFullUrl = {
-  historical: new URL(marketName.historical, MARKET_BASE_URL).href,
-  stocks: new URL(marketName.stocks, MARKET_BASE_URL).href,
-  indexes: new URL(marketName.indexes, MARKET_BASE_URL).href,
-  coins: new URL(marketName.coins, MARKET_BASE_URL).href,
+  /** http://localhost:8080/api/markets/hist */
+  historical: `${MARKET_BASE_URL}/${marketName.historical}`,
+  stocks: `${MARKET_BASE_URL}/${marketName.stocks}`,
+  indexes: `${MARKET_BASE_URL}/${marketName.indexes}`,
+  coins: `${MARKET_BASE_URL}/${marketName.coins}`,
 } as const;
