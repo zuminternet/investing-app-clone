@@ -2,6 +2,7 @@
   <div class="item-detail-overall-content" :style="style">
     <!-- 차트 컴포넌트 자리  -->
     <item-detail-overall-info-box :itemDetail="itemDetail"></item-detail-overall-info-box>
+    <news-list></news-list>
     <!-- 댓글 컴포넌트 자리 -->
     <!-- 뉴스 컴포넌트 자리 -->
     <!-- 분석 컴포넌트 자리 -->
@@ -10,11 +11,13 @@
 
 <script>
 import ItemDetailOverallInfoBox from '../components/ItemDetailOverallInfoBox.vue';
+import NewsList from '../components/News/NewsList.vue';
 
 export default {
   name: 'ItemDetailOverallContent',
   components: {
     ItemDetailOverallInfoBox,
+    NewsList,
   },
   props: {
     itemDetail: {

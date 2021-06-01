@@ -12,6 +12,11 @@ export interface getItemDetailInfo {
   symbols: string;
 }
 
+export interface getNewsInfo {
+  offset: Number;
+  limit: Number;
+}
+
 /**
  * @description search page에 렌더링할 searched items를 가져오는 front-side API 호출 함수
  * @param param0
@@ -32,6 +37,12 @@ const getSearchedItems = async ({ keyword }: getSearchedItemsInfo) => {
   }
 };
 
+/**
+ * @description item detail page에 렌더링할 item detail를 가져오는 front-side API 호출 함수
+ * @param param0
+ * @returns
+ */
+
 const getItemDetail = async ({ symbols }: getItemDetailInfo) => {
   try {
     const result = await Axios.get(`${devURL}/api/item-detail?symbols=${symbols}`);
@@ -46,4 +57,23 @@ const getItemDetail = async ({ symbols }: getItemDetailInfo) => {
   }
 };
 
-export { getSearchedItems, getItemDetail };
+/**
+ * @description item detail page에 렌더링할 news들을 가져오는 front-side API 호출 함수 현재 item detail용 service가 없어서 대체 사용중
+ * @param param0
+ * @returns
+ */
+const getNews = async ({ offset, limit }: getNewsInfo) => {
+  try {
+    const news = await Axios.get(`${devURL}/api/articles/news?offset=${offset}&limit=${limit}`);
+
+    if (news) {
+      return news;
+    }
+
+    throw new Error('Getting news was failed in front api');
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export { getSearchedItems, getItemDetail, getNews };

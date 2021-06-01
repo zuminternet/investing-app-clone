@@ -20,6 +20,8 @@ const state = () => ({
     time: '100',
     currency: 'dallor',
   },
+
+  news: [],
 });
 
 // getter 설정

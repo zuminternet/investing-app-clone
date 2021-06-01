@@ -25,6 +25,8 @@ import ItemDetailPriceBox from '../components/ItemDetailPriceBox.vue';
 import CustomSwiper from '../components/CustomSwiper.vue';
 import ItemDetailOverallContent from '../components/ItemDetailOverallContent.vue';
 
+import { getNews } from '../../frontend/apis';
+
 export default {
   name: 'ItemDetail',
   components: {
@@ -55,8 +57,8 @@ export default {
   },
 
   async mounted() {
-    const { symbols } = this.$route.query;
-    await this.getItemDetail({ symbols });
+    // const { symbols } = this.$route.query;
+    await this.getItemDetail({ symbols: 'AAPL' });
   },
 };
 </script>

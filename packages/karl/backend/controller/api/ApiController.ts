@@ -7,7 +7,8 @@ import AuthService from '../../service/AuthService';
 import SearchService from '../../../../common/backend/service/SearchService';
 import MarketService from '../../service/MarketService';
 import ItemDetailService from '../../../../common/backend/service/ItemDetailService';
-import ArticleService from '../../service/ArticleService';
+// import ArticleService from '../../service/ArticleService';
+import ArticleService from '../../../../common/backend/service/ArticleService';
 
 @Controller({ path: '/api' })
 export class ApiController {
@@ -207,20 +208,47 @@ export class ApiController {
     }
   }
 
-  @PostMapping({ path: '/articles' })
-  public async createArticles(request: Request, response: Response) {
-    try {
-      const result = await this.articleService.createArticles(request.body);
+  /**
+   * @description articles를 parsing하여 DB에 document들로 저장하는 controller(common에 추가할 때까지 주석처리)
+   * @param request
+   * @param response
+   * @returns
+   */
+  // @PostMapping({ path: '/articles' })
+  // public async createArticles(request: Request, response: Response) {
+  //   try {
+  //     const result = await this.articleService.createArticles(request.body);
 
-      if (result) {
-        response.sendStatus(200);
+  //     if (result) {
+  //       response.sendStatus(200);
+
+  //       return true;
+  //     }
+  //     response.sendStatus(409);
+  //   } catch (error) {
+  //     console.log(error);
+  //     response.status(500).json(error);
+  //   }
+  // }
+
+  /**
+   * @description DB에서 articles 중 news만 가져오는 controller
+   * @param request
+   * @param response
+   * @returns
+   */
+  @GetMapping({ path: '/articles/news' })
+  public async getNews(request: Request, response: Response) {
+    try {
+      const news = await this.articleService.getNews(request.body);
+
+      if (news) {
+        response.status(200).send(news);
 
         return true;
       }
-      response.sendStatus(409);
     } catch (error) {
       console.log(error);
-      response.status(500).json(error);
     }
   }
 }

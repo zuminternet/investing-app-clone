@@ -25,12 +25,12 @@ export default () => {
         component: Signup,
       },
       {
-        path: '/',
+        path: '/home',
         name: 'Home',
         component: Home,
       },
       {
-        path: '/item-detail',
+        path: '/',
         name: 'ItemDetail',
         component: ItemDetail,
       },
