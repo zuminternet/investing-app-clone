@@ -2,8 +2,9 @@ import axios, { AxiosRequestConfig } from 'axios';
 
 import { GetHistoricalOptions, MarketStackQueries } from '../../domain/apiOptions';
 import { getDateString, times } from '../../domain/date';
+import { pipe } from '../../domain/HOF';
+import { CandleData } from '../../domain/marketData';
 import { MarketStackConfigs } from '../config/market';
-import { pipe } from '../utils/HOF';
 
 const { access_key, baseUrl } = MarketStackConfigs;
 
@@ -114,32 +115,12 @@ const setParams = (options: GetHistoricalOptions) => pipe(options, adjustKeyName
  *   - response: `{ data, status, statusText, headers, config }`
  * @returns 필요한 데이터만 추출/가공
  */
-const adjustPrices = (result, ...rest) => {
-  console.log(rest);
-
+const adjustPrices = (result) => {
   const {
     pagination: { count, total },
     data,
   } = JSON.parse(result);
 
-  /**
-   * @description
-   * 원본 response 개별 데이터
-   * adj_close: 80500
-   * adj_high: null
-   * adj_low: null
-   * adj_open: null
-   * adj_volume: null
-   * close: 80500
-   * date: "2021-05-31T00:00:00+0000"
-   * exchange: "XKRX"
-   * high: 80600
-   * low: 79600
-   * open: 80300
-   * split_factor: 1
-   * symbol: "005930.XKRX"
-   * volume: 13263445
-   */
   const adjusted = data.map(({ adj_close, open, close, high, low, volume, date }) => ({
     adj_close,
     open,
@@ -148,7 +129,7 @@ const adjustPrices = (result, ...rest) => {
     low,
     volume,
     date,
-  }));
+  })) as CandleData;
 
   return { results: adjusted, count, payload: { total } };
 };
