@@ -1,26 +1,20 @@
-import { CanvasOptionEnum } from '@/type/chart'
-
-import { marketsFullUrl } from '../../../domain/apiUrls'
-import { GetHistoricalOptions } from '../../../domain/apiOptions'
+import { marketsFullUrl } from '../../../domain/apiUrls';
+import { GetHistoricalOptions } from '../../../domain/apiOptions';
 
 /**
  * EventSource Service
  * @description
  * - EventSource Service 클래스
  * - Server-Sent-Event 받아서 차트 데이터 업데이트
+ * - getter로 데이터 반환
  */
 export default class EsService {
-  target: any;
   url: string;
-  es: EventSource;
-  ctx: CanvasRenderingContext2D;
-  location: string;
+  private es: EventSource;
+  private location: string;
+  private _data: object;
 
-  /**
-   * target: Chart에선 ctx가 타겟 노드로 주어짐
-   */
-  constructor(target, query: GetHistoricalOptions) {
-    this.target = target;
+  constructor(query: GetHistoricalOptions) {
     this.url = this.setUrl(query);
     this.location = location.href;
 
@@ -33,12 +27,8 @@ export default class EsService {
     this.addEventListers();
   }
 
-  /**
-   * createChart
-   */
-  public createChart() {
-    /** @todo */
-    this.ctx = this.target.getContext(CanvasOptionEnum.context2d, { alpha: 1 }) as CanvasRenderingContext2D;
+  public get data() {
+    return Object.freeze(this._data);
   }
 
   /**
@@ -74,9 +64,9 @@ export default class EsService {
     /** 페이지 이동시 종료 */
     if (this.location !== location.href) this.onClose();
 
-    const { pagination, data: _data } = JSON.parse(data);
     try {
-      /** @todo drawBasicCandleChart */
+      const result = JSON.parse(data);
+      this._data = result;
     } catch (e) {
       console.error(e);
     }

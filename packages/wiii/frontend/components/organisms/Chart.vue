@@ -3,11 +3,12 @@
 </template>
 
 <script lang="ts">
+import EsService from '@/services/chart/eventSource';
+import { TimespanEnum } from '@/type/apis';
+import { CanvasOptionEnum } from '@/type/chart';
 import Vue from 'vue';
 import { GetHistoricalOptions } from '../../../domain/apiOptions';
 import { getDateString, times } from '../../../domain/date';
-import EsService from '@/services/chart/eventSource';
-import { TimespanEnum } from '@/type/apis';
 
 /**
  * @description
@@ -49,7 +50,7 @@ export default Vue.extend({
            * 가장 최근 시세부터 호출하기 위해 sort-desc
            */
           sort: 'desc',
-          limit: 200,
+          limit: 500,
         }),
     },
   },
@@ -68,6 +69,7 @@ export default Vue.extend({
         from: this.from,
         to: this.to,
       },
+      histData: null,
     };
   },
 
@@ -88,30 +90,36 @@ export default Vue.extend({
         offset: this.offset,
       };
     },
+  } /** end of computed */,
+
+  mounted() {
+    const chart = this.$refs.canvas as HTMLCanvasElement;
+    this.ctx = chart.getContext(CanvasOptionEnum.context2d);
+    this.getES();
   },
 
-  /**
-   * @todo
-   * @description
-   * API fetching
-   * make chart
-   */
-  mounted() {
-    const chart = this.$refs.canvas;
+  watch: {
+    /** ES 호출 -> histData 변경 -> getChart */
+    histData: `getChart`,
+  },
 
-    /**@todo console 삭제 */
-    const timerLabel = `api-chart timer`;
-    console.warn(timerLabel);
-    console.time(timerLabel);
-
-    try {
-      const es = new EsService(chart, this.queryString);
-      es.createChart();
-    } catch (e) {
-      console.error(e);
-    }
-
-    console.timeEnd(timerLabel);
+  methods: {
+    getES() {
+      try {
+        const es = new EsService(this.queryString);
+        this.histData = es.data;
+        console.info(`[Chart] Success to get data; ${this.histData?.data?.length} `);
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    /**
+     * @todo
+     */
+    getChart() {
+      console.info(`[Chart] Start to create a Chart`);
+      console.assert(this.ctx);
+    },
   },
 });
 </script>

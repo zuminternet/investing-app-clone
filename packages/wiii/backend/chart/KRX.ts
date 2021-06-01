@@ -73,7 +73,7 @@ const setDefaultValues = (options) => {
   /** 오늘로부터 2년전 데이터; 유료 API => 잦은 요청보다는 한번에 최대한 많은 데이터 요청이 낫다고 판단 */
   if (!date_from || !date_from.trim()) date_from = getDateString(Number(curDate) - times.year2);
   /** interval 시간 단위 변경 */
-  if (interval && interval.match(`day`)) interval = `24hour`;
+  if (interval?.match(`day`)) interval = `24hour`;
 
   return {
     ...options,
@@ -137,7 +137,7 @@ const adjustPrices = (data: object) => {
  * @param options GetHistoricalOptions
  * @returns axios 응답객체
  */
-export const fetchHistoricalData = async (options: GetHistoricalOptions) => {
+export const fetchHistoricalData = (options: GetHistoricalOptions) => {
   const params = setParams(options);
   if (!params) return;
 
@@ -148,5 +148,5 @@ export const fetchHistoricalData = async (options: GetHistoricalOptions) => {
     // transformResponse: [adjustPrices],
   } as AxiosRequestConfig;
 
-  return await axios.get(baseUrl, config);
+  return axios.get(baseUrl, config);
 };
