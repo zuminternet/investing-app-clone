@@ -17,8 +17,18 @@
         </news-list-item>
       </news-list>
     </sub-content-box>
-
     <!-- 분석 컴포넌트 자리 -->
+    <sub-content-box :text="analysisText">
+      <news-list>
+        <news-list-item v-for="element in analyses" :key="element.id" :to="''">
+          <news-image :src="element.image_url" />
+          <news-text-box>
+            <news-text-box-title>{{ element.title }}</news-text-box-title>
+            <news-text-box-desc :author="element.source" :publishDate="element.date"></news-text-box-desc>
+          </news-text-box>
+        </news-list-item>
+      </news-list>
+    </sub-content-box>
   </div>
 </template>
 
@@ -52,6 +62,11 @@ export default {
     },
 
     news: {
+      type: Array,
+      required: true,
+    },
+
+    analyses: {
       type: Array,
       required: true,
     },

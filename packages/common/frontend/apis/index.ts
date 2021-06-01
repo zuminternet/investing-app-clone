@@ -74,9 +74,15 @@ const getNews = async ({ offset, limit }: getNewsAndAnalysesInfo) => {
   }
 };
 
+/**
+ * @description item detail page에 렌더링할 analyses를 가져오는 front-side API 호출 함수
+ * @param param0
+ * @returns
+ */
+
 const getAnalyses = async ({ offset, limit }: getNewsAndAnalysesInfo) => {
   try {
-    const analyses = await Axios.get(`${devURL}/api/articles/analyses?offset=${offset}&limit=${limit}`);
+    const analyses = await (await Axios.get(`${devURL}/api/articles/analyses?offset=${offset}&limit=${limit}`)).data;
 
     if (analyses) {
       return analyses;

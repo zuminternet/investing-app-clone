@@ -4,7 +4,12 @@
     <item-detail-price-box :itemDetail="itemDetail"></item-detail-price-box>
     <custom-swiper :navigatorButtonNames="swiperNavigatorButtonNames">
       <swiper-slide>
-        <item-detail-overall-content :itemDetail="itemDetail" :news="news" :excludingHeight="210"></item-detail-overall-content>
+        <item-detail-overall-content
+          :itemDetail="itemDetail"
+          :news="news"
+          :analyses="analyses"
+          :excludingHeight="210"
+        ></item-detail-overall-content>
       </swiper-slide>
       <!-- <swiper-slide>
         <item-detail-overall-content :itemDetail="itemDetail" :excludingHeight="210"></item-detail-overall-content>
@@ -48,17 +53,19 @@ export default {
     ...mapState({
       itemDetail: (state) => state.itemDetail.itemDetail,
       news: (state) => state.itemDetail.news,
+      analyses: (state) => state.itemDetail.analyses,
     }),
   },
 
   methods: {
-    ...mapActions('itemDetail', ['getItemDetail', 'getNews']),
+    ...mapActions('itemDetail', ['getItemDetail', 'getNews', 'getAnalyses']),
   },
 
   async mounted() {
-    // const { symbols } = this.$route.query;
-    await this.getItemDetail({ symbols: 'AAPL' });
+    const { symbols } = this.$route.query;
+    await this.getItemDetail({ symbols });
     await this.getNews({ offset: 0, limit: 3 });
+    await this.getAnalyses({ offset: 0, limit: 3 });
   },
 };
 </script>

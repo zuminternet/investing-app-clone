@@ -57,11 +57,9 @@ const createArticles = async ({ articles }) => {
     const result = await Axios.post(`${devURL}/api/articles`, {
       articles,
     });
-
     if (result) {
       return result;
     }
-
     throw new Error('Articles were not created');
   } catch (error) {
     console.log(error);
