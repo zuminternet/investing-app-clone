@@ -16,38 +16,17 @@
     <main>
       <Swiper ref="swiper" @endSlide="onEndSlide">
         <SwiperSlide>
-          <section class="news-section">
-            <NewsHeadline v-if="headline" :to="`/news/${headline._id}`">
-              <NewsImage :src="headline.image_url" />
-              <NewsTextBox>
-                <NewsTextBoxTitle>{{ headline.title }}</NewsTextBoxTitle>
-                <NewsTextBoxDesc :author="headline.source" :publish-date="headline.date" />
-              </NewsTextBox>
-            </NewsHeadline>
-            <NewsList v-if="normalNews">
-              <NewsListItem v-for="newsItem in normalNews" :key="newsItem._id" :to="`/news/${newsItem._id}`">
-                <NewsImage :src="newsItem.image_url" />
-                <NewsTextBox>
-                  <NewsTextBoxTitle>{{ newsItem.title }}</NewsTextBoxTitle>
-                  <NewsTextBoxDesc :author="newsItem.source" :publish-date="newsItem.date" />
-                </NewsTextBox>
-              </NewsListItem>
-            </NewsList>
-          </section>
-          <section class="opinions-section">
-            <h2 class="section-title">분석 및 의견</h2>
-            <NewsList v-if="newOpinions">
-              <NewsListItem v-for="opinion in newOpinions" :key="opinion._id" :to="`/news/${opinion._id}`">
-                <NewsImage :src="opinion.image_url" rounded />
-                <NewsTextBox>
-                  <NewsTextBoxTitle>{{ opinion.title }}</NewsTextBoxTitle>
-                  <NewsTextBoxDesc :author="opinion.source" :publish-date="opinion.date" />
-                </NewsTextBox>
-              </NewsListItem>
-            </NewsList>
-          </section>
+          <NewsTemplate v-if="headline" :headline="headline" :news="normalNews" :opinions="newOpinions" url-prefix="/news/new" />
         </SwiperSlide>
-        <SwiperSlide> </SwiperSlide>
+        <SwiperSlide>
+          <NewsTemplate
+            v-if="headline"
+            :headline="headline"
+            :news="normalNews"
+            :opinions="newOpinions"
+            url-prefix="/news/popular"
+          />
+        </SwiperSlide>
       </Swiper>
     </main>
     <BottomNav></BottomNav>
@@ -59,16 +38,8 @@ import Vue from 'vue';
 import BottomNav from '@/components/BottomNav/BottomNav.vue';
 import { Header, HeaderTitle, HeaderNav, HeaderNavItem } from '@/components/Header';
 import Layout from '@/components/Layout/Layout.vue';
-import {
-  NewsHeadline,
-  NewsTextBoxTitle,
-  NewsTextBoxDesc,
-  NewsTextBox,
-  NewsImage,
-  NewsList,
-  NewsListItem,
-} from 'common/frontend/components/News';
 import { Swiper, SwiperSlide } from '@/components/Swiper';
+import NewsTemplate from '@/components/NewsTemplate/NewsTemplate.vue';
 import swiperMixin from '@/mixin/swiperMixin';
 import { mapActions, mapState } from 'vuex';
 
@@ -81,16 +52,10 @@ export default Vue.extend({
     HeaderTitle,
     HeaderNavItem,
     Layout,
-    NewsHeadline,
-    NewsTextBoxTitle,
-    NewsTextBoxDesc,
-    NewsTextBox,
-    NewsImage,
-    NewsList,
-    NewsListItem,
     HeaderNav,
     Swiper,
     SwiperSlide,
+    NewsTemplate,
   },
 
   mixins: [
