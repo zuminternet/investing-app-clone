@@ -16,22 +16,17 @@
       </HeaderNav>
     </Header>
     <main>
-      <!-- Slider main container -->
-      <div ref="swiperContainer" class="swiper-container">
-        <!-- Additional required wrapper -->
-        <div class="swiper-wrapper">
-          <!-- Slides -->
-          <div class="swiper-slide">
-            <MarketIndex></MarketIndex>
-          </div>
-          <div class="swiper-slide">
-            <MarketStock></MarketStock>
-          </div>
-          <div class="swiper-slide">
-            <MarketCoin></MarketCoin>
-          </div>
-        </div>
-      </div>
+      <Swiper ref="swiper" @endSlide="onEndSlide">
+        <SwiperSlide>
+          <MarketIndex></MarketIndex>
+        </SwiperSlide>
+        <SwiperSlide>
+          <MarketStock></MarketStock>
+        </SwiperSlide>
+        <SwiperSlide>
+          <MarketCoin></MarketCoin>
+        </SwiperSlide>
+      </Swiper>
     </main>
     <BottomNav></BottomNav>
   </Layout>
@@ -46,7 +41,9 @@ import BottomNav from '@/components/BottomNav/BottomNav.vue';
 import MarketIndex from '@/components/Market/MarketIndex.vue';
 import MarketCoin from '@/components/Market/MarketCoin.vue';
 import MarketStock from '@/components/Market/MarketStock.vue';
-import Swiper from 'swiper';
+import Swiper from '@/components/Swiper/Swiper.vue';
+import SwiperSlide from '@/components/Swiper/SwiperSlide.vue';
+import swiperMixin from '@/mixin/swiperMixin';
 
 export default Vue.extend({
   name: 'Index',
@@ -60,80 +57,46 @@ export default Vue.extend({
     MarketCoin,
     MarketStock,
     HeaderNav,
+    Swiper,
+    SwiperSlide,
   },
+
+  mixins: [
+    swiperMixin({
+      fetchData() {
+        if (this.currentNavId === 'index') this.getIndices();
+        if (this.currentNavId === 'stock') this.getStocks();
+        if (this.currentNavId === 'coin') this.getCoins();
+      },
+    }),
+  ],
 
   data() {
     return {
-      swiper: null,
       navRoutes: [
-        { id: 'index', title: '지수' },
-        { id: 'stock', title: '주식' },
-        { id: 'coin', title: '가상화폐' },
+        { id: 'index', title: '지수', index: 0 },
+        { id: 'stock', title: '주식', index: 1 },
+        { id: 'coin', title: '가상화폐', index: 2 },
       ],
       currentNavId: 'index',
     };
-  },
-
-  mounted() {
-    this.swiper = new Swiper(this.$refs.swiperContainer, {
-      loop: true,
-      touchAngle: 20,
-      threshold: 14,
-      speed: 150,
-      grabCursor: true,
-    });
-
-    this.swiper.on('slideChangeTransitionEnd', (swiper) => this.slideTo(swiper.activeIndex));
-  },
-
-  beforeDestroy() {
-    this.swiper.destroy();
   },
 
   methods: {
     ...mapActions(['getIndices', 'getCoins', 'getStocks']),
 
     onClickHeaderNav(id) {
-      const index = this.navRoutes.findIndex((route) => route.id === id) + 1;
-
-      if (!index) return;
-
-      this.slideTo(index);
+      this.handleHeaderNavClick(id);
     },
-    slideTo(index) {
-      this.swiper.slideTo(index);
 
-      // currentNavId 설정을 위한 index 처리. index를 1~3으로 유지시켜준다
-      if (index === 0) index = this.navRoutes.length;
-      else if (index > this.navRoutes.length) index = 1;
-
-      this.currentNavId = this.navRoutes[index - 1].id;
-
-      if (this.currentNavId === 'index') this.getIndices();
-      if (this.currentNavId === 'stock') this.getStocks();
-      if (this.currentNavId === 'coin') this.getCoins();
+    onEndSlide(swiper) {
+      this.handleEndSlide(swiper);
     },
   },
 });
 </script>
 
 <style lang="scss" scoped>
-main {
-  flex: 1;
-  overflow: hidden;
-}
-.swiper-container {
-  overflow-x: hidden;
-  overflow-y: scroll;
-  height: 100%;
-
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
-
-  &::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, Opera */
-  }
-}
 .header-nav-list {
   display: flex;
 
