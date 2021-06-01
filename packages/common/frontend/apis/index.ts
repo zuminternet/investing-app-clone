@@ -12,7 +12,7 @@ export interface getItemDetailInfo {
   symbols: string;
 }
 
-export interface getNewsInfo {
+export interface getNewsAndAnalysesInfo {
   offset: Number;
   limit: Number;
 }
@@ -22,7 +22,6 @@ export interface getNewsInfo {
  * @param param0
  * @returns
  */
-
 const getSearchedItems = async ({ keyword }: getSearchedItemsInfo) => {
   try {
     const result = await Axios.get(`${devURL}/api/search/items?keyword=${keyword}`);
@@ -42,7 +41,6 @@ const getSearchedItems = async ({ keyword }: getSearchedItemsInfo) => {
  * @param param0
  * @returns
  */
-
 const getItemDetail = async ({ symbols }: getItemDetailInfo) => {
   try {
     const itemDetail = (await Axios.get(`${devURL}/api/item-detail?symbols=${symbols}`)).data;
@@ -62,7 +60,7 @@ const getItemDetail = async ({ symbols }: getItemDetailInfo) => {
  * @param param0
  * @returns
  */
-const getNews = async ({ offset, limit }: getNewsInfo) => {
+const getNews = async ({ offset, limit }: getNewsAndAnalysesInfo) => {
   try {
     const news = (await Axios.get(`${devURL}/api/articles/news?offset=${offset}&limit=${limit}`)).data;
 
@@ -76,4 +74,18 @@ const getNews = async ({ offset, limit }: getNewsInfo) => {
   }
 };
 
-export { getSearchedItems, getItemDetail, getNews };
+const getAnalyses = async ({ offset, limit }: getNewsAndAnalysesInfo) => {
+  try {
+    const analyses = await Axios.get(`${devURL}/api/articles/analyses?offset=${offset}&limit=${limit}`);
+
+    if (analyses) {
+      return analyses;
+    }
+
+    throw new Error('Getting analyses was failed in front api');
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export { getSearchedItems, getItemDetail, getNews, getAnalyses };

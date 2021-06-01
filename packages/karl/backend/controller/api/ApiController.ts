@@ -247,6 +247,31 @@ export class ApiController {
 
         return true;
       }
+
+      response.sendStatus(404);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  /**
+   * @description DB에서 articles 중 analyses만 가져오는 controller
+   * @param request
+   * @param response
+   * @returns
+   */
+  @GetMapping({ path: '/articles/analyses' })
+  public async getAnalyses(request: Request, response: Response) {
+    try {
+      const analyses = await this.articleService.getOpinions(request.body);
+
+      if (analyses) {
+        response.status(200).send(analyses);
+
+        return true;
+      }
+
+      response.sendStatus(404);
     } catch (error) {
       console.log(error);
     }
