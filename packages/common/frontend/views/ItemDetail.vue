@@ -4,11 +4,11 @@
     <item-detail-price-box :itemDetail="itemDetail"></item-detail-price-box>
     <custom-swiper :navigatorButtonNames="swiperNavigatorButtonNames">
       <swiper-slide>
-        <item-detail-overall-content :itemDetail="itemDetail" :excludingHeight="210"></item-detail-overall-content>
+        <item-detail-overall-content :itemDetail="itemDetail" :news="news" :excludingHeight="210"></item-detail-overall-content>
       </swiper-slide>
-      <swiper-slide>
+      <!-- <swiper-slide>
         <item-detail-overall-content :itemDetail="itemDetail" :excludingHeight="210"></item-detail-overall-content>
-      </swiper-slide>
+      </swiper-slide> -->
     </custom-swiper>
     <bottom-naviagtor :navigatorButtonNames="bottomNavigatorButtonNames"></bottom-naviagtor>
   </div>
@@ -24,8 +24,6 @@ import MultipurposeHeader from '../components/MultipurposeHeader.vue';
 import ItemDetailPriceBox from '../components/ItemDetailPriceBox.vue';
 import CustomSwiper from '../components/CustomSwiper.vue';
 import ItemDetailOverallContent from '../components/ItemDetailOverallContent.vue';
-
-import { getNews } from '../../frontend/apis';
 
 export default {
   name: 'ItemDetail',
@@ -49,16 +47,18 @@ export default {
   computed: {
     ...mapState({
       itemDetail: (state) => state.itemDetail.itemDetail,
+      news: (state) => state.itemDetail.news,
     }),
   },
 
   methods: {
-    ...mapActions('itemDetail', ['getItemDetail']),
+    ...mapActions('itemDetail', ['getItemDetail', 'getNews']),
   },
 
   async mounted() {
     // const { symbols } = this.$route.query;
     await this.getItemDetail({ symbols: 'AAPL' });
+    await this.getNews({ offset: 0, limit: 3 });
   },
 };
 </script>

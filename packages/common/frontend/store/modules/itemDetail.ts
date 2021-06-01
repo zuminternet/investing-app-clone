@@ -1,4 +1,4 @@
-import { getItemDetail } from '../../apis';
+import { getItemDetail, getNews } from '../../apis';
 
 // 초기 state 값 설정
 const state = () => ({
@@ -36,8 +36,7 @@ const getters = {
 const actions = {
   async getItemDetail({ commit }, { symbols }) {
     try {
-      const result = await getItemDetail({ symbols });
-      const itemDetail = result.data;
+      const itemDetail = await getItemDetail({ symbols });
 
       if (itemDetail) {
         commit('changeItemDetail', itemDetail);
@@ -50,13 +49,28 @@ const actions = {
       console.log(error);
     }
   },
+
+  async getNews({ commit }, { offset, limit }) {
+    try {
+      const news = await getNews({ offset, limit });
+
+      console.log(news);
+      if (news) {
+        commit('changeNews', news);
+
+        return true;
+      }
+
+      throw new Error('Getting news was failed in itemDetail store');
+    } catch (error) {}
+  },
 };
 
 // mutatuons 설정
 const mutations = {
   changeItemDetail(state, itemDetail) {
-    console.log(itemDetail);
     const { name, symbol, country, adj_close, adj_high, adj_low, close, open, volume, stock_exchange, high, low } = itemDetail;
+
     state.itemDetail = {
       ...state.itemDetail,
       name,
@@ -72,8 +86,10 @@ const mutations = {
       high,
       low,
     };
+  },
 
-    console.log(state.itemDetail);
+  changeNews(state, news) {
+    state.news = news;
   },
 };
 

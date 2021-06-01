@@ -45,10 +45,10 @@ const getSearchedItems = async ({ keyword }: getSearchedItemsInfo) => {
 
 const getItemDetail = async ({ symbols }: getItemDetailInfo) => {
   try {
-    const result = await Axios.get(`${devURL}/api/item-detail?symbols=${symbols}`);
+    const itemDetail = (await Axios.get(`${devURL}/api/item-detail?symbols=${symbols}`)).data;
 
-    if (result) {
-      return result;
+    if (itemDetail) {
+      return itemDetail;
     }
 
     throw new Error('Getting item detail was failed in front api');
@@ -64,7 +64,7 @@ const getItemDetail = async ({ symbols }: getItemDetailInfo) => {
  */
 const getNews = async ({ offset, limit }: getNewsInfo) => {
   try {
-    const news = await Axios.get(`${devURL}/api/articles/news?offset=${offset}&limit=${limit}`);
+    const news = (await Axios.get(`${devURL}/api/articles/news?offset=${offset}&limit=${limit}`)).data;
 
     if (news) {
       return news;
