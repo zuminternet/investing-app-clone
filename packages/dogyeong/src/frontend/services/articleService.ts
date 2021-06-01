@@ -8,15 +8,29 @@ interface Query {
   limit?: number;
 }
 
-export const getNews = async ({ offset = 0, limit = 10 }: Query = {}) => {
-  const { data } = await Axios.get(apiEndpoints.getNews, {
+export const getNewNews = async ({ offset = 0, limit = 10 }: Query = {}) => {
+  const { data } = await Axios.get(apiEndpoints.getNewNews, {
     params: { offset, limit },
   });
   return data;
 };
 
-export const getOpinions = async ({ offset = 0, limit = 10 }: Query = {}) => {
-  const { data } = await Axios.get(apiEndpoints.getOpinions, {
+export const getNewOpinions = async ({ offset = 0, limit = 10 }: Query = {}) => {
+  const { data } = await Axios.get(apiEndpoints.getNewOpinions, {
+    params: { offset, limit },
+  });
+  return data;
+};
+
+export const getPopularNews = async ({ offset = 0, limit = 10 }: Query = {}) => {
+  const { data } = await Axios.get(apiEndpoints.getPopularNews, {
+    params: { offset, limit },
+  });
+  return data;
+};
+
+export const getPopularOpinions = async ({ offset = 0, limit = 10 }: Query = {}) => {
+  const { data } = await Axios.get(apiEndpoints.getPopularOpinions, {
     params: { offset, limit },
   });
   return data;

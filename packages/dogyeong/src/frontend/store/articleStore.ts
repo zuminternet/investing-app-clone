@@ -102,7 +102,7 @@ export default () => {
 
           commit('setNewNewsLoading');
 
-          const newNews = await articleService.getNews({ offset });
+          const newNews = await articleService.getNewNews({ offset });
           const nextState = reset ? newNews : [...news.data, ...newNews];
 
           commit('setNewNews', nextState);
@@ -120,7 +120,7 @@ export default () => {
 
           commit('setNewOpinionsLoading');
 
-          const newOpinions = await articleService.getOpinions({ offset });
+          const newOpinions = await articleService.getNewOpinions({ offset });
           const nextState = reset ? newOpinions : [...opinions.data, ...newOpinions];
 
           commit('setNewOpinions', nextState);
@@ -138,7 +138,7 @@ export default () => {
 
           commit('setPopularNewsLoading');
 
-          const popularNews = await articleService.getNews({ offset });
+          const popularNews = await articleService.getPopularNews({ offset });
           const nextState = reset ? popularNews : [...news.data, ...popularNews];
 
           commit('setPopularNews', nextState);
@@ -156,7 +156,7 @@ export default () => {
 
           commit('setPopularOpinionsLoading');
 
-          const popularOpinions = await articleService.getOpinions({ offset });
+          const popularOpinions = await articleService.getPopularOpinions({ offset });
           const nextState = reset ? popularOpinions : [...opinions.data, ...popularOpinions];
 
           commit('setPopularOpinions', nextState);
