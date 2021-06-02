@@ -8,7 +8,7 @@ import { TimespanEnum } from '@/type/apis';
 import { CanvasOptionEnum } from '@/type/chart';
 import { Candle } from '@/utils/chart';
 import { drawBasicCandleChart } from '@/utils/chart/candle';
-import timer from '@/utils/timer';
+import withTime from '@/utils/timer';
 import { devPrint } from '../../../domain/utilFunc';
 import Vue from 'vue';
 import { GetHistoricalOptions } from '../../../domain/apiOptions';
@@ -101,7 +101,7 @@ export default Vue.extend({
   mounted() {
     const chart = this.$refs.canvas as HTMLCanvasElement;
     this.ctx = chart.getContext(CanvasOptionEnum.context2d);
-    timer(this.getES(), `Vue-Chart: API -> Draw`);
+    withTime(this.getES(), `Vue-Chart: API -> Draw`);
   },
 
   methods: {
@@ -146,7 +146,7 @@ export default Vue.extend({
       } = this.histData;
 
       /** Chart Caching */
-      const cachedChart = timer(
+      const cachedChart = withTime(
         drawBasicCandleChart,
         `drawBasicCandleChart`,
       )({

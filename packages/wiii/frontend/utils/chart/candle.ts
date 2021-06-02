@@ -1,4 +1,4 @@
-import timer from '@/utils/timer';
+import withTime from '@/utils/timer';
 import { BasicCandleOptionProps, CandleColorEnum, CanvasOptionEnum, DrawCandleChartOptions, MAColorEnum } from '@/type/chart';
 import { setSMA } from '@/utils/chart/sma';
 
