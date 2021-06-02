@@ -20,7 +20,6 @@ export default ({ fetchData }) => ({
 
     slideTo(index) {
       this.$refs.swiper.slideTo(index);
-      this.fetchData();
     },
   },
 });
