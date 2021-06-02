@@ -32,7 +32,7 @@ export const initCanvas = (ctx: CanvasRenderingContext2D): ClientWH => {
 
   /** @todo 좀 이해안가는 부분.. */
   const zeroX = canvasWidth * 0.927;
-  const zeroY = zeroX * 1.1;
+  const zeroY = zeroX * 1.12;
 
   return {
     /** 영점 */

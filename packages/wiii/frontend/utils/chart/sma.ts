@@ -21,7 +21,7 @@ const getAvg = (data: RefinedCandle[], start: number, duration: number) =>
 /**
  * setSMA(ctx, data, {duration, color})
  */
-export const setSMA = (ctx: CanvasRenderingContext2D, data: RefinedCandle[], { duration, color, width }: SMAOptions) => {
+export const setSMA = (ctx: CanvasRenderingContext2D, data: RefinedCandle[], { ratio, duration, color, width }: SMAOptions) => {
   /** 가장 오래된 기간은 제외 */
   const length = data.length - duration;
   if (duration > length) return;
@@ -34,7 +34,7 @@ export const setSMA = (ctx: CanvasRenderingContext2D, data: RefinedCandle[], { d
     const { centerX: prevX } = data[i + 1];
     const prevAvg = getAvg(data, i, duration);
 
-    drawLine(ctx, { beginX: curX, beginY: curAvg, lastX: prevX, lastY: prevAvg }, { color, lineWidth: width });
+    drawLine(ctx, { beginX: curX, beginY: curAvg, lastX: prevX, lastY: prevAvg }, { ratio, color, lineWidth: width });
 
     curAvg = prevAvg;
   }

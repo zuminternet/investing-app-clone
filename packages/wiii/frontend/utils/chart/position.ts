@@ -48,6 +48,24 @@ export const getHeightRatio = (data: CandleData, zeroY: number): { ratioH: numbe
 };
 
 /**
+ * @description
+ * 거래량 높이 조정 비율 구하기
+ * @param data 거래량 포함된 원본 데이터
+ * @param volumeH 거래량 차트 높이
+ * @returns
+ */
+export const getVolumeHeightRatio = (data: CandleData, volumeH: number) => {
+  let [highest, lowest] = [0, MAX_SAFE_INTEGER];
+
+  for (const { volume } of data) {
+    if (volume > highest) highest = volume;
+    if (volume < lowest) lowest = volume;
+  }
+
+  return { volumeRatioH: volumeH / (highest - lowest), highest, lowest };
+};
+
+/**
  * refiner
  * @description
  * API 원본 데이터 전처리 함수
@@ -104,7 +122,7 @@ export const refiner = (
  */
 export const setDayPartition = (
   ctx: CanvasRenderingContext2D,
-  { data, results, numToShow, count, canvasWidth, canvasHeight, zeroY }: DayPartitionOptions,
+  { data, results, numToShow, count, canvasWidth, canvasHeight, zeroY, ratio }: DayPartitionOptions,
 ) => {
   /**@todo 일자 구분선 */
   const partitions = floor(numToShow / 5);
@@ -114,12 +132,12 @@ export const setDayPartition = (
     const text = `${curDate.getMonth() + 1} / ${curDate.getDate()}`;
     const { centerX } = data[i];
 
-    drawText(ctx, { text, centerX, centerY: canvasHeight * 0.95, canvasHeight }, {});
+    drawText(ctx, { text, centerX, centerY: canvasHeight * 0.95, canvasHeight, ratio }, {});
 
     drawLine(
       ctx,
       { beginX: centerX, beginY: canvasHeight, lastX: centerX, lastY: 0 },
-      { color: CandleColorEnum.partition, lineWidth: 3 },
+      { ratio, color: CandleColorEnum.partition, lineWidth: 3 },
     );
   }
 
@@ -127,7 +145,7 @@ export const setDayPartition = (
   drawLine(
     ctx,
     { beginX: 0, beginY: zeroY, lastX: canvasWidth, lastY: zeroY },
-    { color: CandleColorEnum.partition, lineWidth: 5 },
+    { ratio, color: CandleColorEnum.partition, lineWidth: 5 },
   );
 };
 
@@ -136,16 +154,32 @@ export const setDayPartition = (
  */
 export const setPricePartition = (
   ctx: CanvasRenderingContext2D,
-  { highest, lowest, zeroY, ratioH, canvasWidth, canvasHeight }: PricePartitionOptions,
+  {
+    highest,
+    lowest,
+    zeroY,
+    ratioH,
+    canvasWidth,
+    canvasHeight,
+    ratio,
+    partNum = 5,
+    textAlign,
+    textBaseline,
+    fontSize,
+  }: PricePartitionOptions,
 ) => {
-  const partitions = +((highest - lowest) / 5);
+  const partitions = +((highest - lowest) / partNum);
   for (const i of range(lowest, highest + 1, partitions)) {
     const curY = zeroY + (lowest - i) * ratioH;
     drawLine(
       ctx,
       { beginX: 0, beginY: curY, lastX: canvasWidth, lastY: curY },
-      { color: CandleColorEnum.partition, lineWidth: 3 },
+      { ratio, color: CandleColorEnum.partition, lineWidth: 3 },
     );
-    drawText(ctx, { text: `${i}`, centerX: canvasWidth - 25, centerY: curY, canvasHeight }, { textAlign: `right` });
+    drawText(
+      ctx,
+      { text: i.toFixed(0), centerX: canvasWidth * 0.99, centerY: curY, canvasHeight, ratio },
+      { textAlign, textBaseline, fontSize },
+    );
   }
 };

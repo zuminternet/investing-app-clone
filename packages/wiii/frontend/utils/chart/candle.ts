@@ -1,10 +1,10 @@
-import { DrawCandleChartOptions } from '@/type/chart';
-import { drawCandle } from '@/utils/chart/drawers';
+import { DrawCandleChartOptions, CandleColorEnum } from '@/type/chart';
+import { drawCandle, drawLine, drawVolume } from '@/utils/chart/drawers';
 import { initCanvas } from '@/utils/chart/init';
 import { setSMA } from '@/utils/chart/sma';
 
 import { range } from '../../../domain/utilFunc';
-import { getHeightRatio, refiner, setDayPartition, setPricePartition } from './position';
+import { getHeightRatio, getVolumeHeightRatio, refiner, setDayPartition, setPricePartition } from './position';
 
 /**
  * drawBasicCandleChart
@@ -20,13 +20,16 @@ export const drawBasicCandleChart = ({
   payload: { total, customNumToShow, smaConfigs },
 }: DrawCandleChartOptions): object => {
   const { zeroX, zeroY, ratio, canvasWidth, canvasHeight } = initCanvas(ctx);
+  /** 거래량 차트 세로 길이:  가격/일자 구분선 제외한 차트 세로 길이의 5분의 1 */
+  const volumeH = zeroY * 0.8;
 
-  const { ratioH, lowest, highest } = getHeightRatio(results, zeroY);
+  const { ratioH, lowest, highest } = getHeightRatio(results, volumeH);
 
   /** 캔버스 그리기 쉽게 데이터 전처리 */
   const { data, candleWidth, numToShow } = refiner(results, {
     zeroX,
-    zeroY,
+    /** 가격차트 영점 기준을 거래량 차트 상단으로 조정 */
+    zeroY: volumeH,
     count,
     ratioH,
     lowest,
@@ -39,16 +42,57 @@ export const drawBasicCandleChart = ({
     drawCandle(ctx, data[i], candleWidth, ratio);
   }
 
+  const { volumeRatioH, highest: volumeHigh, lowest: volumeLow } = getVolumeHeightRatio(results, zeroY * 0.2);
+
+  for (const i of range(0, count)) {
+    const { startX, color } = data[i];
+    const { volume } = results[i];
+    drawVolume(ctx, {
+      startX,
+      volume,
+      base: zeroY,
+      candleWidth,
+      ratio: volumeRatioH,
+      color,
+    });
+  }
+
   /** 이동평균선 옵션 받아서 하나씩 그림 */
   for (const { duration, color, width } of smaConfigs) {
-    setSMA(ctx, data, { duration, color, width });
+    setSMA(ctx, data, { ratio, duration, color, width });
   }
 
   /** 가격 구분선 */
-  setPricePartition(ctx, { highest, lowest, zeroY, ratioH, canvasWidth, canvasHeight });
+  setPricePartition(ctx, { highest, lowest, zeroY: volumeH, ratioH, canvasWidth, canvasHeight, ratio });
+
+  /** 거래량  구분선 */
+  setPricePartition(ctx, {
+    highest: volumeHigh,
+    lowest: volumeLow,
+    zeroY,
+    ratioH: volumeRatioH,
+    canvasWidth,
+    canvasHeight,
+    ratio,
+    partNum: 2,
+    textBaseline: 'top',
+    fontSize: 20,
+  });
 
   /** 일자구분선 */
-  setDayPartition(ctx, { data, results, numToShow, count, canvasWidth, canvasHeight, zeroY });
+  setDayPartition(ctx, { data, results, numToShow, count, canvasWidth, canvasHeight, zeroY, ratio });
+
+  drawLine(
+    ctx,
+    { beginX: 0, beginY: volumeH, lastX: canvasWidth, lastY: volumeH },
+    { color: CandleColorEnum.partition, lineWidth: 10, ratio },
+  );
+
+  drawLine(
+    ctx,
+    { beginX: 0, beginY: zeroY, lastX: canvasWidth, lastY: zeroY },
+    { color: CandleColorEnum.partition, lineWidth: 10, ratio },
+  );
 
   /**@description base64 이미지로 저장해, caching */
   return { data, image: ctx.canvas.toDataURL('image/png', 1) };
