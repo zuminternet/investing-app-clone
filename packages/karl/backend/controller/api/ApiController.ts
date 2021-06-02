@@ -27,18 +27,14 @@ export class ApiController {
       const token = request.cookies['jwt-token'];
 
       if (!token) {
-        response.sendStatus(401);
-
-        return false;
+        return response.sendStatus(401);
       }
 
       const decodedToken = this.authService.verifyToken(token);
       const user = await this.userService.loginUserByEmail(decodedToken);
 
       if (user) {
-        response.status(200).send(user);
-
-        return true;
+        return response.status(200).send(user);
       }
 
       response.sendStatus(404);
@@ -53,9 +49,7 @@ export class ApiController {
       const user = await this.userService.createUser(reqeust.body);
 
       if (user) {
-        response.sendStatus(200);
-
-        return true;
+        return response.sendStatus(200);
       }
 
       response.sendStatus(409);
@@ -73,9 +67,8 @@ export class ApiController {
 
       if (token) {
         response.cookie('jwt-token', token, { expires: new Date(Date.now() + 9000000), httpOnly: true });
-        response.status(200).send(user);
 
-        return true;
+        return response.status(200).send(user);
       }
 
       response.sendStatus(401);
@@ -93,9 +86,8 @@ export class ApiController {
 
       if (token) {
         response.cookie('jwt-token', token, { expires: new Date(Date.now() + 9000000), httpOnly: true });
-        response.status(200).send(user);
 
-        return true;
+        return response.status(200).send(user);
       }
 
       response.sendStatus(401);
@@ -118,9 +110,7 @@ export class ApiController {
       const stocks = await this.marketService.getStocks();
 
       if (stocks) {
-        resposne.status(200).send(stocks);
-
-        return true;
+        return resposne.status(200).send(stocks);
       }
 
       resposne.sendStatus(404);
@@ -171,9 +161,7 @@ export class ApiController {
       const itemDetailInfo = await this.itemDetailService.getItemDetail({ symbols });
 
       if (itemDetailInfo) {
-        resposne.status(200).send(itemDetailInfo);
-
-        return true;
+        return resposne.status(200).send(itemDetailInfo);
       }
 
       resposne.sendStatus(404);
@@ -196,9 +184,7 @@ export class ApiController {
       const items = await this.searchService.getSearchedItems({ keyword });
 
       if (items) {
-        response.status(200).send(items);
-
-        return true;
+        return response.status(200).send(items);
       }
 
       response.sendStatus(404);
@@ -243,9 +229,7 @@ export class ApiController {
       const news = await this.articleService.getNews(request.body);
 
       if (news) {
-        response.status(200).send(news);
-
-        return true;
+        return response.status(200).send(news);
       }
 
       response.sendStatus(404);
@@ -266,9 +250,7 @@ export class ApiController {
       const analyses = await this.articleService.getOpinions(request.body);
 
       if (analyses) {
-        response.status(200).send(analyses);
-
-        return true;
+        return response.status(200).send(analyses);
       }
 
       response.sendStatus(404);

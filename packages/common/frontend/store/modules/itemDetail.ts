@@ -70,7 +70,6 @@ const actions = {
     try {
       const analyses = await getAnalyses({ offset, limit });
 
-      console.log(analyses);
       if (analyses) {
         commit('changeAnalyses', analyses);
 
