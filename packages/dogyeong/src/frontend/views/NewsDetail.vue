@@ -17,7 +17,7 @@
     <main v-else>
       <section class="article-header">
         <h3 class="article-title">{{ article.title }}</h3>
-        <p class="article-info">{{ article.source }} | {{ article.date }}</p>
+        <p class="article-info">{{ article.source }} | {{ article.date | formatDate }}</p>
       </section>
       <section class="article-main">
         <img class="article-img" :src="article.image_url" />
@@ -45,6 +45,12 @@ export default Vue.extend({
     HeaderTitle,
     Layout,
     HeaderButton,
+  },
+
+  filters: {
+    formatDate(date) {
+      return fromNow(date);
+    },
   },
 
   data() {
