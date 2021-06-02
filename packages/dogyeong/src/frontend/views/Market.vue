@@ -3,16 +3,14 @@
     <Header>
       <HeaderTitle>시장</HeaderTitle>
       <HeaderNav>
-        <ul class="header-nav-list">
-          <li
-            v-for="route in navRoutes"
-            :key="route.id"
-            :class="{ active: route.id === currentNavId }"
-            @click.prevent="onClickHeaderNav(route.id)"
-          >
-            {{ route.title }}
-          </li>
-        </ul>
+        <HeaderNavItem
+          v-for="route in navRoutes"
+          :key="route.id"
+          :active="route.id === currentNavId"
+          @clickItem="onClickHeaderNav(route.id)"
+        >
+          {{ route.title }}
+        </HeaderNavItem>
       </HeaderNav>
     </Header>
     <main>
@@ -35,14 +33,13 @@
 <script lang="ts">
 import Vue from 'vue';
 import { mapActions } from 'vuex';
-import { Header, HeaderTitle, HeaderNav } from '@/components/Header';
+import { Header, HeaderTitle, HeaderNav, HeaderNavItem } from '@/components/Header';
 import Layout from '@/components/Layout/Layout.vue';
 import BottomNav from '@/components/BottomNav/BottomNav.vue';
 import MarketIndex from '@/components/Market/MarketIndex.vue';
 import MarketCoin from '@/components/Market/MarketCoin.vue';
 import MarketStock from '@/components/Market/MarketStock.vue';
-import Swiper from '@/components/Swiper/Swiper.vue';
-import SwiperSlide from '@/components/Swiper/SwiperSlide.vue';
+import { Swiper, SwiperSlide } from '@/components/Swiper';
 import swiperMixin from '@/mixin/swiperMixin';
 
 export default Vue.extend({
@@ -59,6 +56,7 @@ export default Vue.extend({
     HeaderNav,
     Swiper,
     SwiperSlide,
+    HeaderNavItem,
   },
 
   mixins: [
@@ -96,17 +94,4 @@ export default Vue.extend({
 });
 </script>
 
-<style lang="scss" scoped>
-.header-nav-list {
-  display: flex;
-
-  li {
-    margin-right: 16px;
-    color: var(--sub-text-color);
-
-    &.active {
-      color: var(--text-color);
-    }
-  }
-}
-</style>
+<style lang="scss" scoped></style>

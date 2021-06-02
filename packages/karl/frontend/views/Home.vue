@@ -50,8 +50,8 @@ export default {
     ...mapActions('market', ['getStocks']),
   },
 
-  mounted() {
-    this.getStocks();
+  async mounted() {
+    await this.getStocks();
   },
 };
 </script>

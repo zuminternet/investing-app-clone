@@ -4,10 +4,12 @@
     <item-detail-price-box :itemDetail="itemDetail"></item-detail-price-box>
     <custom-swiper :navigatorButtonNames="swiperNavigatorButtonNames">
       <swiper-slide>
-        <item-detail-overall-content :itemDetail="itemDetail" :excludingHeight="210"></item-detail-overall-content>
-      </swiper-slide>
-      <swiper-slide>
-        <item-detail-overall-content :itemDetail="itemDetail" :excludingHeight="210"></item-detail-overall-content>
+        <item-detail-overall-content
+          :itemDetail="itemDetail"
+          :news="news"
+          :analyses="analyses"
+          :excludingHeight="210"
+        ></item-detail-overall-content>
       </swiper-slide>
     </custom-swiper>
     <bottom-naviagtor :navigatorButtonNames="bottomNavigatorButtonNames"></bottom-naviagtor>
@@ -21,9 +23,9 @@ import { text } from '../constants';
 
 import BottomNaviagtor from '../components/BottomNaviagtor.vue';
 import MultipurposeHeader from '../components/MultipurposeHeader.vue';
-import ItemDetailPriceBox from '../components/ItemDetailPriceBox.vue';
+import ItemDetailPriceBox from '../components/ItemDetail/ItemDetailPriceBox.vue';
 import CustomSwiper from '../components/CustomSwiper.vue';
-import ItemDetailOverallContent from '../components/ItemDetailOverallContent.vue';
+import ItemDetailOverallContent from '../components/ItemDetail/ItemDetailOverallContent.vue';
 
 export default {
   name: 'ItemDetail',
@@ -47,16 +49,20 @@ export default {
   computed: {
     ...mapState({
       itemDetail: (state) => state.itemDetail.itemDetail,
+      news: (state) => state.itemDetail.news,
+      analyses: (state) => state.itemDetail.analyses,
     }),
   },
 
   methods: {
-    ...mapActions('itemDetail', ['getItemDetail']),
+    ...mapActions('itemDetail', ['getItemDetail', 'getNews', 'getAnalyses']),
   },
 
-  async mounted() {
+  created() {
     const { symbols } = this.$route.query;
-    await this.getItemDetail({ symbols });
+    this.getItemDetail({ symbols });
+    this.getNews({ offset: 0, limit: 3 });
+    this.getAnalyses({ offset: 0, limit: 3 });
   },
 };
 </script>

@@ -16,3 +16,9 @@ export default Vue.extend({
   name: 'NewsTextBox',
 });
 </script>
+
+<style scoped>
+.news-text-container {
+  flex: 1;
+}
+</style>

@@ -15,7 +15,9 @@ export default Vue.extend({});
   height: 100%;
 
   main {
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
+    flex: 1;
   }
 }
 </style>
