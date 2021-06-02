@@ -6,11 +6,8 @@
       <swiper-slide>
         <item-detail-wrapper :excludedHeight="210">
           <!-- 차트 컴포넌트 자리  -->
-          <!-- overview 컴포넌트 자리 -->
           <item-detail-overview-box :itemDetail="itemDetail"></item-detail-overview-box>
-
           <!-- 댓글 컴포넌트 자리 -->
-          <!-- 뉴스 컴포넌트 자리 -->
           <sub-content-box :text="newsText">
             <news-list>
               <news-list-item v-for="element in news" :key="element.id" :to="''">
@@ -22,7 +19,6 @@
               </news-list-item>
             </news-list>
           </sub-content-box>
-          <!-- 분석 컴포넌트 자리 -->
           <sub-content-box :text="analysisText">
             <news-list>
               <news-list-item v-for="element in analyses" :key="element.id" :to="''">

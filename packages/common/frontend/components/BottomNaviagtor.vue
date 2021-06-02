@@ -8,24 +8,15 @@
 
 <script>
 import NaviagtorButton from '../components/NaviagtorButton.vue';
-import { text } from '../constants';
 
 export default {
   name: 'BottomNaviagtor',
   components: {
     NaviagtorButton,
   },
-  props: ['navigatorButtonNames'],
-
-  data: function() {
-    const { MARKET, NEWS, CALENDAR, FAVORITES, MORE } = text;
-    return {
-      market: MARKET,
-      news: NEWS,
-      calendar: CALENDAR,
-      favorites: FAVORITES,
-      more: MORE,
-    };
+  props: {
+    type: Array,
+    required: true,
   },
 };
 </script>
