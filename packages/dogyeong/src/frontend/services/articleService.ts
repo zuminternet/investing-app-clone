@@ -8,6 +8,11 @@ interface Query {
   limit?: number;
 }
 
+export const getArticle = async (id: string) => {
+  const { data } = await Axios.get(`${apiEndpoints.getArticle}/${id}`);
+  return data;
+};
+
 export const getNewNews = async ({ offset = 0, limit = 10 }: Query = {}) => {
   const { data } = await Axios.get(apiEndpoints.getNewNews, {
     params: { offset, limit },
