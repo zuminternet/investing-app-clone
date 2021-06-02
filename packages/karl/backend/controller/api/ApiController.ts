@@ -31,7 +31,12 @@ export class ApiController {
       }
 
       const decodedToken = this.authService.verifyToken(token);
-      const user = await this.userService.loginUserByEmail(decodedToken);
+      let user;
+      if (decodedToken.googleId) {
+        user = await this.userService.loginUserByGoogleOAuth(decodedToken);
+      }
+
+      user = await this.userService.loginUserByEmail(decodedToken);
 
       if (user) {
         return response.status(200).send(user);

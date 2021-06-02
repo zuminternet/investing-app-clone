@@ -16,12 +16,8 @@ export interface loginUserByEmailInfo {
   password: string;
 }
 
-export interface loginUserByOAuthInfo {
-  googleId: string;
-  password: string;
-}
-
 export interface loginUserByGoogleOAuthInfo {
+  email: String;
   googleId: string;
 }
 
@@ -34,7 +30,7 @@ const createUser = async ({ name, email, password, googleId }: createUserInfo) =
     const result = await Axios.post(
       `${devURL}/api/user`,
       googleId
-        ? { googleId }
+        ? { googleId, email }
         : {
             name,
             email,
@@ -97,9 +93,16 @@ const loginUserByEmail = async ({ email, password }: loginUserByEmailInfo) => {
   }
 };
 
-const loginUserByGoogleOAuth = async ({ googleId }: loginUserByGoogleOAuthInfo) => {
+/**
+ * @description email과 googleId를 받아서 로그인을 요청하는 front-side API call 함수
+ * @param param0
+ * @returns
+ */
+
+const loginUserByGoogleOAuth = async ({ email, googleId }: loginUserByGoogleOAuthInfo) => {
   try {
     const reuslt = await Axios.post(`${devURL}/api/auth/google-oauth`, {
+      email,
       googleId,
     });
 

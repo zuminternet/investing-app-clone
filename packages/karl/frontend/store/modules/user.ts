@@ -64,7 +64,10 @@ const actions = {
    */
   async loginUserByGoogleOAuthOrCreateUser({ commit }) {
     const googleId = googleUser.Aa;
-    let result = await loginUserByGoogleOAuth({ googleId });
+    const email = googleUser.Ft.pu;
+    // email 위치 googleUser.Ft.pu
+
+    let result = await loginUserByGoogleOAuth({ email, googleId });
 
     if (result) {
       commit('changeIsAuthorizedByOAuth', true);
@@ -72,10 +75,10 @@ const actions = {
       return;
     }
 
-    result = await createUser({ googleId });
+    result = await createUser({ email, googleId });
 
     if (result) {
-      result = await loginUserByGoogleOAuth({ googleId });
+      result = await loginUserByGoogleOAuth({ email, googleId });
       commit('changeIsAuthorizedByOAuth', true);
 
       return;
