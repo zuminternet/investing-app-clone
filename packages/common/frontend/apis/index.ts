@@ -13,9 +13,13 @@ export interface getItemDetailInfo {
 }
 
 export interface getNewsAndAnalysesInfo {
-  offset: Number;
-  limit: Number;
+  offset: number;
+  limit: number;
 }
+
+// export interface createBookmarkInfo {
+//   email:
+// }
 
 /**
  * @description search page에 렌더링할 searched items를 가져오는 front-side API 호출 함수
@@ -93,5 +97,7 @@ const getAnalyses = async ({ offset, limit }: getNewsAndAnalysesInfo) => {
     console.log(error);
   }
 };
+
+const createBookmark = async () => {};
 
 export { getSearchedItems, getItemDetail, getNews, getAnalyses };

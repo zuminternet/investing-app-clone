@@ -11,6 +11,10 @@ export default {
   components: {
     MultipurposeHeader,
   },
+
+  // created() {
+
+  // }
 };
 </script>
 

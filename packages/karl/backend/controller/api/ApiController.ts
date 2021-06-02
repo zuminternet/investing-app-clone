@@ -9,6 +9,7 @@ import MarketService from '../../service/MarketService';
 import ItemDetailService from '../../../../common/backend/service/ItemDetailService';
 // import ArticleService from '../../service/ArticleService';
 import ArticleService from '../../../../common/backend/service/ArticleService';
+import BookmarkService from '../../../../common/backend/service/BookmarkService';
 
 @Controller({ path: '/api' })
 export class ApiController {
@@ -19,6 +20,7 @@ export class ApiController {
     @Inject(MarketService) private marketService: MarketService,
     @Inject(ItemDetailService) private itemDetailService: ItemDetailService,
     @Inject(ArticleService) private articleService: ArticleService,
+    @Inject(BookmarkService) private BookmarkService: BookmarkService,
   ) {}
 
   @GetMapping({ path: '/user' })
@@ -54,7 +56,7 @@ export class ApiController {
       const user = await this.userService.createUser(reqeust.body);
 
       if (user) {
-        return response.sendStatus(200);
+        return response.sendStatus(201);
       }
 
       response.sendStatus(409);
@@ -211,7 +213,7 @@ export class ApiController {
   //     const result = await this.articleService.createArticles(request.body);
 
   //     if (result) {
-  //       response.sendStatus(200);
+  //       response.sendStatus(201);
 
   //       return true;
   //     }
@@ -262,5 +264,19 @@ export class ApiController {
     } catch (error) {
       console.log(error);
     }
+  }
+
+  @PostMapping({ path: '/bookmark' })
+  public async createBookmark(request: Request, response: Response) {
+    try {
+      const { email, symbol } = request.body;
+      const bookmark = await this.BookmarkService.createBookmark({ email, symbol });
+
+      if (bookmark) {
+        return response.status(201).send(bookmark);
+      }
+
+      response.sendStatus(409);
+    } catch (error) {}
   }
 }
