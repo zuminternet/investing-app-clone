@@ -11,6 +11,7 @@ interface QueryProps {
 export default class ArticleService {
   public async getNews({ offset = 0, limit = 10 }: QueryProps): Promise<ArticleDoc[]> {
     return Article.find({ type: ArticleType.news })
+      .sort({ date: 'desc' })
       .skip(offset)
       .limit(limit)
       .lean<ArticleDoc[]>();
@@ -18,6 +19,7 @@ export default class ArticleService {
 
   public async getOpinions({ offset = 0, limit = 10 }: QueryProps): Promise<ArticleDoc[]> {
     return Article.find({ type: ArticleType.opinions })
+      .sort({ date: 'desc' })
       .skip(offset)
       .limit(limit)
       .lean<ArticleDoc[]>();

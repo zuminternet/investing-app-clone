@@ -6,6 +6,7 @@ import UserService, { GoogleUserInfo, UserInfo } from '../service/UserService';
 import TokenService from '../service/TokenService';
 import MarketService from '../service/MarketService';
 import { authConfig } from '../config';
+import ArticleService from 'common/backend/service/ArticleService';
 
 @Controller({ path: '/api' })
 export class ApiController {
@@ -14,6 +15,7 @@ export class ApiController {
     @Inject(UserService) private userService: UserService,
     @Inject(TokenService) private tokenService: TokenService,
     @Inject(MarketService) private marketService: MarketService,
+    @Inject(ArticleService) private articleService: ArticleService,
   ) {}
 
   @PostMapping({ path: ['/user'] })
@@ -139,5 +141,49 @@ export class ApiController {
   /** @TODO Implement random symbol generator */
   private getRandomSymbol() {
     return ['TSLA'][0];
+  }
+
+  @GetMapping({ path: ['/news/new'] })
+  public async getNewNews(req: Request, res: Response) {
+    try {
+      const { offset, limit } = req.query;
+      const news = await this.articleService.getNews({ offset: +offset, limit: +limit });
+      res.json(news);
+    } catch (err) {
+      res.status(500).json({ err: err.message ?? err });
+    }
+  }
+
+  @GetMapping({ path: ['/opinions/new'] })
+  public async getNewOpinions(req: Request, res: Response) {
+    try {
+      const { offset, limit } = req.query;
+      const news = await this.articleService.getOpinions({ offset: +offset, limit: +limit });
+      res.json(news);
+    } catch (err) {
+      res.status(500).json({ err: err.message ?? err });
+    }
+  }
+
+  @GetMapping({ path: ['/news/popular'] })
+  public async getPopularNews(req: Request, res: Response) {
+    try {
+      const { offset, limit } = req.query;
+      const news = await this.articleService.getNews({ offset: +offset, limit: +limit });
+      res.json(news);
+    } catch (err) {
+      res.status(500).json({ err: err.message ?? err });
+    }
+  }
+
+  @GetMapping({ path: ['/opinions/popular'] })
+  public async getPopularOpinions(req: Request, res: Response) {
+    try {
+      const { offset, limit } = req.query;
+      const news = await this.articleService.getOpinions({ offset: +offset, limit: +limit });
+      res.json(news);
+    } catch (err) {
+      res.status(500).json({ err: err.message ?? err });
+    }
   }
 }
