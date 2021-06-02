@@ -13,7 +13,7 @@ import EmptySpace from '../karl/EmptySpace.vue';
 import { text } from '../../constants';
 
 export default {
-  name: 'ItemDetailOverallInfoRow',
+  name: 'ItemDetailOverviewRow',
   components: {
     CustomText,
     EmptySpace,

@@ -5,7 +5,7 @@ import { getUser, loginUserByEmail, loginUserByGoogleOAuth, createUser } from '.
 const state = () => ({
   userName: '',
   userEmail: '',
-  userFavorites: [],
+  userBookmark: [],
   isAuthorizedByOAuth: false,
 });
 

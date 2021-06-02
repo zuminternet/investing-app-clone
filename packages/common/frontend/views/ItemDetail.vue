@@ -4,12 +4,59 @@
     <item-detail-price-box :itemDetail="itemDetail"></item-detail-price-box>
     <custom-swiper :navigatorButtonNames="swiperNavigatorButtonNames">
       <swiper-slide>
-        <item-detail-overall-content
-          :itemDetail="itemDetail"
-          :news="news"
-          :analyses="analyses"
-          :excludingHeight="210"
-        ></item-detail-overall-content>
+        <item-detail-wrapper :excludedHeight="210">
+          <!-- 차트 컴포넌트 자리  -->
+          <item-detail-overview-box :itemDetail="itemDetail"></item-detail-overview-box>
+          <!-- 댓글 컴포넌트 자리 -->
+          <sub-content-box :text="newsText">
+            <news-list>
+              <news-list-item v-for="element in news" :key="element.id" :to="''">
+                <news-image :src="element.image_url" />
+                <news-text-box>
+                  <news-text-box-title>{{ element.title }}</news-text-box-title>
+                  <news-text-box-desc :author="element.source" :publishDate="element.date"></news-text-box-desc>
+                </news-text-box>
+              </news-list-item>
+            </news-list>
+          </sub-content-box>
+          <sub-content-box :text="analysisText">
+            <news-list>
+              <news-list-item v-for="element in analyses" :key="element.id" :to="''">
+                <news-image :src="element.image_url" />
+                <news-text-box>
+                  <news-text-box-title>{{ element.title }}</news-text-box-title>
+                  <news-text-box-desc :author="element.source" :publishDate="element.date"></news-text-box-desc>
+                </news-text-box>
+              </news-list-item>
+            </news-list>
+          </sub-content-box>
+        </item-detail-wrapper>
+      </swiper-slide>
+      <swiper-slide>
+        <item-detail-wrapper :excludedHeight="210">
+          <news-list>
+            <news-list-item v-for="element in news" :key="element.id" :to="''">
+              <news-image :src="element.image_url" />
+              <news-text-box>
+                <news-text-box-title>{{ element.title }}</news-text-box-title>
+                <news-text-box-desc :author="element.source" :publishDate="element.date"></news-text-box-desc>
+              </news-text-box>
+            </news-list-item>
+          </news-list>
+        </item-detail-wrapper>
+      </swiper-slide>
+      <swiper-slide>
+        <item-detail-wrapper :excludedHeight="210">
+          <news-list>
+            <news-list-item v-for="element in analyses" :key="element.id" :to="''">
+              <news-image :src="element.image_url" />
+              <news-text-box>
+                <news-text-box-title>{{ element.title }}</news-text-box-title>
+                <news-text-box-desc :author="element.source" :publishDate="element.date"></news-text-box-desc>
+              </news-text-box>
+            </news-list-item>
+          </news-list>
+        </item-detail-wrapper>
       </swiper-slide>
     </custom-swiper>
     <bottom-naviagtor :navigatorButtonNames="bottomNavigatorButtonNames"></bottom-naviagtor>
@@ -24,8 +71,16 @@ import { text } from '../constants';
 import BottomNaviagtor from '../components/BottomNaviagtor.vue';
 import MultipurposeHeader from '../components/MultipurposeHeader.vue';
 import ItemDetailPriceBox from '../components/ItemDetail/ItemDetailPriceBox.vue';
+import ItemDetailWrapper from '../components/ItemDetail/ItemDetailWrapper';
 import CustomSwiper from '../components/CustomSwiper.vue';
-import ItemDetailOverallContent from '../components/ItemDetail/ItemDetailOverallContent.vue';
+import ItemDetailOverviewBox from '../components/ItemDetail/ItemDetailOverviewBox.vue';
+import SubContentBox from '../components/ItemDetail/SubContentBox.vue';
+import NewsList from '../components/News/NewsList.vue';
+import NewsListItem from '../components/News/NewsListItem.vue';
+import NewsImage from '../components/News/NewsImage.vue';
+import NewsTextBox from '../components/News/NewsTextBox.vue';
+import NewsTextBoxTitle from '../components/News/NewsTextBoxTitle.vue';
+import NewsTextBoxDesc from '../components/News/NewsTextBoxDesc.vue';
 
 export default {
   name: 'ItemDetail',
@@ -35,14 +90,25 @@ export default {
     ItemDetailPriceBox,
     CustomSwiper,
     SwiperSlide,
-    ItemDetailOverallContent,
+    ItemDetailOverviewBox,
+    SubContentBox,
+    NewsList,
+    NewsListItem,
+    NewsImage,
+    NewsTextBox,
+    NewsTextBoxTitle,
+    NewsTextBoxDesc,
+    ItemDetailWrapper,
   },
 
   data() {
-    const { OVERLALL, NEWS, ANALYSIS, OPINION, CHART, MARKET, CALENDAR, FAVORITES, MORE } = text;
+    const { OVERLALL, NEWS, ANALYSIS, OPINION, CHART, MARKET, BOOKMARK, MORE } = text;
     return {
       swiperNavigatorButtonNames: [OVERLALL, NEWS, ANALYSIS, OPINION, CHART],
-      bottomNavigatorButtonNames: [MARKET, NEWS, CALENDAR, FAVORITES, MORE],
+      bottomNavigatorButtonNames: [MARKET, NEWS, BOOKMARK, MORE],
+      newsText: NEWS,
+      analysisText: ANALYSIS,
+      opnionText: OPINION,
     };
   },
 

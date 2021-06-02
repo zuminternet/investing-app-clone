@@ -40,9 +40,11 @@ export default {
   },
 
   data() {
+    const { INDICES, STOCK, CRYPTO_CURRENCY, MARKET, NEWS, BOOKMARK, MORE } = text;
+
     return {
-      swiperNavigatorButtonNames: [text.INDICES, text.STOCK, text.CRYPTO_CURRENCY],
-      bottomNavigatorButtonNames: [text.MARKET, text.NEWS, text.CALENDAR, text.FAVORITES, text.MORE],
+      swiperNavigatorButtonNames: [INDICES, STOCK, CRYPTO_CURRENCY],
+      bottomNavigatorButtonNames: [MARKET, NEWS, BOOKMARK, MORE],
     };
   },
 
@@ -50,8 +52,8 @@ export default {
     ...mapActions('market', ['getStocks']),
   },
 
-  async mounted() {
-    await this.getStocks();
+  created() {
+    this.getStocks();
   },
 };
 </script>
