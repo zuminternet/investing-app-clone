@@ -2,28 +2,6 @@ import { IAggV2Formatted } from '@polygon.io/client-js/lib/rest/stocks/aggregate
 
 import { CandleData } from '../../domain/marketData';
 
-/** @todo 개발 편의 위해 일단 모두 optional로 지정 */
-export interface BasicCandleOptionProps {
-  ctx: CanvasRenderingContext2D;
-  idx?: number;
-  x?: number;
-  y?: number;
-  open?: number;
-  close?: number;
-  low?: number;
-  high?: number;
-  bodyWidth?: number;
-  height?: number;
-  timestamp?: Date;
-
-  highest?: number;
-  lowest?: number;
-  clientWidth?: number;
-  clientHeight?: number;
-  hRatio?: number;
-  padding?: number;
-}
-
 export const enum ChartTypeEnums {
   line = `line`,
   candle = `candle`,
@@ -70,14 +48,83 @@ export type adjustedData = {
 
 /**
  * setSMA 단순이동평균선 Option
- * @property `data` 조정된 종가, 캔들 중앙값 데이터
  * @property `color` 이동평균선 색
- * @property `hRatio` 비율
  * @property `duration`? 평균낼 기간, default 20
  */
-export interface SetSMAOptions {
-  data: adjustedData;
+export interface SMAOptions {
   color: string;
-  hRatio: number;
   duration: number;
+  width?: number;
+}
+
+export interface DrawLinePaths {
+  beginX: number;
+  beginY: number;
+  lastX: number;
+  lastY: number;
+}
+
+export interface DrawLineOptions {
+  color?: string;
+  lineWidth?: number;
+}
+
+export interface DrawTextRequired {
+  text: string;
+  centerX: number;
+  centerY: number;
+  canvasHeight: number;
+}
+
+export interface DrawTextOptions {
+  fontFamily?: string;
+  fontSize?: number;
+  textBaseline?: CanvasTextBaseline;
+  textAlign?: CanvasTextAlign;
+  textWidth?: number;
+}
+
+export interface ClientWH {
+  zeroX: number;
+  zeroY: number;
+  ratio: number;
+  canvasWidth?: number;
+  canvasHeight?: number;
+}
+
+export interface refinerOptions extends Omit<ClientWH, 'ratio'> {
+  count: number;
+  range: Generator<number, void, any>;
+  total?: number;
+  customNumToShow?: number;
+}
+
+/** Chart 만들기 편하게 전처리된 캔들 데이터 */
+export interface RefinedCandle {
+  startX: number;
+  centerX: number;
+  openY: number;
+  closeY: number;
+  rectH: number;
+  highY: number;
+  lowY: number;
+  color: string;
+}
+
+export interface RefinedCandleData {
+  data: RefinedCandle[];
+  candleWidth: number;
+  numToShow: number;
+}
+export interface DayPartitionOptions {
+  /** API에서 넘어온 원본 데이터 */
+  results: CandleData;
+  /** 차트 그리기 위해 가공한 데이터 */
+  data: RefinedCandle[];
+  numToShow: number;
+  count: number;
+  canvasWidth: number;
+  canvasHeight: number;
+  /** 원점 Y 좌표 */
+  zeroY: number;
 }
