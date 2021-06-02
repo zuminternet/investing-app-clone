@@ -4,27 +4,22 @@
       <thead>
         <tr>
           <th>이름</th>
-          <th>현재가</th>
-          <th>전일대비</th>
+          <th @click="$emit('clickValueTab')">현재가{{ sortByValue | formatSortText }}</th>
+          <th @click="$emit('clickDiffTab')">전일대비{{ sortByDiff | formatSortText }}</th>
         </tr>
       </thead>
       <tbody>
-        <RouterLink
-          :to="`/market/stock/${key}`"
-          v-for="{ key, date, diff, growthRate, value } in listData"
-          :key="key"
-          :style="itemStyle"
-        >
+        <RouterLink :to="`/market/stock/${key}`" v-for="{ key, date, diff, growthRate, value } in listData" :key="key">
           <tr>
             <td>
-              <h4 :style="titleStyle">{{ key }}</h4>
-              <span :style="dateStyle">{{ date }}</span>
+              <h4>{{ key }}</h4>
+              <span class="date">{{ date | formatDate }}</span>
             </td>
             <td>
-              <span class="value" :class="getColorClass(diff)" :style="valueStyle">{{ value }}</span>
+              <span class="value" :class="getColorClass(diff)">{{ value }}</span>
             </td>
             <td>
-              <span class="diff" :class="getColorClass(diff)" :style="diffStyle">
+              <span class="diff" :class="getColorClass(diff)">
                 {{ diff | formatNumber }}
                 {{ growthRate | formatNumber | formatPercent }}
               </span>
@@ -38,17 +33,15 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import { sortMap } from '@/mixin/sortMixin';
 
 /**
  * 시장 탭에서 사용하는 리스트 컴포넌트
  * 지수, 주식, 가상화폐의 현재 시세를 보여준다
  *
- * @property {MarketListItem[]} listDate 아래의 MarketListItem 인터페이스 참고
- * @property {object} itemStyle 하나의 row에 해당하는 li태그 스타일
- * @property {object} titleStyle 종목 이름 스타일
- * @property {object} dateStyle 종목 이름 아래의 날짜 부분 스타일
- * @property {object} valueStyle 현재 값 부분 스타일
- * @property {object} diffStyle 값 아래의 변동값 스타일
+ * @prop {MarketListItem[]} listData 아래의 MarketListItem 인터페이스 참고
+ * @prop {number} sortByValue 현재가 정렬 기준 @see @/mixin/sortMixin#sortMap
+ * @prop {number} sortByDiff 전일대비 정렬 기준 @see @/mixin/sortMixin#sortMap
  */
 
 export interface MarketListItem {
@@ -70,6 +63,14 @@ export default Vue.extend({
     formatPercent(value: number) {
       return `(${value}%)`;
     },
+    formatSortText(sortBy: number) {
+      if (sortBy === sortMap.desc) return '(내림)';
+      if (sortBy === sortMap.asc) return '(오름)';
+      return '';
+    },
+    formatDate(date: string) {
+      return date.replaceAll('-', '. ');
+    },
   },
 
   props: {
@@ -77,25 +78,13 @@ export default Vue.extend({
       type: Array,
       required: true,
     },
-    itemStyle: {
-      type: Object,
-      default: () => ({}),
+    sortByValue: {
+      type: Number,
+      default: sortMap.none,
     },
-    titleStyle: {
-      type: Object,
-      default: () => ({}),
-    },
-    dateStyle: {
-      type: Object,
-      default: () => ({}),
-    },
-    valueStyle: {
-      type: Object,
-      default: () => ({}),
-    },
-    diffStyle: {
-      type: Object,
-      default: () => ({}),
+    sortByDiff: {
+      type: Number,
+      default: sortMap.none,
     },
   },
 
@@ -128,6 +117,11 @@ table {
 
   td {
     padding: 6px 12px;
+
+    .date {
+      color: var(--sub-text-color);
+      font-size: 15px;
+    }
   }
 
   th:first-child,
