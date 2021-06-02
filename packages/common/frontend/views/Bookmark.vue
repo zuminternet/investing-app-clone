@@ -6,15 +6,17 @@
 
 <script>
 import MultipurposeHeader from '../components/MultipurposeHeader.vue';
+
+import { createBookmark } from '../apis';
 export default {
   name: 'Bookmark',
   components: {
     MultipurposeHeader,
   },
 
-  // created() {
-
-  // }
+  created() {
+    console.log(createBookmark({ email: 'test', symbol: 'test' }));
+  },
 };
 </script>
 

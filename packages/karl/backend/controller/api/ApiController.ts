@@ -277,6 +277,9 @@ export class ApiController {
       }
 
       response.sendStatus(409);
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+      response.json(error);
+    }
   }
 }

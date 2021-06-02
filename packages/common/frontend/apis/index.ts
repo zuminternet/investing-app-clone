@@ -17,9 +17,10 @@ export interface getNewsAndAnalysesInfo {
   limit: number;
 }
 
-// export interface createBookmarkInfo {
-//   email:
-// }
+export interface createBookmarkInfo {
+  email: string;
+  symbol: string;
+}
 
 /**
  * @description search page에 렌더링할 searched items를 가져오는 front-side API 호출 함수
@@ -47,7 +48,7 @@ const getSearchedItems = async ({ keyword }: getSearchedItemsInfo) => {
  */
 const getItemDetail = async ({ symbols }: getItemDetailInfo) => {
   try {
-    const itemDetail = (await Axios.get(`${devURL}/api/item-detail?symbols=${symbols}`)).data;
+    const { data: itemDetail } = await Axios.get(`${devURL}/api/item-detail?symbols=${symbols}`);
 
     if (itemDetail) {
       return itemDetail;
@@ -66,7 +67,7 @@ const getItemDetail = async ({ symbols }: getItemDetailInfo) => {
  */
 const getNews = async ({ offset, limit }: getNewsAndAnalysesInfo) => {
   try {
-    const news = (await Axios.get(`${devURL}/api/articles/news?offset=${offset}&limit=${limit}`)).data;
+    const { data: news } = await Axios.get(`${devURL}/api/articles/news?offset=${offset}&limit=${limit}`);
 
     if (news) {
       return news;
@@ -86,7 +87,7 @@ const getNews = async ({ offset, limit }: getNewsAndAnalysesInfo) => {
 
 const getAnalyses = async ({ offset, limit }: getNewsAndAnalysesInfo) => {
   try {
-    const analyses = await (await Axios.get(`${devURL}/api/articles/analyses?offset=${offset}&limit=${limit}`)).data;
+    const { data: analyses } = await Axios.get(`${devURL}/api/articles/analyses?offset=${offset}&limit=${limit}`);
 
     if (analyses) {
       return analyses;
@@ -98,6 +99,23 @@ const getAnalyses = async ({ offset, limit }: getNewsAndAnalysesInfo) => {
   }
 };
 
-const createBookmark = async () => {};
+const createBookmark = async ({ email, symbol }: createBookmarkInfo) => {
+  try {
+    const result = await Axios.post(`${devURL}/api/bookmark`, {
+      email,
+      symbol,
+    });
 
-export { getSearchedItems, getItemDetail, getNews, getAnalyses };
+    if (result.status === 201) {
+      const bookmark = result.data;
+
+      return bookmark;
+    }
+
+    throw new Error('Creating bookmark was failed in front api');
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export { getSearchedItems, getItemDetail, getNews, getAnalyses, createBookmark };
