@@ -87,7 +87,7 @@ const actions = {
 // mutatuons 설정
 const mutations = {
   changeItemDetail(state, itemDetail) {
-    const { name, symbol, country, adj_close, adj_high, adj_low, close, open, volume, stock_exchange, high, low } = itemDetail;
+    const { name, symbol, adj_close, adj_high, adj_low, close, open, volume, stock_exchange, high, low } = itemDetail;
 
     state.itemDetail = {
       ...state.itemDetail,

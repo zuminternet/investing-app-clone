@@ -8,9 +8,9 @@
 </template>
 
 <script>
-import CustomText from '../components/CustomText.vue';
-import EmptySpace from '../components/karl/EmptySpace.vue';
-import { text } from '../constants';
+import CustomText from '../CustomText.vue';
+import EmptySpace from '../karl/EmptySpace.vue';
+import { text } from '../../constants';
 
 export default {
   name: 'ItemDetailOverallInfoRow',

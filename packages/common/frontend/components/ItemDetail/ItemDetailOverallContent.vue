@@ -33,16 +33,16 @@
 </template>
 
 <script>
-import ItemDetailOverallInfoBox from '../components/ItemDetailOverallInfoBox.vue';
-import SubContentBox from '../components/ItemDetail/SubContentBox.vue';
-import NewsList from '../components/News/NewsList.vue';
-import NewsListItem from '../components/News/NewsListItem.vue';
-import NewsImage from '../components/News/NewsImage.vue';
-import NewsTextBox from '../components/News/NewsTextBox.vue';
-import NewsTextBoxTitle from '../components/News/NewsTextBoxTitle.vue';
-import NewsTextBoxDesc from '../components/News/NewsTextBoxDesc.vue';
+import ItemDetailOverallInfoBox from './ItemDetailOverallInfoBox.vue';
+import SubContentBox from './SubContentBox.vue';
+import NewsList from '../News/NewsList.vue';
+import NewsListItem from '../News/NewsListItem.vue';
+import NewsImage from '../News/NewsImage.vue';
+import NewsTextBox from '../News/NewsTextBox.vue';
+import NewsTextBoxTitle from '../News/NewsTextBoxTitle.vue';
+import NewsTextBoxDesc from '../News/NewsTextBoxDesc.vue';
 
-import { text } from '../constants';
+import { text } from '../../constants';
 export default {
   name: 'ItemDetailOverallContent',
   components: {

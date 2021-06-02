@@ -9,8 +9,8 @@
 </template>
 
 <script>
-import ItemDetailOverallInfoRow from '../components/ItemDetailOverallInfoRow.vue';
-import { text } from '../constants';
+import ItemDetailOverallInfoRow from './ItemDetailOverallInfoRow.vue';
+import { text } from '../../constants';
 
 export default {
   name: 'ItemDetailOverallInfoBox',

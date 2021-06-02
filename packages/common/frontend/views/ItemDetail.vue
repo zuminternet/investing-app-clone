@@ -11,9 +11,6 @@
           :excludingHeight="210"
         ></item-detail-overall-content>
       </swiper-slide>
-      <!-- <swiper-slide>
-        <item-detail-overall-content :itemDetail="itemDetail" :excludingHeight="210"></item-detail-overall-content>
-      </swiper-slide> -->
     </custom-swiper>
     <bottom-naviagtor :navigatorButtonNames="bottomNavigatorButtonNames"></bottom-naviagtor>
   </div>
@@ -26,9 +23,9 @@ import { text } from '../constants';
 
 import BottomNaviagtor from '../components/BottomNaviagtor.vue';
 import MultipurposeHeader from '../components/MultipurposeHeader.vue';
-import ItemDetailPriceBox from '../components/ItemDetailPriceBox.vue';
+import ItemDetailPriceBox from '../components/ItemDetail/ItemDetailPriceBox.vue';
 import CustomSwiper from '../components/CustomSwiper.vue';
-import ItemDetailOverallContent from '../components/ItemDetailOverallContent.vue';
+import ItemDetailOverallContent from '../components/ItemDetail/ItemDetailOverallContent.vue';
 
 export default {
   name: 'ItemDetail',
