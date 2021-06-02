@@ -4,10 +4,10 @@
     <item-detail-price-box :itemDetail="itemDetail"></item-detail-price-box>
     <custom-swiper :navigatorButtonNames="swiperNavigatorButtonNames">
       <swiper-slide>
-        <item-detail-wrapper :excludingHeight="210">
+        <item-detail-wrapper :excludedHeight="210">
           <!-- 차트 컴포넌트 자리  -->
           <!-- overview 컴포넌트 자리 -->
-          <item-detail-overall-info-box :itemDetail="itemDetail"></item-detail-overall-info-box>
+          <item-detail-overview-box :itemDetail="itemDetail"></item-detail-overview-box>
 
           <!-- 댓글 컴포넌트 자리 -->
           <!-- 뉴스 컴포넌트 자리 -->
@@ -37,7 +37,7 @@
         </item-detail-wrapper>
       </swiper-slide>
       <swiper-slide>
-        <item-detail-wrapper :excludingHeight="210">
+        <item-detail-wrapper :excludedHeight="210">
           <news-list>
             <news-list-item v-for="element in news" :key="element.id" :to="''">
               <news-image :src="element.image_url" />
@@ -50,7 +50,7 @@
         </item-detail-wrapper>
       </swiper-slide>
       <swiper-slide>
-        <item-detail-wrapper>
+        <item-detail-wrapper :excludedHeight="210">
           <news-list>
             <news-list-item v-for="element in analyses" :key="element.id" :to="''">
               <news-image :src="element.image_url" />
@@ -77,7 +77,7 @@ import MultipurposeHeader from '../components/MultipurposeHeader.vue';
 import ItemDetailPriceBox from '../components/ItemDetail/ItemDetailPriceBox.vue';
 import ItemDetailWrapper from '../components/ItemDetail/ItemDetailWrapper';
 import CustomSwiper from '../components/CustomSwiper.vue';
-import ItemDetailOverallInfoBox from '../components/ItemDetail/ItemDetailOverallInfoBox.vue';
+import ItemDetailOverviewBox from '../components/ItemDetail/ItemDetailOverviewBox.vue';
 import SubContentBox from '../components/ItemDetail/SubContentBox.vue';
 import NewsList from '../components/News/NewsList.vue';
 import NewsListItem from '../components/News/NewsListItem.vue';
@@ -94,7 +94,7 @@ export default {
     ItemDetailPriceBox,
     CustomSwiper,
     SwiperSlide,
-    ItemDetailOverallInfoBox,
+    ItemDetailOverviewBox,
     SubContentBox,
     NewsList,
     NewsListItem,

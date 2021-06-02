@@ -8,7 +8,7 @@
 export default {
   name: 'ItemDetailWrapper',
   props: {
-    excludingHeight: {
+    excludedHeight: {
       type: Number,
       default: 150,
     },
@@ -17,7 +17,7 @@ export default {
   computed: {
     style() {
       return {
-        height: `calc(100vh - ${this.excludingHeight}px)`,
+        height: `calc(100vh - ${this.excludedHeight}px)`,
       };
     },
   },
