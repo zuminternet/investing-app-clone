@@ -18,7 +18,7 @@ export default class SearchService {
    */
   public async getSearchedItems({ keyword }: getSearchedItemsInfo) {
     const { accessKey } = marketStackConfig;
-    let items = await (await axios.get(`http://api.marketstack.com/v1/tickers?access_key=${accessKey}&search=${keyword}`)).data;
+    let { data: items } = await axios.get(`http://api.marketstack.com/v1/tickers?access_key=${accessKey}&search=${keyword}`);
 
     if (items) {
       // items = items.map((item) => {

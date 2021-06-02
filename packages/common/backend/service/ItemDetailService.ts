@@ -17,13 +17,13 @@ export default class ItemDetailService {
    */
   public async getItemDetail({ symbols }) {
     const { accessKey } = marketStackConfig;
-    const itemDetailSubInfo1 = await (
-      await axios.get(`http://api.marketstack.com/v1/eod?access_key=${accessKey}&symbols=${symbols}&limit=1`)
-    ).data;
+    const { data: itemDetailSubInfo1 } = await axios.get(
+      `http://api.marketstack.com/v1/eod?access_key=${accessKey}&symbols=${symbols}&limit=1`,
+    );
 
-    const itemDetailSubInfo2 = await (
-      await axios.get(`http://api.marketstack.com/v1/tickers?access_key=${accessKey}&search=${symbols}&limit=1`)
-    ).data;
+    const { data: itemDetailSubInfo2 } = await axios.get(
+      `http://api.marketstack.com/v1/tickers?access_key=${accessKey}&search=${symbols}&limit=1`,
+    );
 
     const itemDetailInfo = { ...itemDetailSubInfo1.data[0], ...itemDetailSubInfo2.data[0] };
 

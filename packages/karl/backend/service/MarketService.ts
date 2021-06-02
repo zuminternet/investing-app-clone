@@ -12,7 +12,7 @@ export default class MarketService {
    */
   public async getStocks() {
     const { accessKey } = marketStackConfig;
-    let stocks = await (await axios.get(`http://api.marketstack.com/v1/tickers?access_key=${accessKey}`)).data;
+    const { data: stocks } = await axios.get(`http://api.marketstack.com/v1/tickers?access_key=${accessKey}`);
 
     if (stocks) {
       return stocks;
