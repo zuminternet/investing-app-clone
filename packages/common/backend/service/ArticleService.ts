@@ -5,20 +5,31 @@ import Article, { ArticleType, ArticleDoc } from '../model/ArticleModel';
 interface QueryProps {
   offset?: number;
   limit?: number;
+  tickers?: string[];
 }
 
 @Service()
 export default class ArticleService {
-  public async getNews({ offset = 0, limit = 10 }: QueryProps): Promise<ArticleDoc[]> {
-    return Article.find({ type: ArticleType.news })
+  public async getNews({ offset = 0, limit = 10, tickers }: QueryProps = {}): Promise<ArticleDoc[]> {
+    const query = {
+      type: ArticleType.news,
+      tickers: tickers ? { $in: tickers } : undefined,
+    };
+
+    return Article.find(query)
       .sort({ date: 'desc' })
       .skip(offset)
       .limit(limit)
       .lean<ArticleDoc[]>();
   }
 
-  public async getOpinions({ offset = 0, limit = 10 }: QueryProps): Promise<ArticleDoc[]> {
-    return Article.find({ type: ArticleType.opinions })
+  public async getOpinions({ offset = 0, limit = 10, tickers }: QueryProps = {}): Promise<ArticleDoc[]> {
+    const query = {
+      type: ArticleType.opinions,
+      tickers: tickers ? { $in: tickers } : undefined,
+    };
+
+    return Article.find(query)
       .sort({ date: 'desc' })
       .skip(offset)
       .limit(limit)
