@@ -3,8 +3,8 @@ import { getUser, loginUserByEmail, loginUserByGoogleOAuth, createUser } from '.
 
 // 초기 state 값 설정
 const state = () => ({
-  userName: '',
   userEmail: '',
+  userGoogleId: '',
   userBookmark: [],
   isAuthorizedByOAuth: false,
 });
@@ -65,24 +65,30 @@ const actions = {
   async loginUserByGoogleOAuthOrCreateUser({ commit }) {
     const googleId = googleUser.Aa;
     const email = googleUser.Ft.pu;
-    // email 위치 googleUser.Ft.pu
 
     let result = await loginUserByGoogleOAuth({ email, googleId });
 
-    if (result) {
-      commit('changeIsAuthorizedByOAuth', true);
+    if (result.status === 200) {
+      commit('setIsAuthorizedByOAuth', true);
+      commit('setUserInfo', { email, googleId });
 
-      return;
+      return true;
     }
 
     result = await createUser({ email, googleId });
 
-    if (result) {
+    if (result.status === 201) {
       result = await loginUserByGoogleOAuth({ email, googleId });
-      commit('changeIsAuthorizedByOAuth', true);
 
-      return;
+      if (result.status === 200) {
+        commit('setIsAuthorizedByOAuth', true);
+        commit('setUserInfo', { email, googleId });
+
+        return true;
+      }
     }
+
+    throw new Error('Google OAuth login or create user was failed in user store');
   },
 
   /**
@@ -90,11 +96,16 @@ const actions = {
    * @description JWT를 이용하여 자동로그인을 수행하는 action. 성공하면 유저 정보를 가져온다.
    *
    */
-  async getUser() {
+  async getUser({ commit }) {
     try {
-      const user = await getUser();
+      const result = await getUser();
 
-      if (user) {
+      if (result.status === 200) {
+        const { data: user } = result;
+        console.log(user);
+
+        commit('setUserInfo', user);
+
         return true;
       }
 
@@ -128,8 +139,12 @@ const actions = {
 
 // mutatuons 설정
 const mutations = {
-  changeIsAuthorizedByOAuth(state, judge) {
+  setIsAuthorizedByOAuth(state, judge) {
     state.isAuthorizedByOAuth = judge;
+  },
+
+  setUserInfo(state, userInfo) {
+    state = { ...state, userEmail: userInfo.email, userGoogleId: userInfo.googleId };
   },
 };
 
