@@ -6,7 +6,8 @@ import chalk from 'chalk';
  * @param end 종료 index
  * @param step
  */
-export const _range = function*(start = 0, end: number, step = 1) {
+export const range = function*(start = 0, end: number, step = 1) {
+  if (start > end) [start, end] = [end, start];
   while (start < end) {
     yield start;
     start += step;

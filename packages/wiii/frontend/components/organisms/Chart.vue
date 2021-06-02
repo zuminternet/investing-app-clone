@@ -5,12 +5,11 @@
 <script lang="ts">
 import EsService from '@/services/chart/eventSource';
 import { TimespanEnum } from '@/type/apis';
-import { CanvasOptionEnum } from '@/type/chart';
-import { Candle } from '@/utils/chart';
-import { drawBasicCandleChart } from '@/utils/chart/candle';
+import { CanvasOptionEnum, MAColorEnum } from '@/type/chart';
+import { drawBasicCandleChart } from '@/utils/chart';
 import withTime from '@/utils/timer';
-import { devPrint } from '../../../domain/utilFunc';
 import Vue from 'vue';
+
 import { GetHistoricalOptions } from '../../../domain/apiOptions';
 import { getDateString, times } from '../../../domain/date';
 
@@ -58,6 +57,37 @@ export default Vue.extend({
           offset: 0,
         }),
     },
+    /** 이동평균선 기본 세팅 5-20-60-120 */
+    smaConfigs: {
+      type: Array,
+      default: () => [
+        {
+          duration: 5,
+          color: MAColorEnum.red500,
+          width: 10,
+        },
+        {
+          duration: 9,
+          color: MAColorEnum.grey500,
+          width: 10,
+        },
+        {
+          duration: 20,
+          color: MAColorEnum.blue500,
+          width: 15,
+        },
+        {
+          duration: 60,
+          color: MAColorEnum.green500,
+          width: 15,
+        },
+        {
+          duration: 120,
+          color: `black`,
+          width: 20,
+        },
+      ],
+    },
   },
 
   /**
@@ -101,7 +131,7 @@ export default Vue.extend({
   mounted() {
     const chart = this.$refs.canvas as HTMLCanvasElement;
     this.ctx = chart.getContext(CanvasOptionEnum.context2d);
-    withTime(this.getES(), `Vue-Chart: API -> Draw`);
+    withTime(this.es ? null : this.getES(), `Vue-Chart: API -> Draw`);
   },
 
   methods: {
@@ -124,13 +154,12 @@ export default Vue.extend({
           },
         });
 
-        new EsService(this.queryString, dataCarrier);
+        this.es = new EsService(this.queryString, dataCarrier);
       } catch (e) {
         console.error(e);
       }
     },
     getChart() {
-      console.info(`[Chart] Start to create a Chart`);
       /**
        * @todo
        * @see
@@ -153,7 +182,7 @@ export default Vue.extend({
         ctx: this.ctx,
         results,
         count,
-        payload: { total, customNumToShow: 300 },
+        payload: { total, customNumToShow: 300, smaConfigs: this.smaConfigs },
       });
 
       this.cachedChart[this.ticker] = cachedChart;
