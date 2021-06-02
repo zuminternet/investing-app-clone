@@ -18,6 +18,8 @@
 </template>
 
 <script>
+import { text } from '../constants';
+
 export default {
   name: 'NaviagtorButton',
   props: {
@@ -30,10 +32,6 @@ export default {
       default: 0,
     },
     navigatorButtonName: {
-      type: String,
-      default: '',
-    },
-    activePage: {
       type: String,
       default: '',
     },
@@ -55,21 +53,22 @@ export default {
 
   mounted() {
     // 이건 필히 refactoring할 것
+    const { MARKET, NEWS, BOOKMARK, MORE } = text;
     const { name } = this.$router.history.current;
 
-    if ((name === 'Market' || name === 'ItemDetail') && this.navigatorButtonName === '시장') {
+    if ((name === 'Market' || name === 'ItemDetail') && this.navigatorButtonName === MARKET) {
       this.isActivePage = true;
     }
 
-    if (name === 'News' && this.navigatorButtonName === '뉴스') {
+    if (name === 'News' && this.navigatorButtonName === NEWS) {
       this.isActivePage = true;
     }
 
-    if (name === 'Bookmark' && this.navigatorButtonName === '북마크') {
+    if (name === 'Bookmark' && this.navigatorButtonName === BOOKMARK) {
       this.isActivePage = true;
     }
 
-    if (name === 'More' && this.navigatorButtonName === '더보기') {
+    if (name === 'More' && this.navigatorButtonName === MORE) {
       this.isActivePage = true;
     }
   },

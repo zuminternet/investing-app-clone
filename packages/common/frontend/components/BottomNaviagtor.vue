@@ -4,7 +4,6 @@
       v-for="(navigatorButtonName, index) in navigatorButtonNames"
       isBottomNavigatorButton
       :key="index"
-      :activePage="activePage"
       @route-to-target-page="routeToTargetPage"
       :navigatorButtonName="navigatorButtonName"
     ></naviagtor-button>
@@ -25,12 +24,6 @@ export default {
       type: Array,
       required: true,
     },
-  },
-
-  data() {
-    return {
-      activePage: '',
-    };
   },
 
   methods: {
