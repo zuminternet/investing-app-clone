@@ -58,11 +58,11 @@ export default {
     ...mapActions('itemDetail', ['getItemDetail', 'getNews', 'getAnalyses']),
   },
 
-  async mounted() {
+  created() {
     const { symbols } = this.$route.query;
-    await this.getItemDetail({ symbols });
-    await this.getNews({ offset: 0, limit: 3 });
-    await this.getAnalyses({ offset: 0, limit: 3 });
+    this.getItemDetail({ symbols });
+    this.getNews({ offset: 0, limit: 3 });
+    this.getAnalyses({ offset: 0, limit: 3 });
   },
 };
 </script>
