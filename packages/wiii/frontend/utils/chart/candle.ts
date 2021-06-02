@@ -21,17 +21,19 @@ const BASE_RADIAN = PI / 180;
  */
 const initCanvas = (ctx: CanvasRenderingContext2D): ClientWH => {
   const ratio = window.devicePixelRatio;
-  const cvs = ctx.canvas;
-  const size = cvs.clientWidth;
 
+  const cvs = ctx.canvas;
+
+  const size = cvs.clientWidth;
   cvs.style.width = `${size}px`;
   cvs.style.height = `${(size * 9) / 16}px`;
 
-  const canvasWidth = (cvs.width = size * ratio);
-  const canvasHeight = (cvs.height = (canvasWidth * 9) / 16);
-  ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+  const canvasWidth = (cvs.width = size * ratio * 2);
+  const canvasHeight = (cvs.height = (canvasWidth * 9 * 2) / 16);
 
-  ctx.scale(ratio, ratio);
+  ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+  ctx.globalCompositeOperation = CanvasOptionEnum.globalCompositeOperation;
+  ctx.save();
 
   return {
     ratio,
@@ -254,8 +256,6 @@ const drawCandle = (
   /** @todo Options 객체 interface */
   candleWidth: number,
   ratio: number,
-  clientWidth: number,
-  clientHeight: number,
 ) => {
   ctx.save();
 
@@ -295,7 +295,7 @@ export const drawBasicCandleChart = ({
   ctx,
   results,
   count,
-  payload: { total, customNumToShow },
+  payload: { total, customNumToShow, smas },
 }: DrawCandleChartOptions): object => {
   const { ratio, canvasWidth, canvasHeight } = initCanvas(ctx);
   const range = () => _range(0, count);
@@ -311,15 +311,9 @@ export const drawBasicCandleChart = ({
     customNumToShow,
   });
 
-  // /**@todo 가격 구분선 */
-  // const partitionNum = 5;
-  // setPricePartition(ctx, hRatio, partitionNum, hRange, clientWidth, clientHeight, lowest);
-
-  // ctx.globalCompositeOperation = CanvasOptionEnum.globalCompositeOperation;
-
   /** 캔들 하나씩 */
   for (const i of range()) {
-    drawCandle(ctx, data[i], candleWidth, ratio, canvasWidth, canvasHeight);
+    drawCandle(ctx, data[i], candleWidth, ratio);
 
     /** @todo only for debugging */
     if (i === count / 2) {
@@ -332,16 +326,15 @@ export const drawBasicCandleChart = ({
     }
   }
 
-  // /** @todo SMA custom; 컴포넌트에서 옵션 받아서 넘기는 방식으로 */
-  // setSMA(ctx, { data: adjCloses, duration: 9, hRatio, color: MAColorEnum.red500 });
-  // setSMA(ctx, { data: adjCloses, duration: 20, hRatio, color: MAColorEnum.green500 });
-  // setSMA(ctx, { data: adjCloses, duration: 55, hRatio, color: MAColorEnum.blue500 });
-  // setSMA(ctx, { data: adjCloses, duration: 112, hRatio, color: MAColorEnum.grey500 });
+  /** 이동평균선 옵션 받아서 하나씩 그림 */
+  // for (const {duration, color} of smas) {
+  //   setSMA(ctx, data, {duration, color})
+  // }
+
+  // /**@todo 가격 구분선 */
+  // const partitionNum = 5;
+  // setPricePartition(ctx, hRatio, partitionNum, hRange, clientWidth, clientHeight, lowest);
 
   /**@description base64 이미지로 저장해, caching */
   return { data, image: ctx.canvas.toDataURL('image/png', 1) };
 };
-
-// export default {
-//   drawBasicCandleChart: process.env.NODE_ENV === `production` ? timer(drawBasicCandleChart, `Draw Chart`) : drawBasicCandleChart,
-// };
