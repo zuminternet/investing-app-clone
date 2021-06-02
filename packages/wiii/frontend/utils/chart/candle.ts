@@ -4,7 +4,7 @@ import { initCanvas } from '@/utils/chart/init';
 import { setSMA } from '@/utils/chart/sma';
 
 import { range } from '../../../domain/utilFunc';
-import { refiner, setDayPartition } from './position';
+import { getHeightRatio, refiner, setDayPartition, setPricePartition } from './position';
 
 /**
  * drawBasicCandleChart
@@ -21,11 +21,15 @@ export const drawBasicCandleChart = ({
 }: DrawCandleChartOptions): object => {
   const { zeroX, zeroY, ratio, canvasWidth, canvasHeight } = initCanvas(ctx);
 
+  const { ratioH, lowest, highest } = getHeightRatio(results, zeroY);
+
   /** 캔버스 그리기 쉽게 데이터 전처리 */
   const { data, candleWidth, numToShow } = refiner(results, {
     zeroX,
     zeroY,
     count,
+    ratioH,
+    lowest,
     range: range(0, count),
     customNumToShow,
   });
@@ -39,6 +43,9 @@ export const drawBasicCandleChart = ({
   for (const { duration, color, width } of smaConfigs) {
     setSMA(ctx, data, { duration, color, width });
   }
+
+  /** 가격 구분선 */
+  setPricePartition(ctx, { highest, lowest, zeroY, ratioH, canvasWidth, canvasHeight });
 
   /** 일자구분선 */
   setDayPartition(ctx, { data, results, numToShow, count, canvasWidth, canvasHeight, zeroY });

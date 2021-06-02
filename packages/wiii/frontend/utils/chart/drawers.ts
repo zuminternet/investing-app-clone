@@ -11,8 +11,8 @@ export const drawText = (
 ) => {
   ctx.save();
   ctx.strokeStyle = CandleColorEnum.grey900;
-  ctx.font = `${fontSize ?? canvasHeight * 0.014}px ${fontFamily ?? `sans-serif`}`;
   ctx.textBaseline = textBaseline ?? 'bottom';
+  ctx.font = `${fontSize ?? `25px/30`}px ${fontFamily ?? `sans-serif`}`;
   ctx.textAlign = textAlign ?? 'right';
   ctx.fillText(text, centerX, centerY);
   ctx.strokeText(text, centerX, centerY);

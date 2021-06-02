@@ -3,7 +3,14 @@
  * 위치 조정 관련 함수 모음
  */
 
-import { CandleColorEnum, DayPartitionOptions, RefinedCandle, RefinedCandleData, refinerOptions } from '@/type/chart';
+import {
+  CandleColorEnum,
+  DayPartitionOptions,
+  RefinedCandle,
+  RefinedCandleData,
+  refinerOptions,
+  PricePartitionOptions,
+} from '@/type/chart';
 import { range } from '../../../domain/utilFunc';
 import { CandleData } from '../../../domain/marketData';
 import { drawLine, drawText } from './drawers';
@@ -29,7 +36,7 @@ const setColor = (o: number, c: number) => {
  * 캔들 높이 조정 비율 구하기
  * - 전체 높이에서 상하 패딩 빼고 가격구간 비율 구함
  */
-const getHeightRatio = (data: CandleData, zeroY: number): { ratioH: number; highest: number; lowest: number } => {
+export const getHeightRatio = (data: CandleData, zeroY: number): { ratioH: number; highest: number; lowest: number } => {
   let [highest, lowest] = [0, MAX_SAFE_INTEGER];
 
   for (const { high, low } of data) {
@@ -53,7 +60,7 @@ const getHeightRatio = (data: CandleData, zeroY: number): { ratioH: number; high
  */
 export const refiner = (
   _data: CandleData,
-  { zeroX, zeroY, count, range, customNumToShow }: refinerOptions,
+  { zeroX, zeroY, count, range, customNumToShow, ratioH, lowest }: refinerOptions,
 ): RefinedCandleData => {
   /** 화면에 보여질 캔들 갯수 */
   const numToShow = customNumToShow > count ? count : customNumToShow;
@@ -63,8 +70,6 @@ export const refiner = (
   const candleHalf = candleWidth / 2;
   /** 캔들 좌우 패딩 */
   const candlePad = candleWidth * 0.1;
-
-  const { ratioH, lowest } = getHeightRatio(_data, zeroY);
 
   const data = Array.from({ length: count });
 
@@ -128,44 +133,19 @@ export const setDayPartition = (
 
 /**
  * setPricePartition
- * 좌상단 (0,0)에서 시작
- *
- * @param ctx CanvasContext
- * @param partitionNum 가격 구분 개수
- * @param hRatio 비율 조정
- * @param hRange 가격구간 높이
- * @param canvasWidth 캔버스 너비
- * @param canvasHeight 캔버스 높이
- * @param lowest 구간 최저가
  */
-// const setPricePartition = (
-//   ctx: CanvasRenderingContext2D,
-//   hRatio?: number,
-//   partitionNum?: number,
-//   hRange?: number,
-//   canvasWidth?: number,
-//   canvasHeight?: number,
-//   lowest?: number,
-// ) => {
-//   ctx.save();
-//   const ratio = hRange / partitionNum;
-//   ctx.lineWidth = 1;
-//   ctx.strokeStyle = CandleColorEnum.partition;
-//   ctx.fillStyle = CandleColorEnum.grey900;
-//   ctx.font = `italic 20px sans-serif`;
-//   ctx.textAlign = CanvasOptionEnum.textAlignRight;
-
-//   for (let n = partitionNum + 1; n--; ) {
-//     /** 구분선 */
-//     const curH = -(n * ratio) * hRatio;
-//     ctx.beginPath();
-//     ctx.moveTo(0, curH);
-//     ctx.lineTo(-canvasWidth, curH);
-//     ctx.closePath();
-//     ctx.stroke();
-
-//     /** 구분선 가격 */
-//     ctx.fillText((lowest - curH / hRatio).toFixed(2).toString(), 0, curH);
-//   }
-//   ctx.restore();
-// };
+export const setPricePartition = (
+  ctx: CanvasRenderingContext2D,
+  { highest, lowest, zeroY, ratioH, canvasWidth, canvasHeight }: PricePartitionOptions,
+) => {
+  const partitions = +((highest - lowest) / 5);
+  for (const i of range(lowest, highest + 1, partitions)) {
+    const curY = zeroY + (lowest - i) * ratioH;
+    drawLine(
+      ctx,
+      { beginX: 0, beginY: curY, lastX: canvasWidth, lastY: curY },
+      { color: CandleColorEnum.partition, lineWidth: 3 },
+    );
+    drawText(ctx, { text: `${i}`, centerX: canvasWidth - 25, centerY: curY, canvasHeight }, { textAlign: `right` });
+  }
+};

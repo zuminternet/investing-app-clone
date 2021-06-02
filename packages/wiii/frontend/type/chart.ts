@@ -94,6 +94,8 @@ export interface ClientWH {
 
 export interface refinerOptions extends Omit<ClientWH, 'ratio'> {
   count: number;
+  ratioH: number;
+  lowest: number;
   range: Generator<number, void, any>;
   total?: number;
   customNumToShow?: number;
@@ -127,4 +129,13 @@ export interface DayPartitionOptions {
   canvasHeight: number;
   /** 원점 Y 좌표 */
   zeroY: number;
+}
+
+export interface PricePartitionOptions {
+  highest: number;
+  lowest: number;
+  zeroY: number;
+  ratioH: number;
+  canvasWidth: number;
+  canvasHeight: number;
 }
