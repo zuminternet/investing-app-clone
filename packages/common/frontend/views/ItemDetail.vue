@@ -102,10 +102,10 @@ export default {
   },
 
   data() {
-    const { OVERLALL, NEWS, ANALYSIS, OPINION, CHART, MARKET, CALENDAR, FAVORITES, MORE } = text;
+    const { OVERLALL, NEWS, ANALYSIS, OPINION, CHART, MARKET, BOOKMARK, MORE } = text;
     return {
       swiperNavigatorButtonNames: [OVERLALL, NEWS, ANALYSIS, OPINION, CHART],
-      bottomNavigatorButtonNames: [MARKET, NEWS, CALENDAR, FAVORITES, MORE],
+      bottomNavigatorButtonNames: [MARKET, NEWS, BOOKMARK, MORE],
       newsText: NEWS,
       analysisText: ANALYSIS,
       opnionText: OPINION,

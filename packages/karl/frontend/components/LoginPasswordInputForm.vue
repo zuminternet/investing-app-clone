@@ -42,11 +42,11 @@ export default {
 
   methods: {
     routeToHome() {
-      this.$router.push('/home');
+      this.$router.push('home');
     },
 
     routeToSignup() {
-      this.$router.push('/signup');
+      this.$router.push('signup');
     },
   },
 };

@@ -25,8 +25,8 @@ export default () => {
         component: Signup,
       },
       {
-        path: '/home',
-        name: 'Home',
+        path: '/market',
+        name: 'Market',
         component: Home,
       },
       {

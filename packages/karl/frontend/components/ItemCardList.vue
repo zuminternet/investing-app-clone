@@ -24,7 +24,7 @@ export default {
 
   methods: {
     routeToItemDetail() {
-      this.$router.push('/item-detail');
+      this.$router.push('item-detail');
     },
   },
 };
