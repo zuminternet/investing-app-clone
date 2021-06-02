@@ -1,19 +1,39 @@
 <template>
-  <ul>
-    <li v-for="data in listData" :key="data.key" :style="itemStyle">
-      <div>
-        <h4 :style="titleStyle">{{ data.key }}</h4>
-        <span :style="dateStyle">{{ data.date }}</span>
-      </div>
-      <div>
-        <span class="value" :style="valueStyle">{{ data.value }}</span>
-        <span class="diff" :class="getColorClass(data.diff)" :style="diffStyle">
-          {{ data.diff | formatNumber }}
-          {{ data.growthRate | formatNumber | formatPercent }}
-        </span>
-      </div>
-    </li>
-  </ul>
+  <div>
+    <table>
+      <thead>
+        <tr>
+          <th>이름</th>
+          <th>현재가</th>
+          <th>전일대비</th>
+        </tr>
+      </thead>
+      <tbody>
+        <RouterLink
+          :to="`/market/stock/${key}`"
+          v-for="{ key, date, diff, growthRate, value } in listData"
+          :key="key"
+          :style="itemStyle"
+        >
+          <tr>
+            <td>
+              <h4 :style="titleStyle">{{ key }}</h4>
+              <span :style="dateStyle">{{ date }}</span>
+            </td>
+            <td>
+              <span class="value" :class="getColorClass(diff)" :style="valueStyle">{{ value }}</span>
+            </td>
+            <td>
+              <span class="diff" :class="getColorClass(diff)" :style="diffStyle">
+                {{ diff | formatNumber }}
+                {{ growthRate | formatNumber | formatPercent }}
+              </span>
+            </td>
+          </tr>
+        </RouterLink>
+      </tbody>
+    </table>
+  </div>
 </template>
 
 <script lang="ts">
@@ -90,37 +110,45 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
-ul {
-  li {
+table {
+  width: 100%;
+  height: 100%;
+  font-size: 1rem;
+
+  a {
     padding: 8px 12px;
-    display: flex;
+    display: contents;
     justify-content: space-between;
     border-bottom: 1px solid var(--border-color);
+  }
 
-    h4 {
-      font-size: 1.2rem;
+  th {
+    padding: 12px;
+  }
+
+  td {
+    padding: 6px 12px;
+  }
+
+  th:first-child,
+  td:first-child {
+    text-align: left;
+  }
+
+  th,
+  td {
+    vertical-align: middle;
+    text-align: right;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .value,
+  .diff {
+    &.red {
+      color: var(--red-color);
     }
-
-    .value,
-    .diff {
-      display: block;
-      text-align: right;
-    }
-
-    .value {
-      font-size: 1.2rem;
-    }
-
-    .diff {
-      font-size: 1rem;
-      font-weight: bold;
-
-      &.red {
-        color: var(--red-color);
-      }
-      &.blue {
-        color: var(--blue-color);
-      }
+    &.blue {
+      color: var(--blue-color);
     }
   }
 }
