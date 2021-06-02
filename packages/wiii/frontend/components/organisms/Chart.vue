@@ -1,5 +1,5 @@
 <template>
-  <canvas ref="canvas" class="area"></canvas>
+  <canvas ref="canvas" class="area dark"></canvas>
 </template>
 
 <script lang="ts">
@@ -193,7 +193,10 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 canvas {
-  box-shadow: 0 0 20px 5px $red-neon;
   background-color: white;
+
+  &.dark {
+    box-shadow: 0 0 20px 5px $neon-crimson;
+  }
 }
 </style>

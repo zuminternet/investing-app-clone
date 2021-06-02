@@ -21,7 +21,7 @@ export default Vue.extend({
 
   computed: {
     isDarkTheme() {
-      return this.isDark ? `dark` : ``;
+      return `dark`;
     },
   },
 });
@@ -45,13 +45,12 @@ export default Vue.extend({
 
   &.dark {
     color: $grey-100;
-    text-shadow: 0 0 15px $red-neon;
-    background-color: $grey-700;
-    box-shadow: 0 0 10px $red-neon;
+    text-shadow: 0 0 15px $neon-crimson;
+    box-shadow: 0 0 10px $neon-crimson;
 
     &:hover {
-      background-color: $grey-500;
-      color: $red-neon;
+      background-color: $shallow-blue;
+      color: $neon-crimson;
       font-weight: bold;
     }
   }
@@ -59,7 +58,7 @@ export default Vue.extend({
   &-active,
   &-exact-active {
     &.dark {
-      color: $red-neon;
+      color: $neon-crimson;
     }
   }
 }
