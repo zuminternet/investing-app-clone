@@ -1,7 +1,8 @@
 /**
  * GetHistoricalOptions
  * @description
- * type, ticker는 필수, 나머지는 선택
+ * - MarketStack 국내주식
+ * - type, ticker는 필수, 나머지는 선택
  */
 export interface GetHistoricalOptions {
   /** - 타입: 주식, 지수, 코인 */

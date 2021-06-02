@@ -2,8 +2,9 @@ import axios, { AxiosRequestConfig } from 'axios';
 
 import { GetHistoricalOptions, MarketStackQueries } from '../../domain/apiOptions';
 import { getDateString, times } from '../../domain/date';
+import { pipe } from '../../domain/utilFunc';
+import { CandleData } from '../../domain/marketData';
 import { MarketStackConfigs } from '../config/market';
-import { pipe } from '../utils/HOF';
 
 const { access_key, baseUrl } = MarketStackConfigs;
 
@@ -110,14 +111,27 @@ const setParams = (options: GetHistoricalOptions) => pipe(options, adjustKeyName
 
 /**
  * adjustPrices
- * @param data axiosResponse data, API에서 제공하는 원본 데이터
- * @returns 원본 데이터 + Chart 그리기 편하도록 조정된 데이터
+ * @param result axiosResponse data, API에서 제공하는 원본 데이터
+ *   - response: `{ data, status, statusText, headers, config }`
+ * @returns 필요한 데이터만 추출/가공
  */
-const adjustPrices = (data: object) => {
-  const adjusted = {
-    /** @todo */
-  };
-  return { origin: data, adjusted };
+const adjustPrices = (result) => {
+  const {
+    pagination: { count, total },
+    data,
+  } = JSON.parse(result);
+
+  const adjusted = data.map(({ adj_close, open, close, high, low, volume, date }) => ({
+    adj_close,
+    open,
+    close,
+    high,
+    low,
+    volume,
+    date,
+  })) as CandleData;
+
+  return { results: adjusted, count, payload: { total } };
 };
 
 /**
@@ -145,7 +159,7 @@ export const fetchHistoricalData = (options: GetHistoricalOptions) => {
     params,
     responseType: 'json',
     maxRedirects: 1,
-    // transformResponse: [adjustPrices],
+    transformResponse: [adjustPrices],
   } as AxiosRequestConfig;
 
   return axios.get(baseUrl, config);
