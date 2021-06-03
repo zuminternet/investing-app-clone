@@ -1,1 +1,21 @@
 @import 'variables';
+
+html,
+body {
+  @extend .reset;
+
+  background-color: $grey-500;
+  font-family: -apple-system, 'Helvetica Neue', 'Noto Sans KR', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#appWrapper {
+  width: 100vw;
+  height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}

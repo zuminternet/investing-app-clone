@@ -26,10 +26,6 @@
   @extend .center;
 
   max-width: $max-width-mobile;
-
-  &.dark {
-    background-color: $deep-dark;
-  }
 }
 
 .card {
@@ -37,16 +33,12 @@
   @extend .center;
 
   margin: $margin-card;
+  margin-bottom: 0;
   padding: 5px;
   border-radius: 15px;
   background-color: $white-900;
   color: $grey-900;
   cursor: pointer;
-
-  &.dark {
-    background-color: $deep-blue;
-    color: $sunny-yellow;
-  }
 }
 
 .router-link {
@@ -60,7 +52,32 @@
     background-color: $blue-100;
   }
 
-  &-active {
+  &-exact-active {
     font-weight: bold;
+  }
+}
+
+.dark {
+  background-color: $deep-dark;
+
+  .area {
+    background-color: $deep-dark;
+  }
+
+  .card {
+    background-color: $deep-blue;
+    color: $sunny-yellow;
+  }
+
+  .router-link {
+    background-color: $shallow-blue;
+    &:hover {
+      background-color: $deep-blue;
+      color: $neon-crimson;
+    }
+
+    &-exact-active {
+      color: $neon-crimson;
+    }
   }
 }

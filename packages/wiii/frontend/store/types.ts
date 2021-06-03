@@ -7,9 +7,3 @@ export enum ChartDataEnums {
   coinData = 'coinData',
   indexData = 'indexData',
 }
-
-export enum ChartModuleMapperEnums {
-  stateIsStockLoaded = 'isStockLoaded',
-  actionGetStockData = 'getStockData',
-  getterCheckStockLoaded = 'loadedStockData',
-}
