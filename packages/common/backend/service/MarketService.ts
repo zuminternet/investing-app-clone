@@ -30,9 +30,13 @@ export default class MarketService {
     throw new Error('invalid symbol');
   }
 
-  private addDisplayName(eod: MarketStockEOD): EndOfDay {
+  private convertEOD(eod: MarketStockEOD): EndOfDay {
     const displayName = this.getDisplayName(eod.symbol);
-    return { ...eod, display_name: displayName };
+    const wasChanged = !Number.isNaN(eod.close - eod.open);
+    const diff = wasChanged ? +(eod.close - eod.open).toFixed(2) : 0;
+    const growthRate = wasChanged ? +(diff / eod.close).toFixed(2) : 0;
+
+    return { ...eod, display_name: displayName, diff, growthRate };
   }
 
   /**
@@ -49,7 +53,7 @@ export default class MarketService {
       params: { symbols: symbolQueryStr },
     });
 
-    return response?.data?.map(this.addDisplayName.bind(this)) ?? [];
+    return response?.data?.map(this.convertEOD) ?? [];
   }
 
   /**

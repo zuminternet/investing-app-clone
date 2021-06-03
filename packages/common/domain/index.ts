@@ -113,6 +113,8 @@ export interface MarketStockEOD {
 
 export interface EndOfDay extends MarketStockEOD {
   display_name: string;
+  diff: number;
+  growthRate: number;
 }
 
 export interface HistoricalData {
