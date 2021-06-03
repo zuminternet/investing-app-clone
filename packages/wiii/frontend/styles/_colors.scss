@@ -22,8 +22,21 @@ $green-500: rgba(0, 150, 136, 1);
 $green-300: rgba(77, 182, 172, 1);
 $green-100: rgba(178, 223, 219, 1);
 
-$red-neon: rgba(255, 23, 68, 1);
-$cyan-neon: rgba(224, 247, 250, 1);
+// for dark mode
+// super theme 색상 참고 (rainglow)
+// @see https://github.com/rainglow/vscode/blob/master/themes/super.json
+$sup-dark: #2c343d;
+$sup-beige: #ffe792;
+
+// neon colors
+// @see https://colorswall.com/palette/94171
+$neon-crimson: rgba(249, 0, 79, 1);
+$neon-blurple: rgba(114, 137, 218, 1);
+$neon-green: rgba(57, 255, 186, 1);
+$sunny-yellow: rgba(255, 238, 122, 1);
+$deep-dark: rgba(25, 27, 42, 1);
+$deep-blue: rgba(42, 45, 70, 1);
+$shallow-blue: rgba(60, 67, 103, 1);
 
 :export {
   grey900: $grey-900;
@@ -42,5 +55,7 @@ $cyan-neon: rgba(224, 247, 250, 1);
   green500: $green-500;
   green300: $green-300;
   green100: $green-100;
-  red-neon: $red-neon;
+  neonCrimson: $neon-crimson;
+  neonBlurple: $neon-blurple;
+  sunnyYellow: $sunny-yellow;
 }

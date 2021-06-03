@@ -9,12 +9,12 @@ export default {
   name: 'App',
 
   computed: {
-    /**
-     * @todo
-     */
     isDark() {
-      // return this.isDark ? 'dark' : null;
-      return null;
+      /**
+       * @todo
+       * 다크 모드 토글
+       */
+      return 'dark';
     },
   },
 };
@@ -27,6 +27,9 @@ html {
   body {
     @extend .reset;
 
+    /** @todo 다크모드 토글 */
+    @extend .dark;
+
     max-width: $max-width-mobile;
     height: 100vh;
     background-color: $grey-100;
@@ -38,6 +41,7 @@ html {
 }
 
 .dark {
-  background-color: $grey-700;
+  background-color: $deep-dark;
+  color: $sup-beige;
 }
 </style>

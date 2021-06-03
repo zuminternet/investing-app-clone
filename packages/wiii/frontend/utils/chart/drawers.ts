@@ -1,5 +1,9 @@
 import { CandleColorEnum, DrawLineOptions, DrawLinePaths, DrawTextOptions, DrawTextRequired, RefinedCandle } from '@/type/chart';
-import { CandleOne } from '../../../domain/marketData';
+import { sunnyYellow, grey900 } from '@/styles/index.scss';
+
+/** @todo Vuex에서 is다크모드 getter로 가져오기  */
+const isDark = true;
+const baseFontStyle = isDark ? `${sunnyYellow}` : `${grey900}`;
 
 /** @description ctx.rotate() 사용시 필요 */
 const { PI } = Math;
@@ -11,7 +15,8 @@ export const drawText = (
   { fontFamily, fontSize, textBaseline, textAlign, /** @todo 쓰기 애매해서 뺄수도 */ textWidth }: DrawTextOptions,
 ) => {
   ctx.save();
-  ctx.strokeStyle = CandleColorEnum.grey900;
+  ctx.strokeStyle = baseFontStyle;
+  ctx.fillStyle = baseFontStyle;
   ctx.textBaseline = textBaseline ?? 'bottom';
   ctx.font = `${fontSize ?? `25px/30`}px ${fontFamily ?? `sans-serif`}`;
   ctx.textAlign = textAlign ?? 'right';

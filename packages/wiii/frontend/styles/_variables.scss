@@ -26,6 +26,10 @@
   @extend .center;
 
   max-width: $max-width-mobile;
+
+  &.dark {
+    background-color: $deep-dark;
+  }
 }
 
 .card {
@@ -37,6 +41,12 @@
   border-radius: 15px;
   background-color: $white-900;
   color: $grey-900;
+  cursor: pointer;
+
+  &.dark {
+    background-color: $deep-blue;
+    color: $sunny-yellow;
+  }
 }
 
 .router-link {
