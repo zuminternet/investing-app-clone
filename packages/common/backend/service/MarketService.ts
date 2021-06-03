@@ -34,7 +34,7 @@ export default class MarketService {
     const displayName = this.getDisplayName(eod.symbol);
     const wasChanged = !Number.isNaN(eod.close - eod.open);
     const diff = wasChanged ? +(eod.close - eod.open).toFixed(2) : 0;
-    const growthRate = wasChanged ? +(diff / eod.close).toFixed(2) : 0;
+    const growthRate = wasChanged ? +((diff / eod.open) * 100).toFixed(2) : 0;
 
     return { ...eod, display_name: displayName, diff, growthRate };
   }
