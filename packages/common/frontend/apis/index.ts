@@ -134,7 +134,6 @@ const createBookmark = async ({ email, symbol }: createBookmarkInfo) => {
 const getBookmarks = async (email: string) => {
   try {
     const result = await Axios.get(`${devURL}/api/bookmark?email=${email}`);
-    console.log(result);
 
     if (result.status === 200) {
       const { data: bookmarks } = result;

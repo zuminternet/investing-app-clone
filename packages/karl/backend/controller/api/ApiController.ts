@@ -110,6 +110,7 @@ export class ApiController {
    * @description Home page에 렌더링할 stocks들을 가져오는 controller
    * @param request
    * @param resposne
+   * @returns response
    */
 
   @GetMapping({ path: '/market/stock' })
@@ -132,6 +133,7 @@ export class ApiController {
    * @description Home page에 렌더링할 indices를 가져오는 controller
    * @param request
    * @param resposne
+   * @returns response
    */
   @GetMapping({ path: '/market/indices' })
   public async getIndices(request: Request, resposne: Response) {
@@ -146,6 +148,7 @@ export class ApiController {
    * @description Home page에 렌더링할 cpyto currencies를 가져오는 controller
    * @param request
    * @param resposne
+   * @reutrns response
    */
   @GetMapping({ path: '/market/cpyto-currencies' })
   public async getCryptoCurrencies(request: Request, resposne: Response) {
@@ -159,7 +162,7 @@ export class ApiController {
    * @description item detail page에 렌더링할 item datail info를 가져오는 controller
    * @param request
    * @param resposne
-   * @returns
+   * @returns response
    */
 
   @GetMapping({ path: '/item-detail' })
@@ -183,7 +186,7 @@ export class ApiController {
    * @description search page에 렌더링할 searched items들을 가져오는 controller
    * @param request
    * @param response
-   * @returns
+   * @returns response
    */
   @GetMapping({ path: '/search/items' })
   public async getSearchedItems(request: Request, response: Response) {
@@ -206,7 +209,7 @@ export class ApiController {
    * @description articles를 parsing하여 DB에 document들로 저장하는 controller(common에 추가할 때까지 주석처리)
    * @param request
    * @param response
-   * @returns
+   * @returns response
    */
   // @PostMapping({ path: '/articles' })
   // public async createArticles(request: Request, response: Response) {
@@ -229,7 +232,7 @@ export class ApiController {
    * @description DB에서 articles 중 news만 가져오는 controller
    * @param request
    * @param response
-   * @returns
+   * @returns response
    */
   @GetMapping({ path: '/articles/news' })
   public async getNews(request: Request, response: Response) {
@@ -250,7 +253,7 @@ export class ApiController {
    * @description DB에서 articles 중 analyses만 가져오는 controller
    * @param request
    * @param response
-   * @returns
+   * @returns response
    */
   @GetMapping({ path: '/articles/analyses' })
   public async getAnalyses(request: Request, response: Response) {
@@ -271,7 +274,7 @@ export class ApiController {
    * @description DB에서 bookmark documents를 추가하는 controller
    * @param request
    * @param response
-   * @returns BookmarkDocument
+   * @returns response
    */
   @PostMapping({ path: '/bookmark' })
   public async createBookmark(request: Request, response: Response) {
@@ -291,10 +294,10 @@ export class ApiController {
   }
 
   /**
-   * @description
+   * @description DB에서 bookmark documents를 가져오는 controller
    * @param request
    * @param response
-   * @returns
+   * @returns response
    */
   @GetMapping({ path: '/bookmark' })
   public async getBookmarks(request: Request, response: Response) {

@@ -5,21 +5,28 @@
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex';
+
 import MultipurposeHeader from '../components/MultipurposeHeader.vue';
 
-import { getBookmarks } from '../apis';
 export default {
   name: 'Bookmark',
   components: {
     MultipurposeHeader,
   },
 
-  async created() {
-    const bookmarks = await getBookmarks('karl@zuminternet.com');
+  computed: {
+    ...mapState({
+      bookmarks: (state) => state.user.userBookmarks,
+    }),
+  },
 
-    if (bookmarks) {
-      console.log(bookmarks);
-    }
+  methods: {
+    ...mapActions('user', ['getBookmarks']),
+  },
+
+  created() {
+    this.getBookmarks();
   },
 };
 </script>

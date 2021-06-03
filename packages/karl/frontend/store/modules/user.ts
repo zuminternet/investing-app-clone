@@ -1,11 +1,12 @@
 import { googleAuthInitConfig } from '../../configs';
 import { getUser, loginUserByEmail, loginUserByGoogleOAuth, createUser } from '../../apis';
+import { getBookmarks } from '../../../../common/frontend/apis';
 
 // 초기 state 값 설정
 const state = () => ({
   userEmail: '',
   userGoogleId: '',
-  userBookmark: [],
+  userBookmarks: [],
   isAuthorizedByOAuth: false,
 });
 
@@ -117,16 +118,32 @@ const actions = {
       const user = await loginUserByEmail({ email, password });
 
       if (user) {
-        // console.log(result, 'email login OAuth result');
         commit('setUserInfo', user);
 
         return true;
       }
 
-      throw new Error('invalid user');
+      throw new Error('Requesting email login was failed in user store');
     } catch (error) {
       console.log(error);
       alert(error);
+    }
+  },
+
+  async getBookmarks({ commit, state }) {
+    try {
+      const email = state.userEmail;
+      const bookmarks = await getBookmarks(email);
+
+      if (bookmarks) {
+        commit('setBookmarks', bookmarks);
+
+        return true;
+      }
+
+      throw new Error('Getting bookmarks was failed in user store');
+    } catch (error) {
+      console.log(error);
     }
   },
 };
@@ -142,6 +159,10 @@ const mutations = {
 
     state.userEmail = email;
     state.userGoogleId = googleId;
+  },
+
+  setBookmarks(state, bookmarks) {
+    state.userBookmarks = bookmarks;
   },
 };
 
