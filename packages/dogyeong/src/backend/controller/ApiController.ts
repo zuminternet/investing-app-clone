@@ -4,7 +4,6 @@ import { Inject } from 'zum-portal-core/backend/decorator/Alias';
 import AuthService from '../service/AuthService';
 import UserService, { GoogleUserInfo, UserInfo } from '../service/UserService';
 import TokenService from '../service/TokenService';
-import MarketService from '../service/MarketService';
 import { authConfig } from '../config';
 
 @Controller({ path: '/api' })
@@ -13,7 +12,6 @@ export class ApiController {
     @Inject(AuthService) private authService: AuthService,
     @Inject(UserService) private userService: UserService,
     @Inject(TokenService) private tokenService: TokenService,
-    @Inject(MarketService) private marketService: MarketService,
   ) {}
 
   @PostMapping({ path: ['/user'] })
@@ -82,62 +80,5 @@ export class ApiController {
   public logout(req: Request, res: Response) {
     res.clearCookie(authConfig.accessTokenCookie);
     res.end();
-  }
-
-  @GetMapping({ path: ['/indices'] })
-  public async getIndices(req: Request, res: Response) {
-    try {
-      const indices = await this.marketService.getIndices();
-      res.json({ indices });
-    } catch (err) {
-      res.status(500).json({ err: err.message ?? err });
-    }
-  }
-
-  @GetMapping({ path: ['/coins'] })
-  public async getCoins(req: Request, res: Response) {
-    try {
-      const coins = await this.marketService.getCoins();
-      res.json({ coins });
-    } catch (err) {
-      res.status(500).json({ err: err.message ?? err });
-    }
-  }
-
-  @GetMapping({ path: ['/stocks'] })
-  public async getStocks(req: Request, res: Response) {
-    try {
-      const stocks = await this.marketService.getStocks();
-      res.json({ stocks });
-    } catch (err) {
-      res.status(500).json({ err: err.message ?? err });
-    }
-  }
-
-  @GetMapping({ path: ['/summary'] })
-  public async getSummary(req: Request, res: Response) {
-    try {
-      const symbol = this.getRandomSymbol();
-      const summary = await this.marketService.getSummaryDetail(symbol);
-      res.json(summary);
-    } catch (err) {
-      res.status(500).json({ err: err.message ?? err });
-    }
-  }
-
-  @GetMapping({ path: ['/chart'] })
-  public async getChart(req: Request, res: Response) {
-    try {
-      const symbol = this.getRandomSymbol();
-      const chart = await this.marketService.getCandleChartData(symbol);
-      res.json({ chart });
-    } catch (err) {
-      res.status(500).json({ err: err.message ?? err });
-    }
-  }
-
-  /** @TODO Implement random symbol generator */
-  private getRandomSymbol() {
-    return ['TSLA'][0];
   }
 }
