@@ -34,6 +34,7 @@ export class ApiController {
 
       const decodedToken = this.authService.verifyToken(token);
       let user;
+
       if (decodedToken.googleId) {
         user = await this.userService.loginUserByGoogleOAuth(decodedToken);
       }

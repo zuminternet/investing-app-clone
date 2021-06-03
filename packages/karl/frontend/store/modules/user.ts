@@ -11,11 +11,7 @@ const state = () => ({
 
 // getter 설정
 
-const getters = {
-  itemCollections: (state) => {
-    return [state.stockItems, state.indexItems, state.cryptoItems];
-  },
-};
+const getters = {};
 
 // google OAuth에 필요한 객체
 let googleAuth = null;
@@ -66,23 +62,22 @@ const actions = {
     const googleId = googleUser.Aa;
     const email = googleUser.Ft.pu;
 
-    let result = await loginUserByGoogleOAuth({ email, googleId });
+    let user = await loginUserByGoogleOAuth({ email, googleId });
 
-    if (result.status === 200) {
+    if (user) {
+      console.log(user, 'google OAuth result');
       commit('setIsAuthorizedByOAuth', true);
-      commit('setUserInfo', { email, googleId });
+      commit('setUserInfo', user);
 
       return true;
     }
 
-    result = await createUser({ email, googleId });
+    if (await createUser({ email, googleId })) {
+      user = await loginUserByGoogleOAuth({ email, googleId });
 
-    if (result.status === 201) {
-      result = await loginUserByGoogleOAuth({ email, googleId });
-
-      if (result.status === 200) {
+      if (user) {
         commit('setIsAuthorizedByOAuth', true);
-        commit('setUserInfo', { email, googleId });
+        commit('setUserInfo', user);
 
         return true;
       }
@@ -98,12 +93,9 @@ const actions = {
    */
   async getUser({ commit }) {
     try {
-      const result = await getUser();
+      const user = await getUser();
 
-      if (result.status === 200) {
-        const { data: user } = result;
-        console.log(user);
-
+      if (user) {
         commit('setUserInfo', user);
 
         return true;
@@ -123,9 +115,12 @@ const actions = {
   async requestEmailLogin({ commit }, event) {
     try {
       const { email, password } = event.$data;
-      const result = await loginUserByEmail({ email, password });
+      const user = await loginUserByEmail({ email, password });
 
-      if (result.status === 200) {
+      if (user) {
+        // console.log(result, 'email login OAuth result');
+        commit('setUserInfo', user);
+
         return true;
       }
 
@@ -144,7 +139,15 @@ const mutations = {
   },
 
   setUserInfo(state, userInfo) {
-    state = { ...state, userEmail: userInfo.email, userGoogleId: userInfo.googleId };
+    const { email, googleId } = userInfo;
+
+    if (googleId) {
+      state = { ...state, userEmail: email, userGoogleId: googleId };
+
+      return;
+    }
+
+    state = { ...state, userEmail: email };
   },
 };
 

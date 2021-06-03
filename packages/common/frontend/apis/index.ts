@@ -31,8 +31,10 @@ const getSearchedItems = async ({ keyword }: getSearchedItemsInfo) => {
   try {
     const result = await Axios.get(`${devURL}/api/search/items?keyword=${keyword}`);
 
-    if (result) {
-      return result;
+    if (result.status === 200) {
+      const { data: searchedItems } = result;
+
+      return searchedItems;
     }
 
     throw new Error('Getting searched items was failed in front api');
@@ -48,9 +50,11 @@ const getSearchedItems = async ({ keyword }: getSearchedItemsInfo) => {
  */
 const getItemDetail = async ({ symbols }: getItemDetailInfo) => {
   try {
-    const { data: itemDetail } = await Axios.get(`${devURL}/api/item-detail?symbols=${symbols}`);
+    const result = await Axios.get(`${devURL}/api/item-detail?symbols=${symbols}`);
 
-    if (itemDetail) {
+    if (result.status === 200) {
+      const { data: itemDetail } = result;
+
       return itemDetail;
     }
 
@@ -67,9 +71,11 @@ const getItemDetail = async ({ symbols }: getItemDetailInfo) => {
  */
 const getNews = async ({ offset, limit }: getNewsAndAnalysesInfo) => {
   try {
-    const { data: news } = await Axios.get(`${devURL}/api/articles/news?offset=${offset}&limit=${limit}`);
+    const result = await Axios.get(`${devURL}/api/articles/news?offset=${offset}&limit=${limit}`);
 
-    if (news) {
+    if (result.status === 200) {
+      const { data: news } = result;
+
       return news;
     }
 
@@ -87,9 +93,11 @@ const getNews = async ({ offset, limit }: getNewsAndAnalysesInfo) => {
 
 const getAnalyses = async ({ offset, limit }: getNewsAndAnalysesInfo) => {
   try {
-    const { data: analyses } = await Axios.get(`${devURL}/api/articles/analyses?offset=${offset}&limit=${limit}`);
+    const result = await Axios.get(`${devURL}/api/articles/analyses?offset=${offset}&limit=${limit}`);
 
-    if (analyses) {
+    if (result.status === 200) {
+      const { data: analyses } = result;
+
       return analyses;
     }
 
