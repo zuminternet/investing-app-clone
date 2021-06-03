@@ -8,10 +8,16 @@
         {{ headerTitle }}
       </HeaderTitle>
     </Header>
-    <main>
+    <main v-if="isLoading">
+      <div class="message">loading...</div>
+    </main>
+    <main v-else-if="isError">
+      <div class="message">Error!</div>
+    </main>
+    <main v-else>
       <section class="article-header">
         <h3 class="article-title">{{ article.title }}</h3>
-        <p class="article-info">{{ article.source }} | {{ article.date }}</p>
+        <p class="article-info">{{ article.source }} | {{ article.date | formatDate }}</p>
       </section>
       <section class="article-main">
         <img class="article-img" :src="article.image_url" />
@@ -27,6 +33,8 @@ import Vue from 'vue';
 import BottomNav from '@/components/BottomNav/BottomNav.vue';
 import { Header, HeaderTitle, HeaderButton } from '@/components/Header';
 import Layout from '@/components/Layout/Layout.vue';
+import { getArticle } from '@/services/articleService';
+import { fromNow } from 'common/frontend/utils';
 
 export default Vue.extend({
   name: 'NewsDetail',
@@ -39,23 +47,39 @@ export default Vue.extend({
     HeaderButton,
   },
 
+  filters: {
+    formatDate(date) {
+      return fromNow(date);
+    },
+  },
+
   data() {
     return {
       params: this.$route.params,
       path: this.$route.path.split('/')[1],
+      article: null,
+      isLoading: true,
+      isError: false,
     };
   },
 
   computed: {
-    article() {
-      const { id, type } = this.params;
-      const { news, opinions } = this.$store.state.article[type];
-
-      return news.data.find(({ _id }) => _id === id) ?? opinions.data.find(({ _id }) => _id === id);
-    },
     headerTitle() {
       return this.params.type === 'new' ? '최신' : '가장 인기 있는 뉴스';
     },
+  },
+
+  created() {
+    getArticle(this.params.id)
+      .then((article) => {
+        this.article = article;
+        this.isLoading = false;
+      })
+      .catch((e) => {
+        console.error(e);
+        this.isError = true;
+        this.isLoading = false;
+      });
   },
 
   methods: {
@@ -90,6 +114,11 @@ main {
     .article-text {
       padding: 20px 0;
     }
+  }
+
+  .message {
+    padding: 12px;
+    font-size: 18px;
   }
 }
 </style>

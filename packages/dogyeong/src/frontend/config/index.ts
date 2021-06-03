@@ -9,10 +9,11 @@ export const apiEndpoints = {
   getStocks: '/api/stocks',
   getSummary: '/api/summary',
   getChart: '/api/chart',
-  getNewNews: '/api/news/new',
-  getNewOpinions: '/api/opinions/new',
-  getPopularNews: '/api/news/popular',
-  getPopularOpinions: '/api/opinions/popular',
+  getNewNews: '/api/article/news/new',
+  getNewOpinions: '/api/article/opinions/new',
+  getPopularNews: '/api/article/news/popular',
+  getPopularOpinions: '/api/article/opinions/popular',
+  getArticle: '/api/article',
 };
 
 export const googleAuthInitConfig = {
