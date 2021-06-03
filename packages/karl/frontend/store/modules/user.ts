@@ -1,21 +1,18 @@
 import { googleAuthInitConfig } from '../../configs';
 import { getUser, loginUserByEmail, loginUserByGoogleOAuth, createUser } from '../../apis';
+import { getBookmarks } from '../../../../common/frontend/apis';
 
 // 초기 state 값 설정
 const state = () => ({
-  userName: '',
   userEmail: '',
-  userBookmark: [],
+  userGoogleId: '',
+  userBookmarks: [],
   isAuthorizedByOAuth: false,
 });
 
 // getter 설정
 
-const getters = {
-  itemCollections: (state) => {
-    return [state.stockItems, state.indexItems, state.cryptoItems];
-  },
-};
+const getters = {};
 
 // google OAuth에 필요한 객체
 let googleAuth = null;
@@ -64,22 +61,29 @@ const actions = {
    */
   async loginUserByGoogleOAuthOrCreateUser({ commit }) {
     const googleId = googleUser.Aa;
-    let result = await loginUserByGoogleOAuth({ googleId });
+    const email = googleUser.Ft.pu;
 
-    if (result) {
-      commit('changeIsAuthorizedByOAuth', true);
+    let user = await loginUserByGoogleOAuth({ email, googleId });
 
-      return;
+    if (user) {
+      commit('setIsAuthorizedByOAuth', true);
+      commit('setUserInfo', user);
+
+      return true;
     }
 
-    result = await createUser({ googleId });
+    if (await createUser({ email, googleId })) {
+      user = await loginUserByGoogleOAuth({ email, googleId });
 
-    if (result) {
-      result = await loginUserByGoogleOAuth({ googleId });
-      commit('changeIsAuthorizedByOAuth', true);
+      if (user) {
+        commit('setIsAuthorizedByOAuth', true);
+        commit('setUserInfo', user);
 
-      return;
+        return true;
+      }
     }
+
+    throw new Error('Google OAuth login or create user was failed in user store');
   },
 
   /**
@@ -87,11 +91,13 @@ const actions = {
    * @description JWT를 이용하여 자동로그인을 수행하는 action. 성공하면 유저 정보를 가져온다.
    *
    */
-  async getUser() {
+  async getUser({ commit }) {
     try {
       const user = await getUser();
 
       if (user) {
+        commit('setUserInfo', user);
+
         return true;
       }
 
@@ -109,24 +115,54 @@ const actions = {
   async requestEmailLogin({ commit }, event) {
     try {
       const { email, password } = event.$data;
-      const result = await loginUserByEmail({ email, password });
+      const user = await loginUserByEmail({ email, password });
 
-      if (result.status === 200) {
+      if (user) {
+        commit('setUserInfo', user);
+
         return true;
       }
 
-      throw new Error('invalid user');
+      throw new Error('Requesting email login was failed in user store');
     } catch (error) {
       console.log(error);
       alert(error);
+    }
+  },
+
+  async getBookmarks({ commit, state }) {
+    try {
+      const email = state.userEmail;
+      const bookmarks = await getBookmarks(email);
+
+      if (bookmarks) {
+        commit('setBookmarks', bookmarks);
+
+        return true;
+      }
+
+      throw new Error('Getting bookmarks was failed in user store');
+    } catch (error) {
+      console.log(error);
     }
   },
 };
 
 // mutatuons 설정
 const mutations = {
-  changeIsAuthorizedByOAuth(state, judge) {
+  setIsAuthorizedByOAuth(state, judge) {
     state.isAuthorizedByOAuth = judge;
+  },
+
+  setUserInfo(state, userInfo) {
+    const { email, googleId } = userInfo;
+
+    state.userEmail = email;
+    state.userGoogleId = googleId;
+  },
+
+  setBookmarks(state, bookmarks) {
+    state.userBookmarks = bookmarks;
   },
 };
 

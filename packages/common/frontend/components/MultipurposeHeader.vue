@@ -15,8 +15,7 @@
       <empty-space></empty-space>
       <div class="header-button-box">
         <header-button isGoSearchButton></header-button>
-
-        <header-button></header-button>
+        <header-button isAddBookmarkButton :email="userInfo.userEmail" :symbol="itemDetail.symbol"></header-button>
       </div>
     </template>
 
@@ -74,7 +73,16 @@ export default {
 
     itemDetail: {
       type: Object,
-      required: false,
+      default() {
+        return {};
+      },
+    },
+
+    userInfo: {
+      type: Object,
+      default() {
+        return {};
+      },
     },
   },
 

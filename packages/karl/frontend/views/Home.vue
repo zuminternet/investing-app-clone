@@ -34,6 +34,7 @@ export default {
     ...mapState({
       stockItems: (state) => state.market.stockItems,
     }),
+
     ...mapGetters('market', {
       itemCollections: 'itemCollections',
     }),

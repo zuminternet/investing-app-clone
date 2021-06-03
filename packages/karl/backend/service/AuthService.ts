@@ -13,7 +13,7 @@ export default class AuthService {
   constructor() {}
 
   public issueToken({ email, password, googleId }: issueTokenInfo): string | Error {
-    const token = jsonwebtoken.sign(googleId ? { googleId } : { email, password }, jwtSecret);
+    const token = jsonwebtoken.sign(googleId ? { email, googleId } : { email, password }, jwtSecret);
 
     if (token) {
       return token;
