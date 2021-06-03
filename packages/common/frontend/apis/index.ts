@@ -107,6 +107,11 @@ const getAnalyses = async ({ offset, limit }: getNewsAndAnalysesInfo) => {
   }
 };
 
+/**
+ * @description email, symbol을 받아 북마크 추가를 요청하는 front-side API call 함수
+ * @param param0
+ * @returns
+ */
 const createBookmark = async ({ email, symbol }: createBookmarkInfo) => {
   try {
     const result = await Axios.post(`${devURL}/api/bookmark`, {
@@ -114,10 +119,8 @@ const createBookmark = async ({ email, symbol }: createBookmarkInfo) => {
       symbol,
     });
 
-    console.log(result);
-
     if (result.status === 201) {
-      const bookmark = result.data;
+      const { data: bookmark } = result;
 
       return bookmark;
     }
@@ -128,4 +131,21 @@ const createBookmark = async ({ email, symbol }: createBookmarkInfo) => {
   }
 };
 
-export { getSearchedItems, getItemDetail, getNews, getAnalyses, createBookmark };
+const getBookmarks = async (email: string) => {
+  try {
+    const result = await Axios.get(`${devURL}/api/bookmark?email=${email}`);
+    console.log(result);
+
+    if (result.status === 200) {
+      const { data: bookmarks } = result;
+
+      return bookmarks;
+    }
+
+    throw new Error('Getting bookmarks was failed in front api');
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export { getSearchedItems, getItemDetail, getNews, getAnalyses, createBookmark, getBookmarks };

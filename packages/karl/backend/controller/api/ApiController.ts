@@ -267,6 +267,12 @@ export class ApiController {
     }
   }
 
+  /**
+   * @description DB에서 bookmark documents를 추가하는 controller
+   * @param request
+   * @param response
+   * @returns BookmarkDocument
+   */
   @PostMapping({ path: '/bookmark' })
   public async createBookmark(request: Request, response: Response) {
     try {
@@ -275,6 +281,29 @@ export class ApiController {
 
       if (bookmark) {
         return response.status(201).send(bookmark);
+      }
+
+      response.sendStatus(409);
+    } catch (error) {
+      console.log(error);
+      response.json(error);
+    }
+  }
+
+  /**
+   * @description
+   * @param request
+   * @param response
+   * @returns
+   */
+  @GetMapping({ path: '/bookmark' })
+  public async getBookmarks(request: Request, response: Response) {
+    try {
+      const { email } = request.query;
+      const bookmarks = await this.bookmarkService.getBookmarks(email);
+
+      if (bookmarks) {
+        return response.status(200).send(bookmarks);
       }
 
       response.sendStatus(409);

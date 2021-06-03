@@ -22,4 +22,20 @@ export default class BookmarkService {
 
     return Bookmark.create({ email, symbol });
   }
+
+  /**
+   * @description email을 받아 Bookmark documents 들을 리턴하는 service
+   * @param email string
+   * @returns BookmarkDocument
+   */
+
+  public async getBookmarks(email: string) {
+    const bookmarks = await Bookmark.find({ email });
+
+    if (bookmarks) {
+      return bookmarks;
+    }
+
+    throw new Error('Getting bookmarks was failed in bookmark service');
+  }
 }

@@ -7,15 +7,19 @@
 <script>
 import MultipurposeHeader from '../components/MultipurposeHeader.vue';
 
-import { createBookmark } from '../apis';
+import { getBookmarks } from '../apis';
 export default {
   name: 'Bookmark',
   components: {
     MultipurposeHeader,
   },
 
-  created() {
-    console.log(createBookmark({ email: 'test', symbol: 'test' }));
+  async created() {
+    const bookmarks = await getBookmarks('karl@zuminternet.com');
+
+    if (bookmarks) {
+      console.log(bookmarks);
+    }
   },
 };
 </script>
