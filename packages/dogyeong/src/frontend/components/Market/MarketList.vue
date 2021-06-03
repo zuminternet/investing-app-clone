@@ -9,14 +9,18 @@
         </tr>
       </thead>
       <tbody>
-        <RouterLink :to="`/market/stock/${key}`" v-for="{ key, date, diff, growthRate, value } in listData" :key="key">
+        <RouterLink
+          v-for="{ display_name, symbol, date, diff, growthRate, close } in listData"
+          :key="symbol"
+          :to="`/market/stock/${symbol}`"
+        >
           <tr>
             <td>
-              <h4>{{ key }}</h4>
-              <span class="date">{{ date | formatDate }}</span>
+              <h4>{{ display_name }}</h4>
+              <span class="date">{{ date }}</span>
             </td>
             <td>
-              <span class="value" :class="getColorClass(diff)">{{ value }}</span>
+              <span class="value" :class="getColorClass(diff)">{{ close }}</span>
             </td>
             <td>
               <span class="diff" :class="getColorClass(diff)">
@@ -67,9 +71,6 @@ export default Vue.extend({
       if (sortBy === sortMap.desc) return '(내림)';
       if (sortBy === sortMap.asc) return '(오름)';
       return '';
-    },
-    formatDate(date: string) {
-      return date.replaceAll('-', '. ');
     },
   },
 
