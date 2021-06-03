@@ -53,7 +53,7 @@ export default class MarketService {
       params: { symbols: symbolQueryStr },
     });
 
-    return response?.data?.map(this.convertEOD) ?? [];
+    return response?.data?.map(this.convertEOD.bind(this)) ?? [];
   }
 
   /**
