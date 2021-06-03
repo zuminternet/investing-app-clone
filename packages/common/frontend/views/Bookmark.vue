@@ -1,6 +1,6 @@
 <template>
   <div class="bookmark-page">
-    <multipurpose-header isSearch></multipurpose-header>
+    <multipurpose-header isBookmark></multipurpose-header>
     <item-card-list :items="bookmarks" :excludedHeight="50" isBookmark></item-card-list>
   </div>
 </template>
