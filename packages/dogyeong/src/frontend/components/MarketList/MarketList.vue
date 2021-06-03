@@ -1,17 +1,19 @@
 <template>
   <ul>
-    <li v-for="data in listData" :key="data.key" :style="itemStyle">
-      <div>
-        <h4 :style="titleStyle">{{ data.key }}</h4>
-        <span :style="dateStyle">{{ data.date }}</span>
-      </div>
-      <div>
-        <span class="value" :style="valueStyle">{{ data.value }}</span>
-        <span class="diff" :class="getColorClass(data.diff)" :style="diffStyle">
-          {{ data.diff | formatNumber }}
-          {{ data.growthRate | formatNumber | formatPercent }}
-        </span>
-      </div>
+    <li v-for="{ key, date, diff, growthRate, value } in listData" :key="key" :style="itemStyle">
+      <RouterLink :to="`/market/stock/${key}`">
+        <div>
+          <h4 :style="titleStyle">{{ key }}</h4>
+          <span :style="dateStyle">{{ date }}</span>
+        </div>
+        <div>
+          <span class="value" :style="valueStyle">{{ value }}</span>
+          <span class="diff" :class="getColorClass(diff)" :style="diffStyle">
+            {{ diff | formatNumber }}
+            {{ growthRate | formatNumber | formatPercent }}
+          </span>
+        </div>
+      </RouterLink>
     </li>
   </ul>
 </template>
@@ -92,10 +94,12 @@ export default Vue.extend({
 <style lang="scss" scoped>
 ul {
   li {
-    padding: 8px 12px;
-    display: flex;
-    justify-content: space-between;
-    border-bottom: 1px solid var(--border-color);
+    a {
+      padding: 8px 12px;
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-color);
+    }
 
     h4 {
       font-size: 1.2rem;
