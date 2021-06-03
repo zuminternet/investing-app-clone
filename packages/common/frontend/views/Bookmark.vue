@@ -22,6 +22,7 @@ export default {
 
   computed: {
     ...mapState({
+      userInfo: (state) => state.user,
       bookmarks: (state) => state.user.userBookmarks,
     }),
   },

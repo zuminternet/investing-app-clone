@@ -1,6 +1,6 @@
 <template>
   <div v-if="isSearch" class="item-card-list" :style="style">
-    <item-card v-for="(item, index) in items" :key="index" :item="item" isSearch></item-card>
+    <item-card v-for="(item, index) in items" :userInfo="userInfo" :key="index" :item="item" isSearch></item-card>
   </div>
   <div v-else-if="isHome || isBookmark" class="item-card-list" :style="style">
     <item-card v-for="(item, index) in items" :key="index" :item="item" isHome isBookmark></item-card>
@@ -22,9 +22,19 @@ export default {
       type: Number,
       default: 150,
     },
+
     items: {
       type: Array,
-      default: true,
+      default() {
+        return [];
+      },
+    },
+
+    userInfo: {
+      type: Object,
+      default() {
+        return {};
+      },
     },
 
     isSearch: {

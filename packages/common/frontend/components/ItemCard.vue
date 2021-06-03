@@ -1,42 +1,51 @@
 <template>
-  <div class="item-card" @click="routeToItemDetail">
+  <div class="item-card">
     <template v-if="isSearch">
-      <div class="item-information">
-        <custom-text>
-          {{ name }}
-        </custom-text>
+      <div class="wrapper" @click="routeToItemDetail">
+        <div class="item-info-box">
+          <custom-text>
+            {{ name }}
+          </custom-text>
 
-        <div class="item-sub-infortmation">
-          <custom-text> {{ symbol }}</custom-text>
-
-          <custom-text v-if="category"> | {{ category }} </custom-text>
+          <div class="item-sub-info-box">
+            <custom-text> {{ symbol }}</custom-text>
+            <custom-text v-if="category"> | {{ category }} </custom-text>
+          </div>
         </div>
+        <empty-space></empty-space>
       </div>
-      <empty-space></empty-space>
-      <item-card-button></item-card-button>
+      <div class="bookmark-button-box">
+        <item-card-button
+          :name="name"
+          :category="category"
+          :email="email"
+          :symbol="symbol"
+          isAddBookmarkButton
+        ></item-card-button>
+      </div>
     </template>
 
     <template v-if="isHome || isBookmark">
-      <div class="item-information-except-price">
-        <custom-text>
-          {{ name }}
-        </custom-text>
-
-        <div class="item-sub-information">
-          <custom-text>{{ time }}</custom-text>
-          |
+      <div class="wrapper" @click="routeToItemDetail">
+        <div class="item-info-box">
           <custom-text>
-            {{ category }}
+            {{ name }}
           </custom-text>
+          <div class="item-sub-information">
+            <custom-text>{{ time }}</custom-text>
+            |
+            <custom-text>
+              {{ category }}
+            </custom-text>
+          </div>
         </div>
-      </div>
-      <empty-space></empty-space>
-      <div class="item-information-price">
-        <custom-text>{{ price }}</custom-text>
-
-        <div class="item-sub-information">
-          <custom-text>{{ fluctuationPrice }}</custom-text>
-          <custom-text>({{ fluctuationRate }})</custom-text>
+        <empty-space></empty-space>
+        <div>
+          <custom-text>{{ price }}</custom-text>
+          <div>
+            <custom-text>{{ fluctuationPrice }}</custom-text>
+            <custom-text>({{ fluctuationRate }})</custom-text>
+          </div>
         </div>
       </div>
     </template>
@@ -75,6 +84,13 @@ export default {
       type: Boolean,
       default: false,
     },
+
+    userInfo: {
+      type: Object,
+      default() {
+        return {};
+      },
+    },
   },
 
   computed: {
@@ -83,19 +99,19 @@ export default {
     },
 
     category() {
-      if ((this.isSearch || this.isHome) && this.item.stock_exchange) {
+      if (this.isSearch) {
         return this.item.stock_exchange.acronym;
       }
 
-      if (this.isBookmark) {
-        return this.item.category;
-      }
+      return this.item.category;
     },
 
     symbol() {
-      if (this.isSearch || this.isHome) {
-        return this.item.symbol;
-      }
+      return this.item.symbol;
+    },
+
+    email() {
+      return this.userInfo.userEmail;
     },
 
     price() {
@@ -137,5 +153,21 @@ export default {
   flex: 0 0 auto;
   height: 40px;
   background-color: grey;
+}
+
+.wrapper {
+  display: flex;
+  flex: 1;
+}
+
+.item-info-box {
+  display: flex;
+  flex-direction: column;
+}
+
+.bookmark-button-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>

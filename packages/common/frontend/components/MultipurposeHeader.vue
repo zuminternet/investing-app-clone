@@ -15,13 +15,7 @@
       <empty-space></empty-space>
       <div class="header-button-box">
         <header-button isGoSearchButton></header-button>
-        <header-button
-          isAddBookmarkButton
-          :email="userInfo.userEmail"
-          :symbol="symbol"
-          :name="name"
-          :category="category"
-        ></header-button>
+        <header-button isAddBookmarkButton :email="email" :symbol="symbol" :name="name" :category="category"></header-button>
       </div>
     </template>
 
@@ -41,6 +35,7 @@
     </template>
 
     <template v-if="isBookmark">
+      <header-button isBackButton></header-button>
       <div class="header-title-box">
         <p>{{ bookmarkTitle }}</p>
       </div>
@@ -119,6 +114,10 @@ export default {
 
     symbol() {
       return this.itemDetail.symbol;
+    },
+
+    email() {
+      return this.userInfo.email;
     },
   },
 

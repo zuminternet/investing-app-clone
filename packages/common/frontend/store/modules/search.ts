@@ -40,6 +40,8 @@ const actions = {
 const mutations = {
   changeSearchedItems(state, items) {
     state.searchedItems = items;
+
+    console.log(state);
   },
 };
 
