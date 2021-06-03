@@ -65,7 +65,6 @@ const actions = {
     let user = await loginUserByGoogleOAuth({ email, googleId });
 
     if (user) {
-      console.log(user, 'google OAuth result');
       commit('setIsAuthorizedByOAuth', true);
       commit('setUserInfo', user);
 
@@ -141,13 +140,8 @@ const mutations = {
   setUserInfo(state, userInfo) {
     const { email, googleId } = userInfo;
 
-    if (googleId) {
-      state = { ...state, userEmail: email, userGoogleId: googleId };
-
-      return;
-    }
-
-    state = { ...state, userEmail: email };
+    state.userEmail = email;
+    state.userGoogleId = googleId;
   },
 };
 

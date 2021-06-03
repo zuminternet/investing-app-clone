@@ -1,6 +1,6 @@
 <template>
   <div class="item-detail-page">
-    <multipurpose-header :itemDetail="itemDetail" isItemDetail></multipurpose-header>
+    <multipurpose-header :itemDetail="itemDetail" isItemDetail :userInfo="userInfo"></multipurpose-header>
     <item-detail-price-box :itemDetail="itemDetail"></item-detail-price-box>
     <custom-swiper :navigatorButtonNames="swiperNavigatorButtonNames">
       <swiper-slide>
@@ -117,6 +117,7 @@ export default {
       itemDetail: (state) => state.itemDetail.itemDetail,
       news: (state) => state.itemDetail.news,
       analyses: (state) => state.itemDetail.analyses,
+      userInfo: (state) => state.user,
     }),
   },
 
@@ -129,6 +130,10 @@ export default {
     this.getItemDetail({ symbols });
     this.getNews({ offset: 0, limit: 3 });
     this.getAnalyses({ offset: 0, limit: 3 });
+  },
+
+  mounted() {
+    console.log(this.userInfo);
   },
 };
 </script>

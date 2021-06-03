@@ -20,7 +20,7 @@ export class ApiController {
     @Inject(MarketService) private marketService: MarketService,
     @Inject(ItemDetailService) private itemDetailService: ItemDetailService,
     @Inject(ArticleService) private articleService: ArticleService,
-    @Inject(BookmarkService) private BookmarkService: BookmarkService,
+    @Inject(BookmarkService) private bookmarkService: BookmarkService,
   ) {}
 
   @GetMapping({ path: '/user' })
@@ -271,7 +271,7 @@ export class ApiController {
   public async createBookmark(request: Request, response: Response) {
     try {
       const { email, symbol } = request.body;
-      const bookmark = await this.BookmarkService.createBookmark({ email, symbol });
+      const bookmark = await this.bookmarkService.createBookmark({ email, symbol });
 
       if (bookmark) {
         return response.status(201).send(bookmark);

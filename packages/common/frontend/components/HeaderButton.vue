@@ -1,10 +1,13 @@
 <template>
   <input v-if="isBackButton" class="header-button" type="button" @click="goBack" />
   <input v-else-if="isGoSearchButton" class="header-button" type="button" @click="goSearch" />
+  <input v-else-if="isAddBookmarkButton" class="header-button" type="button" @click="addBookmark(email, symbol)" />
   <input v-else class="header-button" type="button" @click="$emit('handle-header-button-click')" />
 </template>
 
 <script>
+import { createBookmark } from '../apis';
+
 export default {
   name: 'HeaderButton',
   props: {
@@ -17,6 +20,21 @@ export default {
       type: Boolean,
       default: false,
     },
+
+    isAddBookmarkButton: {
+      type: Boolean,
+      default: true,
+    },
+
+    email: {
+      type: String,
+      default: '',
+    },
+
+    symbol: {
+      type: String,
+      default: '',
+    },
   },
 
   methods: {
@@ -25,8 +43,11 @@ export default {
     },
 
     goSearch() {
-      console.log('test');
       this.$router.push('search');
+    },
+
+    async addBookmark(email, symbol) {
+      await createBookmark({ email, symbol });
     },
   },
 };

@@ -114,6 +114,8 @@ const createBookmark = async ({ email, symbol }: createBookmarkInfo) => {
       symbol,
     });
 
+    console.log(result);
+
     if (result.status === 201) {
       const bookmark = result.data;
 
