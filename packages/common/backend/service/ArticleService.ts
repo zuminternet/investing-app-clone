@@ -10,11 +10,13 @@ interface QueryProps {
 
 @Service()
 export default class ArticleService {
+  private getTickerOption(tickers?: string[]) {
+    return tickers ? { tickers: { $in: tickers } } : {};
+  }
+
   public async getNews({ offset = 0, limit = 10, tickers }: QueryProps = {}): Promise<ArticleDoc[]> {
-    const query = {
-      type: ArticleType.news,
-      tickers: tickers ? { $in: tickers } : undefined,
-    };
+    const tickerOption = this.getTickerOption(tickers);
+    const query = { type: ArticleType.news, ...tickerOption };
 
     return Article.find(query)
       .sort({ date: 'desc' })
@@ -24,10 +26,8 @@ export default class ArticleService {
   }
 
   public async getOpinions({ offset = 0, limit = 10, tickers }: QueryProps = {}): Promise<ArticleDoc[]> {
-    const query = {
-      type: ArticleType.opinions,
-      tickers: tickers ? { $in: tickers } : undefined,
-    };
+    const tickerOption = this.getTickerOption(tickers);
+    const query = { type: ArticleType.news, ...tickerOption };
 
     return Article.find(query)
       .sort({ date: 'desc' })
