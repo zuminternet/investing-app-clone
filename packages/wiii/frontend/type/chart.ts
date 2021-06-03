@@ -52,6 +52,7 @@ export type adjustedData = {
  * @property `duration`? 평균낼 기간, default 20
  */
 export interface SMAOptions {
+  ratio: number;
   color: string;
   duration: number;
   width?: number;
@@ -65,6 +66,7 @@ export interface DrawLinePaths {
 }
 
 export interface DrawLineOptions {
+  ratio: number;
   color?: string;
   lineWidth?: number;
 }
@@ -74,6 +76,7 @@ export interface DrawTextRequired {
   centerX: number;
   centerY: number;
   canvasHeight: number;
+  ratio: number;
 }
 
 export interface DrawTextOptions {
@@ -94,6 +97,8 @@ export interface ClientWH {
 
 export interface refinerOptions extends Omit<ClientWH, 'ratio'> {
   count: number;
+  ratioH: number;
+  lowest: number;
   range: Generator<number, void, any>;
   total?: number;
   customNumToShow?: number;
@@ -127,4 +132,19 @@ export interface DayPartitionOptions {
   canvasHeight: number;
   /** 원점 Y 좌표 */
   zeroY: number;
+  ratio: number;
+}
+
+export interface PricePartitionOptions {
+  highest: number;
+  lowest: number;
+  zeroY: number;
+  ratio: number;
+  ratioH: number;
+  canvasWidth: number;
+  canvasHeight: number;
+  partNum?: number;
+  textAlign?: CanvasTextAlign;
+  textBaseline?: CanvasTextBaseline;
+  fontSize?: number;
 }

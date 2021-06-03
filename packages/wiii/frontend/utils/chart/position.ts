@@ -3,7 +3,14 @@
  * 위치 조정 관련 함수 모음
  */
 
-import { CandleColorEnum, DayPartitionOptions, RefinedCandle, RefinedCandleData, refinerOptions } from '@/type/chart';
+import {
+  CandleColorEnum,
+  DayPartitionOptions,
+  RefinedCandle,
+  RefinedCandleData,
+  refinerOptions,
+  PricePartitionOptions,
+} from '@/type/chart';
 import { range } from '../../../domain/utilFunc';
 import { CandleData } from '../../../domain/marketData';
 import { drawLine, drawText } from './drawers';
@@ -29,7 +36,7 @@ const setColor = (o: number, c: number) => {
  * 캔들 높이 조정 비율 구하기
  * - 전체 높이에서 상하 패딩 빼고 가격구간 비율 구함
  */
-const getHeightRatio = (data: CandleData, zeroY: number): { ratioH: number; highest: number; lowest: number } => {
+export const getHeightRatio = (data: CandleData, zeroY: number): { ratioH: number; highest: number; lowest: number } => {
   let [highest, lowest] = [0, MAX_SAFE_INTEGER];
 
   for (const { high, low } of data) {
@@ -38,6 +45,24 @@ const getHeightRatio = (data: CandleData, zeroY: number): { ratioH: number; high
   }
 
   return { ratioH: zeroY / (highest - lowest), highest, lowest };
+};
+
+/**
+ * @description
+ * 거래량 높이 조정 비율 구하기
+ * @param data 거래량 포함된 원본 데이터
+ * @param volumeH 거래량 차트 높이
+ * @returns
+ */
+export const getVolumeHeightRatio = (data: CandleData, volumeH: number) => {
+  let [highest, lowest] = [0, MAX_SAFE_INTEGER];
+
+  for (const { volume } of data) {
+    if (volume > highest) highest = volume;
+    if (volume < lowest) lowest = volume;
+  }
+
+  return { volumeRatioH: volumeH / (highest - lowest), highest, lowest };
 };
 
 /**
@@ -53,7 +78,7 @@ const getHeightRatio = (data: CandleData, zeroY: number): { ratioH: number; high
  */
 export const refiner = (
   _data: CandleData,
-  { zeroX, zeroY, count, range, customNumToShow }: refinerOptions,
+  { zeroX, zeroY, count, range, customNumToShow, ratioH, lowest }: refinerOptions,
 ): RefinedCandleData => {
   /** 화면에 보여질 캔들 갯수 */
   const numToShow = customNumToShow > count ? count : customNumToShow;
@@ -63,8 +88,6 @@ export const refiner = (
   const candleHalf = candleWidth / 2;
   /** 캔들 좌우 패딩 */
   const candlePad = candleWidth * 0.1;
-
-  const { ratioH, lowest } = getHeightRatio(_data, zeroY);
 
   const data = Array.from({ length: count });
 
@@ -99,7 +122,7 @@ export const refiner = (
  */
 export const setDayPartition = (
   ctx: CanvasRenderingContext2D,
-  { data, results, numToShow, count, canvasWidth, canvasHeight, zeroY }: DayPartitionOptions,
+  { data, results, numToShow, count, canvasWidth, canvasHeight, zeroY, ratio }: DayPartitionOptions,
 ) => {
   /**@todo 일자 구분선 */
   const partitions = floor(numToShow / 5);
@@ -109,12 +132,12 @@ export const setDayPartition = (
     const text = `${curDate.getMonth() + 1} / ${curDate.getDate()}`;
     const { centerX } = data[i];
 
-    drawText(ctx, { text, centerX, centerY: canvasHeight * 0.95, canvasHeight }, {});
+    drawText(ctx, { text, centerX, centerY: canvasHeight * 0.95, canvasHeight, ratio }, {});
 
     drawLine(
       ctx,
       { beginX: centerX, beginY: canvasHeight, lastX: centerX, lastY: 0 },
-      { color: CandleColorEnum.partition, lineWidth: 3 },
+      { ratio, color: CandleColorEnum.partition, lineWidth: 3 },
     );
   }
 
@@ -122,50 +145,41 @@ export const setDayPartition = (
   drawLine(
     ctx,
     { beginX: 0, beginY: zeroY, lastX: canvasWidth, lastY: zeroY },
-    { color: CandleColorEnum.partition, lineWidth: 5 },
+    { ratio, color: CandleColorEnum.partition, lineWidth: 5 },
   );
 };
 
 /**
  * setPricePartition
- * 좌상단 (0,0)에서 시작
- *
- * @param ctx CanvasContext
- * @param partitionNum 가격 구분 개수
- * @param hRatio 비율 조정
- * @param hRange 가격구간 높이
- * @param canvasWidth 캔버스 너비
- * @param canvasHeight 캔버스 높이
- * @param lowest 구간 최저가
  */
-// const setPricePartition = (
-//   ctx: CanvasRenderingContext2D,
-//   hRatio?: number,
-//   partitionNum?: number,
-//   hRange?: number,
-//   canvasWidth?: number,
-//   canvasHeight?: number,
-//   lowest?: number,
-// ) => {
-//   ctx.save();
-//   const ratio = hRange / partitionNum;
-//   ctx.lineWidth = 1;
-//   ctx.strokeStyle = CandleColorEnum.partition;
-//   ctx.fillStyle = CandleColorEnum.grey900;
-//   ctx.font = `italic 20px sans-serif`;
-//   ctx.textAlign = CanvasOptionEnum.textAlignRight;
-
-//   for (let n = partitionNum + 1; n--; ) {
-//     /** 구분선 */
-//     const curH = -(n * ratio) * hRatio;
-//     ctx.beginPath();
-//     ctx.moveTo(0, curH);
-//     ctx.lineTo(-canvasWidth, curH);
-//     ctx.closePath();
-//     ctx.stroke();
-
-//     /** 구분선 가격 */
-//     ctx.fillText((lowest - curH / hRatio).toFixed(2).toString(), 0, curH);
-//   }
-//   ctx.restore();
-// };
+export const setPricePartition = (
+  ctx: CanvasRenderingContext2D,
+  {
+    highest,
+    lowest,
+    zeroY,
+    ratioH,
+    canvasWidth,
+    canvasHeight,
+    ratio,
+    partNum = 5,
+    textAlign,
+    textBaseline,
+    fontSize,
+  }: PricePartitionOptions,
+) => {
+  const partitions = +((highest - lowest) / partNum);
+  for (const i of range(lowest, highest + 1, partitions)) {
+    const curY = zeroY + (lowest - i) * ratioH;
+    drawLine(
+      ctx,
+      { beginX: 0, beginY: curY, lastX: canvasWidth, lastY: curY },
+      { ratio, color: CandleColorEnum.partition, lineWidth: 3 },
+    );
+    drawText(
+      ctx,
+      { text: i.toFixed(0), centerX: canvasWidth * 0.99, centerY: curY, canvasHeight, ratio },
+      { textAlign, textBaseline, fontSize },
+    );
+  }
+};

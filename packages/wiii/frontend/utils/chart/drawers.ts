@@ -1,4 +1,5 @@
 import { CandleColorEnum, DrawLineOptions, DrawLinePaths, DrawTextOptions, DrawTextRequired, RefinedCandle } from '@/type/chart';
+import { CandleOne } from '../../../domain/marketData';
 
 /** @description ctx.rotate() 사용시 필요 */
 const { PI } = Math;
@@ -6,23 +7,24 @@ const BASE_RADIAN = PI / 180;
 
 export const drawText = (
   ctx: CanvasRenderingContext2D,
-  { text, centerX, centerY, canvasHeight }: DrawTextRequired,
+  { text, centerX, centerY, ratio }: DrawTextRequired,
   { fontFamily, fontSize, textBaseline, textAlign, /** @todo 쓰기 애매해서 뺄수도 */ textWidth }: DrawTextOptions,
 ) => {
   ctx.save();
   ctx.strokeStyle = CandleColorEnum.grey900;
-  ctx.font = `${fontSize ?? canvasHeight * 0.014}px ${fontFamily ?? `sans-serif`}`;
   ctx.textBaseline = textBaseline ?? 'bottom';
+  ctx.font = `${fontSize ?? `25px/30`}px ${fontFamily ?? `sans-serif`}`;
   ctx.textAlign = textAlign ?? 'right';
   ctx.fillText(text, centerX, centerY);
   ctx.strokeText(text, centerX, centerY);
+  ctx.scale(ratio, ratio);
   ctx.restore();
 };
 
 export const drawLine = (
   ctx: CanvasRenderingContext2D,
   { beginX, beginY, lastX, lastY }: DrawLinePaths,
-  { color, lineWidth }: DrawLineOptions,
+  { ratio, color, lineWidth }: DrawLineOptions,
 ) => {
   ctx.save();
   ctx.strokeStyle = color || CandleColorEnum.grey900;
@@ -32,6 +34,7 @@ export const drawLine = (
   ctx.lineTo(lastX, lastY);
   ctx.closePath();
   ctx.stroke();
+  ctx.scale(ratio, ratio);
   ctx.restore();
 };
 
@@ -45,16 +48,25 @@ export const drawCandle = (
   ctx.save();
 
   /** 캔들 꼬리 */
-  drawLine(ctx, { beginX: centerX, beginY: highY, lastX: centerX, lastY: lowY }, { color });
+  drawLine(ctx, { beginX: centerX, beginY: highY, lastX: centerX, lastY: lowY }, { ratio, color });
 
   /** 캔들 몸통 */
   if (rectH === 0) {
-    drawLine(ctx, { beginX: startX, beginY: openY, lastX: startX + candleWidth, lastY: openY }, {});
+    drawLine(ctx, { beginX: startX, beginY: openY, lastX: startX + candleWidth, lastY: openY }, { ratio });
   } else {
     ctx.fillStyle = color;
     ctx.fillRect(startX, openY, candleWidth, rectH);
   }
 
   ctx.scale(ratio, ratio);
+  ctx.restore();
+};
+
+export const drawVolume = (ctx: CanvasRenderingContext2D, { startX, volume, base, candleWidth, ratio, color }) => {
+  ctx.save();
+  ctx.fillStyle = color;
+  const height = volume * ratio;
+  ctx.fillRect(startX, base - height, candleWidth, height);
+
   ctx.restore();
 };
