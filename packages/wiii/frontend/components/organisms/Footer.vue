@@ -1,6 +1,6 @@
 <template>
   <footer class="area">
-    <h3 class="card">Footer</h3>
+    <h3 class="card noselect">Footer</h3>
   </footer>
 </template>
 

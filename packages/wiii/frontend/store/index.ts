@@ -12,7 +12,6 @@ export interface RootState {
 
 Vue.use(Vuex);
 
-// <RootState>
 const store = new Vuex.Store({
   modules: {
     theme: Theme,

@@ -35,7 +35,6 @@
   @extend .center;
 
   max-width: $max-width-mobile;
-
   overflow-x: hidden;
   overflow-y: auto;
 }
@@ -45,9 +44,9 @@
   @extend .center;
 
   width: 100%;
-  border-radius: 10px;
+  margin-top: $margin-padding-15;
   padding: 10px;
-  margin-bottom: $margin-padding-15;
+  border-radius: 10px;
 
   background-color: $white-900;
   color: $grey-900;
@@ -55,8 +54,7 @@
 
 .section {
   @extend .boundary;
-
-  height: 100%;
+  margin-top: $margin-padding-15;
 }
 
 .card {

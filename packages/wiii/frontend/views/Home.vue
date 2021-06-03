@@ -9,7 +9,7 @@
 <script>
 import Header from '@/components/organisms/HomeHeader';
 import HomeTemplate from '@/components/templates/Home';
-import Footer from '@/components/organisms/HomeFooter';
+import Footer from '@/components/organisms/Footer';
 
 export default {
   name: 'Home',

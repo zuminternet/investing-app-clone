@@ -7,6 +7,7 @@
     <main class="area">
       <Reply />
     </main>
+    <Footer />
   </div>
 </template>
 
@@ -15,6 +16,7 @@ import Vue from 'vue';
 import Menu from '@/components/molecules/HeaderMenus';
 import Title from '@/components/molecules/NewsTitle';
 import Reply from '@/components/organisms/ReplySection';
+import Footer from '@/components/organisms/Footer';
 
 export default Vue.extend({
   name: 'NewsView',
@@ -22,6 +24,7 @@ export default Vue.extend({
     Menu,
     Title,
     Reply,
+    Footer,
   },
 });
 </script>
