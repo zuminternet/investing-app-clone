@@ -2,12 +2,13 @@
   <div class="swiper-navigator">
     <naviagtor-button
       v-for="(navigatorButtonName, index) in navigatorButtonNames"
+      isSwiperNavigatorButton
       :key="index"
       :buttonIndex="index"
       :slideActiveIndex="slideActiveIndex"
+      :navigatorButtonName="navigatorButtonName"
       @set-slide-active-index="$emit('set-slide-active-index', $event)"
-      >{{ navigatorButtonName }}</naviagtor-button
-    >
+    ></naviagtor-button>
   </div>
 </template>
 
@@ -19,7 +20,18 @@ export default {
   components: {
     NaviagtorButton,
   },
-  props: ['navigatorButtonNames', 'slideActiveIndex'],
+
+  props: {
+    navigatorButtonNames: {
+      type: Array,
+      required: true,
+    },
+
+    slideActiveIndex: {
+      type: Number,
+      default: 0,
+    },
+  },
 };
 </script>
 <style scoped lang="scss">

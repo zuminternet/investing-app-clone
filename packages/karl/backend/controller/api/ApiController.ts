@@ -7,6 +7,8 @@ import AuthService from '../../service/AuthService';
 import SearchService from '../../../../common/backend/service/SearchService';
 import MarketService from '../../service/MarketService';
 import ItemDetailService from '../../../../common/backend/service/ItemDetailService';
+// import ArticleService from '../../service/ArticleService';
+import ArticleService from '../../../../common/backend/service/ArticleService';
 
 @Controller({ path: '/api' })
 export class ApiController {
@@ -16,6 +18,7 @@ export class ApiController {
     @Inject(SearchService) private searchService: SearchService,
     @Inject(MarketService) private marketService: MarketService,
     @Inject(ItemDetailService) private itemDetailService: ItemDetailService,
+    @Inject(ArticleService) private articleService: ArticleService,
   ) {}
 
   @GetMapping({ path: '/user' })
@@ -24,18 +27,14 @@ export class ApiController {
       const token = request.cookies['jwt-token'];
 
       if (!token) {
-        response.sendStatus(401);
-
-        return false;
+        return response.sendStatus(401);
       }
 
       const decodedToken = this.authService.verifyToken(token);
       const user = await this.userService.loginUserByEmail(decodedToken);
 
       if (user) {
-        response.status(200).send(user);
-
-        return true;
+        return response.status(200).send(user);
       }
 
       response.sendStatus(404);
@@ -50,9 +49,7 @@ export class ApiController {
       const user = await this.userService.createUser(reqeust.body);
 
       if (user) {
-        response.sendStatus(200);
-
-        return true;
+        return response.sendStatus(200);
       }
 
       response.sendStatus(409);
@@ -70,9 +67,8 @@ export class ApiController {
 
       if (token) {
         response.cookie('jwt-token', token, { expires: new Date(Date.now() + 9000000), httpOnly: true });
-        response.status(200).send(user);
 
-        return true;
+        return response.status(200).send(user);
       }
 
       response.sendStatus(401);
@@ -90,9 +86,8 @@ export class ApiController {
 
       if (token) {
         response.cookie('jwt-token', token, { expires: new Date(Date.now() + 9000000), httpOnly: true });
-        response.status(200).send(user);
 
-        return true;
+        return response.status(200).send(user);
       }
 
       response.sendStatus(401);
@@ -115,9 +110,7 @@ export class ApiController {
       const stocks = await this.marketService.getStocks();
 
       if (stocks) {
-        resposne.status(200).send(stocks);
-
-        return true;
+        return resposne.status(200).send(stocks);
       }
 
       resposne.sendStatus(404);
@@ -168,9 +161,7 @@ export class ApiController {
       const itemDetailInfo = await this.itemDetailService.getItemDetail({ symbols });
 
       if (itemDetailInfo) {
-        resposne.status(200).send(itemDetailInfo);
-
-        return true;
+        return resposne.status(200).send(itemDetailInfo);
       }
 
       resposne.sendStatus(404);
@@ -193,15 +184,78 @@ export class ApiController {
       const items = await this.searchService.getSearchedItems({ keyword });
 
       if (items) {
-        response.status(200).send(items);
-
-        return true;
+        return response.status(200).send(items);
       }
 
       response.sendStatus(404);
     } catch (error) {
       console.log(error);
       response.status(404).json(error);
+    }
+  }
+
+  /**
+   * @description articles를 parsing하여 DB에 document들로 저장하는 controller(common에 추가할 때까지 주석처리)
+   * @param request
+   * @param response
+   * @returns
+   */
+  // @PostMapping({ path: '/articles' })
+  // public async createArticles(request: Request, response: Response) {
+  //   try {
+  //     const result = await this.articleService.createArticles(request.body);
+
+  //     if (result) {
+  //       response.sendStatus(200);
+
+  //       return true;
+  //     }
+  //     response.sendStatus(409);
+  //   } catch (error) {
+  //     console.log(error);
+  //     response.status(500).json(error);
+  //   }
+  // }
+
+  /**
+   * @description DB에서 articles 중 news만 가져오는 controller
+   * @param request
+   * @param response
+   * @returns
+   */
+  @GetMapping({ path: '/articles/news' })
+  public async getNews(request: Request, response: Response) {
+    try {
+      const news = await this.articleService.getNews(request.body);
+
+      if (news) {
+        return response.status(200).send(news);
+      }
+
+      response.sendStatus(404);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  /**
+   * @description DB에서 articles 중 analyses만 가져오는 controller
+   * @param request
+   * @param response
+   * @returns
+   */
+  @GetMapping({ path: '/articles/analyses' })
+  public async getAnalyses(request: Request, response: Response) {
+    try {
+      const analyses = await this.articleService.getOpinions(request.body);
+
+      if (analyses) {
+        return response.status(200).send(analyses);
+      }
+
+      response.sendStatus(404);
+    } catch (error) {
+      console.log(error);
     }
   }
 }

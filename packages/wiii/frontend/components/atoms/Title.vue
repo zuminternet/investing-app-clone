@@ -1,5 +1,5 @@
 <template>
-  <p class="card" :style="{ ...style }">{{ title }}</p>
+  <p class="card" :style="{ ...style }" :class="isDark">{{ title }}</p>
 </template>
 
 <script lang="ts">
@@ -8,10 +8,10 @@ import { blue700 } from '@/styles/index.scss';
 
 export default Vue.extend({
   props: {
-    color: {
-      type: String,
-      default: blue700,
-    },
+    // color: {
+    //   type: String,
+    //   default: blue700,
+    // },
     titleText: {
       type: String,
       default: '',
@@ -29,7 +29,7 @@ export default Vue.extend({
   computed: {
     style() {
       return {
-        color: this.color,
+        // color: this.color,
         fontSize: this.fontSize,
         fontWeight: this.fontWeight,
       };
@@ -37,6 +37,11 @@ export default Vue.extend({
 
     title() {
       return this.titleText;
+    },
+
+    isDark() {
+      /** @todo dark 모드 토글 */
+      return 'card dark';
     },
   },
 });

@@ -1,21 +1,21 @@
 <template>
   <div class="item-detail-overall-info-box">
-    <item-detail-overall-info-row
+    <item-detail-overview-row
       v-for="(element, index) in itemDetailForRow"
       :key="index"
       :element="element"
-    ></item-detail-overall-info-row>
+    ></item-detail-overview-row>
   </div>
 </template>
 
 <script>
-import ItemDetailOverallInfoRow from '../components/ItemDetailOverallInfoRow.vue';
-import { text } from '../constants';
+import ItemDetailOverviewRow from './ItemDetailOverviewRow.vue';
+import { text } from '../../constants';
 
 export default {
-  name: 'ItemDetailOverallInfoBox',
+  name: 'ItemDetailOverviewBox',
   components: {
-    ItemDetailOverallInfoRow,
+    ItemDetailOverviewRow,
   },
 
   props: {

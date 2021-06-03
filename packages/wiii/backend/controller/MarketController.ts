@@ -84,12 +84,12 @@ export class MarketController {
       if (!isOptionsValidate(options)) return res.sendStatus(404);
 
       /** SSE Response Instance 생성 */
+      /** @todo 굳이 class로? 그냥 함수로 선언해도 될 듯.. */
       new SSE(res, options);
 
       const data = await this.marketService.getHistorical(options);
       this.writeData(data, res);
 
-      /** 15초 간격 SSE, @todo 조정해도 계속 3초 간격 요청..? => debounce 처리해야.. */
       const intervalTime = times.sse * 3000;
       const eventSourceInterval = setInterval(async () => {
         const data = await this.marketService.getHistorical(options);

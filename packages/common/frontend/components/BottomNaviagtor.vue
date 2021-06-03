@@ -1,8 +1,12 @@
 <template>
   <div class="bottom-navigator">
-    <naviagtor-button v-for="(navigatorButtonName, index) in navigatorButtonNames" :key="index" :buttonIndex="index">{{
-      navigatorButtonName
-    }}</naviagtor-button>
+    <naviagtor-button
+      v-for="(navigatorButtonName, index) in navigatorButtonNames"
+      isBottomNavigatorButton
+      :key="index"
+      @route-to-target-page="routeToTargetPage"
+      :navigatorButtonName="navigatorButtonName"
+    ></naviagtor-button>
   </div>
 </template>
 
@@ -15,17 +19,34 @@ export default {
   components: {
     NaviagtorButton,
   },
-  props: ['navigatorButtonNames'],
+  props: {
+    navigatorButtonNames: {
+      type: Array,
+      required: true,
+    },
+  },
 
-  data: function() {
-    const { MARKET, NEWS, CALENDAR, FAVORITES, MORE } = text;
-    return {
-      market: MARKET,
-      news: NEWS,
-      calendar: CALENDAR,
-      favorites: FAVORITES,
-      more: MORE,
-    };
+  methods: {
+    routeToTargetPage(event) {
+      const { MARKET, NEWS, BOOKMARK, MORE } = text;
+      const targetPage = event.target.innerText;
+
+      if (targetPage === MARKET) {
+        this.$router.push('market');
+      }
+
+      if (targetPage === NEWS) {
+        this.$router.push('news');
+      }
+
+      if (targetPage === BOOKMARK) {
+        this.$router.push('bookmark');
+      }
+
+      if (targetPage === MORE) {
+        this.$router.push('more');
+      }
+    },
   },
 };
 </script>

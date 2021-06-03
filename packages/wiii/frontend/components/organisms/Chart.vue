@@ -1,15 +1,17 @@
 <template>
-  <canvas ref="canvas" class="area"></canvas>
+  <canvas ref="canvas" class="area dark"></canvas>
 </template>
 
 <script lang="ts">
 import EsService from '@/services/chart/eventSource';
 import { TimespanEnum } from '@/type/apis';
-import { CanvasOptionEnum } from '@/type/chart';
+import { CanvasOptionEnum, MAColorEnum } from '@/type/chart';
+import { drawBasicCandleChart } from '@/utils/chart';
+import withTime from '@/utils/timer';
 import Vue from 'vue';
+
 import { GetHistoricalOptions } from '../../../domain/apiOptions';
 import { getDateString, times } from '../../../domain/date';
-import { drawBasicCandleChart } from '../../utils/chart/candle';
 
 /**
  * @description
@@ -51,8 +53,40 @@ export default Vue.extend({
            * 가장 최근 시세부터 호출하기 위해 sort-desc
            */
           sort: 'desc',
-          limit: 500,
+          limit: 1000,
+          offset: 0,
         }),
+    },
+    /** 이동평균선 기본 세팅 5-20-60-120 */
+    smaConfigs: {
+      type: Array,
+      default: () => [
+        {
+          duration: 5,
+          color: MAColorEnum.red500,
+          width: 10,
+        },
+        {
+          duration: 9,
+          color: MAColorEnum.grey500,
+          width: 10,
+        },
+        {
+          duration: 20,
+          color: MAColorEnum.blue500,
+          width: 15,
+        },
+        {
+          duration: 60,
+          color: MAColorEnum.green500,
+          width: 15,
+        },
+        {
+          duration: 120,
+          color: `black`,
+          width: 20,
+        },
+      ],
     },
   },
 
@@ -71,12 +105,13 @@ export default Vue.extend({
         to: this.to,
       },
       histData: {},
+      cachedChart: {},
     };
   },
 
   computed: {
     queryString(): GetHistoricalOptions {
-      const { sort, limit } = this.options;
+      const { sort, limit, offset } = this.query;
 
       /** @todo type에 따라 property 다른 부분 처리, 일단 국내주식(MarketStack)에 맞춰서 */
       return {
@@ -88,7 +123,7 @@ export default Vue.extend({
         interval: `${this.multiplier}${this.timespan}`,
         sort,
         limit,
-        offset: this.offset,
+        offset,
       };
     },
   } /** end of computed */,
@@ -96,7 +131,7 @@ export default Vue.extend({
   mounted() {
     const chart = this.$refs.canvas as HTMLCanvasElement;
     this.ctx = chart.getContext(CanvasOptionEnum.context2d);
-    this.getES();
+    withTime(this.es ? null : this.getES(), `Vue-Chart: API -> Draw`);
   },
 
   methods: {
@@ -119,22 +154,38 @@ export default Vue.extend({
           },
         });
 
-        new EsService(this.queryString, dataCarrier);
+        this.es = new EsService(this.queryString, dataCarrier);
       } catch (e) {
         console.error(e);
       }
     },
     getChart() {
-      console.info(`[Chart] Start to create a Chart`);
-      console.assert(this.ctx);
-      console.table(this.histData.data);
-      /**  @todo */
-      // drawBasicCandleChart({
-      //   ctx: this.ctx,
-      //   results: this.histData.data,
-      //   resultsCount: this.histData.data.length,
-      //   limit: this.limit,
-      // });
+      /**
+       * @todo
+       * @see
+       * MarketStack-KRX에서 가져오는 데이터
+       * {  results: adjusted, count, payload: { total } }
+       */
+      const {
+        data: {
+          results,
+          count,
+          payload: { total },
+        },
+      } = this.histData;
+
+      /** Chart Caching */
+      const cachedChart = withTime(
+        drawBasicCandleChart,
+        `drawBasicCandleChart`,
+      )({
+        ctx: this.ctx,
+        results,
+        count,
+        payload: { total, customNumToShow: 300, smaConfigs: this.smaConfigs },
+      });
+
+      this.cachedChart[this.ticker] = cachedChart;
     },
   },
 });
@@ -142,11 +193,10 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 canvas {
-  width: 600px;
-  height: 300px;
-  padding: 15px;
-  margin: 20px;
-  box-shadow: 0 0 20px 5px $red-neon;
   background-color: white;
+
+  &.dark {
+    box-shadow: 0 0 20px 5px $neon-crimson;
+  }
 }
 </style>

@@ -1,7 +1,10 @@
 /**
  * @description 보조지표 helpers
  */
-import { adjustedData, SetSMAOptions } from '@/type/chart';
+import { SMAOptions, RefinedCandle } from '@/type/chart';
+import { drawLine } from '@/utils/chart/drawers';
+
+import { range } from '../../../domain/utilFunc';
 
 /**
  * getAvg
@@ -12,36 +15,27 @@ import { adjustedData, SetSMAOptions } from '@/type/chart';
  * @param duration 구간 길이
  * @returns 구간 이동평균
  */
-const getAvg = (data: adjustedData, start: number, duration: number) =>
-  data.slice(start, start + duration).reduce((acc, { adjClose }) => acc + adjClose, 0) / duration;
+const getAvg = (data: RefinedCandle[], start: number, duration: number) =>
+  data.slice(start, start + duration).reduce((acc, { closeY }) => acc + closeY, 0) / duration;
 
 /**
- * setSMA
- * @description
- * 종가 기준 단순 이동평균선 그리기
- * @param ctx CanvasContext
- * @param SMAOptions data 및 이동평균선 옵션
+ * setSMA(ctx, data, {duration, color})
  */
-export const setSMA = (ctx: CanvasRenderingContext2D, { data, hRatio, duration, color }: SetSMAOptions) => {
+export const setSMA = (ctx: CanvasRenderingContext2D, data: RefinedCandle[], { ratio, duration, color, width }: SMAOptions) => {
   /** 가장 오래된 기간은 제외 */
   const length = data.length - duration;
   if (duration > length) return;
 
-  ctx.save();
   ctx.strokeStyle = color;
-  ctx.scale(1, hRatio);
 
-  let prevAvg = getAvg(data, length, duration);
-  /** @description 가장 오래된 캔들부터 계산 */
-  for (let i = length; i--; ) {
-    const { candleCenter: prevX } = data[i + 1];
-    const { candleCenter: curX } = data[i];
-    const curAvg = getAvg(data, i, duration);
-    ctx.beginPath();
-    ctx.moveTo(prevX, prevAvg);
-    ctx.lineTo(curX, curAvg);
-    prevAvg = curAvg;
-    ctx.stroke();
+  let curAvg = getAvg(data, 0, duration);
+  for (const i of range(0, length)) {
+    const { centerX: curX } = data[i];
+    const { centerX: prevX } = data[i + 1];
+    const prevAvg = getAvg(data, i, duration);
+
+    drawLine(ctx, { beginX: curX, beginY: curAvg, lastX: prevX, lastY: prevAvg }, { ratio, color, lineWidth: width });
+
+    curAvg = prevAvg;
   }
-  ctx.restore();
 };

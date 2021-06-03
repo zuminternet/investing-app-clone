@@ -24,7 +24,7 @@
             <text-button @handle-button-click="changeToEmailLogin">{{ signIn }}</text-button>
           </div>
         </div>
-        <text-button @handle-button-click="routeToHome">{{ passWithoutLogin }}</text-button>
+        <text-button @handle-button-click="routeToMarket">{{ passWithoutLogin }}</text-button>
       </div>
     </template>
   </div>
@@ -89,24 +89,24 @@ export default {
       this.isEmailLogin = true;
     },
 
-    routeToHome() {
-      this.$router.push('/home');
+    routeToMarket() {
+      this.$router.push('market');
     },
 
     routeToSignup() {
-      this.$router.push('/signup');
+      this.$router.push('signup');
     },
 
     async submitForEmailLogin(event) {
       if (await this.requestEmailLogin(event)) {
-        this.routeToHome();
+        this.routeToMarket();
       }
     },
   },
 
-  async mounted() {
+  async created() {
     if (await this.getUser()) {
-      this.routeToHome();
+      this.routeToMarket();
 
       return;
     }
@@ -118,7 +118,7 @@ export default {
   watch: {
     isAuthorizedByOAuth(value) {
       if (value) {
-        this.routeToHome();
+        this.routeToMarket();
       }
     },
   },

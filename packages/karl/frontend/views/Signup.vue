@@ -43,8 +43,8 @@ export default {
       this.checkSignInOrSignOut();
     },
 
-    routeToHome() {
-      this.$router.push('/home');
+    routeToMarket() {
+      this.$router.push('market');
     },
 
     routerToLogin() {
@@ -76,7 +76,7 @@ export default {
   watch: {
     isAuthorizedByOAuth(value) {
       if (value) {
-        this.routeToHome();
+        this.routeToMarket();
       }
     },
   },

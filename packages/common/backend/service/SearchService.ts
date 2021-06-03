@@ -17,21 +17,17 @@ export default class SearchService {
    * @returns items
    */
   public async getSearchedItems({ keyword }: getSearchedItemsInfo) {
-    try {
-      const { accessKey } = marketStackConfig;
-      let items = await (await axios.get(`http://api.marketstack.com/v1/tickers?access_key=${accessKey}&search=${keyword}`)).data;
+    const { accessKey } = marketStackConfig;
+    let { data: items } = await axios.get(`http://api.marketstack.com/v1/tickers?access_key=${accessKey}&search=${keyword}`);
 
-      if (items) {
-        // items = items.map((item) => {
-        //   return {};
-        // });
+    if (items) {
+      // items = items.map((item) => {
+      //   return {};
+      // });
 
-        return items;
-      }
-
-      throw new Error('getting searched items was failed in SearchService');
-    } catch (error) {
-      console.log(error);
+      return items;
     }
+
+    throw new Error('getting searched items was failed in SearchService');
   }
 }

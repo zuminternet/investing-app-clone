@@ -41,6 +41,11 @@ export default () => {
         component: () => import('@/views/NewsDetail.vue'),
       },
       {
+        path: '/market/:type/:id',
+        name: 'MarketDetail',
+        component: () => import('@/views/MarketDetail.vue'),
+      },
+      {
         path: '/bookmark',
         name: 'Bookmark',
         component: () => import('@/views/Bookmark.vue'),
