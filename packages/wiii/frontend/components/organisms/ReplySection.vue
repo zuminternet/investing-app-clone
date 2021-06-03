@@ -1,5 +1,5 @@
 <template>
-  <section class="area">REPL</section>
+  <section class="section">REPL</section>
 </template>
 
 <script lang="ts">
