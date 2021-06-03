@@ -25,7 +25,7 @@ export interface createBookmarkInfo {
 /**
  * @description search page에 렌더링할 searched items를 가져오는 front-side API 호출 함수
  * @param param0
- * @returns
+ * @returns Promise
  */
 const getSearchedItems = async ({ keyword }: getSearchedItemsInfo) => {
   try {
@@ -46,7 +46,7 @@ const getSearchedItems = async ({ keyword }: getSearchedItemsInfo) => {
 /**
  * @description item detail page에 렌더링할 item detail를 가져오는 front-side API 호출 함수
  * @param param0
- * @returns
+ * @returns Promise
  */
 const getItemDetail = async ({ symbols }: getItemDetailInfo) => {
   try {
@@ -67,7 +67,7 @@ const getItemDetail = async ({ symbols }: getItemDetailInfo) => {
 /**
  * @description item detail page에 렌더링할 news들을 가져오는 front-side API 호출 함수 현재 item detail용 service가 없어서 대체 사용중
  * @param param0
- * @returns
+ * @returns Promise
  */
 const getNews = async ({ offset, limit }: getNewsAndAnalysesInfo) => {
   try {
@@ -88,7 +88,7 @@ const getNews = async ({ offset, limit }: getNewsAndAnalysesInfo) => {
 /**
  * @description item detail page에 렌더링할 analyses를 가져오는 front-side API 호출 함수
  * @param param0
- * @returns
+ * @returns Promise
  */
 
 const getAnalyses = async ({ offset, limit }: getNewsAndAnalysesInfo) => {
@@ -110,7 +110,7 @@ const getAnalyses = async ({ offset, limit }: getNewsAndAnalysesInfo) => {
 /**
  * @description email, symbol을 받아 북마크 추가를 요청하는 front-side API call 함수
  * @param param0
- * @returns
+ * @returns Promise
  */
 const createBookmark = async ({ email, symbol }: createBookmarkInfo) => {
   try {
@@ -130,6 +130,12 @@ const createBookmark = async ({ email, symbol }: createBookmarkInfo) => {
     console.log(error);
   }
 };
+
+/**
+ * @description email을 받아 bookmarks를 가져오는 front-side API call 함수
+ * @param email
+ * @returns Promise
+ */
 
 const getBookmarks = async (email: string) => {
   try {
