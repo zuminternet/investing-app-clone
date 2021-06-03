@@ -7,6 +7,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import Link from '@/components/atoms/RouterLink';
+
 import { HomeMenuData } from '@/type/views';
 
 export default Vue.extend({
@@ -17,7 +18,6 @@ export default Vue.extend({
       HomeMenuData,
     };
   },
-
   components: {
     Link,
   },

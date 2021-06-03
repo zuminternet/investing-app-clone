@@ -26,6 +26,9 @@
   @extend .reset;
   @extend .center;
 
+  overflow-x: hidden;
+  overflow-y: auto;
+
   max-width: $max-width-mobile;
 }
 
@@ -44,6 +47,7 @@
 
 .dark {
   background-color: $deep-dark;
+  color: $grey-100;
 
   .area {
     background-color: $deep-dark;

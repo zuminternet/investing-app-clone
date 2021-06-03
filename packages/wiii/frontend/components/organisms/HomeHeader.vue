@@ -12,6 +12,7 @@ import Menus from '@/components/molecules/HeaderMenus';
 
 export default Vue.extend({
   name: 'HomeHeader',
+
   components: {
     HomeTitle,
     Menus,

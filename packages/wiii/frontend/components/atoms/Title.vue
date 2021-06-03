@@ -1,48 +1,24 @@
 <template>
-  <p class="card" :style="{ ...style }" :class="isDark">{{ title }}</p>
+  <h1 class="card noselect">{{ title }}</h1>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import { blue700 } from '@/styles/index.scss';
 
 export default Vue.extend({
   props: {
-    // color: {
-    //   type: String,
-    //   default: blue700,
-    // },
-    titleText: {
+    title: {
       type: String,
       default: '',
-    },
-    fontSize: {
-      type: [String, Number],
-      default: '2em',
-    },
-    fontWeight: {
-      type: [String, Number],
-      default: 900,
-    },
-  },
-
-  computed: {
-    style() {
-      return {
-        // color: this.color,
-        fontSize: this.fontSize,
-        fontWeight: this.fontWeight,
-      };
-    },
-
-    title() {
-      return this.titleText;
-    },
-
-    isDark() {
-      /** @todo dark 모드 토글 */
-      return 'card dark';
     },
   },
 });
 </script>
+
+<style lang="scss" scoped>
+h1.card {
+  color: $blue-700;
+  font-size: 2em;
+  font-weight: 900;
+}
+</style>

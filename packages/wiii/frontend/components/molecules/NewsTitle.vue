@@ -15,11 +15,7 @@ export default Vue.extend({
   },
 
   data() {
-    return {
-      titleText: viewsTitle.Home,
-    };
+    return { titleText: viewsTitle.News };
   },
 });
 </script>
-
-<style lang="scss" scoped></style>
