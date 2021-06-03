@@ -29,10 +29,14 @@ export default Vue.extend({
   text-decoration: none;
 
   &:hover {
-    background-color: $blue-100;
+    color: $grey-100;
+    background-color: $blue-700;
+    font-weight: bold;
+    text-decoration: $blue-300 underline 3px;
   }
 
   &-exact-active {
+    color: $blue-700;
     font-weight: bold;
   }
 }

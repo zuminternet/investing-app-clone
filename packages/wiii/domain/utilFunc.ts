@@ -33,7 +33,7 @@ export const IS_PRO_MODE = process.env.NODE_ENV === `production`;
  * @returns
  */
 export const devPrint = () => {
-  if (IS_PRO_MODE) return;
+  if (IS_PRO_MODE) return () => (null);
   return (result: any, title?: string) => {
     console.log(chalk`{rgb(0,255,51) ${`[devPrint]`}} result of {rgb(224,231,34) ${title ?? `this function`}}:`);
     console.dir(result);

@@ -1,8 +1,8 @@
 <template>
   <div class="area">
     <header class="area">
-      <Menu />
       <Title :title="'Markets'" />
+      <Menu />
     </header>
     <main class="area">
       <keep-alive>

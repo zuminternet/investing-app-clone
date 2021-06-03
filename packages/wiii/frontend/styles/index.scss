@@ -4,7 +4,7 @@ html,
 body {
   @extend .reset;
 
-  background-color: $grey-500;
+  background-color: $grey-300;
   overflow-y: auto;
   font-family: -apple-system, 'Helvetica Neue', 'Noto Sans KR', sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -15,7 +15,7 @@ body {
   @extend .reset;
 
   width: 100vw;
-  height: calc(100vh - 15px);
+  height: 100vh;
 
   display: flex;
   flex-direction: column;

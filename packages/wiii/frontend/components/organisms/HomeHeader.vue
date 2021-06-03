@@ -1,8 +1,8 @@
 <template>
-  <div class="area">
+  <header>
     <HomeTitle />
     <Menus />
-  </div>
+  </header>
 </template>
 
 <script lang="ts">

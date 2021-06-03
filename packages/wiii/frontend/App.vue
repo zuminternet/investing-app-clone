@@ -1,7 +1,7 @@
 <template>
   <div id="appWrapper" :class="theme">
-    <ThemeToggleButton />
     <router-view />
+    <ThemeToggleButton />
   </div>
 </template>
 

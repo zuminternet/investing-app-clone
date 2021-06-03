@@ -6,7 +6,7 @@
   margin: 0;
   padding: 0;
   width: 100%;
-  transition: all 0.2s ease-out;
+  transition: all 0.15s ease-out;
 }
 
 .center {
@@ -30,31 +30,31 @@
   }
 }
 
-.area {
+.boundary {
   @extend .reset;
   @extend .center;
+
+  margin-bottom: $margin-padding-15;
+  padding: 10px;
+  border-radius: 10px;
+
+  background-color: $white-900;
+  color: $grey-700;
+}
+
+.area {
+  @extend .reset;
 
   max-width: $max-width-mobile;
   overflow-x: hidden;
   overflow-y: auto;
 }
 
-.boundary {
-  @extend .reset;
-  @extend .center;
-
-  width: 100%;
-  margin-top: $margin-padding-15;
-  padding: 10px;
-  border-radius: 10px;
-
-  background-color: $white-900;
-  color: $grey-900;
-}
-
 .section {
   @extend .boundary;
-  margin-top: $margin-padding-15;
+
+  background-color: transparent;
+  padding: 10px 0 10px 0;
 }
 
 .card {
@@ -72,17 +72,29 @@
     color: $sunny-yellow;
   }
 
-  .section,
+  .section {
+    color: $sunny-yellow;
+  }
+
   .card {
     background-color: $deep-blue;
     color: $sunny-yellow;
   }
 
+  .title {
+    color: $neon-crimson;
+    box-shadow: inset 0 -5px 5px rgba($neon-crimson, 0.7);
+    background-color: transparent;
+  }
+
   .router-link {
-    background-color: $shallow-blue;
+    background-color: transparent;
+    box-shadow: inset 0 0 7px rgba($neon-crimson, 0.7);
+
     &:hover {
       background-color: $deep-blue;
       color: $neon-crimson;
+      text-decoration: none;
     }
 
     &-exact-active {

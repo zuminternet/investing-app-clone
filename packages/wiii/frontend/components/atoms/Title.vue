@@ -1,5 +1,5 @@
 <template>
-  <h1 class="card noselect">{{ title }}</h1>
+  <h1 class="title noselect">{{ title }}</h1>
 </template>
 
 <script lang="ts">
@@ -16,9 +16,15 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
-h1.card {
-  color: $blue-700;
+.title {
+  @extend .boundary;
+
+  margin-top: $margin-padding-15;
+  line-height: 1.5;
   font-size: 2em;
   font-weight: 900;
+
+  color: $blue-900;
+  background-color: $grey-100;
 }
 </style>
