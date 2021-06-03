@@ -12,7 +12,9 @@ body {
 
 #appWrapper {
   width: 100vw;
-  height: 100vh;
+  height: calc(100vh - 15px);
+
+  padding-top: $margin-padding-15;
 
   display: flex;
   flex-direction: column;

@@ -20,26 +20,33 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  & > * {
+    margin-right: $margin-padding-15;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
 }
 
 .area {
   @extend .reset;
   @extend .center;
 
+  max-width: $max-width-mobile;
+
   overflow-x: hidden;
   overflow-y: auto;
-
-  max-width: $max-width-mobile;
 }
 
 .card {
   @extend .reset;
   @extend .center;
 
-  margin: $margin-card;
-  margin-bottom: 0;
-  padding: 5px;
-  border-radius: 15px;
+  margin-bottom: $margin-padding-15;
+  padding: 10px;
+  border-radius: 10px;
   background-color: $white-900;
   color: $grey-900;
   cursor: pointer;

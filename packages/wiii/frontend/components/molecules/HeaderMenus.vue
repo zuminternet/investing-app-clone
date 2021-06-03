@@ -1,6 +1,6 @@
 <template>
-  <div class="rows-space-between">
-    <Link v-for="{ id, name, href } in HomeMenuData" :key="id" :name="name" :href="href" :isDark="true" />
+  <div class="area rows-space-between ">
+    <Link v-for="{ id, name, href } in HomeMenuData" :key="id" :name="name" :href="href" />
   </div>
 </template>
 
