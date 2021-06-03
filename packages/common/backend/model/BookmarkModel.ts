@@ -3,8 +3,10 @@ import mongoose from 'common/backend/mongoose';
 const { Schema, model } = mongoose;
 
 export interface BookmarkDocument {
-  symbol: string;
   email: string;
+  symbol: string;
+  name: string;
+  category: string;
 }
 
 /**
@@ -12,8 +14,10 @@ export interface BookmarkDocument {
  */
 
 const BookmarkSchema = new Schema({
-  symbol: { type: String, required: true },
   email: { type: String, required: true },
+  symbol: { type: String, required: true },
+  name: { type: String, required: true },
+  category: { type: String, required: true },
 });
 
 const Bookmark = model<BookmarkDocument>('Bookmarks', BookmarkSchema);

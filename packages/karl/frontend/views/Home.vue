@@ -3,7 +3,7 @@
     <multipurpose-header isHome></multipurpose-header>
     <custom-swiper :navigatorButtonNames="swiperNavigatorButtonNames">
       <swiper-slide v-for="(items, index) in itemCollections" :key="index">
-        <item-card-list :items="items" :excludingHeight="150" isHome></item-card-list>
+        <item-card-list :items="items" :excludedHeight="150" isHome></item-card-list>
       </swiper-slide>
     </custom-swiper>
     <bottom-naviagtor :navigatorButtonNames="bottomNavigatorButtonNames"></bottom-naviagtor>

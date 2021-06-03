@@ -4,6 +4,8 @@ import Bookmark from '../model/BookmarkModel';
 interface QueryProps {
   email: string;
   symbol: string;
+  name: string;
+  category: string;
 }
 
 @Service()
@@ -11,16 +13,16 @@ export default class BookmarkService {
   /**
    * @description Bookmark document를 추가하는 service
    * @param param0
-   * @returns
+   * @returns Promise
    */
-  public async createBookmark({ email, symbol }: QueryProps) {
-    const bookmark = await Bookmark.findOne({ email, symbol });
+  public async createBookmark({ email, symbol, name, category }: QueryProps) {
+    const bookmark = await Bookmark.findOne({ email, symbol, name, category });
 
     if (bookmark) {
       throw new Error('Bookmark already exists');
     }
 
-    return Bookmark.create({ email, symbol });
+    return Bookmark.create({ email, symbol, name, category });
   }
 
   /**

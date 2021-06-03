@@ -15,7 +15,7 @@
       <empty-space></empty-space>
       <div class="header-button-box">
         <header-button isGoSearchButton></header-button>
-        <header-button isAddBookmarkButton :email="userInfo.userEmail" :symbol="itemDetail.symbol"></header-button>
+        <header-button isAddBookmarkButton :email="email" :symbol="symbol" :name="name" :category="category"></header-button>
       </div>
     </template>
 
@@ -26,10 +26,22 @@
 
     <template v-if="isHome">
       <div class="header-title-box">
-        <p>{{ title }}</p>
+        <p>{{ marketTitle }}</p>
       </div>
       <empty-space></empty-space>
       <div class="header-button-box">
+        <header-button isGoSearchButton></header-button>
+      </div>
+    </template>
+
+    <template v-if="isBookmark">
+      <header-button isBackButton></header-button>
+      <div class="header-title-box">
+        <p>{{ bookmarkTitle }}</p>
+      </div>
+      <empty-space></empty-space>
+      <div class="header-button-box">
+        <header-button></header-button>
         <header-button isGoSearchButton></header-button>
       </div>
     </template>
@@ -71,6 +83,11 @@ export default {
       default: false,
     },
 
+    isBookmark: {
+      type: Boolean,
+      default: false,
+    },
+
     itemDetail: {
       type: Object,
       default() {
@@ -98,11 +115,16 @@ export default {
     symbol() {
       return this.itemDetail.symbol;
     },
+
+    email() {
+      return this.userInfo.email;
+    },
   },
 
   data() {
     return {
-      title: text.INVESTING_COM,
+      marketTitle: text.INVESTING_COM,
+      bookmarkTitle: text.BOOKMARK,
     };
   },
 
