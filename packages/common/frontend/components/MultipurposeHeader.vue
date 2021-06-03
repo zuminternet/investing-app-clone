@@ -15,7 +15,13 @@
       <empty-space></empty-space>
       <div class="header-button-box">
         <header-button isGoSearchButton></header-button>
-        <header-button isAddBookmarkButton :email="userInfo.userEmail" :symbol="itemDetail.symbol"></header-button>
+        <header-button
+          isAddBookmarkButton
+          :email="userInfo.userEmail"
+          :symbol="symbol"
+          :name="name"
+          :category="category"
+        ></header-button>
       </div>
     </template>
 
@@ -67,6 +73,11 @@ export default {
     },
 
     isHome: {
+      type: Boolean,
+      default: false,
+    },
+
+    isBookmark: {
       type: Boolean,
       default: false,
     },

@@ -131,10 +131,6 @@ export default {
     this.getNews({ offset: 0, limit: 3 });
     this.getAnalyses({ offset: 0, limit: 3 });
   },
-
-  mounted() {
-    console.log(this.userInfo);
-  },
 };
 </script>
 

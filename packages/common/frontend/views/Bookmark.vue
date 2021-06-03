@@ -1,6 +1,7 @@
 <template>
   <div class="bookmark-page">
     <multipurpose-header isSearch></multipurpose-header>
+    <item-card-list :items="bookmarks" :excludedHeight="50" isBookmark></item-card-list>
   </div>
 </template>
 
@@ -8,11 +9,15 @@
 import { mapState, mapActions } from 'vuex';
 
 import MultipurposeHeader from '../components/MultipurposeHeader.vue';
+import ItemCardList from '../components/ItemCardList.vue';
+import ItemCardButton from '../components/ItemCardButton.vue';
 
 export default {
   name: 'Bookmark',
   components: {
     MultipurposeHeader,
+    ItemCardList,
+    ItemCardButton,
   },
 
   computed: {

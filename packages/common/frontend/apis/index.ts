@@ -20,6 +20,8 @@ export interface getNewsAndAnalysesInfo {
 export interface createBookmarkInfo {
   email: string;
   symbol: string;
+  name: string;
+  category: string;
 }
 
 /**
@@ -112,11 +114,13 @@ const getAnalyses = async ({ offset, limit }: getNewsAndAnalysesInfo) => {
  * @param param0
  * @returns Promise
  */
-const createBookmark = async ({ email, symbol }: createBookmarkInfo) => {
+const createBookmark = async ({ email, symbol, name, category }: createBookmarkInfo) => {
   try {
     const result = await Axios.post(`${devURL}/api/bookmark`, {
       email,
       symbol,
+      name,
+      category,
     });
 
     if (result.status === 201) {

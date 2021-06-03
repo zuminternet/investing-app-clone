@@ -1,7 +1,12 @@
 <template>
   <input v-if="isBackButton" class="header-button" type="button" @click="goBack" />
   <input v-else-if="isGoSearchButton" class="header-button" type="button" @click="goSearch" />
-  <input v-else-if="isAddBookmarkButton" class="header-button" type="button" @click="addBookmark(email, symbol)" />
+  <input
+    v-else-if="isAddBookmarkButton"
+    class="header-button"
+    type="button"
+    @click="addBookmark(email, symbol, name, category)"
+  />
   <input v-else class="header-button" type="button" @click="$emit('handle-header-button-click')" />
 </template>
 
@@ -35,6 +40,16 @@ export default {
       type: String,
       default: '',
     },
+
+    name: {
+      type: String,
+      default: '',
+    },
+
+    category: {
+      type: String,
+      default: '',
+    },
   },
 
   methods: {
@@ -46,8 +61,8 @@ export default {
       this.$router.push('search');
     },
 
-    async addBookmark(email, symbol) {
-      await createBookmark({ email, symbol });
+    async addBookmark(email, symbol, name, category) {
+      await createBookmark({ email, symbol, name, category });
     },
   },
 };

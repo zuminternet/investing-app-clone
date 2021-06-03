@@ -16,7 +16,7 @@
       <item-card-button></item-card-button>
     </template>
 
-    <template v-if="isHome">
+    <template v-if="isHome || isBookmark">
       <div class="item-information-except-price">
         <custom-text>
           {{ name }}
@@ -70,6 +70,11 @@ export default {
       type: Boolean,
       default: false,
     },
+
+    isBookmark: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   computed: {
@@ -82,7 +87,9 @@ export default {
         return this.item.stock_exchange.acronym;
       }
 
-      return 'DUMMY';
+      if (this.isBookmark) {
+        return this.item.category;
+      }
     },
 
     symbol() {

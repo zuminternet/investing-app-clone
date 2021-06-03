@@ -2,8 +2,8 @@
   <div v-if="isSearch" class="item-card-list" :style="style">
     <item-card v-for="(item, index) in items" :key="index" :item="item" isSearch></item-card>
   </div>
-  <div v-else-if="isHome" class="item-card-list" :style="style">
-    <item-card v-for="(item, index) in items" :key="index" :item="item" isHome></item-card>
+  <div v-else-if="isHome || isBookmark" class="item-card-list" :style="style">
+    <item-card v-for="(item, index) in items" :key="index" :item="item" isHome isBookmark></item-card>
   </div>
   <div v-else></div>
 </template>
@@ -18,13 +18,13 @@ export default {
   },
 
   props: {
-    excludingHeight: {
+    excludedHeight: {
       type: Number,
-      required: true,
+      default: 150,
     },
     items: {
       type: Array,
-      required: true,
+      default: true,
     },
 
     isSearch: {
@@ -36,12 +36,17 @@ export default {
       type: Boolean,
       default: false,
     },
+
+    isBookmark: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   computed: {
     style() {
       return {
-        height: `calc(100vh - ${this.excludingHeight}px)`,
+        height: `calc(100vh - ${this.excludedHeight}px)`,
       };
     },
   },

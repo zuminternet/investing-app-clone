@@ -279,8 +279,8 @@ export class ApiController {
   @PostMapping({ path: '/bookmark' })
   public async createBookmark(request: Request, response: Response) {
     try {
-      const { email, symbol } = request.body;
-      const bookmark = await this.bookmarkService.createBookmark({ email, symbol });
+      const { email, symbol, name, category } = request.body;
+      const bookmark = await this.bookmarkService.createBookmark({ email, symbol, name, category });
 
       if (bookmark) {
         return response.status(201).send(bookmark);
