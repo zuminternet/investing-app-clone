@@ -1,6 +1,6 @@
 <template>
   <div class="card">
-    <Words :text="'CARD'" />
+    <Words>Card!</Words>
   </div>
 </template>
 

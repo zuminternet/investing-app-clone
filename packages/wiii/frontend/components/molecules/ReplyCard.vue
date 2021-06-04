@@ -1,8 +1,8 @@
 <template>
   <article class="card reply">
-    <Words :contents="`[ ${replId} ] ${title}  - ${user}`" />
-    <Words :contents="contents" />
-    <Words :contents="date" />
+    <Words> {{ `[ ${replId} ] ${title}  - ${user}` }} </Words>
+    <Words> {{ contents }} </Words>
+    <Words> {{ date }} </Words>
   </article>
 </template>
 

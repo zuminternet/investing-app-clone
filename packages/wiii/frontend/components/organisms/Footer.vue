@@ -1,6 +1,6 @@
 <template>
   <footer>
-    <Words class="card noselect" :contents="'Footer'" />
+    <Words class="card noselect">Footer</Words>
   </footer>
 </template>
 

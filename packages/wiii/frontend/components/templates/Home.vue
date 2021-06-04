@@ -1,6 +1,6 @@
 <template>
   <main class="area section">
-    <Words :contents="'MAIN SECTION'"></Words>
+    <Words>MAIN SECTION</Words>
   </main>
 </template>
 

@@ -1,18 +1,13 @@
 <template>
-  <p class="pure-text">{{ contents }}</p>
+  <p class="pure-text">
+    <slot></slot>
+  </p>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 
-export default Vue.extend({
-  props: {
-    contents: {
-      type: [String, Number],
-      required: true,
-    },
-  },
-});
+export default Vue.extend({});
 </script>
 
 <style lang="scss">
@@ -22,7 +17,6 @@ export default Vue.extend({
   font-size: 14px;
   line-height: 2;
   color: $grey-700;
-
   background-color: transparent;
 
   cursor: auto;
