@@ -20,6 +20,7 @@
           :category="category"
           :email="email"
           :symbol="symbol"
+          :isBookmarked="isBookmarked"
           isAddBookmarkButton
         ></item-card-button>
       </div>
@@ -112,6 +113,10 @@ export default {
 
     email() {
       return this.userInfo.userEmail;
+    },
+
+    isBookmarked() {
+      return this.item.isBookmarked;
     },
 
     price() {

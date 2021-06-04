@@ -26,17 +26,13 @@ const state = () => ({
 
 // getter 설정
 
-const getters = {
-  // itemCollections: (state) => {
-  //   return [state.stockItems, state.indexItems, state.cryptoItems];
-  // },
-};
+const getters = {};
 
 // actions 설정
 const actions = {
-  async getItemDetail({ commit }, { symbols }) {
+  async getItemDetail({ commit }, { symbols, email }) {
     try {
-      const itemDetail = await getItemDetail({ symbols });
+      const itemDetail = await getItemDetail({ symbols, email });
 
       if (itemDetail) {
         commit('changeItemDetail', itemDetail);
@@ -86,7 +82,20 @@ const actions = {
 // mutatuons 설정
 const mutations = {
   changeItemDetail(state, itemDetail) {
-    const { name, symbol, adj_close, adj_high, adj_low, close, open, volume, stock_exchange, high, low } = itemDetail;
+    const {
+      name,
+      symbol,
+      adj_close,
+      adj_high,
+      adj_low,
+      close,
+      open,
+      volume,
+      stock_exchange,
+      high,
+      low,
+      isBookmarked,
+    } = itemDetail;
 
     state.itemDetail = {
       ...state.itemDetail,
@@ -102,6 +111,7 @@ const mutations = {
       acronym: stock_exchange.acronym,
       high,
       low,
+      isBookmarked,
     };
   },
 

@@ -7,6 +7,7 @@ import { marketStackConfig } from '../config';
 
 export interface getSearchedItemsInfo {
   keyword: string;
+  email: string;
 }
 
 @Service()
@@ -29,18 +30,13 @@ export default class SearchService {
   //   unless: (result) => !result,
   // })
   public async getSearchedItems({ keyword }: getSearchedItemsInfo) {
-    console.log('no cached');
     const { accessKey } = marketStackConfig;
     let { data: items } = await axios.get(`http://api.marketstack.com/v1/tickers?access_key=${accessKey}&search=${keyword}`);
 
     if (items) {
-      // items = items.map((item) => {
-      //   return {};
-      // });
-
       return items;
     }
 
-    throw new Error('getting searched items was failed in SearchService');
+    return false;
   }
 }

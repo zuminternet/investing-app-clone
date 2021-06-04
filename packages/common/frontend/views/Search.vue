@@ -1,6 +1,6 @@
 <template>
   <div class="search-page">
-    <multipurpose-header isSearch></multipurpose-header>
+    <multipurpose-header :userInfo="userInfo" isSearch></multipurpose-header>
     <custom-swiper :navigatorButtonNames="swiperNavigatorButtonNames">
       <swiper-slide>
         <item-card-list :items="searchedItems" :excludedHeight="100" :userInfo="userInfo" isSearch></item-card-list>
@@ -17,7 +17,7 @@
 
 <script>
 import { SwiperSlide } from 'vue-awesome-swiper';
-import { mapState, mapGetters } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 
 import MultipurposeHeader from '../components/MultipurposeHeader.vue';
 import CustomSwiper from '../components/CustomSwiper.vue';
@@ -48,6 +48,14 @@ export default {
     return {
       swiperNavigatorButtonNames: [text.ITEM, text.NEWS, text.ANALYSIS],
     };
+  },
+
+  methods: {
+    ...mapActions('search', ['clearSearchStore']),
+  },
+
+  beforeDestroy() {
+    this.clearSearchStore();
   },
 };
 </script>

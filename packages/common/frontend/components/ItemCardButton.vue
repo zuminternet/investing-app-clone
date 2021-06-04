@@ -1,10 +1,22 @@
 <template>
-  <input v-if="isAddBookmarkButton" class="item-card-button" type="button" @click="addBookmark(email, symbol, name, category)" />
+  <input
+    v-if="isAddBookmarkButton && isBookmarkedForLocal"
+    class="item-card-active-button"
+    type="button"
+    @click="handleBookmark(email, symbol, name, category)"
+  />
+  <input
+    v-else-if="isAddBookmarkButton"
+    class="item-card-button"
+    type="button"
+    @click="handleBookmark(email, symbol, name, category)"
+  />
+
   <input v-else class="item-card-button" type="button" @click="$emit('handle-item-card-button-click')" />
 </template>
 
 <script>
-import { createBookmark } from '../apis';
+import { createBookmark, deleteBookmark } from '../apis';
 
 export default {
   name: 'ItemCardButton',
@@ -33,12 +45,36 @@ export default {
       type: String,
       default: '',
     },
+
+    isBookmarked: {
+      type: Boolean,
+      default: false,
+    },
+  },
+
+  data() {
+    return {
+      isBookmarkedForLocal: false,
+    };
   },
 
   methods: {
-    async addBookmark(email, symbol, name, category) {
-      console.log(email, symbol, name, category);
-      await createBookmark({ email, symbol, name, category });
+    async handleBookmark(email, symbol, name, category) {
+      if (!this.isBookmarkedForLocal && (await createBookmark({ email, symbol, name, category }))) {
+        this.isBookmarkedForLocal = true;
+      } else if (this.isBookmarkedForLocal && (await deleteBookmark({ email, symbol, name, category }))) {
+        this.isBookmarkedForLocal = false;
+      }
+    },
+  },
+
+  mounted() {
+    this.isBookmarkedForLocal = this.isBookmarked;
+  },
+
+  watch: {
+    isBookmarked() {
+      this.isBookmarkedForLocal = this.isBookmarked;
     },
   },
 };
@@ -49,6 +85,13 @@ export default {
   width: 30px;
   height: 30px;
   background-color: green;
+  margin-right: 10px;
+}
+
+.item-card-active-button {
+  width: 30px;
+  height: 30px;
+  background-color: red;
   margin-right: 10px;
 }
 </style>

@@ -1,4 +1,4 @@
-import { Controller, GetMapping, PostMapping } from 'zum-portal-core/backend/decorator/Controller';
+import { Controller, DeleteMapping, GetMapping, PostMapping } from 'zum-portal-core/backend/decorator/Controller';
 import { Request, Response } from 'express';
 import { Inject } from 'zum-portal-core/backend/decorator/Alias';
 
@@ -168,10 +168,13 @@ export class ApiController {
   @GetMapping({ path: '/item-detail' })
   public async getItemDetail(request: Request, resposne: Response) {
     try {
-      const { symbols } = request.query;
+      const { symbols, email } = request.query;
       const itemDetailInfo = await this.itemDetailService.getItemDetail({ symbols });
 
       if (itemDetailInfo) {
+        const isBookmarked = await this.bookmarkService.getIsBookmarked({ email, symbols });
+        itemDetailInfo.isBookmarked = isBookmarked;
+
         return resposne.status(200).send(itemDetailInfo);
       }
 
@@ -191,12 +194,17 @@ export class ApiController {
   @GetMapping({ path: '/search/items' })
   public async getSearchedItems(request: Request, response: Response) {
     try {
-      const { keyword } = request.query;
-      const items = await this.searchService.getSearchedItems({ keyword });
-
-      console.log(items);
+      const { keyword, email } = request.query;
+      let { data: items } = await this.searchService.getSearchedItems({ keyword });
 
       if (items) {
+        for (let i = 0; i < items.length; i++) {
+          const { symbol } = items[i];
+          const isBookmarked = await this.bookmarkService.getIsBookmarked({ email, symbols: symbol });
+
+          items[i].isBookmarked = isBookmarked;
+        }
+
         return response.status(200).send(items);
       }
 
@@ -278,6 +286,7 @@ export class ApiController {
    * @param response
    * @returns response
    */
+
   @PostMapping({ path: '/bookmark' })
   public async createBookmark(request: Request, response: Response) {
     try {
@@ -295,6 +304,23 @@ export class ApiController {
     }
   }
 
+  @DeleteMapping({ path: '/bookmark' })
+  public async deleteBookmark(request: Request, response: Response) {
+    try {
+      const { email, symbol, name, category } = request.body;
+
+      const result = await this.bookmarkService.deleteBookmark({ email, symbol, name, category });
+
+      if (result) {
+        return response.sendStatus(200);
+      }
+
+      response.sendStatus(409);
+    } catch (error) {
+      console.log(error);
+      response.json(error);
+    }
+  }
   /**
    * @description DB에서 bookmark documents를 가져오는 controller
    * @param request
