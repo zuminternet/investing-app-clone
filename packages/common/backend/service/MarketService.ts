@@ -1,4 +1,5 @@
 import { Service } from 'zum-portal-core/backend/decorator/Alias';
+import { Caching } from 'zum-portal-core/backend/decorator/Caching';
 import * as yahooFinance from 'yahoo-finance';
 import { marketStackConfig } from '../config';
 import {
@@ -12,11 +13,9 @@ import {
   ChartPeriod,
 } from '../../domain';
 import axios, { AxiosInstance } from 'axios';
+import * as NodeCache from 'node-cache';
 
-interface GetHistoricalDataProps {
-  symbol: MarketSymbol;
-  period: ChartPeriod;
-}
+const cache = new NodeCache({ deleteOnExpire: true });
 
 @Service()
 export default class MarketService {
@@ -76,6 +75,7 @@ export default class MarketService {
    * @author dogyeong
    * @param {MarketSymbol[]} symbols ticker 심볼 배열
    */
+  @Caching({ ttl: 30, cache, runOnStart: false })
   public async getLatestEOD(symbols: MarketSymbol[]): Promise<EndOfDay[]> {
     if (!symbols.every(this.isValidSymbol.bind(this))) throw new Error('invalid symbol');
 
@@ -95,6 +95,7 @@ export default class MarketService {
    * @author dogyeong
    * @param {MarketSymbol} symbol ticker 심볼
    */
+  @Caching({ ttl: 30, cache, runOnStart: false })
   public async getSummaryDetail(symbol: MarketSymbol): Promise<SummaryDetail> {
     if (!this.isValidSymbol(symbol)) throw new Error('invalid symbol');
 
@@ -114,7 +115,8 @@ export default class MarketService {
    * @author dogyeong
    * @param {MarketSymbol} symbol ticker 심볼
    */
-  public async getHistoricalData({ symbol, period }: GetHistoricalDataProps): Promise<HistoricalData> {
+  @Caching({ ttl: 30, cache, runOnStart: false })
+  public async getHistoricalData(symbol: MarketSymbol, period: ChartPeriod): Promise<HistoricalData> {
     if (!this.isValidSymbol(symbol)) throw new Error('invalid symbol');
     if (!this.isValidPeriod(period)) throw new Error('invalid period');
 
