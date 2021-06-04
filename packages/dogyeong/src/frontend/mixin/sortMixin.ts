@@ -15,7 +15,7 @@ export default {
   computed: {
     sortedMarketData() {
       if (this.sortByValue === sortMap.asc || this.sortByValue === sortMap.desc) {
-        return [...this.marketData].sort((a, b) => (a.value - b.value) * this.sortByValue);
+        return [...this.marketData].sort((a, b) => (a.close - b.close) * this.sortByValue);
       }
       if (this.sortByDiff === 1 || this.sortByDiff === -1) {
         return [...this.marketData].sort((a, b) => (a.diff - b.diff) * this.sortByDiff);
