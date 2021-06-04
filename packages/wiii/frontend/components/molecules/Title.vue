@@ -1,17 +1,15 @@
 <template>
-  <h1 class="title noselect">{{ title }}</h1>
+  <Words class="title noselect" :textType="10">
+    <slot></slot>
+  </Words>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
+import Words from '@/components/atoms/Words';
 
 export default Vue.extend({
-  props: {
-    title: {
-      type: String,
-      default: '',
-    },
-  },
+  components: { Words },
 });
 </script>
 
@@ -21,7 +19,7 @@ export default Vue.extend({
 
   margin-top: $margin-padding-15;
   line-height: 1.5;
-  font-size: 2em;
+  font-size: 2rem;
   font-weight: 900;
 
   color: $blue-900;

@@ -5,7 +5,7 @@ export default [
   {
     path: paths.MarketsRouter,
     name: views.Markets,
-    component: () => import('@/views/Markets/index.vue'),
+    component: () => import('@/views/Markets.vue'),
   },
   {
     path: paths.User,

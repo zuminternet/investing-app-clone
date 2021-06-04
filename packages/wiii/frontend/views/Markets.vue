@@ -1,9 +1,6 @@
 <template>
   <div class="area">
-    <header class="area">
-      <Title :title="'Markets'" />
-      <Menu />
-    </header>
+    <Header :titleText="titleText" />
     <main class="area">
       <keep-alive>
         <component :is="currentMarket"></component>
@@ -15,22 +12,28 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { marketsType } from '@/type/views';
-import Title from '@/components/atoms/Title';
-import Menu from '@/components/molecules/HeaderMenus';
+import { marketsType, viewsTitle } from '@/type/views';
+import Header from '@/components/organisms/Header';
 import Footer from '@/components/organisms/Footer';
-import Indexes from '@/views/Markets/Indexes';
-import Stocks from '@/views/Markets/Stocks';
-import Coins from '@/views/Markets/Coins';
+import Indexes from '@/components/templates/Markets/Indexes';
+import Stocks from '@/components/templates/Markets/Stocks';
+import Coins from '@/components/templates/Markets/Coins';
 
 export default Vue.extend({
+  name: 'MarketsView',
+
   components: {
-    Menu,
+    Header,
     Footer,
-    Title,
     Indexes,
     Stocks,
     Coins,
+  },
+
+  data() {
+    return {
+      titleText: viewsTitle.Markets,
+    };
   },
 
   computed: {

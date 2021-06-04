@@ -1,9 +1,6 @@
 <template>
   <div class="area">
-    <header class="area">
-      <Title />
-      <Menu />
-    </header>
+    <Header :titleText="titleText" />
     <main class="area">
       <News />
       <Reply />
@@ -14,20 +11,26 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import Menu from '@/components/molecules/HeaderMenus';
-import Title from '@/components/molecules/NewsTitle';
+import Header from '@/components/organisms/Header';
 import News from '@/components/organisms/NewsSection';
 import Reply from '@/components/organisms/ReplySection';
 import Footer from '@/components/organisms/Footer';
+import { viewsTitle } from '@/type/views';
 
 export default Vue.extend({
   name: 'NewsView',
+
   components: {
-    Menu,
-    Title,
+    Header,
     News,
     Reply,
     Footer,
+  },
+
+  data() {
+    return {
+      titleText: viewsTitle.News,
+    };
   },
 });
 </script>
