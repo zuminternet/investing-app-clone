@@ -16,12 +16,8 @@ export interface loginUserByEmailInfo {
   password: string;
 }
 
-export interface loginUserByOAuthInfo {
-  googleId: string;
-  password: string;
-}
-
 export interface loginUserByGoogleOAuthInfo {
+  email: String;
   googleId: string;
 }
 
@@ -34,7 +30,7 @@ const createUser = async ({ name, email, password, googleId }: createUserInfo) =
     const result = await Axios.post(
       `${devURL}/api/user`,
       googleId
-        ? { googleId }
+        ? { googleId, email }
         : {
             name,
             email,
@@ -42,8 +38,8 @@ const createUser = async ({ name, email, password, googleId }: createUserInfo) =
           },
     );
 
-    if (result) {
-      return result;
+    if (result.status === 201) {
+      return true;
     }
 
     throw new Error('User was not created');
@@ -57,8 +53,9 @@ const createArticles = async ({ articles }) => {
     const result = await Axios.post(`${devURL}/api/articles`, {
       articles,
     });
-    if (result) {
-      return result;
+
+    if (result.status === 201) {
+      return true;
     }
     throw new Error('Articles were not created');
   } catch (error) {
@@ -70,8 +67,10 @@ const getUser = async () => {
   try {
     const result = await Axios.get(`${devURL}/api/user`, { withCredentials: true });
 
-    if (result) {
-      return result;
+    if (result.status === 200) {
+      const { data: user } = result;
+
+      return user;
     }
 
     throw new Error('Getting user was failed in front api');
@@ -87,8 +86,10 @@ const loginUserByEmail = async ({ email, password }: loginUserByEmailInfo) => {
       password,
     });
 
-    if (result) {
-      return result;
+    if (result.status === 200) {
+      const { data: user } = result;
+
+      return user;
     }
 
     throw new Error('Email login was failed in front api');
@@ -97,14 +98,23 @@ const loginUserByEmail = async ({ email, password }: loginUserByEmailInfo) => {
   }
 };
 
-const loginUserByGoogleOAuth = async ({ googleId }: loginUserByGoogleOAuthInfo) => {
+/**
+ * @description email과 googleId를 받아서 로그인을 요청하는 front-side API call 함수
+ * @param param0
+ * @returns
+ */
+
+const loginUserByGoogleOAuth = async ({ email, googleId }: loginUserByGoogleOAuthInfo) => {
   try {
-    const reuslt = await Axios.post(`${devURL}/api/auth/google-oauth`, {
+    const result = await Axios.post(`${devURL}/api/auth/google-oauth`, {
+      email,
       googleId,
     });
 
-    if (reuslt) {
-      return reuslt;
+    if (result.status === 200) {
+      const { data: user } = result;
+
+      return user;
     }
 
     throw new Error('OAuth login was failed in front api');
@@ -121,8 +131,10 @@ const getStocks = async () => {
   try {
     const result = await Axios.get(`${devURL}/api/market/stock`);
 
-    if (result) {
-      return result;
+    if (result.status === 200) {
+      const { data: stocks } = result;
+
+      return stocks;
     }
 
     throw new Error('Getting stocks was failed in front api');

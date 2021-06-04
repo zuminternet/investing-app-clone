@@ -21,11 +21,7 @@ const actions = {
   async getSearchedItems({ commit }, keyword) {
     try {
       const result = await getSearchedItems({ keyword });
-      const data = result.data.data;
-
-      const items = data.map((item) => {
-        return item;
-      });
+      const { data: items } = result;
 
       if (items) {
         commit('changeSearchedItems', items);
@@ -44,6 +40,8 @@ const actions = {
 const mutations = {
   changeSearchedItems(state, items) {
     state.searchedItems = items;
+
+    console.log(state);
   },
 };
 

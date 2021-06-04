@@ -23,19 +23,15 @@ export default class UserService {
   constructor() {}
 
   public async createUser({ name, email, password, googleId }: createUserInfo) {
-    const user = await User.findOne(
-      googleId
-        ? { googleId }
-        : {
-            email,
-          },
-    );
+    const user = await User.findOne({
+      email,
+    });
 
     if (user) {
       throw new Error('User already exists');
     }
 
-    return await User.create(googleId ? { googleId } : { name, email, password });
+    return await User.create(googleId ? { googleId, email } : { name, email, password });
   }
 
   public async loginUserByEmail({ email, password }: loginUserByEmailInfo) {
@@ -48,8 +44,8 @@ export default class UserService {
     throw new Error('User not exists (email login in user service)');
   }
 
-  public async loginUserByGoogleOAuth({ googleId }: loginUserByGoogleOAuthInfo) {
-    const user = await User.findOne({ googleId }).lean();
+  public async loginUserByGoogleOAuth({ email, googleId }: loginUserByGoogleOAuthInfo) {
+    const user = await User.findOne({ email, googleId }).lean();
 
     if (user) {
       return user;

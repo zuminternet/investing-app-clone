@@ -3,6 +3,7 @@ import Router from 'vue-router';
 import { Login, Home, Signup } from '../views';
 import ItemDetail from '../../../common/frontend/views/ItemDetail.vue';
 import Search from '../../../common/frontend/views/Search.vue';
+import Bookmark from '../../../common/frontend/views/Bookmark.vue';
 // import Login from '../views/Login.vue'
 // import Home from '../views/Home.vue'
 // import ItemDetail from '../views/ItemDetail.vue'
@@ -38,6 +39,11 @@ export default () => {
         path: '/search',
         name: 'Search',
         component: Search,
+      },
+      {
+        path: '/bookmark',
+        name: 'Bookmark',
+        component: Bookmark,
       },
     ],
   });

@@ -9,6 +9,8 @@ Vue.use(Vuex);
 
 export default () => {
   return new Vuex.Store({
+    // logger
+
     // 각 기능 별 모듈
     modules: {
       market,

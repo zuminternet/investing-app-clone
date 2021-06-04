@@ -6,14 +6,12 @@ import App from './App.vue';
 import createRouter from './router';
 import createStore from './store';
 
-Vue.use(Router);
-
-const router = createRouter();
-const store = createStore();
+Vue.prototype._$router = createRouter();
+Vue.prototype._$store = createStore();
 
 const $app = new Vue({
   el: '#app',
-  router,
-  store,
+  router: Vue.prototype._$router,
+  store: Vue.prototype._$store,
   render: (h) => h(App),
 });

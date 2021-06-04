@@ -1,21 +1,44 @@
 <template>
-  <input v-if="isFavoriteButton" class="item-card-button" type="button" @click="addFavorite" />
+  <input v-if="isAddBookmarkButton" class="item-card-button" type="button" @click="addBookmark(email, symbol, name, category)" />
   <input v-else class="item-card-button" type="button" @click="$emit('handle-item-card-button-click')" />
 </template>
 
 <script>
+import { createBookmark } from '../apis';
+
 export default {
   name: 'ItemCardButton',
   props: {
-    isFavoriteButton: {
+    isAddBookmarkButton: {
       type: Boolean,
       default: false,
+    },
+
+    email: {
+      type: String,
+      default: '',
+    },
+
+    symbol: {
+      type: String,
+      default: '',
+    },
+
+    name: {
+      type: String,
+      default: '',
+    },
+
+    category: {
+      type: String,
+      default: '',
     },
   },
 
   methods: {
-    addFavorite() {
-      // 즐겨찾기 기능 구현해야함
+    async addBookmark(email, symbol, name, category) {
+      console.log(email, symbol, name, category);
+      await createBookmark({ email, symbol, name, category });
     },
   },
 };

@@ -9,6 +9,7 @@ import MarketService from '../../service/MarketService';
 import ItemDetailService from '../../../../common/backend/service/ItemDetailService';
 // import ArticleService from '../../service/ArticleService';
 import ArticleService from '../../../../common/backend/service/ArticleService';
+import BookmarkService from '../../../../common/backend/service/BookmarkService';
 
 @Controller({ path: '/api' })
 export class ApiController {
@@ -19,6 +20,7 @@ export class ApiController {
     @Inject(MarketService) private marketService: MarketService,
     @Inject(ItemDetailService) private itemDetailService: ItemDetailService,
     @Inject(ArticleService) private articleService: ArticleService,
+    @Inject(BookmarkService) private bookmarkService: BookmarkService,
   ) {}
 
   @GetMapping({ path: '/user' })
@@ -31,7 +33,13 @@ export class ApiController {
       }
 
       const decodedToken = this.authService.verifyToken(token);
-      const user = await this.userService.loginUserByEmail(decodedToken);
+      let user;
+
+      if (decodedToken.googleId) {
+        user = await this.userService.loginUserByGoogleOAuth(decodedToken);
+      }
+
+      user = await this.userService.loginUserByEmail(decodedToken);
 
       if (user) {
         return response.status(200).send(user);
@@ -49,7 +57,7 @@ export class ApiController {
       const user = await this.userService.createUser(reqeust.body);
 
       if (user) {
-        return response.sendStatus(200);
+        return response.sendStatus(201);
       }
 
       response.sendStatus(409);
@@ -102,6 +110,7 @@ export class ApiController {
    * @description Home page에 렌더링할 stocks들을 가져오는 controller
    * @param request
    * @param resposne
+   * @returns response
    */
 
   @GetMapping({ path: '/market/stock' })
@@ -124,6 +133,7 @@ export class ApiController {
    * @description Home page에 렌더링할 indices를 가져오는 controller
    * @param request
    * @param resposne
+   * @returns response
    */
   @GetMapping({ path: '/market/indices' })
   public async getIndices(request: Request, resposne: Response) {
@@ -138,6 +148,7 @@ export class ApiController {
    * @description Home page에 렌더링할 cpyto currencies를 가져오는 controller
    * @param request
    * @param resposne
+   * @reutrns response
    */
   @GetMapping({ path: '/market/cpyto-currencies' })
   public async getCryptoCurrencies(request: Request, resposne: Response) {
@@ -151,7 +162,7 @@ export class ApiController {
    * @description item detail page에 렌더링할 item datail info를 가져오는 controller
    * @param request
    * @param resposne
-   * @returns
+   * @returns response
    */
 
   @GetMapping({ path: '/item-detail' })
@@ -175,7 +186,7 @@ export class ApiController {
    * @description search page에 렌더링할 searched items들을 가져오는 controller
    * @param request
    * @param response
-   * @returns
+   * @returns response
    */
   @GetMapping({ path: '/search/items' })
   public async getSearchedItems(request: Request, response: Response) {
@@ -198,7 +209,7 @@ export class ApiController {
    * @description articles를 parsing하여 DB에 document들로 저장하는 controller(common에 추가할 때까지 주석처리)
    * @param request
    * @param response
-   * @returns
+   * @returns response
    */
   // @PostMapping({ path: '/articles' })
   // public async createArticles(request: Request, response: Response) {
@@ -206,7 +217,7 @@ export class ApiController {
   //     const result = await this.articleService.createArticles(request.body);
 
   //     if (result) {
-  //       response.sendStatus(200);
+  //       response.sendStatus(201);
 
   //       return true;
   //     }
@@ -221,7 +232,7 @@ export class ApiController {
    * @description DB에서 articles 중 news만 가져오는 controller
    * @param request
    * @param response
-   * @returns
+   * @returns response
    */
   @GetMapping({ path: '/articles/news' })
   public async getNews(request: Request, response: Response) {
@@ -242,7 +253,7 @@ export class ApiController {
    * @description DB에서 articles 중 analyses만 가져오는 controller
    * @param request
    * @param response
-   * @returns
+   * @returns response
    */
   @GetMapping({ path: '/articles/analyses' })
   public async getAnalyses(request: Request, response: Response) {
@@ -256,6 +267,52 @@ export class ApiController {
       response.sendStatus(404);
     } catch (error) {
       console.log(error);
+    }
+  }
+
+  /**
+   * @description DB에서 bookmark documents를 추가하는 controller
+   * @param request
+   * @param response
+   * @returns response
+   */
+  @PostMapping({ path: '/bookmark' })
+  public async createBookmark(request: Request, response: Response) {
+    try {
+      const { email, symbol, name, category } = request.body;
+      const bookmark = await this.bookmarkService.createBookmark({ email, symbol, name, category });
+
+      if (bookmark) {
+        return response.status(201).send(bookmark);
+      }
+
+      response.sendStatus(409);
+    } catch (error) {
+      console.log(error);
+      response.json(error);
+    }
+  }
+
+  /**
+   * @description DB에서 bookmark documents를 가져오는 controller
+   * @param request
+   * @param response
+   * @returns response
+   */
+  @GetMapping({ path: '/bookmark' })
+  public async getBookmarks(request: Request, response: Response) {
+    try {
+      const { email } = request.query;
+      const bookmarks = await this.bookmarkService.getBookmarks(email);
+
+      if (bookmarks) {
+        return response.status(200).send(bookmarks);
+      }
+
+      response.sendStatus(409);
+    } catch (error) {
+      console.log(error);
+      response.json(error);
     }
   }
 }
