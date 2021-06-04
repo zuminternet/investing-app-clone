@@ -2,6 +2,7 @@ import { isValidObjectId, ObjectId } from 'mongoose';
 import { Service } from 'zum-portal-core/backend/decorator/Alias';
 import { Caching } from 'zum-portal-core/backend/decorator/Caching';
 import Article, { ArticleType, ArticleDoc } from '../model/ArticleModel';
+import * as NodeCache from 'node-cache';
 
 interface QueryProps {
   offset?: number;
@@ -9,13 +10,15 @@ interface QueryProps {
   tickers?: string[];
 }
 
+const cache = new NodeCache({ deleteOnExpire: true });
+
 @Service()
 export default class ArticleService {
   private getTickerOption(tickers?: string[]) {
     return tickers ? { tickers: { $in: tickers } } : {};
   }
 
-  @Caching({ ttl: 10, runOnStart: false })
+  @Caching({ ttl: 30, runOnStart: false, cache })
   public async getNews({ offset = 0, limit = 10, tickers }: QueryProps = {}): Promise<ArticleDoc[]> {
     const tickerOption = this.getTickerOption(tickers);
     const query = { type: ArticleType.news, ...tickerOption };
@@ -27,7 +30,7 @@ export default class ArticleService {
       .lean<ArticleDoc[]>();
   }
 
-  @Caching({ ttl: 10, runOnStart: false })
+  @Caching({ ttl: 30, runOnStart: false, cache })
   public async getOpinions({ offset = 0, limit = 10, tickers }: QueryProps = {}): Promise<ArticleDoc[]> {
     const tickerOption = this.getTickerOption(tickers);
     const query = { type: ArticleType.opinions, ...tickerOption };
@@ -39,7 +42,7 @@ export default class ArticleService {
       .lean<ArticleDoc[]>();
   }
 
-  @Caching({ ttl: 10, runOnStart: false })
+  @Caching({ ttl: 30, runOnStart: false, cache })
   public async getArticleById(id: ObjectId | string): Promise<ArticleDoc> {
     if (!isValidObjectId(id)) throw new Error('invalid id');
 
