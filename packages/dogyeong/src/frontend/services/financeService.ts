@@ -1,46 +1,30 @@
 import { AxiosStatic } from 'axios';
 import { apiEndpoints } from '@/config';
-import { InvestingApiResponse, CandleChartData, SummaryDetail } from '../../backend/service/MarketService';
+import { MarketSymbol, EndOfDay, SummaryDetail, HistoricalData } from 'common/domain';
 
 declare const Axios: AxiosStatic;
 
-interface IndicesResponse {
-  indices: InvestingApiResponse[];
-}
-
-interface CoinsResponse {
-  coins: InvestingApiResponse[];
-}
-
-interface StocksResponse {
-  stocks: InvestingApiResponse[];
-}
-
-interface ChartResponse {
-  chart: CandleChartData[];
-}
-
-export const getIndices = async (): Promise<IndicesResponse> => {
+export const getIndices = async (): Promise<EndOfDay[]> => {
   const { data } = await Axios.get(apiEndpoints.getIndices);
   return data;
 };
 
-export const getCoins = async (): Promise<CoinsResponse> => {
+export const getCoins = async (): Promise<EndOfDay[]> => {
   const { data } = await Axios.get(apiEndpoints.getCoins);
   return data;
 };
 
-export const getStocks = async (): Promise<StocksResponse> => {
+export const getStocks = async (): Promise<EndOfDay[]> => {
   const { data } = await Axios.get(apiEndpoints.getStocks);
   return data;
 };
 
-export const getSummary = async (): Promise<SummaryDetail> => {
-  const { data } = await Axios.get(apiEndpoints.getSummary);
+export const getSummary = async (symbol: MarketSymbol): Promise<SummaryDetail> => {
+  const { data } = await Axios.get(`${apiEndpoints.getSummary}/${symbol}`);
   return data;
 };
 
-export const getChart = async (): Promise<ChartResponse> => {
-  const { data } = await Axios.get(apiEndpoints.getChart);
+export const getChart = async (symbol: MarketSymbol): Promise<HistoricalData> => {
+  const { data } = await Axios.get(`${apiEndpoints.getChart}/${symbol}`);
   return data;
 };

@@ -63,15 +63,15 @@ export default Vue.extend({
   props: {
     headline: {
       type: Object,
-      required: true,
+      default: null,
     },
     news: {
       type: Array,
-      required: true,
+      default: null,
     },
     opinions: {
       type: Array,
-      required: true,
+      default: null,
     },
     urlPrefix: {
       type: String,
