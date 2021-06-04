@@ -29,6 +29,7 @@ export default class SearchService {
     unless: (result) => !result,
   })
   public async getSearchedItems({ keyword }: getSearchedItemsInfo) {
+    console.log('call');
     const { accessKey } = marketStackConfig;
     let { data: items } = await axios.get(`http://api.marketstack.com/v1/tickers?access_key=${accessKey}&search=${keyword}`);
 

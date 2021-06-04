@@ -135,6 +135,7 @@ export default {
       const keyword = event.target.value;
 
       if (keyword) {
+        console.log('call');
         this.getSearchedItems(keyword);
       }
     },
