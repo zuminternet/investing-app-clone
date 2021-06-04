@@ -1,8 +1,8 @@
 <template>
   <article class="card reply">
-    <Words> {{ `[ ${replId} ] ${title}  - ${user}` }} </Words>
+    <Words class="mini"> {{ `[ ${replId} ]` }} </Words>
     <Words> {{ contents }} </Words>
-    <Words> {{ date }} </Words>
+    <Words class="mini"> {{ user }} / {{ date }} </Words>
   </article>
 </template>
 
@@ -20,9 +20,6 @@ export default Vue.extend({
     replId: {
       type: [String, Number],
     },
-    title: {
-      type: [String, Number],
-    },
     contents: {
       type: [String, Number],
     },
@@ -38,5 +35,17 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 .reply {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .pure-text {
+    color: $grey-300;
+  }
+
+  .mini {
+    align-self: flex-start;
+    color: $neon-crimson;
+  }
 }
 </style>

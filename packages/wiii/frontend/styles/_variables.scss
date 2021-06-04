@@ -38,7 +38,7 @@
   padding: 10px;
   border-radius: 10px;
 
-  background-color: $white-900;
+  background-color: $grey-100;
   color: $grey-700;
 }
 
@@ -81,7 +81,7 @@
     color: $sunny-yellow;
   }
 
-  .title {
+  .title-area {
     color: $neon-crimson;
     box-shadow: inset 0 -5px 5px rgba($neon-crimson, 0.7);
     background-color: transparent;
@@ -93,11 +93,14 @@
 
     &:hover {
       background-color: $deep-blue;
-      color: $neon-crimson;
       text-decoration: none;
+
+      .pure-text {
+        color: $neon-crimson;
+      }
     }
 
-    &-exact-active {
+    &-exact-active > p {
       color: $neon-crimson;
     }
   }

@@ -4,7 +4,6 @@
 
 <script lang="ts">
 import Vue from 'vue';
-
 import Card from '@/components/molecules/Card';
 
 export default Vue.extend({

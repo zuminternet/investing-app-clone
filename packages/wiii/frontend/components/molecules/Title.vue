@@ -1,5 +1,5 @@
 <template>
-  <Words class="title noselect" :textType="10">
+  <Words class="noselect title-area title-text">
     <slot></slot>
   </Words>
 </template>
@@ -14,15 +14,10 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
-.title {
+.title-area {
   @extend .boundary;
 
   margin-top: $margin-padding-15;
-  line-height: 1.5;
-  font-size: 2rem;
-  font-weight: 900;
-
   color: $blue-900;
-  background-color: $grey-100;
 }
 </style>

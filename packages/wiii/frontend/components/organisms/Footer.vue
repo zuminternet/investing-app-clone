@@ -1,15 +1,14 @@
 <template>
-  <footer>
-    <Words class="card noselect">Footer</Words>
+  <footer class="card noselect">
+    <FooterText />
   </footer>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-
-import Words from '@/components/atoms/Words';
+import FooterText from '@/components/molecules/FooterText';
 
 export default Vue.extend({
-  components: { Words },
+  components: { FooterText },
 });
 </script>
