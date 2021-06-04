@@ -6,9 +6,11 @@ const devURL = 'http://localhost:3000';
 
 export interface getSearchedItemsInfo {
   keyword: string;
+  email: string;
 }
 
 export interface getItemDetailInfo {
+  email: string;
   symbols: string;
 }
 
@@ -24,14 +26,21 @@ export interface createBookmarkInfo {
   category: string;
 }
 
+export interface deleteBookmarkInfo {
+  email: string;
+  symbol: string;
+  name: string;
+  category: string;
+}
+
 /**
  * @description search page에 렌더링할 searched items를 가져오는 front-side API 호출 함수
  * @param param0
  * @returns Promise
  */
-const getSearchedItems = async ({ keyword }: getSearchedItemsInfo) => {
+const getSearchedItems = async ({ keyword, email }: getSearchedItemsInfo) => {
   try {
-    const result = await Axios.get(`${devURL}/api/search/items?keyword=${keyword}`);
+    const result = await Axios.get(`${devURL}/api/search/items?keyword=${keyword}&email=${email}`);
 
     if (result.status === 200) {
       const { data: searchedItems } = result;
@@ -50,9 +59,11 @@ const getSearchedItems = async ({ keyword }: getSearchedItemsInfo) => {
  * @param param0
  * @returns Promise
  */
-const getItemDetail = async ({ symbols }: getItemDetailInfo) => {
+const getItemDetail = async ({ symbols, email }: getItemDetailInfo) => {
   try {
-    const result = await Axios.get(`${devURL}/api/item-detail?symbols=${symbols}`);
+    console.log(email);
+    const result = await Axios.get(`${devURL}/api/item-detail?symbols=${symbols}&email=${email}`);
+    console.log(result);
 
     if (result.status === 200) {
       const { data: itemDetail } = result;
@@ -135,6 +146,22 @@ const createBookmark = async ({ email, symbol, name, category }: createBookmarkI
   }
 };
 
+const deleteBookmark = async ({ email, symbol, name, category }: deleteBookmarkInfo) => {
+  try {
+    const result = await Axios.delete(`${devURL}/api/bookmark`, {
+      data: { email, symbol, name, category },
+    });
+
+    if (result.status === 200) {
+      return true;
+    }
+
+    return false;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 /**
  * @description email을 받아 bookmarks를 가져오는 front-side API call 함수
  * @param email
@@ -157,4 +184,4 @@ const getBookmarks = async (email: string) => {
   }
 };
 
-export { getSearchedItems, getItemDetail, getNews, getAnalyses, createBookmark, getBookmarks };
+export { getSearchedItems, getItemDetail, getNews, getAnalyses, createBookmark, getBookmarks, deleteBookmark };

@@ -1,7 +1,19 @@
 import { Service } from 'zum-portal-core/backend/decorator/Alias';
 import Bookmark from '../model/BookmarkModel';
 
-interface QueryProps {
+interface createBookmarkQueryProps {
+  email: string;
+  symbol: string;
+  name: string;
+  category: string;
+}
+
+interface getIsBookmarkedQueryProps {
+  email: string;
+  symbols: string;
+}
+
+interface deleteBookmarkQueryProps {
   email: string;
   symbol: string;
   name: string;
@@ -15,14 +27,25 @@ export default class BookmarkService {
    * @param param0
    * @returns Promise
    */
-  public async createBookmark({ email, symbol, name, category }: QueryProps) {
+  public async createBookmark({ email, symbol, name, category }: createBookmarkQueryProps) {
     const bookmark = await Bookmark.findOne({ email, symbol, name, category });
 
+    console.log(bookmark);
     if (bookmark) {
-      throw new Error('Bookmark already exists');
+      return false;
     }
 
     return Bookmark.create({ email, symbol, name, category });
+  }
+
+  public async deleteBookmark({ email, symbol, name, category }: deleteBookmarkQueryProps) {
+    const bookmark = await Bookmark.findOneAndRemove({ email, symbol, name, category });
+
+    if (bookmark !== null) {
+      return true;
+    }
+
+    return false;
   }
 
   /**
@@ -34,10 +57,20 @@ export default class BookmarkService {
   public async getBookmarks(email: string) {
     const bookmarks = await Bookmark.find({ email });
 
-    if (bookmarks) {
+    if (bookmarks !== null) {
       return bookmarks;
     }
 
-    throw new Error('Getting bookmarks was failed in bookmark service');
+    return false;
+  }
+
+  public async getIsBookmarked({ email, symbols }: getIsBookmarkedQueryProps) {
+    const bookmarks = await Bookmark.findOne({ email, symbol: symbols });
+
+    if (bookmarks !== null) {
+      return true;
+    }
+
+    return false;
   }
 }

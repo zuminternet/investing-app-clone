@@ -127,7 +127,9 @@ export default {
 
   created() {
     const { symbols } = this.$route.query;
-    this.getItemDetail({ symbols });
+    const email = this.userInfo.userEmail;
+
+    this.getItemDetail({ symbols, email });
     this.getNews({ offset: 0, limit: 3 });
     this.getAnalyses({ offset: 0, limit: 3 });
   },

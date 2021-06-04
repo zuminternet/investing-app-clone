@@ -15,7 +15,14 @@
       <empty-space></empty-space>
       <div class="header-button-box">
         <header-button isGoSearchButton></header-button>
-        <header-button isAddBookmarkButton :email="email" :symbol="symbol" :name="name" :category="category"></header-button>
+        <header-button
+          isAddBookmarkButton
+          :isBookmarked="isBookmarked"
+          :email="email"
+          :symbol="symbol"
+          :name="name"
+          :category="category"
+        ></header-button>
       </div>
     </template>
 
@@ -116,8 +123,12 @@ export default {
       return this.itemDetail.symbol;
     },
 
+    isBookmarked() {
+      return this.itemDetail.isBookmarked;
+    },
+
     email() {
-      return this.userInfo.email;
+      return this.userInfo.userEmail;
     },
   },
 
@@ -135,7 +146,7 @@ export default {
       const keyword = event.target.value;
 
       if (keyword) {
-        this.getSearchedItems(keyword);
+        this.getSearchedItems({ keyword, email: this.email });
       }
     },
   },

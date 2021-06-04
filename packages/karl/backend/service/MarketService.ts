@@ -27,7 +27,6 @@ export default class MarketService {
     const { accessKey } = marketStackConfig;
     const { data: stocks } = await axios.get(`http://api.marketstack.com/v1/tickers?access_key=${accessKey}`);
 
-    console.log('call');
     if (stocks) {
       return stocks;
     }

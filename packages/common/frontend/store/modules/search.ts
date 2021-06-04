@@ -10,18 +10,13 @@ const state = () => ({
 
 // getter 설정
 
-const getters = {
-  // itemCollections: (state) => {
-  //   return [state.stockItems, state.indexItems, state.cryptoItems];
-  // },
-};
+const getters = {};
 
 // actions 설정
 const actions = {
-  async getSearchedItems({ commit }, keyword) {
+  async getSearchedItems({ commit }, { keyword, email }) {
     try {
-      const result = await getSearchedItems({ keyword });
-      const { data: items } = result;
+      const items = await getSearchedItems({ keyword, email });
 
       if (items) {
         commit('changeSearchedItems', items);
@@ -34,14 +29,22 @@ const actions = {
       console.log(error);
     }
   },
+
+  async clearSearchStore({ commit }) {
+    commit('clearSearchStore');
+  },
 };
 
 // mutatuons 설정
 const mutations = {
   changeSearchedItems(state, items) {
     state.searchedItems = items;
+  },
 
-    console.log(state);
+  clearSearchStore(state) {
+    state.searchedItems = [];
+    state.searchedNews = [];
+    state.searchedAnalysis = [];
   },
 };
 
