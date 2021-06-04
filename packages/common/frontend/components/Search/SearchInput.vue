@@ -1,10 +1,5 @@
 <template>
-  <input
-    class="search-input"
-    :placeholder="`${product} ${search}`"
-    @change="$emit('search-input-value-change', $event)"
-    @keyup.enter="$emit('search-input-value-change', $event)"
-  />
+  <input class="search-input" :placeholder="`${product} ${search}`" @change="$emit('search-input-value-change', $event)" />
 </template>
 
 <script>

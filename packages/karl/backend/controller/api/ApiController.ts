@@ -194,6 +194,8 @@ export class ApiController {
       const { keyword } = request.query;
       const items = await this.searchService.getSearchedItems({ keyword });
 
+      console.log(items);
+
       if (items) {
         return response.status(200).send(items);
       }
