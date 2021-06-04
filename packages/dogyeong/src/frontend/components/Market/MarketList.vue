@@ -9,7 +9,7 @@
         </tr>
       </thead>
       <tbody>
-        <RouterLink :to="`/market/stock/${key}`" v-for="{ key, date, diff, growthRate, value } in listData" :key="key">
+        <RouterLink v-for="{ key, date, diff, growthRate, value } in listData" :key="key" :to="`/market/stock/${key}`">
           <tr>
             <td>
               <h4>{{ key }}</h4>

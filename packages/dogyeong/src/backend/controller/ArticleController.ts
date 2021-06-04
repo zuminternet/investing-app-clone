@@ -12,6 +12,7 @@ export class ApiController {
     try {
       const { offset, limit } = req.query;
       const news = await this.articleService.getNews({ offset: +offset, limit: +limit });
+
       res.json(news);
     } catch (err) {
       res.status(500).json({ err: err.message ?? err });
