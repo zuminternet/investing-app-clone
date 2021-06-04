@@ -117,7 +117,7 @@ export default {
     },
 
     email() {
-      return this.userInfo.email;
+      return this.userInfo.userEmail;
     },
   },
 
