@@ -121,3 +121,18 @@ export interface HistoricalData {
   display_name: string;
   data: MarketStockEOD[];
 }
+
+// 캐시 관련
+const secondUnit = 1000;
+const hourUnit = 60 * 60 * secondUnit;
+const dayUnit = 24 * hourUnit;
+const weekUnit = dayUnit * 7;
+const yearUnit = dayUnit * 365;
+
+export const times = {
+  //캐싱 60초
+  caching: 60,
+};
+
+// 개발 모드
+export const isProductionMode = process.env.MODE_ENV === 'production';

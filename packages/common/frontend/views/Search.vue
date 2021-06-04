@@ -3,13 +3,13 @@
     <multipurpose-header isSearch></multipurpose-header>
     <custom-swiper :navigatorButtonNames="swiperNavigatorButtonNames">
       <swiper-slide>
-        <item-card-list :items="searchedItems" :excludingHeight="100" isSearch></item-card-list>
+        <item-card-list :items="searchedItems" :excludedHeight="100" :userInfo="userInfo" isSearch></item-card-list>
       </swiper-slide>
       <swiper-slide>
-        <item-card-list :items="searchedItems" :excludingHeight="100" isSearch></item-card-list>
+        <item-card-list :items="searchedItems" :excludedHeight="100"></item-card-list>
       </swiper-slide>
       <swiper-slide>
-        <item-card-list :items="searchedItems" :excludingHeight="100" isSearch></item-card-list>
+        <item-card-list :items="searchedItems" :excludedHeight="100"></item-card-list>
       </swiper-slide>
     </custom-swiper>
   </div>
@@ -39,6 +39,7 @@ export default {
 
   computed: {
     ...mapState({
+      userInfo: (state) => state.user,
       searchedItems: (state) => state.search.searchedItems,
     }),
   },
