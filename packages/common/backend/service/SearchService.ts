@@ -1,6 +1,9 @@
 import { Service } from 'zum-portal-core/backend/decorator/Alias';
-import { marketStackConfig } from '../config';
+import { Caching } from 'zum-portal-core/backend/decorator/Caching';
 import axios from 'axios';
+
+import { marketStackConfig } from '../config';
+import { times, isProductionMode } from '../../domain';
 
 export interface getSearchedItemsInfo {
   keyword: string;
@@ -16,6 +19,15 @@ export default class SearchService {
    * @param keyword
    * @returns items
    */
+
+  @Caching({
+    /** 개발모드에서는 1시간에 한 번만 실행 */
+    refreshCron: isProductionMode ? `30 * * * * *` : `1 * * *`,
+    /** 캐싱 기간 초 단위 */
+    ttl: isProductionMode ? times.caching : times.caching * 60,
+    runOnStart: false,
+    unless: (result) => !result,
+  })
   public async getSearchedItems({ keyword }: getSearchedItemsInfo) {
     const { accessKey } = marketStackConfig;
     let { data: items } = await axios.get(`http://api.marketstack.com/v1/tickers?access_key=${accessKey}&search=${keyword}`);
