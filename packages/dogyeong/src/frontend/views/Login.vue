@@ -31,6 +31,20 @@ export default Vue.extend({
 
   methods: {
     ...mapActions(['login', 'googleLogin']),
+
+    onClickLogin() {
+      this.login({ email: this.email, password: this.password })
+        .then(this.routeHome.bind(this))
+        .catch((e) => window.alert(e?.response?.data ?? e?.message));
+    },
+    onClickGoogleLogin() {
+      this.googleLogin()
+        .then(this.routeHome.bind(this))
+        .catch((e) => window.alert(e?.response?.data ?? e?.error ?? e));
+    },
+    routeHome() {
+      this.$router.replace('/');
+    },
   },
 });
 </script>

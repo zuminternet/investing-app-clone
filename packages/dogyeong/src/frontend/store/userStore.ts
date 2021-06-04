@@ -20,6 +20,7 @@ export default () => {
           commit('setUser', user.name);
         } catch (e) {
           console.error(e);
+          throw e;
         }
       },
 
@@ -31,6 +32,7 @@ export default () => {
           commit('setUser', user.name);
         } catch (e) {
           console.error(e);
+          throw e;
         }
       },
 
