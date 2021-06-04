@@ -1,8 +1,13 @@
 import { AxiosStatic } from 'axios';
 import { apiEndpoints } from '@/config';
-import { MarketSymbol, EndOfDay, SummaryDetail, HistoricalData } from 'common/domain';
+import { MarketSymbol, EndOfDay, SummaryDetail, HistoricalData, ChartPeriod } from 'common/domain';
 
 declare const Axios: AxiosStatic;
+
+interface GetChartProps {
+  symbol: MarketSymbol;
+  period: ChartPeriod;
+}
 
 export const getIndices = async (): Promise<EndOfDay[]> => {
   const { data } = await Axios.get(apiEndpoints.getIndices);
@@ -24,7 +29,7 @@ export const getSummary = async (symbol: MarketSymbol): Promise<SummaryDetail> =
   return data;
 };
 
-export const getChart = async (symbol: MarketSymbol): Promise<HistoricalData> => {
-  const { data } = await Axios.get(`${apiEndpoints.getChart}/${symbol}`);
+export const getChart = async ({ symbol, period = '1d' }: GetChartProps): Promise<HistoricalData> => {
+  const { data } = await Axios.get(`${apiEndpoints.getChart}/${symbol}`, { params: { period } });
   return data;
 };
