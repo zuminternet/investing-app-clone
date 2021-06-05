@@ -35,7 +35,6 @@ const actions = {
       const news = await getSearchedNews({ offset, limit, tickers });
 
       if (news) {
-        console.log(news);
         commit('setSearchedNews', news);
 
         return true;
