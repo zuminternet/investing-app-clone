@@ -28,7 +28,7 @@
 
     <template v-if="isSearch">
       <header-button isBackButton></header-button>
-      <search-input @search-input-value-change="requestSearchedItems" />
+      <search-input @search-input-value-change="$emit('search-input-value-change', $event)" />
     </template>
 
     <template v-if="isHome">
@@ -140,13 +140,16 @@ export default {
   },
 
   methods: {
-    ...mapActions('search', ['getSearchedItems']),
+    ...mapActions('search', ['getSearchedItems', 'getSearchedNews', 'getSearchedAnalyses']),
 
-    requestSearchedItems(event) {
+    requestSearch(event) {
       const keyword = event.target.value;
 
       if (keyword) {
+        const tickers = [keyword];
         this.getSearchedItems({ keyword, email: this.email });
+        this.getSearchedNews({ offset: 0, limit: 10, tickers });
+        this.getSearchedAnalyses({ offset: 0, limit: 10, tickers });
       }
     },
   },

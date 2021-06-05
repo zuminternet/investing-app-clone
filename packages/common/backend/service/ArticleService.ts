@@ -27,8 +27,30 @@ export default class ArticleService {
       .lean<ArticleDoc[]>();
   }
 
+  public async getNewsForSearch({ offset = 0, limit = 10, tickers }: QueryProps = {}): Promise<ArticleDoc[]> {
+    const tickerOption = this.getTickerOption(tickers);
+    const query = { type: ArticleType.news, ...tickerOption };
+
+    return Article.find(query)
+      .sort({ date: 'desc' })
+      .skip(offset)
+      .limit(limit)
+      .lean<ArticleDoc[]>();
+  }
+
   @Caching({ ttl: 10, runOnStart: false })
   public async getOpinions({ offset = 0, limit = 10, tickers }: QueryProps = {}): Promise<ArticleDoc[]> {
+    const tickerOption = this.getTickerOption(tickers);
+    const query = { type: ArticleType.opinions, ...tickerOption };
+
+    return Article.find(query)
+      .sort({ date: 'desc' })
+      .skip(offset)
+      .limit(limit)
+      .lean<ArticleDoc[]>();
+  }
+
+  public async getOpinionsForSearch({ offset = 0, limit = 10, tickers }: QueryProps = {}): Promise<ArticleDoc[]> {
     const tickerOption = this.getTickerOption(tickers);
     const query = { type: ArticleType.opinions, ...tickerOption };
 

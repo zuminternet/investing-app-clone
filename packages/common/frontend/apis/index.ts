@@ -17,6 +17,7 @@ export interface getItemDetailInfo {
 export interface getNewsAndAnalysesInfo {
   offset: number;
   limit: number;
+  tickers: String[];
 }
 
 export interface createBookmarkInfo {
@@ -55,15 +56,55 @@ const getSearchedItems = async ({ keyword, email }: getSearchedItemsInfo) => {
 };
 
 /**
+ * @description search page에 렌더링할 searched news를 가져오는 front-side API call 함수
+ * @param param0
+ * @returns
+ */
+const getSearchedNews = async ({ offset, limit, tickers }: getNewsAndAnalysesInfo) => {
+  try {
+    const result = await Axios.get(`${devURL}/api/search/news`, {
+      params: { offset, limit, tickers },
+    });
+
+    if (result.status === 200) {
+      const { data: news } = result;
+
+      return news;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+/**
+ * search page에 렌더링할 searched analyses를 가져오는 front-side API call 함수
+ * @param param0
+ * @returns
+ */
+const getSearchedAnalyses = async ({ offset, limit, tickers }: getNewsAndAnalysesInfo) => {
+  try {
+    const result = await Axios.get(`${devURL}/api/search/analyses`, {
+      params: { offset, limit, tickers },
+    });
+
+    if (result.status === 200) {
+      const { data: news } = result;
+
+      return news;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+/**
  * @description item detail page에 렌더링할 item detail를 가져오는 front-side API 호출 함수
  * @param param0
  * @returns Promise
  */
 const getItemDetail = async ({ symbols, email }: getItemDetailInfo) => {
   try {
-    console.log(email);
     const result = await Axios.get(`${devURL}/api/item-detail?symbols=${symbols}&email=${email}`);
-    console.log(result);
 
     if (result.status === 200) {
       const { data: itemDetail } = result;
@@ -82,9 +123,11 @@ const getItemDetail = async ({ symbols, email }: getItemDetailInfo) => {
  * @param param0
  * @returns Promise
  */
-const getNews = async ({ offset, limit }: getNewsAndAnalysesInfo) => {
+const getNews = async ({ offset, limit, tickers }: getNewsAndAnalysesInfo) => {
   try {
-    const result = await Axios.get(`${devURL}/api/articles/news?offset=${offset}&limit=${limit}`);
+    const result = await Axios.get(`${devURL}/api/articles/news`, {
+      params: { offset, limit, tickers },
+    });
 
     if (result.status === 200) {
       const { data: news } = result;
@@ -104,9 +147,11 @@ const getNews = async ({ offset, limit }: getNewsAndAnalysesInfo) => {
  * @returns Promise
  */
 
-const getAnalyses = async ({ offset, limit }: getNewsAndAnalysesInfo) => {
+const getAnalyses = async ({ offset, limit, tickers }: getNewsAndAnalysesInfo) => {
   try {
-    const result = await Axios.get(`${devURL}/api/articles/analyses?offset=${offset}&limit=${limit}`);
+    const result = await Axios.get(`${devURL}/api/articles/analyses`, {
+      params: { offset, limit, tickers },
+    });
 
     if (result.status === 200) {
       const { data: analyses } = result;
@@ -184,4 +229,14 @@ const getBookmarks = async (email: string) => {
   }
 };
 
-export { getSearchedItems, getItemDetail, getNews, getAnalyses, createBookmark, getBookmarks, deleteBookmark };
+export {
+  getSearchedAnalyses,
+  getSearchedItems,
+  getItemDetail,
+  getNews,
+  getAnalyses,
+  createBookmark,
+  getBookmarks,
+  deleteBookmark,
+  getSearchedNews,
+};

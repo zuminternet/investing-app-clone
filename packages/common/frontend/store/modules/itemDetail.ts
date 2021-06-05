@@ -46,9 +46,9 @@ const actions = {
     }
   },
 
-  async getNews({ commit }, { offset, limit }) {
+  async getNews({ commit }, { offset, limit, tickers }) {
     try {
-      const news = await getNews({ offset, limit });
+      const news = await getNews({ offset, limit, tickers });
 
       if (news) {
         commit('changeNews', news);
@@ -62,9 +62,9 @@ const actions = {
     }
   },
 
-  async getAnalyses({ commit }, { offset, limit }) {
+  async getAnalyses({ commit }, { offset, limit, tickers }) {
     try {
-      const analyses = await getAnalyses({ offset, limit });
+      const analyses = await getAnalyses({ offset, limit, tickers });
 
       if (analyses) {
         commit('changeAnalyses', analyses);
