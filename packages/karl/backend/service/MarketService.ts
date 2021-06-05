@@ -1,22 +1,52 @@
 import { Service } from 'zum-portal-core/backend/decorator/Alias';
 import { Caching } from 'zum-portal-core/backend/decorator/Caching';
 import axios from 'axios';
+import * as yahooFinance from 'yahoo-finance';
+import { investing } from 'investing-com-api';
 
 import { marketStackConfig } from '../../../common/backend/config';
 import { times } from '../domain/date';
 import { isProductionMode } from '../domain/utils';
 
+interface InvestingData {
+  date: number;
+  value: number;
+}
+
+export interface InvestingApiResponse {
+  key: string;
+  value: number;
+  diff: number;
+  growthRate: number;
+  // date: string;
+}
+
 enum StockSymbols {
-  MSFT = 's', // 마이크로 소프트
-  AAPL = 's', // 애플
-  AMZN = 's', // 아마존
-  FB = 's', // 페이스북
-  JPM = 's', // JP 모건
+  AAPL = 'equities/apple-computer-inc', // 애플
+  AMZN = 'equities/amazon-com-inc', // 아마존
+  FB = 'equities/facebook-inc', // 페이스북
+  JPM = 'equities/jp-morgan-chase', // JP 모건
 }
 
 @Service()
 export default class MarketService {
   constructor() {}
+
+  private callInvesting(key, investingId) {
+    return new Promise<InvestingApiResponse>((resolve, reject) => {
+      investing(investingId)
+        .then((result: InvestingData[]) => {
+          console.log(investingId, 'investingId');
+
+          const { value: newValue, date } = result.pop();
+          const { value: oldValue } = result.pop();
+          const diff = newValue - oldValue;
+          const growthRate = (diff / newValue) * 100;
+          resolve({ key, value: newValue, diff, growthRate });
+        })
+        .catch(reject);
+    });
+  }
 
   /**
    * @description home page에 렌더링할 stock들을 가져오는 service
@@ -42,13 +72,15 @@ export default class MarketService {
     const { data: stocks } = result;
     const displayedStocks = [];
 
-    stocks.forEach((stock) => {
-      if (StockSymbols[stock.symbol]) {
-        displayedStocks.push(stock);
-      }
-    });
+    for (let i = 0; i < stocks.length; i++) {
+      if (StockSymbols[stocks[i].symbol]) {
+        const key = stocks[i].symbol;
+        const investingId = StockSymbols[stocks[i].symbol];
+        const investingData = await this.callInvesting(key, investingId);
 
-    console.log(displayedStocks);
+        displayedStocks.push({ ...stocks[i], ...investingData });
+      }
+    }
 
     if (displayedStocks) {
       return displayedStocks;

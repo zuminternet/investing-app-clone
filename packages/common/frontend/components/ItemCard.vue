@@ -120,7 +120,7 @@ export default {
     },
 
     price() {
-      return 10;
+      return this.item.value;
     },
 
     time() {
@@ -128,19 +128,11 @@ export default {
     },
 
     fluctuationPrice() {
-      // if (!this.isSearch) {
-      //   return this.item.fluctuationPrice;
-      // }
-
-      return 10;
+      return this.item.diff.toFixed(3);
     },
 
     fluctuationRate() {
-      // if (!this.isSearch) {
-      //   return this.item.fluctuationRate;
-      // }
-
-      return 10;
+      return this.item.growthRate.toFixed(3);
     },
   },
 

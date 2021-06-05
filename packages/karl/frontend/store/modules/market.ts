@@ -22,6 +22,7 @@ const actions = {
       const stocks = await getStocks();
 
       if (stocks) {
+        console.log(stocks);
         commit('changeStockItems', stocks);
 
         return true;
