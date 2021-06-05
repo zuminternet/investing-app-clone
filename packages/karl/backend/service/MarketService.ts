@@ -6,6 +6,14 @@ import { marketStackConfig } from '../../../common/backend/config';
 import { times } from '../domain/date';
 import { isProductionMode } from '../domain/utils';
 
+enum StockSymbols {
+  MSFT = 's', // 마이크로 소프트
+  AAPL = 's', // 애플
+  AMZN = 's', // 아마존
+  FB = 's', // 페이스북
+  JPM = 's', // JP 모건
+}
+
 @Service()
 export default class MarketService {
   constructor() {}
@@ -25,10 +33,25 @@ export default class MarketService {
   })
   public async getStocks() {
     const { accessKey } = marketStackConfig;
-    const { data: stocks } = await axios.get(`http://api.marketstack.com/v1/tickers?access_key=${accessKey}`);
+    const { data: result } = await axios.get(`http://api.marketstack.com/v1/tickers`, {
+      params: {
+        access_key: accessKey,
+      },
+    });
 
-    if (stocks) {
-      return stocks;
+    const { data: stocks } = result;
+    const displayedStocks = [];
+
+    stocks.forEach((stock) => {
+      if (StockSymbols[stock.symbol]) {
+        displayedStocks.push(stock);
+      }
+    });
+
+    console.log(displayedStocks);
+
+    if (displayedStocks) {
+      return displayedStocks;
     }
 
     throw new Error('getting stocks was failed in MarketService');

@@ -19,7 +19,7 @@ const getters = {
 const actions = {
   async getStocks({ commit }) {
     try {
-      const { data: stocks } = await getStocks();
+      const stocks = await getStocks();
 
       if (stocks) {
         commit('changeStockItems', stocks);
