@@ -141,11 +141,34 @@ export class ApiController {
    * @returns response
    */
   @GetMapping({ path: '/market/indices' })
-  public async getIndices(request: Request, resposne: Response) {
+  public async getIndices(request: Request, response: Response) {
     try {
+      const indices = await this.marketService.getIndices();
+
+      if (indices) {
+        return response.status(200).send(indices);
+      }
+
+      response.sendStatus(404);
     } catch (error) {
       console.log(error);
-      resposne.status(404).json(error);
+      response.status(404).json(error);
+    }
+  }
+
+  @GetMapping({ path: '/market/cryptos' })
+  public async getCryptos(request: Request, response: Response) {
+    try {
+      const cryptos = await this.marketService.getCryptos();
+
+      if (cryptos) {
+        return response.status(200).send(cryptos);
+      }
+
+      response.sendStatus(404);
+    } catch (error) {
+      console.log(error);
+      response.status(404).json(error);
     }
   }
 
@@ -276,14 +299,11 @@ export class ApiController {
     try {
       const { offset, limit, tickers } = request.query;
 
-      console.log(tickers);
       const news = await this.articleService.getNewsForSearch({
         offset: +offset,
         limit: +limit,
         tickers: this.getTickerArray(tickers),
       });
-
-      console.log(news);
 
       if (news) {
         return response.status(200).send(news);

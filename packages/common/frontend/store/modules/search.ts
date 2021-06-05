@@ -70,7 +70,13 @@ const actions = {
 // mutatuons 설정
 const mutations = {
   setSearchedItems(state, items) {
-    state.searchedItems = items;
+    const searchedItems = [];
+
+    items.forEach((item) => {
+      item = { ...item, category: item.stock_exchange.acronym };
+      searchedItems.push(item);
+    });
+    state.searchedItems = searchedItems;
   },
 
   setSearchedNews(state, news) {

@@ -33,7 +33,7 @@
             {{ name }}
           </custom-text>
           <div class="item-sub-information">
-            <custom-text>{{ time }}</custom-text>
+            <custom-text>{{ date }}</custom-text>
             |
             <custom-text>
               {{ category }}
@@ -100,10 +100,6 @@ export default {
     },
 
     category() {
-      if (this.isSearch) {
-        return this.item.stock_exchange.acronym;
-      }
-
       return this.item.category;
     },
 
@@ -123,16 +119,24 @@ export default {
       return this.item.value;
     },
 
-    time() {
-      return 10;
+    date() {
+      return this.item.date;
     },
 
     fluctuationPrice() {
-      return this.item.diff.toFixed(3);
+      if (!this.isBookmark) {
+        return this.item.diff.toFixed(3);
+      }
+
+      return 10;
     },
 
     fluctuationRate() {
-      return this.item.growthRate.toFixed(3);
+      if (!this.isBookmark) {
+        return this.item.growthRate.toFixed(3);
+      }
+
+      return 10;
     },
   },
 

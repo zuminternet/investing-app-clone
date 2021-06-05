@@ -148,6 +148,27 @@ const getStocks = async () => {
  */
 const getIndices = async () => {
   try {
+    const result = await Axios.get(`${devURL}/api/market/indices`);
+
+    if (result.status === 200) {
+      const { data: indices } = result;
+
+      return indices;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const getCryptos = async () => {
+  try {
+    const result = await Axios.get(`${devURL}/api/market/cryptos`);
+
+    if (result.status === 200) {
+      const { data: cryptos } = result;
+
+      return cryptos;
+    }
   } catch (error) {
     console.log(error);
   }
@@ -172,4 +193,5 @@ export {
   getIndices,
   getCryptoCurrencies,
   createArticles,
+  getCryptos,
 };
