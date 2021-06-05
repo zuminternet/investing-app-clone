@@ -265,15 +265,25 @@ export class ApiController {
     }
   }
 
+  /**
+   * @description DB에서 articles 중 검색된 news만 가져오는 controller
+   * @param request
+   * @param response
+   * @returns
+   */
   @GetMapping({ path: '/search/news' })
   public async getNewsForSearch(request: Request, response: Response) {
     try {
       const { offset, limit, tickers } = request.query;
+
+      console.log(tickers);
       const news = await this.articleService.getNewsForSearch({
         offset: +offset,
         limit: +limit,
         tickers: this.getTickerArray(tickers),
       });
+
+      console.log(news);
 
       if (news) {
         return response.status(200).send(news);
@@ -301,7 +311,25 @@ export class ApiController {
         // tickers: this.getTickerArray(tickers),
       });
 
-      console.log(analyses, 'ana');
+      if (analyses) {
+        return response.status(200).send(analyses);
+      }
+
+      response.sendStatus(404);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  @GetMapping({ path: '/search/analyses' })
+  public async getAnalysesForSearch(request: Request, response: Response) {
+    try {
+      const { offset, limit, tickers } = request.query;
+      const analyses = await this.articleService.getOpinionsForSearch({
+        offset: +offset,
+        limit: +limit,
+        // tickers: this.getTickerArray(tickers),
+      });
 
       if (analyses) {
         return response.status(200).send(analyses);
