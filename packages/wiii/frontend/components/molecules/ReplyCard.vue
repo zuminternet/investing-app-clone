@@ -25,6 +25,7 @@
 import Vue from 'vue';
 import Button from '@/components/atoms/Button';
 import Words from '@/components/atoms/Words';
+import lazyloading from '@/utils/lazyloading';
 
 export default Vue.extend({
   name: 'ReplyCard',
@@ -63,22 +64,8 @@ export default Vue.extend({
   },
 
   mounted() {
-    /** lazy-loading for thumbnails */
     const card = this.$refs.card;
-    const io = new IntersectionObserver((entries) => {
-      for (const { target, isIntersecting } of entries) {
-        if (!isIntersecting) continue;
-
-        const img = target.getElementsByTagName('img')[0];
-        if (!img?.dataset?.src) continue;
-
-        img.src = img.dataset.src;
-        img.removeAttribute('data-imgsrc');
-
-        io.disconnect();
-      }
-    });
-    io.observe(card);
+    lazyloading(card);
   },
 });
 </script>
