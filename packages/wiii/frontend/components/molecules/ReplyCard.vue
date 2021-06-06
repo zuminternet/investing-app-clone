@@ -12,8 +12,9 @@
     <Words class="reply-content"> {{ contents }} </Words>
     <div class="reply-reaction noselect">
       <Button class="reply-likes">👍 {{ likes }}</Button>
-      <Button class="reply-rerepl">대댓글 달기</Button>
+      <Button class="reply-rerepl" @click.native="inputToggle(replId)">대댓글 달기</Button>
     </div>
+    <ReplyForm v-show="curInputId === replId" @change-current-input="inputToggle" />
   </article>
 </template>
 
@@ -25,12 +26,13 @@
 import Vue from 'vue';
 import Button from '@/components/atoms/Button';
 import Words from '@/components/atoms/Words';
+import ReplyForm from '@/components/molecules/ReplyInputForm.vue';
 import lazyloading from '@/utils/lazyloading';
 
 export default Vue.extend({
   name: 'ReplyCard',
 
-  components: { Button, Words },
+  components: { Button, Words, ReplyForm },
 
   /**
    * @see @/components/organisms/ReplySection
@@ -61,6 +63,9 @@ export default Vue.extend({
       type: Number,
       default: 0,
     },
+    curInputId: {
+      type: String,
+    },
   },
 
   computed: {
@@ -79,6 +84,12 @@ export default Vue.extend({
   mounted() {
     const card = this.$refs.card;
     lazyloading(card);
+  },
+
+  methods: {
+    inputToggle(id) {
+      this.$emit('change-current-input', id);
+    },
   },
 });
 </script>

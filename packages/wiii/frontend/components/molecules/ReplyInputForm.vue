@@ -1,12 +1,8 @@
 <template>
-  <div v-if="!isInputOpen" id="reply-open" class="card noselect" @click="inputToggle">
-    <Words>댓글 달기</Words>
-  </div>
-  <form v-else id="reply-input" class="card" @submit.prevent="submitReply">
-    <Label :forId="'reply-input-text'">댓글 달기</Label>
+  <form id="reply-input" class="card" @submit.prevent="submitReply">
     <TextArea id="reply-input-text" @change-text-handler="changeReplyInput" :replyText="replyText" />
     <div id="buttons">
-      <Button id="reply-input-cancel" type="reset" @click.native="inputToggle">Cancel</Button>
+      <Button id="reply-input-cancel" type="reset" @click.native="cancelInput">Cancel</Button>
       <Button id="reply-input-submit" type="submit" :disabled="replyText.length === 0">Save</Button>
     </div>
   </form>
@@ -14,23 +10,22 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import Words from '@/components/atoms/Words.vue';
-import Label from '@/components/atoms/Label.vue';
 import TextArea from '@/components/atoms/TextArea.vue';
 import Button from '@/components/atoms/Button.vue';
 
 export default Vue.extend({
   data() {
     return {
-      isInputOpen: false,
       replyText: '',
     };
   },
-  components: { Words, Label, TextArea, Button },
+
+  components: { TextArea, Button },
+
   methods: {
-    inputToggle() {
+    cancelInput() {
       this.replyText = '';
-      this.isInputOpen = !this.isInputOpen;
+      this.$emit('change-current-input', 'none');
     },
 
     changeReplyInput(event) {
@@ -38,25 +33,15 @@ export default Vue.extend({
     },
 
     submitReply() {
-      alert(this.replyText);
+      const replyText = this.replyText;
+      this.cancelInput();
+      alert(replyText);
     },
   },
 });
 </script>
 
 <style lang="scss" scoped>
-#reply-open {
-  &,
-  p {
-    cursor: pointer;
-  }
-
-  &:hover {
-    background-color: $grey-500;
-    color: $grey-100;
-  }
-}
-
 #reply-input {
   width: 100%;
   padding: 3% 5% 2% 5%;
