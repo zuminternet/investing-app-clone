@@ -37,15 +37,11 @@ export default Vue.extend({});
   }
 
   &.mini {
+    width: fit-content;
     font-size: 0.6rem;
     line-height: 1.3;
     font-style: oblique;
     color: $grey-500;
-  }
-
-  .dark & {
-    background-color: transparent;
-    color: $grey-300;
   }
 }
 </style>

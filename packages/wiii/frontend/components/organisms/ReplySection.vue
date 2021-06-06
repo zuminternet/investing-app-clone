@@ -1,20 +1,16 @@
 <template>
   <section class="section">
     <Card
-      v-for="{ replId, title, contents, date, user } in repls"
+      v-for="{ replId, userThumbnail, userName, contents, date, likes } in repls"
       :key="replId"
-      :replId="replId"
-      :title="title"
-      :contents="contents"
-      :date="date"
-      :user="user"
+      v-bind="{ userThumbnail, userName, contents, date, likes }"
     />
   </section>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-
+import { mapActions } from 'vuex';
 import Words from '@/components/atoms/Words';
 import Card from '@/components/molecules/ReplyCard';
 
@@ -23,26 +19,36 @@ export default Vue.extend({
 
   components: { Card, Words },
 
-  computed: {
-    repls() {
-      return this.getRepls();
-    },
+  data() {
+    return {
+      repls: [],
+    };
+  },
+
+  async mounted() {
+    this.repls = await this.getRandRepls();
   },
 
   methods: {
-    /** @todo vuex에서 데이터 가져오기 */
-    getRepls() {
-      /** dummies */
-      return [
-        { replId: 'dfgf3w', title: ' hello', contents: '댓글댓글', date: `2021-06-01`, user: 3434 },
-        { replId: 'dfgf3w', title: ' hello', contents: '댓글댓글', date: `2021-06-01`, user: 3434 },
-        { replId: 'dfgf3w', title: ' hello', contents: '댓글댓글', date: `2021-06-01`, user: 3434 },
-        { replId: 'dfgf3w', title: ' hello', contents: '댓글댓글', date: `2021-06-01`, user: 3434 },
-        { replId: 'dfgf3w', title: ' hello', contents: '댓글댓글', date: `2021-06-01`, user: 3434 },
-        { replId: 'dfgf3w', title: ' hello', contents: '댓글댓글', date: `2021-06-01`, user: 3434 },
-        { replId: 'dfgf3w', title: ' hello', contents: '댓글댓글', date: `2021-06-01`, user: 3434 },
-        { replId: 'dfgf3w', title: ' hello', contents: '댓글댓글', date: `2021-06-01`, user: 3434 },
-      ];
+    ...mapActions('Reply', ['getRandomRepls']),
+    /**
+     * @todo vuex에서 데이터 가져오기
+     * @property replId
+     * @property userThumbnail
+     * @property userName
+     * @property date
+     * @property contents
+     * @property likes
+     */
+    async getRandRepls() {
+      try {
+        const result = await this.getRandomRepls();
+        if (!result?.length) throw new Error('No Result');
+
+        return result;
+      } catch (e) {
+        console.error(e);
+      }
     },
   },
 });

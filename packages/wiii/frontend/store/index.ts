@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 
 import Theme, { ThemeState } from '@/store/modules/theme';
+import Reply from '@/store/modules/reply';
 import { RouteState } from '@/store/modules/route';
 import { getModule } from 'vuex-module-decorators';
 
@@ -14,7 +15,8 @@ Vue.use(Vuex);
 
 const store = new Vuex.Store({
   modules: {
-    theme: Theme,
+    Theme,
+    Reply,
   },
 });
 
