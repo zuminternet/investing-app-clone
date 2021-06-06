@@ -1,5 +1,5 @@
 <template>
-  <Button @click.native="themeToggler" :class="color" :text="buttonTitle"></Button>
+  <Button @click.native="themeToggler" :class="color">{{ buttonTitle }}</Button>
 </template>
 
 <script lang="ts">
@@ -11,9 +11,7 @@ import { ThemeName } from '@/store/modules/theme';
 export default Vue.extend({
   name: 'ThemeToggleButton',
 
-  components: {
-    Button,
-  },
+  components: { Button },
 
   computed: {
     isDark() {
