@@ -1,6 +1,7 @@
 <template>
   <section class="section">
     <ReplySort @change-sort="changeSort" :sortText="sortText" />
+    <ReplyInput />
     <Card
       v-for="{ replId, userThumbnail, userName, contents, date, likes } in repls"
       :key="replId"
@@ -14,13 +15,14 @@ import Vue from 'vue';
 import { mapActions } from 'vuex';
 import Words from '@/components/atoms/Words';
 import Button from '@/components/atoms/Button';
+import ReplyInput from '@/components/molecules/ReplyInput';
 import ReplySort from '@/components/molecules/ReplySort';
 import Card from '@/components/molecules/ReplyCard';
 
 export default Vue.extend({
   name: 'ReplySection',
 
-  components: { Words, Button, ReplySort, Card },
+  components: { Words, Button, ReplyInput, ReplySort, Card },
 
   data() {
     const sortTexts = ['최신순', '좋아요순'];

@@ -36,6 +36,7 @@ export default Vue.extend({
     background-color: $grey-100;
     border: 2px solid $grey-100;
     margin-left: 2px;
+    font-weight: bold;
   }
 }
 </style>

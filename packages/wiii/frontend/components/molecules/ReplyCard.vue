@@ -5,17 +5,7 @@
         <img :data-src="userThumbnail" alt="😎" class="thumbnail noselect" />
         <div class="reply-info-user-detail">
           <Words class="mini bold"> {{ userName }} </Words>
-          <Words class="mini">
-            {{
-              `'${date
-                .getFullYear()
-                .toString()
-                .slice(-2)}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date
-                .getDate()
-                .toString()
-                .padStart(2, '0')}`
-            }}
-          </Words>
+          <Words class="mini"> {{ dateString }} </Words>
         </div>
       </div>
     </div>
@@ -70,6 +60,19 @@ export default Vue.extend({
     likes: {
       type: Number,
       default: 0,
+    },
+  },
+
+  computed: {
+    dateString() {
+      const { date } = this;
+      return `'${date
+        .getFullYear()
+        .toString()
+        .slice(-2)}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date
+        .getDate()
+        .toString()
+        .padStart(2, '0')}`;
     },
   },
 

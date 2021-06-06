@@ -59,7 +59,7 @@ const actions = {
           userName: username,
           date: new Date(Date.now() * Math.random()),
           contents: messagesArr[i],
-          likes: Math.floor(Math.random() * 15),
+          likes: Math.floor(Math.random() * 50),
         };
       }
 

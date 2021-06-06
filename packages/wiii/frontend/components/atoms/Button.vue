@@ -1,5 +1,5 @@
 <template>
-  <button class="oselect">
+  <button class="noselect">
     <slot />
   </button>
 </template>
@@ -22,9 +22,13 @@ button {
   cursor: pointer;
   transition: all 0.15s ease-out;
 
-  &:hover {
+  &:hover:not(:disabled) {
     background-color: $grey-500;
     border: solid 2px $grey-500;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
   }
 }
 </style>
