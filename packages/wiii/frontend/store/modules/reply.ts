@@ -53,25 +53,17 @@ const actions = {
           picture: { thumbnail },
         } = results[i];
 
-        const randomDate = new Date(Date.now() * Math.random());
-        const date = `'${randomDate
-          .getFullYear()
-          .toString()
-          .slice(-2)}/${(randomDate.getMonth() + 1).toString().padStart(2, '0')}/${randomDate
-          .getDate()
-          .toString()
-          .padStart(2, '0')}`;
         randomRepls[i] = {
           replId: uuid,
           userThumbnail: thumbnail,
           userName: username,
-          date,
+          date: new Date(Date.now() * Math.random()),
           contents: messagesArr[i],
           likes: Math.floor(Math.random() * 15),
         };
       }
 
-      return randomRepls;
+      return randomRepls.sort((a, b) => b.date - a.date);
     } catch (e) {
       return console.error(e);
     }

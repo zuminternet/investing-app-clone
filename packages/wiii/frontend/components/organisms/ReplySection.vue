@@ -1,5 +1,6 @@
 <template>
   <section class="section">
+    <ReplySort @change-sort="changeSort" :sortText="sortText" />
     <Card
       v-for="{ replId, userThumbnail, userName, contents, date, likes } in repls"
       :key="replId"
@@ -12,21 +13,28 @@
 import Vue from 'vue';
 import { mapActions } from 'vuex';
 import Words from '@/components/atoms/Words';
+import Button from '@/components/atoms/Button';
+import ReplySort from '@/components/molecules/ReplySort';
 import Card from '@/components/molecules/ReplyCard';
 
 export default Vue.extend({
   name: 'ReplySection',
 
-  components: { Card, Words },
+  components: { Words, Button, ReplySort, Card },
 
   data() {
+    const sortTexts = ['최신순', '좋아요순'];
     return {
       repls: [],
+      sortIdx: 0,
+      sortText: sortTexts[0],
+      sortTexts,
     };
   },
 
   async mounted() {
     this.repls = await this.getRandRepls();
+    this.sortText = this.sortTexts[this.sortIdx];
   },
 
   methods: {
@@ -49,6 +57,12 @@ export default Vue.extend({
       } catch (e) {
         console.error(e);
       }
+    },
+
+    changeSort() {
+      this.sortIdx = (this.sortIdx + 1) % 2;
+      this.sortText = this.sortTexts[this.sortIdx];
+      this.repls = this.repls.sort((a, b) => (this.sortIdx === 0 ? b.date - a.date : b.likes - a.likes));
     },
   },
 });

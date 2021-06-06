@@ -1,5 +1,5 @@
 <template>
-  <button class="noselect">
+  <button class="oselect">
     <slot />
   </button>
 </template>
@@ -15,10 +15,16 @@ button {
   background-color: $grey-300;
   height: 30px;
   width: max-content;
-  border: none;
+  border: solid 2px $grey-300;
   border-radius: 10px;
   font-size: 0.7rem;
   line-height: 1rem;
   cursor: pointer;
+  transition: all 0.15s ease-out;
+
+  &:hover {
+    background-color: $grey-500;
+    border: solid 2px $grey-500;
+  }
 }
 </style>
