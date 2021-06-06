@@ -1,22 +1,24 @@
 <template>
-  <button class="noselect">{{ text }}</button>
+  <button class="noselect">
+    <slot />
+  </button>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 
-export default Vue.extend({
-  props: {
-    text: {
-      type: String,
-    },
-  },
-});
+export default Vue.extend({});
 </script>
 
 <style lang="scss" scoped>
 button {
-  border-radius: 15px;
+  background-color: $grey-300;
+  height: 30px;
+  width: max-content;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.7rem;
+  line-height: 1rem;
   cursor: pointer;
 }
 </style>

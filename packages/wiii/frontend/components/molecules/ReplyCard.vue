@@ -11,8 +11,8 @@
     </div>
     <Words class="reply-content"> {{ contents }} </Words>
     <div class="reply-reaction noselect">
-      <button class="reply-likes">👍 {{ likes }}</button>
-      <button class="reply-rerepl">대댓글 달기</button>
+      <Button class="reply-likes">👍 {{ likes }}</Button>
+      <Button class="reply-rerepl">대댓글 달기</Button>
     </div>
   </article>
 </template>
@@ -23,12 +23,13 @@
  * @see https://semantic-ui.com/views/comment.html
  */
 import Vue from 'vue';
+import Button from '@/components/atoms/Button';
 import Words from '@/components/atoms/Words';
 
 export default Vue.extend({
   name: 'ReplyCard',
 
-  components: { Words },
+  components: { Button, Words },
 
   /**
    * @see @/components/organisms/ReplySection
@@ -45,7 +46,6 @@ export default Vue.extend({
     },
     userThumbnail: {
       type: String,
-      default: 'https://loremflickr.com/g/150/150/panda',
     },
     userName: {
       type: String,
@@ -113,10 +113,6 @@ $maxHeight: 50px;
     justify-content: space-between;
     align-items: center;
 
-    p {
-      margin: 3px 0;
-    }
-
     &-user {
       width: max-content;
       display: flex;
@@ -128,6 +124,10 @@ $maxHeight: 50px;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
+
+        p {
+          margin: 3px 0;
+        }
       }
     }
 
@@ -150,17 +150,6 @@ $maxHeight: 50px;
     justify-content: space-between;
     align-items: center;
     cursor: default;
-
-    button {
-      background-color: $grey-300;
-      height: 30px;
-      width: max-content;
-      border: none;
-      border-radius: 10px;
-      font-size: 0.7rem;
-      line-height: 1rem;
-      cursor: pointer;
-    }
 
     .reply-likes {
       text-align: center;
