@@ -2,10 +2,13 @@
   <div v-if="!isInputOpen" id="reply-open" class="card noselect" @click="inputToggle">
     <Words>댓글 달기</Words>
   </div>
-  <form v-else="isInputOpen" id="reply-input" class="card" @submit.prevent="submitReply">
+  <form v-else id="reply-input" class="card" @submit.prevent="submitReply">
     <Label :forId="'reply-input-text'">댓글 달기</Label>
     <TextArea id="reply-input-text" @change-text-handler="changeReplyInput" :replyText="replyText" />
-    <Button id="reply-input-submit" type="submit" :disabled="replyText.length === 0">Save</Button>
+    <div id="buttons">
+      <Button id="reply-input-cancel" type="reset" @click.native="inputToggle">Cancel</Button>
+      <Button id="reply-input-submit" type="submit" :disabled="replyText.length === 0">Save</Button>
+    </div>
   </form>
 </template>
 
@@ -26,6 +29,7 @@ export default Vue.extend({
   components: { Words, Label, TextArea, Button },
   methods: {
     inputToggle() {
+      this.replyText = '';
       this.isInputOpen = !this.isInputOpen;
     },
 
@@ -59,10 +63,29 @@ export default Vue.extend({
   display: flex;
   flex-direction: column;
 
-  &-submit:hover:not(:disabled) {
-    background-color: $blue-700;
-    border: solid 2px $blue-700;
-    color: $grey-100;
+  #buttons {
+    width: 100%;
+    padding-top: 3px;
+    display: flex;
+    justify-content: space-between;
+    cursor: default;
+  }
+
+  &-submit:not(:disabled) {
+    background-color: $green-500;
+    border: solid 2px $green-500;
+    color: $white-900;
+
+    &:hover {
+      background-color: $blue-700;
+      border: solid 2px $blue-700;
+    }
+  }
+
+  &-cancel {
+    background-color: $red-a400;
+    border: solid 2px $red-a400;
+    color: $white-900;
   }
 }
 </style>

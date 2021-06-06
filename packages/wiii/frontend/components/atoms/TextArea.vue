@@ -1,5 +1,5 @@
 <template>
-  <textarea @input="$emit('change-text-handler', $event)" :value="replyText" />
+  <textarea @input="$emit('change-text-handler', $event)" :value="newText" />
 </template>
 
 <script lang="ts">
@@ -7,7 +7,7 @@ import Vue from 'vue';
 
 export default Vue.extend({
   props: {
-    replyText: {
+    newText: {
       type: String,
       default: '',
     },
@@ -23,6 +23,7 @@ textarea {
   min-height: 50px;
   max-height: 150px;
   margin: 5px;
+  padding: 0;
   border: none;
   border-radius: 10px;
 
