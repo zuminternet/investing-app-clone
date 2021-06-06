@@ -1,12 +1,12 @@
 <template>
-  <article class="card reply">
-    <img :src="userThumbnail" alt="😎" class="thumbnail" />
+  <article class="card reply" ref="card">
     <div class="reply-info">
+      <img :data-src="userThumbnail" alt="😎" class="thumbnail" />
       <Words class="mini bold"> {{ userName }} </Words>
       <Words class="mini"> {{ date }} </Words>
-      <Words class="mini"> + {{ likes }} </Words>
-      <Words> {{ contents }} </Words>
     </div>
+    <Words> {{ contents }} </Words>
+    <Words class="mini"> + {{ likes }} </Words>
   </article>
 </template>
 
@@ -48,12 +48,31 @@ export default Vue.extend({
       type: [String, Date],
     },
     contents: {
-      type: [String, Number],
+      type: String,
     },
     likes: {
       type: Number,
       default: 0,
     },
+  },
+
+  mounted() {
+    /** lazy-loading for thumbnails */
+    const card = this.$refs.card;
+    const io = new IntersectionObserver((entries) => {
+      for (const { target, isIntersecting } of entries) {
+        if (!isIntersecting) continue;
+
+        const img = target.getElementsByTagName('img')[0];
+        if (!img?.dataset?.src) continue;
+
+        img.src = img.dataset.src;
+        img.removeAttribute('data-imgsrc');
+
+        io.disconnect();
+      }
+    });
+    io.observe(card);
   },
 });
 </script>

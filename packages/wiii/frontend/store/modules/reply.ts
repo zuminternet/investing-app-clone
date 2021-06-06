@@ -54,7 +54,10 @@ const actions = {
         } = results[i];
 
         const randomDate = new Date(Date.now() * Math.random());
-        const date = `${randomDate.getFullYear()}/${randomDate.getMonth() + 1}/${randomDate.getDate()}`;
+        const date = `'${randomDate
+          .getFullYear()
+          .toString()
+          .slice(-2)}/${randomDate.getMonth() + 1}/${randomDate.getDate()}`;
         randomRepls[i] = {
           replId: uuid,
           userThumbnail: thumbnail,
