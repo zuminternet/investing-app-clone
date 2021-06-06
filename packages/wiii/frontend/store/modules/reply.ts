@@ -57,7 +57,10 @@ const actions = {
         const date = `'${randomDate
           .getFullYear()
           .toString()
-          .slice(-2)}/${randomDate.getMonth() + 1}/${randomDate.getDate()}`;
+          .slice(-2)}/${(randomDate.getMonth() + 1).toString().padStart(2, '0')}/${randomDate
+          .getDate()
+          .toString()
+          .padStart(2, '0')}`;
         randomRepls[i] = {
           replId: uuid,
           userThumbnail: thumbnail,
