@@ -8,15 +8,14 @@ import { ReplyProps } from '../../db/types';
 import { Column, Entity, ManyToOne, ObjectID, ObjectIdColumn } from 'typeorm';
 import Base from './Base';
 
-@Entity({ database: DBName.mongoDB })
+@Entity({ database: DBName.mongoDB, name: 'Repls' })
 export default class Reply extends Base {
   @ObjectIdColumn()
   id: ObjectID;
 
   /**
    * @property
-   * 문서(뉴스, 댓글, 종목 상세 등) id
-   * - JOIN??
+   * ticker, news 등 댓글 달릴 문서 id
    */
   @Column({ nullable: false })
   docId: string;
@@ -60,22 +59,15 @@ export default class Reply extends Base {
    * @property
    * 현 댓글이 원 댓글인 경우, 대댓글 개수
    */
-  @Column({ type: 'int', default: 0 })
+  @Column({ default: 0 })
   childNums: number;
 
   /**
    * @property
    * 좋아요 수
    */
-  @Column({ type: 'int', default: 0 })
+  @Column({ default: 0 })
   like: number;
-
-  /**
-   * @property
-   * 싫어요 수
-   */
-  @Column({ type: 'int', default: 0 })
-  dislike: number;
 
   constructor(props: ReplyProps) {
     super();

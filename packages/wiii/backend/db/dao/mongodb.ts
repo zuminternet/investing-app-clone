@@ -1,6 +1,5 @@
 /**
-import { Connection } from 'typeorm';
- * MongoDB DAO
+ * MongoDB DAO - TypeORM
  * @description
  * - 댓글 CRUD
  *  - 댓글 생성/수정시 useremail 받아서 userid 조회 후 입력
@@ -86,4 +85,4 @@ class MongoDB extends MongoRepository<Reply> {
   }
 }
 
-// export default new MongoDB();
+export default new MongoDB();

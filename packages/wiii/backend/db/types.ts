@@ -13,6 +13,12 @@ export interface CheckUserProps extends UserProps {
   token: string;
 }
 
+export enum SocialProviers {
+  google = 'gg',
+  facebook = 'fb',
+  github = 'gh',
+}
+
 export interface ReplyProps {
   id?: ObjectID;
   userId: number;
