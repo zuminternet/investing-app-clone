@@ -4,28 +4,30 @@
  * - typeorm - connections
  */
 
-import { MongoDBConnOptions } from '../config/db';
+import { MongoDBConnOptions, RedisConnOptions } from '../config/db';
 import { Connection, createConnection } from 'typeorm';
+import { createClient } from 'redis';
+
 // import MongoDBDao from './dao/mongodb';
 // import MySQLDao from './dao/mysql';
 // import { getConnections } from './index';
 export const getMongoConnection = async () => {
   try {
     const conn = await createConnection(MongoDBConnOptions);
-    console.info(`MongoDB Connected`, { conn });
-    // new MySQLDao();
-    // new MongoDBDao();
+    console.info(`[DB] MongoDB Connected`);
     return conn;
   } catch (e) {
     return console.error(e);
   }
 };
 
-const getRedisConnection = () => {
-  //
+const { host, port } = RedisConnOptions;
+export const getRedisConnection = () => {
+  try {
+    const client = createClient(port, host);
+    console.info(`[DB] Redis Connected`);
+    return client;
+  } catch (e) {
+    return console.error(e);
+  }
 };
-
-// export {
-// getConnections,
-// getRedisConnection
-// }
