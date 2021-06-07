@@ -134,7 +134,7 @@ export default {
 
   methods: {
     routeToItemDetail() {
-      this.$router.push({ path: 'item-detail', query: { symbols: this.symbol } });
+      this.$router.push({ path: 'item-detail', query: { symbols: this.symbol, name: this.name } });
     },
   },
 };

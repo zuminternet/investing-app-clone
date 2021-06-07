@@ -6,7 +6,7 @@ enum tickersMap {
   FRANCE_40 = 'France 40',
   NIKKEI_255 = 'Nikkei 255',
   BIT_COIN = 'BIT COIN',
-  LITE_COIN = 'LITE_COIN',
+  LITE_COIN = 'LITE COIN',
   ETHEREUM = 'ETHEREUM',
   IOTA = 'IOTA',
 }
@@ -93,7 +93,7 @@ const mutations = {
     indices.forEach((index) => {
       const { key, value, diff, growthRate, date } = index;
 
-      indicesItems.push({ key, name: tickersMap[key], value, diff, growthRate, date, category: categoryMap[key] });
+      indicesItems.push({ key, name: tickersMap[key], value, diff, growthRate, date, category: categoryMap[key], symbol: key });
     });
 
     state.indicesItems = indicesItems;
@@ -105,7 +105,16 @@ const mutations = {
     cryptos.forEach((crypto) => {
       const { key, value, diff, growthRate, date } = crypto;
 
-      cryptoItems.push({ key, name: tickersMap[key], value, diff, growthRate, date, category: categoryMap['CRYPTO'] });
+      cryptoItems.push({
+        key,
+        name: tickersMap[key],
+        value,
+        diff,
+        growthRate,
+        date,
+        category: categoryMap['CRYPTO'],
+        symbol: key,
+      });
     });
 
     state.cryptoItems = cryptoItems;
