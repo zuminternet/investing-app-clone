@@ -1,7 +1,4 @@
-import { AxiosStatic } from 'axios';
-import { range } from '../../../domain/utilFunc';
-
-declare const Axios: AxiosStatic;
+import { range } from '../../../../wiii/domain/utilFunc';
 
 const state = () => {
   //

@@ -1,6 +1,6 @@
 <template>
   <section class="section">
-    <ReplySort @change-sort="changeSort" :sortText="sortText" />
+    <ReplySort :sortText="sortText" @change-sort="changeSort" />
     <ReplyInput v-bind="{ curInputId }" @change-current-input="changeCurInput" />
     <Card
       v-for="{ replId, userThumbnail, userName, contents, date, likes } in repls"
@@ -14,9 +14,10 @@
 <script lang="ts">
 import Vue from 'vue';
 import { mapActions } from 'vuex';
-import ReplyInput from '@/components/molecules/ReplyNewInput';
-import ReplySort from '@/components/molecules/ReplySort';
-import Card from '@/components/molecules/ReplyCard';
+import ReplyInput from './molecules/ReplyNewInput';
+import ReplySort from './molecules/ReplySort';
+import Card from './molecules/ReplyCard';
+import './style.scss';
 
 export default Vue.extend({
   name: 'ReplySection',
