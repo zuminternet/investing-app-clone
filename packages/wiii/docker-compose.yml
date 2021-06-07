@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  mongo:
+    image: mongo:4.2
+    ports:
+      - '27017:27017'
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: secret
+      MONGO_INITDB_DATABASE: UserReply
+      MONGO_USERNAME: admin
+      MONGO_PASSWORD: admin789
+    volumes:
+      - ./docker/db/mongodb:/data/db/mongodb
+
+  redis:
+    image: redis:6.2.4-alpine
+    ports:
+      - '6379:6379'
