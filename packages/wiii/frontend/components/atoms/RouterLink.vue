@@ -1,16 +1,11 @@
 <template>
-  <router-link :to="href" class="router-link noselect"
-    ><Words> {{ name }}</Words></router-link
-  >
+  <router-link :to="href" class="router-link noselect">{{ name }}</router-link>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import Words from '@/components/atoms/Words';
 
 export default Vue.extend({
-  components: { Words },
-
   props: {
     name: {
       type: String,

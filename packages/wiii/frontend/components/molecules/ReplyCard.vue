@@ -14,7 +14,7 @@
       <Button class="reply-likes">👍 {{ likes }}</Button>
       <Button class="reply-rerepl" @click.native="inputToggle(replId)">대댓글 달기</Button>
     </div>
-    <ReplyForm v-show="curInputId === replId" @change-current-input="inputToggle" />
+    <ReplyForm v-if="curInputId === replId" @change-current-input="inputToggle" />
   </article>
 </template>
 
@@ -26,7 +26,7 @@
 import Vue from 'vue';
 import Button from '@/components/atoms/Button';
 import Words from '@/components/atoms/Words';
-import ReplyForm from '@/components/molecules/ReplyInputForm.vue';
+import ReplyForm from '@/components/molecules/ReplyInputForm';
 import lazyloading from '@/utils/lazyloading';
 
 export default Vue.extend({
@@ -87,7 +87,7 @@ export default Vue.extend({
   },
 
   methods: {
-    inputToggle(id) {
+    inputToggle(id: string | number) {
       this.$emit('change-current-input', id);
     },
   },

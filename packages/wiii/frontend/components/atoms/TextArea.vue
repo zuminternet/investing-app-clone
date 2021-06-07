@@ -1,5 +1,5 @@
 <template>
-  <textarea @input="$emit('change-text-handler', $event)" :value="newText" />
+  <textarea @input="$emit('change-text-handler', $event)" :value="newText" autofocus />
 </template>
 
 <script lang="ts">

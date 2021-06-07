@@ -1,6 +1,6 @@
 <template>
-  <form id="reply-input" class="card" @submit.prevent="submitReply">
-    <TextArea id="reply-input-text" @change-text-handler="changeReplyInput" :replyText="replyText" />
+  <form id="reply-input" class="card" @submit.prevent="() => submitReply(replyText)">
+    <TextArea id="reply-input-text" @change-text-handler="changeReplyInput" :newText="replyText" />
     <div id="buttons">
       <Button id="reply-input-cancel" type="reset" @click.native="cancelInput">Cancel</Button>
       <Button id="reply-input-submit" type="submit" :disabled="replyText.length === 0">Save</Button>
@@ -12,6 +12,7 @@
 import Vue from 'vue';
 import TextArea from '@/components/atoms/TextArea.vue';
 import Button from '@/components/atoms/Button.vue';
+import debounce from '@/utils/debounce';
 
 export default Vue.extend({
   data() {
@@ -32,10 +33,16 @@ export default Vue.extend({
       this.replyText = event.target.value;
     },
 
-    submitReply() {
-      const replyText = this.replyText;
-      this.cancelInput();
-      alert(replyText);
+    /**
+     * debounce 적용해 한번만 쿼리 전송되도록
+     * @todo debounce 함수 제대로 안만들어진건지 alert 계속 실행되는 문제..
+     */
+    submitReply(replyText) {
+      const reset = this.cancelInput;
+      return debounce(function() {
+        reset();
+        return alert(replyText);
+      }, 500)();
     },
   },
 });
