@@ -1,13 +1,12 @@
 import { getIndices, getStocks, getCryptos } from '../../apis';
 
-enum tickersMap {
+enum nameMap {
   DOW_JONES_30 = 'Dow Jones 30',
   NASDAQ_100 = 'Nasdaq 100',
   NIKKEI_255 = 'Nikkei 255',
   BIT_COIN = 'Bit coin',
   LITE_COIN = 'Lite coin',
   ETHEREUM = 'Ethereum',
-  IOTA = 'Iota',
 }
 
 enum categoryMap {
@@ -91,7 +90,7 @@ const mutations = {
     indices.forEach((index) => {
       const { key, value, diff, growthRate, date } = index;
 
-      indicesItems.push({ key, name: tickersMap[key], value, diff, growthRate, date, category: categoryMap[key], symbol: key });
+      indicesItems.push({ key, name: nameMap[key], value, diff, growthRate, date, category: categoryMap[key], symbol: key });
     });
 
     state.indicesItems = indicesItems;
@@ -105,7 +104,7 @@ const mutations = {
 
       cryptoItems.push({
         key,
-        name: tickersMap[key],
+        name: nameMap[key],
         value,
         diff,
         growthRate,

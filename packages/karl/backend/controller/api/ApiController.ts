@@ -11,6 +11,15 @@ import ItemDetailService from '../../../../common/backend/service/ItemDetailServ
 import ArticleService from '../../../../common/backend/service/ArticleService';
 import BookmarkService from '../../../../common/backend/service/BookmarkService';
 
+const fakeTickersMap = {
+  TSLA: true,
+  NVDA: true,
+  NFLX: true,
+  BAC: true,
+  GOOGL: true,
+  BABA: true,
+};
+
 @Controller({ path: '/api' })
 export class ApiController {
   constructor(
@@ -200,8 +209,8 @@ export class ApiController {
       const itemDetailInfo = await this.itemDetailService.getItemDetail({ symbols });
 
       if (itemDetailInfo) {
-        const isBookmarked = await this.bookmarkService.getIsBookmarked({ email, symbols });
-        itemDetailInfo.isBookmarked = isBookmarked;
+        itemDetailInfo.isBookmarked = await this.bookmarkService.getIsBookmarked({ email, symbols });
+        itemDetailInfo.isStock = fakeTickersMap[symbols] ? false : true;
 
         return resposne.status(200).send(itemDetailInfo);
       }

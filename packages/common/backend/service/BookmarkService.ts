@@ -15,6 +15,15 @@ export interface InvestingApiResponse {
   date: string;
 }
 
+const fakeTickersMap = {
+  TSLA: true,
+  NVDA: true,
+  NFLX: true,
+  BAC: true,
+  GOOGL: true,
+  BABA: true,
+};
+
 enum bookmarkSymbols {
   AAPL = 'equities/apple-computer-inc', // 애플
   AMZN = 'equities/amazon-com-inc', // 아마존
@@ -77,17 +86,17 @@ export default class BookmarkService {
    * @returns Promise
    */
   public async createBookmark({ email, symbol, name, category }: createBookmarkQueryProps) {
-    const bookmark = await Bookmark.findOne({ email, symbol, name, category });
+    const bookmark = await Bookmark.findOne({ email, symbol, name });
 
     if (bookmark) {
       return false;
     }
 
-    return Bookmark.create({ email, symbol, name, category });
+    return Bookmark.create({ email, symbol, name, category: fakeTickersMap[symbol] ? 'zum-investing-app' : category });
   }
 
   public async deleteBookmark({ email, symbol, name, category }: deleteBookmarkQueryProps) {
-    const bookmark = await Bookmark.findOneAndRemove({ email, symbol, name, category });
+    const bookmark = await Bookmark.findOneAndRemove({ email, symbol, name });
 
     if (bookmark !== null) {
       return true;
@@ -111,14 +120,10 @@ export default class BookmarkService {
 
       const investingId = bookmarkSymbols[key];
       const investingData = await this.callInvesting(key, investingId);
-
-      console.log(bookmarks[i], 'call1');
       const { email, symbol, name, category } = bookmarks[i];
 
       displayedBookmarks.push({ email, symbol, name, category, ...investingData });
     }
-
-    console.log(displayedBookmarks, 'displayed');
 
     if (displayedBookmarks) {
       return displayedBookmarks;
