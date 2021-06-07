@@ -124,19 +124,11 @@ export default {
     },
 
     fluctuationPrice() {
-      if (!this.isBookmark) {
-        return this.item.diff.toFixed(3);
-      }
-
-      return 10;
+      return this.item.diff.toFixed(3);
     },
 
     fluctuationRate() {
-      if (!this.isBookmark) {
-        return this.item.growthRate.toFixed(3);
-      }
-
-      return 10;
+      return this.item.growthRate.toFixed(3);
     },
   },
 
