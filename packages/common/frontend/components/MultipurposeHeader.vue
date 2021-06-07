@@ -48,7 +48,7 @@
       </div>
       <empty-space></empty-space>
       <div class="header-button-box">
-        <header-button></header-button>
+        <!-- <header-button></header-button> -->
         <header-button isGoSearchButton></header-button>
       </div>
     </template>
