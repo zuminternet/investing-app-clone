@@ -1,5 +1,6 @@
 import { Service } from 'zum-portal-core/backend/decorator/Alias';
 import Bookmark from '../model/BookmarkModel';
+import { investing } from 'investing-com-api';
 
 interface createBookmarkQueryProps {
   email: string;
@@ -30,7 +31,6 @@ export default class BookmarkService {
   public async createBookmark({ email, symbol, name, category }: createBookmarkQueryProps) {
     const bookmark = await Bookmark.findOne({ email, symbol, name, category });
 
-    console.log(bookmark);
     if (bookmark) {
       return false;
     }

@@ -82,7 +82,20 @@ const actions = {
 // mutatuons 설정
 const mutations = {
   setItemDetail(state, { itemDetail, name }) {
-    const { symbol, adj_close, adj_high, adj_low, close, open, volume, stock_exchange, high, low, isBookmarked } = itemDetail;
+    const {
+      symbol,
+      adj_close,
+      adj_high,
+      adj_low,
+      close,
+      open,
+      volume,
+      stock_exchange,
+      high,
+      low,
+      isBookmarked,
+      isStock,
+    } = itemDetail;
 
     state.itemDetail = {
       ...state.itemDetail,
@@ -99,6 +112,7 @@ const mutations = {
       high,
       low,
       isBookmarked,
+      isStock,
     };
   },
 

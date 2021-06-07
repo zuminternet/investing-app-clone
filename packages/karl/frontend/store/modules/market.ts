@@ -5,10 +5,10 @@ enum tickersMap {
   NASDAQ_100 = 'Nasdaq 100',
   FRANCE_40 = 'France 40',
   NIKKEI_255 = 'Nikkei 255',
-  BIT_COIN = 'BIT COIN',
-  LITE_COIN = 'LITE COIN',
-  ETHEREUM = 'ETHEREUM',
-  IOTA = 'IOTA',
+  BIT_COIN = 'Bit coin',
+  LITE_COIN = 'Lite coin',
+  ETHEREUM = 'Ethereum',
+  IOTA = 'Iota',
 }
 
 enum categoryMap {
