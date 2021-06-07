@@ -30,12 +30,12 @@ const getters = {};
 
 // actions 설정
 const actions = {
-  async getItemDetail({ commit }, { symbols, email }) {
+  async getItemDetail({ commit }, { symbols, email, name }) {
     try {
       const itemDetail = await getItemDetail({ symbols, email });
 
       if (itemDetail) {
-        commit('changeItemDetail', itemDetail);
+        commit('setItemDetail', { itemDetail, name });
 
         return true;
       }
@@ -51,7 +51,7 @@ const actions = {
       const news = await getNews({ offset, limit, tickers });
 
       if (news) {
-        commit('changeNews', news);
+        commit('setNews', news);
 
         return true;
       }
@@ -67,7 +67,7 @@ const actions = {
       const analyses = await getAnalyses({ offset, limit, tickers });
 
       if (analyses) {
-        commit('changeAnalyses', analyses);
+        commit('setAnalyses', analyses);
 
         return true;
       }
@@ -81,9 +81,8 @@ const actions = {
 
 // mutatuons 설정
 const mutations = {
-  changeItemDetail(state, itemDetail) {
+  setItemDetail(state, { itemDetail, name }) {
     const {
-      name,
       symbol,
       adj_close,
       adj_high,
@@ -95,6 +94,7 @@ const mutations = {
       high,
       low,
       isBookmarked,
+      isStock,
     } = itemDetail;
 
     state.itemDetail = {
@@ -112,14 +112,15 @@ const mutations = {
       high,
       low,
       isBookmarked,
+      isStock,
     };
   },
 
-  changeNews(state, news) {
+  setNews(state, news) {
     state.news = news;
   },
 
-  changeAnalyses(state, analyses) {
+  setAnalyses(state, analyses) {
     state.analyses = analyses;
   },
 };

@@ -4,6 +4,17 @@ declare const Axios: AxiosStatic;
 
 const devURL = 'http://localhost:3000';
 
+enum tickersMap {
+  DOW_JONES_30 = 'TSLA',
+  NASDAQ_100 = 'NVDA',
+  FRANCE_40 = 'DOCU',
+  NIKKEI_255 = 'MSFT',
+  BIT_COIN = 'ZM',
+  LITE_COIN = 'EBAY',
+  ETHEREUM = 'MOS',
+  IOTA = 'AAL',
+}
+
 export interface getSearchedItemsInfo {
   keyword: string;
   email: string;
@@ -104,10 +115,22 @@ const getSearchedAnalyses = async ({ offset, limit, tickers }: getNewsAndAnalyse
  */
 const getItemDetail = async ({ symbols, email }: getItemDetailInfo) => {
   try {
-    const result = await Axios.get(`${devURL}/api/item-detail?symbols=${symbols}&email=${email}`);
+    let isStock = true;
+
+    const result = await Axios.get(`${devURL}/api/item-detail`, {
+      params: {
+        symbols: tickersMap[symbols] ? tickersMap[symbols] : symbols,
+        email,
+      },
+    });
+
+    if (tickersMap[symbols]) {
+      isStock = false;
+    }
 
     if (result.status === 200) {
       const { data: itemDetail } = result;
+      itemDetail.isStock = isStock;
 
       return itemDetail;
     }

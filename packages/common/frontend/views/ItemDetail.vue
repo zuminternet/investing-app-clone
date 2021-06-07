@@ -126,11 +126,11 @@ export default {
   },
 
   created() {
-    const { symbols } = this.$route.query;
+    const { symbols, name } = this.$route.query;
     const email = this.userInfo.userEmail;
     const tickers = [symbols];
 
-    this.getItemDetail({ symbols, email });
+    this.getItemDetail({ symbols, email, name });
     this.getNews({ offset: 0, limit: 20, tickers });
     this.getAnalyses({ offset: 0, limit: 20, tickers });
   },

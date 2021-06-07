@@ -8,7 +8,7 @@
         <div>
           <custom-text>{{ name }}</custom-text>
         </div>
-        <div>
+        <div v-if="isStock">
           <custom-text>{{ category }} ({{ symbol }})</custom-text>
         </div>
       </div>
@@ -129,6 +129,10 @@ export default {
 
     email() {
       return this.userInfo.userEmail;
+    },
+
+    isStock() {
+      return this.itemDetail.isStock;
     },
   },
 
