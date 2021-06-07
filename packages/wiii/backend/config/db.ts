@@ -3,7 +3,7 @@ import { resolve } from 'path';
 import { ConnectionOptions } from 'typeorm';
 import { IS_PRO_MODE } from '../../domain/utilFunc';
 
-config({ path: resolve(__dirname, '../.market.env') });
+config({ path: resolve(__dirname, '../.db.env') });
 
 export enum DBName {
   redis = 'redis',
@@ -22,6 +22,8 @@ export const RedisConnOptions = {
 export const MongoDBConnOptions: ConnectionOptions = {
   name: DBName.mongoDB,
   type: DBName.mongoDB,
+  host: process.env.DOCKER_MONGO_HOST,
+  port: +process.env.DOCKER_MONGO_PORT,
   database: process.env.DOCKER_MONGO_DB,
   username: process.env.DOCKER_MONGO_USER,
   password: process.env.DOCKER_MONGO_PASS,

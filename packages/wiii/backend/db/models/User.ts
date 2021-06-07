@@ -8,8 +8,8 @@ import { CreateUserProps } from '../../db/types';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import Base from './Base';
 
-@Entity({ database: DBName.mysql })
-export default class User extends Base {
+@Entity({ database: DBName.mongoDB })
+class User extends Base {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -46,3 +46,5 @@ export default class User extends Base {
     this.pass = props.password;
   }
 }
+
+// export default User;
