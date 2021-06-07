@@ -8,7 +8,7 @@ import { marketStackConfig } from '../../../common/backend/config';
 import { times } from '../domain/date';
 import { isProductionMode } from '../domain/utils';
 
-interface InvestingData {
+export interface InvestingData {
   date: number;
   value: number;
 }
@@ -31,14 +31,12 @@ enum StockSymbols {
 enum indicesSymbols {
   DOW_JONES_30 = 'indices/us-30', // 다우 존스
   NASDAQ_100 = 'indices/nq-100', // 나스닥
-  FRANCE_40 = 'indices/france-40', // 프랑스 지수
   NIKKEI_255 = 'indices/japan-ni225', // 니케이
 }
 
 enum cryptoSymbols {
   BIT_COIN = 'crypto/bitcoin/btc-usd', // 비트코인
   ETHEREUM = 'crypto/ethereum/eth-usd?c997650', // 이더리움
-  IOTA = 'crypto/iota/iota-usd', // IOTA
   LITE_COIN = 'crypto/litecoin/ltc-usd?c1010798', // 라이트코인
 }
 
@@ -94,10 +92,10 @@ export default class MarketService {
     const displayedStocks = [];
 
     for (let i = 0; i < stocks.length; i++) {
-      if (StockSymbols[stocks[i].symbol]) {
+      const key = stocks[i].symbol;
+      if (StockSymbols[key]) {
         stocks[i].category = stocks[i].stock_exchange.acronym;
-        const key = stocks[i].symbol;
-        const investingId = StockSymbols[stocks[i].symbol];
+        const investingId = StockSymbols[key];
         const investingData = await this.callInvesting(key, investingId);
 
         displayedStocks.push({ ...stocks[i], ...investingData });

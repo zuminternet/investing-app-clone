@@ -3,7 +3,6 @@ import { getIndices, getStocks, getCryptos } from '../../apis';
 enum tickersMap {
   DOW_JONES_30 = 'Dow Jones 30',
   NASDAQ_100 = 'Nasdaq 100',
-  FRANCE_40 = 'France 40',
   NIKKEI_255 = 'Nikkei 255',
   BIT_COIN = 'Bit coin',
   LITE_COIN = 'Lite coin',
@@ -14,7 +13,6 @@ enum tickersMap {
 enum categoryMap {
   DOW_JONES_30 = 'NYSE',
   NASDAQ_100 = 'NASDAQ',
-  FRANCE_40 = 'Paris',
   NIKKEI_255 = 'Tokyo',
   CRYPTO = 'zum-investing-app',
 }

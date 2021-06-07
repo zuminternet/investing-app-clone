@@ -7,12 +7,10 @@ const devURL = 'http://localhost:3000';
 enum tickersMap {
   DOW_JONES_30 = 'TSLA',
   NASDAQ_100 = 'NVDA',
-  FRANCE_40 = 'DOCU',
-  NIKKEI_255 = 'MSFT',
-  BIT_COIN = 'ZM',
-  LITE_COIN = 'EBAY',
-  ETHEREUM = 'MOS',
-  IOTA = 'AAL',
+  NIKKEI_255 = 'BABA',
+  BIT_COIN = 'NFLX',
+  LITE_COIN = 'BAC',
+  ETHEREUM = 'GOOGL',
 }
 
 export interface getSearchedItemsInfo {

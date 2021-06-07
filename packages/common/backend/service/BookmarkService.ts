@@ -2,6 +2,32 @@ import { Service } from 'zum-portal-core/backend/decorator/Alias';
 import Bookmark from '../model/BookmarkModel';
 import { investing } from 'investing-com-api';
 
+export interface InvestingData {
+  date: number;
+  value: number;
+}
+
+export interface InvestingApiResponse {
+  key: string;
+  value: number;
+  diff: number;
+  growthRate: number;
+  date: string;
+}
+
+enum bookmarkSymbols {
+  AAPL = 'equities/apple-computer-inc', // 애플
+  AMZN = 'equities/amazon-com-inc', // 아마존
+  FB = 'equities/facebook-inc', // 페이스북
+  JPM = 'equities/jp-morgan-chase', // JP 모건
+  TSLA = 'indices/us-30', // 다우 존스
+  NVDA = 'indices/nq-100', // 나스닥
+  BABA = 'indices/japan-ni225', // 니케이
+  NFLX = 'crypto/bitcoin/btc-usd', // 비트코인
+  GOOGL = 'crypto/ethereum/eth-usd?c997650', // 이더리움
+  BAC = 'crypto/litecoin/ltc-usd?c1010798', // 라이트코인
+}
+
 interface createBookmarkQueryProps {
   email: string;
   symbol: string;
@@ -23,6 +49,28 @@ interface deleteBookmarkQueryProps {
 
 @Service()
 export default class BookmarkService {
+  private callInvesting(key, investingId) {
+    return new Promise<InvestingApiResponse>((resolve, reject) => {
+      investing(investingId)
+        .then((result: InvestingData[]) => {
+          const { value: newValue, date } = result.pop();
+          const { value: oldValue } = result.pop();
+          const diff = newValue - oldValue;
+          const growthRate = (diff / newValue) * 100;
+          resolve({ key, value: newValue, diff, growthRate, date: this.getDateString(date) });
+        })
+        .catch(reject);
+    });
+  }
+
+  private getDateString(timeStamp: number) {
+    const date = new Date(timeStamp);
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    return `${year}-${month}-${day}`;
+  }
+
   /**
    * @description Bookmark document를 추가하는 service
    * @param param0
@@ -56,9 +104,24 @@ export default class BookmarkService {
 
   public async getBookmarks(email: string) {
     const bookmarks = await Bookmark.find({ email });
+    const displayedBookmarks = [];
 
-    if (bookmarks !== null) {
-      return bookmarks;
+    for (let i = 0; i < bookmarks.length; i++) {
+      const key = bookmarks[i].symbol;
+
+      const investingId = bookmarkSymbols[key];
+      const investingData = await this.callInvesting(key, investingId);
+
+      console.log(bookmarks[i], 'call1');
+      const { email, symbol, name, category } = bookmarks[i];
+
+      displayedBookmarks.push({ email, symbol, name, category, ...investingData });
+    }
+
+    console.log(displayedBookmarks, 'displayed');
+
+    if (displayedBookmarks) {
+      return displayedBookmarks;
     }
 
     return false;
