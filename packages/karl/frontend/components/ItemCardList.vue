@@ -12,12 +12,12 @@ export default {
   components: {
     ItemCard,
   },
-  props: ['excludingHeight', 'items'],
+  props: ['excludedHeight', 'items'],
 
   computed: {
     style() {
       return {
-        height: `calc(100vh - ${this.excludingHeight}px)`,
+        height: `calc(100vh - ${this.excludedHeight}px)`,
       };
     },
   },

@@ -1,22 +1,26 @@
 <template>
   <Layout>
     <Header>
-      <HeaderTitle>시장</HeaderTitle>
-      <HeaderNav>
-        <HeaderNavItem v-for="route in navRoutes" :key="route.id" :active="route.id === currentNavId">
-          {{ route.title }}
-        </HeaderNavItem>
-      </HeaderNav>
+      <HeaderTitle>
+        <template #left>
+          <HeaderButton @clickHeaderButton="back">🠔</HeaderButton>
+        </template>
+        {{ name }}
+      </HeaderTitle>
     </Header>
     <main>
-      <section class="chart-container" ref="chartContainer"></section>
+      <section ref="chartContainer" class="chart-container"></section>
       <section v-if="summaryDetail">
+        <h3>개요</h3>
         <p>금일 저가 {{ summaryDetail.dayLow }}</p>
         <p>금일 고가 {{ summaryDetail.dayHigh }}</p>
         <p>금일 시가 {{ summaryDetail.open }}</p>
         <p>52주 최고가 {{ summaryDetail.fiftyTwoWeekLow }}</p>
         <p>52주 최저가 {{ summaryDetail.fiftyTwoWeekHigh }}</p>
       </section>
+      <div>
+        <NewsTemplate v-if="news" :news="news" :opinions="opinions" url-prefix="/news/new" />
+      </div>
     </main>
     <BottomNav></BottomNav>
   </Layout>
@@ -25,13 +29,15 @@
 <script lang="ts">
 import Vue from 'vue';
 import { getSummary, getChart } from '@/services/financeService';
+import { getNewNews } from '@/services/articleService';
 import Layout from '@/components/Layout/Layout.vue';
-import { Header, HeaderTitle, HeaderNav, HeaderNavItem } from '@/components/Header';
+import { Header, HeaderTitle, HeaderButton } from '@/components/Header';
 import BottomNav from '@/components/BottomNav/BottomNav.vue';
 import { createChart } from '@/chart';
+import NewsTemplate from '@/components/NewsTemplate/NewsTemplate.vue';
 
 const chartLightThemeOption = {
-  bgColor: 'white',
+  bgColor: '#fafffa',
   blueColor: 'blue',
   redColor: 'red',
   textColor: 'black',
@@ -40,27 +46,46 @@ const chartLightThemeOption = {
 export default Vue.extend({
   name: 'MarketDetail',
 
+  components: { Layout, Header, HeaderTitle, BottomNav, HeaderButton, NewsTemplate },
+
   data() {
     return {
       summaryDetail: null,
       chartData: null,
       chart: null,
-      navRoutes: [
-        { id: 'summary', title: '개요', index: 0 },
-        { id: 'news', title: '뉴스', index: 1 },
-      ],
-      currentNavId: 'summary',
+      name: '',
+      news: null,
+      opinions: null,
     };
   },
 
-  components: { Layout, Header, HeaderTitle, HeaderNav, HeaderNavItem, BottomNav },
+  watch: {
+    chartData(newData) {
+      if (!this.chart) return;
+      this.chart.setCandles([...newData]);
+    },
+  },
 
   created() {
-    getSummary()
-      .then(({ summaryDetail }) => (this.summaryDetail = summaryDetail))
+    const symbol = this.$route.params.id;
+
+    getSummary(symbol)
+      .then((summaryDetail) => (this.summaryDetail = summaryDetail))
       .catch(console.error);
-    getChart()
-      .then(({ chart }) => (this.chartData = chart))
+
+    getChart(symbol)
+      .then((chart) => {
+        this.chartData = chart.data;
+        this.name = chart.display_name;
+      })
+      .catch(console.error);
+
+    getNewNews({ tickers: symbol })
+      .then((news) => (this.news = news))
+      .catch(console.error);
+
+    getNewNews({ tickers: symbol })
+      .then((opinions) => (this.opinions = opinions))
       .catch(console.error);
   },
 
@@ -71,10 +96,9 @@ export default Vue.extend({
     this.chart = createChart(chartContainer, colorOption);
   },
 
-  watch: {
-    chartData(newData) {
-      if (!this.chart) return;
-      this.chart.setCandles([...newData]);
+  methods: {
+    back() {
+      this.$router.back();
     },
   },
 });

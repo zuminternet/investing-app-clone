@@ -1,12 +1,13 @@
 <template>
   <p>
     <span class="news-author" :style="authorStyle">{{ author }}</span>
-    <span class="news-date" :style="dateStyle">{{ publishDate }}</span>
+    <span class="news-date" :style="dateStyle">{{ publishDate | formatDate }}</span>
   </p>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
+import { fromNow } from '../../utils';
 
 /**
  * @description 뉴스 리스트 텍스트 박스의 부가정보 영역
@@ -20,6 +21,12 @@ import Vue from 'vue';
 
 export default Vue.extend({
   name: 'NewsTextBoxDesc',
+
+  filters: {
+    formatDate(date) {
+      return fromNow(date);
+    },
+  },
 
   props: {
     author: {

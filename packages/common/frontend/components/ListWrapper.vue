@@ -1,12 +1,12 @@
 <template>
-  <div class="item-detail-wrapper" :style="style">
+  <div class="list-wrapper" :style="style">
     <slot></slot>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'ItemDetailWrapper',
+  name: 'ListWrapper',
   props: {
     excludedHeight: {
       type: Number,
@@ -25,7 +25,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.item-detail-wrapper {
+.list-wrapper {
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
@@ -34,7 +34,7 @@ export default {
   scrollbar-width: none; /* Firefox */
 }
 
-.item-detail-wrapper::-webkit-scrollbar {
+.list-wrapper::-webkit-scrollbar {
   display: none;
 }
 </style>

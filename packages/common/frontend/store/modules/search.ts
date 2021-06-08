@@ -1,34 +1,25 @@
-import { getSearchedItems } from '../../apis';
+import { getSearchedItems, getSearchedNews, getSearchedAnalyses } from '../../apis';
 
 // 초기 state 값 설정
 const state = () => ({
   searchedItems: [],
 
   searchedNews: [],
-  searchedAnalysis: [],
+  searchedAnalyses: [],
 });
 
 // getter 설정
 
-const getters = {
-  // itemCollections: (state) => {
-  //   return [state.stockItems, state.indexItems, state.cryptoItems];
-  // },
-};
+const getters = {};
 
 // actions 설정
 const actions = {
-  async getSearchedItems({ commit }, keyword) {
+  async getSearchedItems({ commit }, { keyword, email }) {
     try {
-      const result = await getSearchedItems({ keyword });
-      const data = result.data.data;
-
-      const items = data.map((item) => {
-        return item;
-      });
+      const items = await getSearchedItems({ keyword, email });
 
       if (items) {
-        commit('changeSearchedItems', items);
+        commit('setSearchedItems', items);
 
         return true;
       }
@@ -38,12 +29,68 @@ const actions = {
       console.log(error);
     }
   },
+
+  async getSearchedNews({ commit }, { offset, limit, tickers }) {
+    try {
+      const news = await getSearchedNews({ offset, limit, tickers });
+
+      if (news) {
+        commit('setSearchedNews', news);
+
+        return true;
+      }
+
+      throw new Error('Getting news was failed in itemDetail store');
+    } catch (error) {
+      console.log(error);
+    }
+  },
+
+  async getSearchedAnalyses({ commit }, { offset, limit, tickers }) {
+    try {
+      const analyses = await getSearchedAnalyses({ offset, limit, tickers });
+
+      if (analyses) {
+        commit('setSearchedAnalyses', analyses);
+
+        return true;
+      }
+
+      throw new Error('Getting news was failed in itemDetail store');
+    } catch (error) {
+      console.log(error);
+    }
+  },
+
+  async clearSearchStore({ commit }) {
+    commit('clearSearchStore');
+  },
 };
 
 // mutatuons 설정
 const mutations = {
-  changeSearchedItems(state, items) {
-    state.searchedItems = items;
+  setSearchedItems(state, items) {
+    const searchedItems = [];
+
+    items.forEach((item) => {
+      item = { ...item, category: item.stock_exchange.acronym };
+      searchedItems.push(item);
+    });
+    state.searchedItems = searchedItems;
+  },
+
+  setSearchedNews(state, news) {
+    state.searchedNews = news;
+  },
+
+  setSearchedAnalyses(state, analyses) {
+    state.searchedAnalyses = analyses;
+  },
+
+  clearSearchStore(state) {
+    state.searchedItems = [];
+    state.searchedNews = [];
+    state.searchedAnalyses = [];
   },
 };
 

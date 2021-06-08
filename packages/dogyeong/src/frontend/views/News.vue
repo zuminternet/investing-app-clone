@@ -16,7 +16,15 @@
     <main>
       <Swiper ref="swiper" @endSlide="onEndSlide">
         <SwiperSlide>
-          <NewsTemplate v-if="headline" :headline="headline" :news="normalNews" :opinions="newOpinions" url-prefix="/news/new" />
+          <NewsTemplate
+            v-if="headline"
+            :headline="headline"
+            :news="normalNews"
+            :opinions="newOpinions"
+            url-prefix="/news/new"
+            @clickFetchNewsButton="getNewNews"
+            @clickFetchOpinionsButton="getNewOpinions"
+          />
         </SwiperSlide>
         <SwiperSlide>
           <NewsTemplate
@@ -25,6 +33,8 @@
             :news="normalNews"
             :opinions="newOpinions"
             url-prefix="/news/popular"
+            @clickFetchNewsButton="getPopularNews"
+            @clickFetchOpinionsButton="getPopularOpinions"
           />
         </SwiperSlide>
       </Swiper>
@@ -110,45 +120,3 @@ export default Vue.extend({
   },
 });
 </script>
-
-<style lang="scss">
-.news-section,
-.opinions-section {
-  .news-headline {
-    a .news-text-container {
-      padding: 16px 12px;
-    }
-  }
-
-  .news-headline,
-  .news-list-item {
-    a,
-    a.news-link {
-      background-color: var(--bg-color);
-      border-bottom: 1px solid var(--border-color);
-    }
-
-    h4 {
-      color: var(--text-color);
-      word-break: keep-all;
-      overflow: hidden;
-      font-size: 18px;
-      text-overflow: ellipsis;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-    }
-
-    .news-author,
-    .news-date {
-      color: var(--sub-text-color);
-      font-size: 13px;
-    }
-  }
-
-  .section-title {
-    font-size: 24px;
-    padding: 36px 12px;
-  }
-}
-</style>

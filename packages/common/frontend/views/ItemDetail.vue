@@ -1,10 +1,10 @@
 <template>
   <div class="item-detail-page">
-    <multipurpose-header :itemDetail="itemDetail" isItemDetail></multipurpose-header>
+    <multipurpose-header :itemDetail="itemDetail" isItemDetail :userInfo="userInfo"></multipurpose-header>
     <item-detail-price-box :itemDetail="itemDetail"></item-detail-price-box>
     <custom-swiper :navigatorButtonNames="swiperNavigatorButtonNames">
       <swiper-slide>
-        <item-detail-wrapper :excludedHeight="210">
+        <list-wrapper :excludedHeight="210">
           <!-- 차트 컴포넌트 자리  -->
           <item-detail-overview-box :itemDetail="itemDetail"></item-detail-overview-box>
           <!-- 댓글 컴포넌트 자리 -->
@@ -30,10 +30,10 @@
               </news-list-item>
             </news-list>
           </sub-content-box>
-        </item-detail-wrapper>
+        </list-wrapper>
       </swiper-slide>
       <swiper-slide>
-        <item-detail-wrapper :excludedHeight="210">
+        <list-wrapper :excludedHeight="210">
           <news-list>
             <news-list-item v-for="element in news" :key="element.id" :to="''">
               <news-image :src="element.image_url" />
@@ -43,10 +43,10 @@
               </news-text-box>
             </news-list-item>
           </news-list>
-        </item-detail-wrapper>
+        </list-wrapper>
       </swiper-slide>
       <swiper-slide>
-        <item-detail-wrapper :excludedHeight="210">
+        <list-wrapper :excludedHeight="210">
           <news-list>
             <news-list-item v-for="element in analyses" :key="element.id" :to="''">
               <news-image :src="element.image_url" />
@@ -56,7 +56,7 @@
               </news-text-box>
             </news-list-item>
           </news-list>
-        </item-detail-wrapper>
+        </list-wrapper>
       </swiper-slide>
     </custom-swiper>
     <bottom-naviagtor :navigatorButtonNames="bottomNavigatorButtonNames"></bottom-naviagtor>
@@ -71,7 +71,7 @@ import { text } from '../constants';
 import BottomNaviagtor from '../components/BottomNaviagtor.vue';
 import MultipurposeHeader from '../components/MultipurposeHeader.vue';
 import ItemDetailPriceBox from '../components/ItemDetail/ItemDetailPriceBox.vue';
-import ItemDetailWrapper from '../components/ItemDetail/ItemDetailWrapper';
+import ListWrapper from '../components/ListWrapper.vue';
 import CustomSwiper from '../components/CustomSwiper.vue';
 import ItemDetailOverviewBox from '../components/ItemDetail/ItemDetailOverviewBox.vue';
 import SubContentBox from '../components/ItemDetail/SubContentBox.vue';
@@ -98,7 +98,7 @@ export default {
     NewsTextBox,
     NewsTextBoxTitle,
     NewsTextBoxDesc,
-    ItemDetailWrapper,
+    ListWrapper,
   },
 
   data() {
@@ -117,6 +117,7 @@ export default {
       itemDetail: (state) => state.itemDetail.itemDetail,
       news: (state) => state.itemDetail.news,
       analyses: (state) => state.itemDetail.analyses,
+      userInfo: (state) => state.user,
     }),
   },
 
@@ -125,10 +126,13 @@ export default {
   },
 
   created() {
-    const { symbols } = this.$route.query;
-    this.getItemDetail({ symbols });
-    this.getNews({ offset: 0, limit: 3 });
-    this.getAnalyses({ offset: 0, limit: 3 });
+    const { symbols, name } = this.$route.query;
+    const email = this.userInfo.userEmail;
+    const tickers = [symbols];
+
+    this.getItemDetail({ symbols, email, name });
+    this.getNews({ offset: 0, limit: 20, tickers });
+    this.getAnalyses({ offset: 0, limit: 20, tickers });
   },
 };
 </script>

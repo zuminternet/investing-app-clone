@@ -3,7 +3,7 @@
     <multipurpose-header isHome></multipurpose-header>
     <custom-swiper :navigatorButtonNames="swiperNavigatorButtonNames">
       <swiper-slide v-for="(items, index) in itemCollections" :key="index">
-        <item-card-list :items="items" :excludingHeight="150" isHome></item-card-list>
+        <item-card-list :items="items" :excludedHeight="150" isHome></item-card-list>
       </swiper-slide>
     </custom-swiper>
     <bottom-naviagtor :navigatorButtonNames="bottomNavigatorButtonNames"></bottom-naviagtor>
@@ -12,7 +12,7 @@
 
 <script>
 import { SwiperSlide } from 'vue-awesome-swiper';
-import { mapState, mapGetters, mapActions } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
 import BottomNaviagtor from '../../../common/frontend/components/BottomNaviagtor.vue';
 import MultipurposeHeader from '../../../common/frontend/components/MultipurposeHeader.vue';
@@ -31,9 +31,6 @@ export default {
     SwiperSlide,
   },
   computed: {
-    ...mapState({
-      stockItems: (state) => state.market.stockItems,
-    }),
     ...mapGetters('market', {
       itemCollections: 'itemCollections',
     }),
@@ -49,11 +46,13 @@ export default {
   },
 
   methods: {
-    ...mapActions('market', ['getStocks']),
+    ...mapActions('market', ['getStocks', 'getIndices', 'getCryptos']),
   },
 
   created() {
     this.getStocks();
+    this.getIndices();
+    this.getCryptos();
   },
 };
 </script>

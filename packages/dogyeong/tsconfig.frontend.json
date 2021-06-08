@@ -9,7 +9,8 @@
     "moduleResolution": "node",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "allowJs": true
+    "allowJs": true,
+    "lib": ["esnext", "DOM", "DOM.Iterable", "ScriptHost"]
   },
 
   "exclude": ["**/backend/**", "**/node_modules/**"]

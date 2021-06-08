@@ -17,6 +17,7 @@
           </NewsTextBox>
         </NewsListItem>
       </NewsList>
+      <button class="more-button" @click="$emit('clickFetchNewsButton')">더 많은 뉴스 ></button>
     </section>
     <section class="opinions-section">
       <h2 class="section-title">분석 및 의견</h2>
@@ -29,6 +30,7 @@
           </NewsTextBox>
         </NewsListItem>
       </NewsList>
+      <button class="more-button" @click="$emit('clickFetchOpinionsButton')">더 많은 분석 & 견해 ></button>
     </section>
   </div>
 </template>
@@ -61,15 +63,15 @@ export default Vue.extend({
   props: {
     headline: {
       type: Object,
-      required: true,
+      default: null,
     },
     news: {
       type: Array,
-      required: true,
+      default: null,
     },
     opinions: {
       type: Array,
-      required: true,
+      default: null,
     },
     urlPrefix: {
       type: String,
@@ -90,6 +92,8 @@ export default Vue.extend({
 <style lang="scss">
 .news-section,
 .opinions-section {
+  padding-bottom: 36px;
+
   .news-headline {
     a .news-text-container {
       padding: 16px 12px;
@@ -124,7 +128,17 @@ export default Vue.extend({
 
   .section-title {
     font-size: 24px;
-    padding: 36px 12px;
+    padding: 0px 12px 36px;
+  }
+
+  .more-button {
+    padding: 4px;
+    margin-top: 4px;
+    margin-left: 12px;
+    font-size: 16px;
+    background-color: transparent;
+    border: 0;
+    cursor: pointer;
   }
 }
 </style>

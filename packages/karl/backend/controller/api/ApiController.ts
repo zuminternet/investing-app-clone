@@ -1,4 +1,4 @@
-import { Controller, GetMapping, PostMapping } from 'zum-portal-core/backend/decorator/Controller';
+import { Controller, DeleteMapping, GetMapping, PostMapping } from 'zum-portal-core/backend/decorator/Controller';
 import { Request, Response } from 'express';
 import { Inject } from 'zum-portal-core/backend/decorator/Alias';
 
@@ -9,6 +9,16 @@ import MarketService from '../../service/MarketService';
 import ItemDetailService from '../../../../common/backend/service/ItemDetailService';
 // import ArticleService from '../../service/ArticleService';
 import ArticleService from '../../../../common/backend/service/ArticleService';
+import BookmarkService from '../../../../common/backend/service/BookmarkService';
+
+const fakeTickersMap = {
+  TSLA: true,
+  NVDA: true,
+  NFLX: true,
+  BAC: true,
+  GOOGL: true,
+  BABA: true,
+};
 
 @Controller({ path: '/api' })
 export class ApiController {
@@ -19,7 +29,13 @@ export class ApiController {
     @Inject(MarketService) private marketService: MarketService,
     @Inject(ItemDetailService) private itemDetailService: ItemDetailService,
     @Inject(ArticleService) private articleService: ArticleService,
+    @Inject(BookmarkService) private bookmarkService: BookmarkService,
   ) {}
+
+  private getTickerArray(tickers: any) {
+    if (typeof tickers === 'string') return [tickers];
+    return tickers;
+  }
 
   @GetMapping({ path: '/user' })
   public async getUser(request: Request, response: Response) {
@@ -31,7 +47,13 @@ export class ApiController {
       }
 
       const decodedToken = this.authService.verifyToken(token);
-      const user = await this.userService.loginUserByEmail(decodedToken);
+      let user;
+
+      if (decodedToken.googleId) {
+        user = await this.userService.loginUserByGoogleOAuth(decodedToken);
+      }
+
+      user = await this.userService.loginUserByEmail(decodedToken);
 
       if (user) {
         return response.status(200).send(user);
@@ -49,7 +71,7 @@ export class ApiController {
       const user = await this.userService.createUser(reqeust.body);
 
       if (user) {
-        return response.sendStatus(200);
+        return response.sendStatus(201);
       }
 
       response.sendStatus(409);
@@ -102,6 +124,7 @@ export class ApiController {
    * @description Home page에 렌더링할 stocks들을 가져오는 controller
    * @param request
    * @param resposne
+   * @returns response
    */
 
   @GetMapping({ path: '/market/stock' })
@@ -124,13 +147,37 @@ export class ApiController {
    * @description Home page에 렌더링할 indices를 가져오는 controller
    * @param request
    * @param resposne
+   * @returns response
    */
   @GetMapping({ path: '/market/indices' })
-  public async getIndices(request: Request, resposne: Response) {
+  public async getIndices(request: Request, response: Response) {
     try {
+      const indices = await this.marketService.getIndices();
+
+      if (indices) {
+        return response.status(200).send(indices);
+      }
+
+      response.sendStatus(404);
     } catch (error) {
       console.log(error);
-      resposne.status(404).json(error);
+      response.status(404).json(error);
+    }
+  }
+
+  @GetMapping({ path: '/market/cryptos' })
+  public async getCryptos(request: Request, response: Response) {
+    try {
+      const cryptos = await this.marketService.getCryptos();
+
+      if (cryptos) {
+        return response.status(200).send(cryptos);
+      }
+
+      response.sendStatus(404);
+    } catch (error) {
+      console.log(error);
+      response.status(404).json(error);
     }
   }
 
@@ -138,6 +185,7 @@ export class ApiController {
    * @description Home page에 렌더링할 cpyto currencies를 가져오는 controller
    * @param request
    * @param resposne
+   * @reutrns response
    */
   @GetMapping({ path: '/market/cpyto-currencies' })
   public async getCryptoCurrencies(request: Request, resposne: Response) {
@@ -151,16 +199,19 @@ export class ApiController {
    * @description item detail page에 렌더링할 item datail info를 가져오는 controller
    * @param request
    * @param resposne
-   * @returns
+   * @returns response
    */
 
   @GetMapping({ path: '/item-detail' })
   public async getItemDetail(request: Request, resposne: Response) {
     try {
-      const { symbols } = request.query;
+      const { symbols, email } = request.query;
       const itemDetailInfo = await this.itemDetailService.getItemDetail({ symbols });
 
       if (itemDetailInfo) {
+        itemDetailInfo.isBookmarked = await this.bookmarkService.getIsBookmarked({ email, symbols });
+        itemDetailInfo.isStock = fakeTickersMap[symbols] ? false : true;
+
         return resposne.status(200).send(itemDetailInfo);
       }
 
@@ -175,15 +226,22 @@ export class ApiController {
    * @description search page에 렌더링할 searched items들을 가져오는 controller
    * @param request
    * @param response
-   * @returns
+   * @returns response
    */
   @GetMapping({ path: '/search/items' })
   public async getSearchedItems(request: Request, response: Response) {
     try {
-      const { keyword } = request.query;
-      const items = await this.searchService.getSearchedItems({ keyword });
+      const { keyword, email } = request.query;
+      let { data: items } = await this.searchService.getSearchedItems({ keyword });
 
       if (items) {
+        for (let i = 0; i < items.length; i++) {
+          const { symbol } = items[i];
+          const isBookmarked = await this.bookmarkService.getIsBookmarked({ email, symbols: symbol });
+
+          items[i].isBookmarked = isBookmarked;
+        }
+
         return response.status(200).send(items);
       }
 
@@ -198,7 +256,7 @@ export class ApiController {
    * @description articles를 parsing하여 DB에 document들로 저장하는 controller(common에 추가할 때까지 주석처리)
    * @param request
    * @param response
-   * @returns
+   * @returns response
    */
   // @PostMapping({ path: '/articles' })
   // public async createArticles(request: Request, response: Response) {
@@ -206,7 +264,7 @@ export class ApiController {
   //     const result = await this.articleService.createArticles(request.body);
 
   //     if (result) {
-  //       response.sendStatus(200);
+  //       response.sendStatus(201);
 
   //       return true;
   //     }
@@ -221,12 +279,40 @@ export class ApiController {
    * @description DB에서 articles 중 news만 가져오는 controller
    * @param request
    * @param response
-   * @returns
+   * @returns response
    */
   @GetMapping({ path: '/articles/news' })
   public async getNews(request: Request, response: Response) {
     try {
-      const news = await this.articleService.getNews(request.body);
+      const { offset, limit, tickers } = request.query;
+      const news = await this.articleService.getNews({ offset: +offset, limit: +limit, tickers: this.getTickerArray(tickers) });
+
+      if (news) {
+        return response.status(200).send(news);
+      }
+
+      response.sendStatus(404);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  /**
+   * @description DB에서 articles 중 검색된 news만 가져오는 controller
+   * @param request
+   * @param response
+   * @returns
+   */
+  @GetMapping({ path: '/search/news' })
+  public async getNewsForSearch(request: Request, response: Response) {
+    try {
+      const { offset, limit, tickers } = request.query;
+
+      const news = await this.articleService.getNewsForSearch({
+        offset: +offset,
+        limit: +limit,
+        tickers: this.getTickerArray(tickers),
+      });
 
       if (news) {
         return response.status(200).send(news);
@@ -242,12 +328,17 @@ export class ApiController {
    * @description DB에서 articles 중 analyses만 가져오는 controller
    * @param request
    * @param response
-   * @returns
+   * @returns response
    */
   @GetMapping({ path: '/articles/analyses' })
   public async getAnalyses(request: Request, response: Response) {
     try {
-      const analyses = await this.articleService.getOpinions(request.body);
+      const { offset, limit, tickers } = request.query;
+      const analyses = await this.articleService.getOpinions({
+        offset: +offset,
+        limit: +limit,
+        // tickers: this.getTickerArray(tickers),
+      });
 
       if (analyses) {
         return response.status(200).send(analyses);
@@ -256,6 +347,90 @@ export class ApiController {
       response.sendStatus(404);
     } catch (error) {
       console.log(error);
+    }
+  }
+
+  @GetMapping({ path: '/search/analyses' })
+  public async getAnalysesForSearch(request: Request, response: Response) {
+    try {
+      const { offset, limit, tickers } = request.query;
+      const analyses = await this.articleService.getOpinionsForSearch({
+        offset: +offset,
+        limit: +limit,
+        // tickers: this.getTickerArray(tickers),
+      });
+
+      if (analyses) {
+        return response.status(200).send(analyses);
+      }
+
+      response.sendStatus(404);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  /**
+   * @description DB에서 bookmark documents를 추가하는 controller
+   * @param request
+   * @param response
+   * @returns response
+   */
+
+  @PostMapping({ path: '/bookmark' })
+  public async createBookmark(request: Request, response: Response) {
+    try {
+      const { email, symbol, name, category } = request.body;
+      const bookmark = await this.bookmarkService.createBookmark({ email, symbol, name, category });
+
+      if (bookmark) {
+        return response.status(201).send(bookmark);
+      }
+
+      response.sendStatus(409);
+    } catch (error) {
+      console.log(error);
+      response.json(error);
+    }
+  }
+
+  @DeleteMapping({ path: '/bookmark' })
+  public async deleteBookmark(request: Request, response: Response) {
+    try {
+      const { email, symbol, name, category } = request.body;
+
+      const result = await this.bookmarkService.deleteBookmark({ email, symbol, name, category });
+
+      if (result) {
+        return response.sendStatus(200);
+      }
+
+      response.sendStatus(409);
+    } catch (error) {
+      console.log(error);
+      response.json(error);
+    }
+  }
+  /**
+   * @description DB에서 bookmark documents를 가져오는 controller
+   * @param request
+   * @param response
+   * @returns response
+   */
+  @GetMapping({ path: '/bookmark' })
+  public async getBookmarks(request: Request, response: Response) {
+    try {
+      const { email } = request.query;
+      const bookmarks = await this.bookmarkService.getBookmarks(email);
+
+      if (bookmarks) {
+        return response.status(200).send(bookmarks);
+      }
+
+      response.sendStatus(409);
+    } catch (error) {
+      console.log(error);
+      response.json(error);
     }
   }
 }

@@ -21,7 +21,7 @@ export default () => {
     },
 
     mutations: {
-      setIndices(state, { indices = [] }) {
+      setIndices(state, indices = []) {
         state.indices = {
           data: indices,
           isLoading: false,
@@ -36,7 +36,7 @@ export default () => {
         indices.isLoading = false;
         indices.isError = true;
       },
-      setCoins(state, { coins = [] }) {
+      setCoins(state, coins = []) {
         state.coins = {
           data: coins,
           isLoading: false,
@@ -51,7 +51,7 @@ export default () => {
         coins.isLoading = false;
         coins.isError = true;
       },
-      setStocks(state, { stocks = [] }) {
+      setStocks(state, stocks = []) {
         state.stocks = {
           data: stocks,
           isLoading: false,

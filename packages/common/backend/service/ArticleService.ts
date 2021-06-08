@@ -1,30 +1,64 @@
 import { isValidObjectId, ObjectId } from 'mongoose';
 import { Service } from 'zum-portal-core/backend/decorator/Alias';
+import { Caching } from 'zum-portal-core/backend/decorator/Caching';
 import Article, { ArticleType, ArticleDoc } from '../model/ArticleModel';
+import * as NodeCache from 'node-cache';
 
-interface QueryProps {
-  offset?: number;
-  limit?: number;
-}
+const cache = new NodeCache({ deleteOnExpire: true });
 
 @Service()
 export default class ArticleService {
-  public async getNews({ offset = 0, limit = 10 }: QueryProps): Promise<ArticleDoc[]> {
-    return Article.find({ type: ArticleType.news })
+  private getTickerOption(tickers?: string[]) {
+    return tickers ? { tickers: { $in: tickers } } : {};
+  }
+
+  @Caching({ ttl: 30, runOnStart: false, cache })
+  public async getNews(offset = 0, limit = 10, tickers?: string[]): Promise<ArticleDoc[]> {
+    const tickerOption = this.getTickerOption(tickers);
+    const query = { type: ArticleType.news, ...tickerOption };
+
+    return Article.find(query)
+      .sort({ date: 'desc' })
+      .skip(offset)
+      .limit(limit)
+      .lean<ArticleDoc[]>();
+  }
+    
+  public async getNewsForSearch({ offset = 0, limit = 10, tickers }: QueryProps = {}): Promise<ArticleDoc[]> {
+    const tickerOption = this.getTickerOption(tickers);
+    const query = { type: ArticleType.news, ...tickerOption };
+
+    return Article.find(query)
       .sort({ date: 'desc' })
       .skip(offset)
       .limit(limit)
       .lean<ArticleDoc[]>();
   }
 
-  public async getOpinions({ offset = 0, limit = 10 }: QueryProps): Promise<ArticleDoc[]> {
-    return Article.find({ type: ArticleType.opinions })
+  @Caching({ ttl: 30, runOnStart: false, cache })
+  public async getOpinions({ offset = 0, limit = 10, tickers }: QueryProps = {}): Promise<ArticleDoc[]> {
+    const tickerOption = this.getTickerOption(tickers);
+    const query = { type: ArticleType.opinions, ...tickerOption };
+
+    return Article.find(query)
       .sort({ date: 'desc' })
       .skip(offset)
       .limit(limit)
       .lean<ArticleDoc[]>();
   }
 
+  public async getOpinionsForSearch({ offset = 0, limit = 10, tickers }: QueryProps = {}): Promise<ArticleDoc[]> {
+    const tickerOption = this.getTickerOption(tickers);
+    const query = { type: ArticleType.opinions, ...tickerOption };
+
+    return Article.find(query)
+      .sort({ date: 'desc' })
+      .skip(offset)
+      .limit(limit)
+      .lean<ArticleDoc[]>();
+  }
+
+  @Caching({ ttl: 30, runOnStart: false, cache })
   public async getArticleById(id: ObjectId | string): Promise<ArticleDoc> {
     if (!isValidObjectId(id)) throw new Error('invalid id');
 

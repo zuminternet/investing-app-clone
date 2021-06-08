@@ -26,20 +26,16 @@ const state = () => ({
 
 // getter 설정
 
-const getters = {
-  // itemCollections: (state) => {
-  //   return [state.stockItems, state.indexItems, state.cryptoItems];
-  // },
-};
+const getters = {};
 
 // actions 설정
 const actions = {
-  async getItemDetail({ commit }, { symbols }) {
+  async getItemDetail({ commit }, { symbols, email, name }) {
     try {
-      const itemDetail = await getItemDetail({ symbols });
+      const itemDetail = await getItemDetail({ symbols, email });
 
       if (itemDetail) {
-        commit('changeItemDetail', itemDetail);
+        commit('setItemDetail', { itemDetail, name });
 
         return true;
       }
@@ -50,12 +46,12 @@ const actions = {
     }
   },
 
-  async getNews({ commit }, { offset, limit }) {
+  async getNews({ commit }, { offset, limit, tickers }) {
     try {
-      const news = await getNews({ offset, limit });
+      const news = await getNews({ offset, limit, tickers });
 
       if (news) {
-        commit('changeNews', news);
+        commit('setNews', news);
 
         return true;
       }
@@ -66,12 +62,12 @@ const actions = {
     }
   },
 
-  async getAnalyses({ commit }, { offset, limit }) {
+  async getAnalyses({ commit }, { offset, limit, tickers }) {
     try {
-      const analyses = await getAnalyses({ offset, limit });
+      const analyses = await getAnalyses({ offset, limit, tickers });
 
       if (analyses) {
-        commit('changeAnalyses', analyses);
+        commit('setAnalyses', analyses);
 
         return true;
       }
@@ -85,8 +81,21 @@ const actions = {
 
 // mutatuons 설정
 const mutations = {
-  changeItemDetail(state, itemDetail) {
-    const { name, symbol, adj_close, adj_high, adj_low, close, open, volume, stock_exchange, high, low } = itemDetail;
+  setItemDetail(state, { itemDetail, name }) {
+    const {
+      symbol,
+      adj_close,
+      adj_high,
+      adj_low,
+      close,
+      open,
+      volume,
+      stock_exchange,
+      high,
+      low,
+      isBookmarked,
+      isStock,
+    } = itemDetail;
 
     state.itemDetail = {
       ...state.itemDetail,
@@ -102,14 +111,16 @@ const mutations = {
       acronym: stock_exchange.acronym,
       high,
       low,
+      isBookmarked,
+      isStock,
     };
   },
 
-  changeNews(state, news) {
+  setNews(state, news) {
     state.news = news;
   },
 
-  changeAnalyses(state, analyses) {
+  setAnalyses(state, analyses) {
     state.analyses = analyses;
   },
 };

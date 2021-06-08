@@ -4,7 +4,7 @@
       <input class="input" :placeholder="nameText" v-model="name" />
     </template>
     <input class="input" :placeholder="emailText" v-model="email" />
-    <input class="input" :placeholder="passwordText" v-model="password" />
+    <input class="input" type="password" :placeholder="passwordText" v-model="password" />
     <input class="submit" type="submit" :value="this.submitButtonText" />
   </form>
 </template>
