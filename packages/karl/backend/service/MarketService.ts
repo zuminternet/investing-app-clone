@@ -7,6 +7,7 @@ import { investing } from 'investing-com-api';
 import { marketStackConfig } from '../../../common/backend/config';
 import { times } from '../domain/date';
 import { isProductionMode } from '../domain/utils';
+import { tickerMap } from '../../../common/domain';
 
 export interface InvestingData {
   date: number;
@@ -19,25 +20,6 @@ export interface InvestingApiResponse {
   diff: number;
   growthRate: number;
   date: string;
-}
-
-enum StockSymbols {
-  AAPL = 'equities/apple-computer-inc', // 애플
-  AMZN = 'equities/amazon-com-inc', // 아마존
-  FB = 'equities/facebook-inc', // 페이스북
-  JPM = 'equities/jp-morgan-chase', // JP 모건
-}
-
-enum indicesSymbols {
-  DOW_JONES_30 = 'indices/us-30', // 다우 존스
-  NASDAQ_100 = 'indices/nq-100', // 나스닥
-  NIKKEI_255 = 'indices/japan-ni225', // 니케이
-}
-
-enum cryptoSymbols {
-  BIT_COIN = 'crypto/bitcoin/btc-usd', // 비트코인
-  ETHEREUM = 'crypto/ethereum/eth-usd?c997650', // 이더리움
-  LITE_COIN = 'crypto/litecoin/ltc-usd?c1010798', // 라이트코인
 }
 
 const { accessKey } = marketStackConfig;
@@ -93,12 +75,13 @@ export default class MarketService {
 
     for (let i = 0; i < stocks.length; i++) {
       const key = stocks[i].symbol;
-      if (StockSymbols[key]) {
+
+      if (tickerMap.stock[key]) {
         stocks[i].category = stocks[i].stock_exchange.acronym;
-        const investingId = StockSymbols[key];
+        const { investingId, name, category } = tickerMap.stock[key];
         const investingData = await this.callInvesting(key, investingId);
 
-        displayedStocks.push({ ...stocks[i], ...investingData });
+        displayedStocks.push({ ...stocks[i], ...investingData, name, category });
       }
     }
 
@@ -123,14 +106,16 @@ export default class MarketService {
   })
   public async getIndices() {
     try {
-      const indices = Object.entries(indicesSymbols);
+      const indices = Object.entries(tickerMap.index);
       const displayedIndices = [];
 
       for (let i = 0; i < indices.length; i++) {
-        const [key, investingId] = indices[i];
+        const [key, indexInfo] = indices[i];
+        const { investingId, name, category } = indexInfo;
+
         const investingData = await this.callInvesting(key, investingId);
 
-        displayedIndices.push(investingData);
+        displayedIndices.push({ ...investingData, name, category, symbol: key });
       }
 
       if (displayedIndices) {
@@ -148,14 +133,15 @@ export default class MarketService {
    */
   public async getCryptos() {
     try {
-      const cpyptos = Object.entries(cryptoSymbols);
+      const cpyptos = Object.entries(tickerMap.crypto);
       const displayedCryptos = [];
 
       for (let i = 0; i < cpyptos.length; i++) {
-        const [key, investingId] = cpyptos[i];
+        const [key, cryptoInfo] = cpyptos[i];
+        const { investingId, name, category } = cryptoInfo;
         const investingData = await this.callInvesting(key, investingId);
 
-        displayedCryptos.push(investingData);
+        displayedCryptos.push({ ...investingData, name, category, symbol: key });
       }
 
       if (displayedCryptos) {

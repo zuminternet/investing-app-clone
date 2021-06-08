@@ -5,52 +5,84 @@ export const tickerMap = {
     FB: {
       //  화면에 표시될 종목 이름
       name: '나스닥100',
+      // investingId end point 이름
+      investingId: 'indices/nq-100',
+      // 화면에 표시될 소속 이름
+      category: 'zum-investing-app',
     },
     ADBE: {
       name: '다우존스30',
+      investingId: 'indices/us-30',
+      category: 'zum-investing-app',
     },
     ADI: {
       name: 'S&P500',
+      investingId: 'equities/apple-computer-inc',
+      category: 'zum-investing-app',
     },
     ADP: {
       name: 'foo index',
+      investingId: 'equities/apple-computer-inc',
+      category: 'zum-investing-app',
     },
     ADSK: {
       name: 'bar index',
+      investingId: 'equities/apple-computer-inc',
+      category: 'zum-investing-app',
     },
   },
   crypto: {
     BIDU: {
       name: '비트코인',
+      investingId: 'crypto/bitcoin/btc-usd',
+      category: 'zum-investing-app',
     },
     EBAY: {
       name: '이더리움',
+      investingId: 'crypto/ethereum/eth-usd?c997650',
+      category: 'zum-investing-app',
     },
     INTC: {
       name: 'foo coin',
+      investingId: 'equities/apple-computer-inc',
+      category: 'zum-investing-app',
     },
     MAR: {
       name: 'bar coin',
+      investingId: 'equities/apple-computer-inc',
+      category: 'zum-investing-app',
     },
     MNST: {
       name: 'baz coin',
+      investingId: 'equities/apple-computer-inc',
+      category: 'zum-investing-app',
     },
   },
   stock: {
     AAPL: {
       name: '애플',
+      investingId: 'equities/apple-computer-inc',
+      category: 'zum-investing-app',
     },
     GOOG: {
       name: '구글',
+      investingId: 'equities/apple-computer-inc',
+      category: 'zum-investing-app',
     },
     TSLA: {
       name: '테슬라',
+      investingId: 'equities/apple-computer-inc',
+      category: 'zum-investing-app',
     },
     AMZN: {
       name: '아마존',
+      investingId: 'equities/amazon-com-inc',
+      category: 'zum-investing-app',
     },
     PYPL: {
       name: '페이팔',
+      investingId: 'equities/apple-computer-inc',
+      category: 'zum-investing-app',
     },
   },
 } as const;
