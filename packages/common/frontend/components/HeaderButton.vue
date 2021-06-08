@@ -2,16 +2,22 @@
   <input v-if="isBackButton" class="header-button" type="button" @click="goBack" />
   <input v-else-if="isGoSearchButton" class="header-button" type="button" @click="goSearch" />
   <input
+    v-else-if="isAddBookmarkButton && isBookmarkedForLocal"
+    class="header-active-button"
+    type="button"
+    @click="handleBookmark(email, symbol, name, category)"
+  />
+  <input
     v-else-if="isAddBookmarkButton"
     class="header-button"
     type="button"
-    @click="addBookmark(email, symbol, name, category)"
+    @click="handleBookmark(email, symbol, name, category)"
   />
   <input v-else class="header-button" type="button" @click="$emit('handle-header-button-click')" />
 </template>
 
 <script>
-import { createBookmark } from '../apis';
+import { createBookmark, deleteBookmark } from '../apis';
 
 export default {
   name: 'HeaderButton',
@@ -50,6 +56,17 @@ export default {
       type: String,
       default: '',
     },
+
+    isBookmarked: {
+      type: Boolean,
+      default: false,
+    },
+  },
+
+  data() {
+    return {
+      isBookmarkedForLocal: false,
+    };
   },
 
   methods: {
@@ -61,8 +78,22 @@ export default {
       this.$router.push('search');
     },
 
-    async addBookmark(email, symbol, name, category) {
-      await createBookmark({ email, symbol, name, category });
+    async handleBookmark(email, symbol, name, category) {
+      if (!this.isBookmarkedForLocal && (await createBookmark({ email, symbol, name, category }))) {
+        this.isBookmarkedForLocal = true;
+      } else if (this.isBookmarkedForLocal && (await deleteBookmark({ email, symbol, name, category }))) {
+        this.isBookmarkedForLocal = false;
+      }
+    },
+  },
+
+  mounted() {
+    this.isBookmarkedForLocal = this.isBookmarked;
+  },
+
+  watch: {
+    isBookmarked() {
+      this.isBookmarkedForLocal = this.isBookmarked;
     },
   },
 };
@@ -73,6 +104,13 @@ export default {
   width: 30px;
   height: 30px;
   background-color: green;
+  margin-right: 10px;
+}
+
+.header-active-button {
+  width: 30px;
+  height: 30px;
+  background-color: red;
   margin-right: 10px;
 }
 </style>

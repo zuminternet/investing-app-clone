@@ -122,6 +122,66 @@ export interface HistoricalData {
   data: MarketStockEOD[];
 }
 
+/**
+ * 1d -> 5m
+ * 1w -> 30m
+ * 1m -> 1h
+ * 6m -> 3h
+ * 1y -> 12h
+ * 5y -> 24h
+ * max -> 24h
+ */
+const getPastDate = ({ day = 0, month = 0, year = 0 } = {}) => {
+  const date = new Date();
+  const y = date.getFullYear();
+  const m = date.getMonth();
+  const d = date.getDate();
+  date.setFullYear(y - year);
+  date.setMonth(m - month);
+  date.setDate(d - day);
+
+  return date;
+};
+
+const formatDate = (date: Date) => {
+  return date.toISOString().replace(/\..*/, '+0000');
+};
+
+export const IntraDayChartMap = {
+  '1d': {
+    interval: '5min',
+    dateFrom: () => formatDate(getPastDate({ day: 1 })),
+    dateTo: () => formatDate(new Date()),
+  },
+  '1w': {
+    interval: '30min',
+    dateFrom: () => formatDate(getPastDate({ day: 7 })),
+    dateTo: () => formatDate(new Date()),
+  },
+  '1m': {
+    interval: '1hour',
+    dateFrom: () => formatDate(getPastDate({ month: 1 })),
+    dateTo: () => formatDate(new Date()),
+  },
+  '1y': {
+    interval: '12hour',
+    dateFrom: () => formatDate(getPastDate({ year: 1 })),
+    dateTo: () => formatDate(new Date()),
+  },
+  '5y': {
+    interval: '24hour',
+    dateFrom: () => formatDate(getPastDate({ year: 1 })),
+    dateTo: () => formatDate(new Date()),
+  },
+  max: {
+    interval: '24hour',
+    dateFrom: () => formatDate(getPastDate({ year: 1000 })),
+    dateTo: () => formatDate(new Date()),
+  },
+} as const;
+
+export type ChartPeriod = keyof typeof IntraDayChartMap;
+
 // 캐시 관련
 const secondUnit = 1000;
 const hourUnit = 60 * 60 * secondUnit;

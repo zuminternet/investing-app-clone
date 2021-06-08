@@ -20,6 +20,7 @@
           :category="category"
           :email="email"
           :symbol="symbol"
+          :isBookmarked="isBookmarked"
           isAddBookmarkButton
         ></item-card-button>
       </div>
@@ -32,7 +33,7 @@
             {{ name }}
           </custom-text>
           <div class="item-sub-information">
-            <custom-text>{{ time }}</custom-text>
+            <custom-text>{{ date }}</custom-text>
             |
             <custom-text>
               {{ category }}
@@ -99,10 +100,6 @@ export default {
     },
 
     category() {
-      if (this.isSearch) {
-        return this.item.stock_exchange.acronym;
-      }
-
       return this.item.category;
     },
 
@@ -114,34 +111,30 @@ export default {
       return this.userInfo.userEmail;
     },
 
-    price() {
-      return 10;
+    isBookmarked() {
+      return this.item.isBookmarked;
     },
 
-    time() {
-      return 10;
+    price() {
+      return this.item.value;
+    },
+
+    date() {
+      return this.item.date;
     },
 
     fluctuationPrice() {
-      // if (!this.isSearch) {
-      //   return this.item.fluctuationPrice;
-      // }
-
-      return 10;
+      return this.item.diff.toFixed(3);
     },
 
     fluctuationRate() {
-      // if (!this.isSearch) {
-      //   return this.item.fluctuationRate;
-      // }
-
-      return 10;
+      return this.item.growthRate.toFixed(3);
     },
   },
 
   methods: {
     routeToItemDetail() {
-      this.$router.push({ path: 'item-detail', query: { symbols: this.symbol } });
+      this.$router.push({ path: 'item-detail', query: { symbols: this.symbol, name: this.name } });
     },
   },
 };

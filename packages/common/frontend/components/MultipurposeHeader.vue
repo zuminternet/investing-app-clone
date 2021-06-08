@@ -8,20 +8,27 @@
         <div>
           <custom-text>{{ name }}</custom-text>
         </div>
-        <div>
+        <div v-if="isStock">
           <custom-text>{{ category }} ({{ symbol }})</custom-text>
         </div>
       </div>
       <empty-space></empty-space>
       <div class="header-button-box">
         <header-button isGoSearchButton></header-button>
-        <header-button isAddBookmarkButton :email="email" :symbol="symbol" :name="name" :category="category"></header-button>
+        <header-button
+          isAddBookmarkButton
+          :isBookmarked="isBookmarked"
+          :email="email"
+          :symbol="symbol"
+          :name="name"
+          :category="category"
+        ></header-button>
       </div>
     </template>
 
     <template v-if="isSearch">
       <header-button isBackButton></header-button>
-      <search-input @search-input-value-change="requestSearchedItems" />
+      <search-input @search-input-value-change="$emit('search-input-value-change', $event)" />
     </template>
 
     <template v-if="isHome">
@@ -41,7 +48,7 @@
       </div>
       <empty-space></empty-space>
       <div class="header-button-box">
-        <header-button></header-button>
+        <!-- <header-button></header-button> -->
         <header-button isGoSearchButton></header-button>
       </div>
     </template>
@@ -116,8 +123,16 @@ export default {
       return this.itemDetail.symbol;
     },
 
+    isBookmarked() {
+      return this.itemDetail.isBookmarked;
+    },
+
     email() {
-      return this.userInfo.email;
+      return this.userInfo.userEmail;
+    },
+
+    isStock() {
+      return this.itemDetail.isStock;
     },
   },
 
@@ -129,13 +144,16 @@ export default {
   },
 
   methods: {
-    ...mapActions('search', ['getSearchedItems']),
+    ...mapActions('search', ['getSearchedItems', 'getSearchedNews', 'getSearchedAnalyses']),
 
-    requestSearchedItems(event) {
+    requestSearch(event) {
       const keyword = event.target.value;
 
       if (keyword) {
-        this.getSearchedItems(keyword);
+        const tickers = [keyword];
+        this.getSearchedItems({ keyword, email: this.email });
+        this.getSearchedNews({ offset: 0, limit: 10, tickers });
+        this.getSearchedAnalyses({ offset: 0, limit: 10, tickers });
       }
     },
   },

@@ -4,20 +4,39 @@ declare const Axios: AxiosStatic;
 
 const devURL = 'http://localhost:3000';
 
+enum indicesCprytosMap {
+  DOW_JONES_30 = 'TSLA',
+  NASDAQ_100 = 'NVDA',
+  NIKKEI_255 = 'BABA',
+  BIT_COIN = 'NFLX',
+  LITE_COIN = 'BAC',
+  ETHEREUM = 'GOOGL',
+}
+
 export interface getSearchedItemsInfo {
   keyword: string;
+  email: string;
 }
 
 export interface getItemDetailInfo {
+  email: string;
   symbols: string;
 }
 
 export interface getNewsAndAnalysesInfo {
   offset: number;
   limit: number;
+  tickers: String[];
 }
 
 export interface createBookmarkInfo {
+  email: string;
+  symbol: string;
+  name: string;
+  category: string;
+}
+
+export interface deleteBookmarkInfo {
   email: string;
   symbol: string;
   name: string;
@@ -29,9 +48,9 @@ export interface createBookmarkInfo {
  * @param param0
  * @returns Promise
  */
-const getSearchedItems = async ({ keyword }: getSearchedItemsInfo) => {
+const getSearchedItems = async ({ keyword, email }: getSearchedItemsInfo) => {
   try {
-    const result = await Axios.get(`${devURL}/api/search/items?keyword=${keyword}`);
+    const result = await Axios.get(`${devURL}/api/search/items?keyword=${keyword}&email=${email}`);
 
     if (result.status === 200) {
       const { data: searchedItems } = result;
@@ -46,13 +65,60 @@ const getSearchedItems = async ({ keyword }: getSearchedItemsInfo) => {
 };
 
 /**
+ * @description search page에 렌더링할 searched news를 가져오는 front-side API call 함수
+ * @param param0
+ * @returns
+ */
+const getSearchedNews = async ({ offset, limit, tickers }: getNewsAndAnalysesInfo) => {
+  try {
+    const result = await Axios.get(`${devURL}/api/search/news`, {
+      params: { offset, limit, tickers },
+    });
+
+    if (result.status === 200) {
+      const { data: news } = result;
+
+      return news;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+/**
+ * search page에 렌더링할 searched analyses를 가져오는 front-side API call 함수
+ * @param param0
+ * @returns
+ */
+const getSearchedAnalyses = async ({ offset, limit, tickers }: getNewsAndAnalysesInfo) => {
+  try {
+    const result = await Axios.get(`${devURL}/api/search/analyses`, {
+      params: { offset, limit, tickers },
+    });
+
+    if (result.status === 200) {
+      const { data: news } = result;
+
+      return news;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+/**
  * @description item detail page에 렌더링할 item detail를 가져오는 front-side API 호출 함수
  * @param param0
  * @returns Promise
  */
-const getItemDetail = async ({ symbols }: getItemDetailInfo) => {
+const getItemDetail = async ({ symbols, email }: getItemDetailInfo) => {
   try {
-    const result = await Axios.get(`${devURL}/api/item-detail?symbols=${symbols}`);
+    const result = await Axios.get(`${devURL}/api/item-detail`, {
+      params: {
+        symbols: indicesCprytosMap[symbols] ? indicesCprytosMap[symbols] : symbols,
+        email,
+      },
+    });
 
     if (result.status === 200) {
       const { data: itemDetail } = result;
@@ -71,9 +137,11 @@ const getItemDetail = async ({ symbols }: getItemDetailInfo) => {
  * @param param0
  * @returns Promise
  */
-const getNews = async ({ offset, limit }: getNewsAndAnalysesInfo) => {
+const getNews = async ({ offset, limit, tickers }: getNewsAndAnalysesInfo) => {
   try {
-    const result = await Axios.get(`${devURL}/api/articles/news?offset=${offset}&limit=${limit}`);
+    const result = await Axios.get(`${devURL}/api/articles/news`, {
+      params: { offset, limit, tickers },
+    });
 
     if (result.status === 200) {
       const { data: news } = result;
@@ -93,9 +161,11 @@ const getNews = async ({ offset, limit }: getNewsAndAnalysesInfo) => {
  * @returns Promise
  */
 
-const getAnalyses = async ({ offset, limit }: getNewsAndAnalysesInfo) => {
+const getAnalyses = async ({ offset, limit, tickers }: getNewsAndAnalysesInfo) => {
   try {
-    const result = await Axios.get(`${devURL}/api/articles/analyses?offset=${offset}&limit=${limit}`);
+    const result = await Axios.get(`${devURL}/api/articles/analyses`, {
+      params: { offset, limit, tickers },
+    });
 
     if (result.status === 200) {
       const { data: analyses } = result;
@@ -135,6 +205,22 @@ const createBookmark = async ({ email, symbol, name, category }: createBookmarkI
   }
 };
 
+const deleteBookmark = async ({ email, symbol, name, category }: deleteBookmarkInfo) => {
+  try {
+    const result = await Axios.delete(`${devURL}/api/bookmark`, {
+      data: { email, symbol, name, category },
+    });
+
+    if (result.status === 200) {
+      return true;
+    }
+
+    return false;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 /**
  * @description email을 받아 bookmarks를 가져오는 front-side API call 함수
  * @param email
@@ -146,7 +232,7 @@ const getBookmarks = async (email: string) => {
     const result = await Axios.get(`${devURL}/api/bookmark?email=${email}`);
 
     if (result.status === 200) {
-      const { data: bookmarks } = result;
+      let { data: bookmarks } = result;
 
       return bookmarks;
     }
@@ -157,4 +243,14 @@ const getBookmarks = async (email: string) => {
   }
 };
 
-export { getSearchedItems, getItemDetail, getNews, getAnalyses, createBookmark, getBookmarks };
+export {
+  getSearchedAnalyses,
+  getSearchedItems,
+  getItemDetail,
+  getNews,
+  getAnalyses,
+  createBookmark,
+  getBookmarks,
+  deleteBookmark,
+  getSearchedNews,
+};

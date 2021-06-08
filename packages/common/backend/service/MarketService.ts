@@ -1,8 +1,21 @@
 import { Service } from 'zum-portal-core/backend/decorator/Alias';
+import { Caching } from 'zum-portal-core/backend/decorator/Caching';
 import * as yahooFinance from 'yahoo-finance';
 import { marketStackConfig } from '../config';
-import { MarketSymbol, SummaryDetail, EndOfDay, tickerMap, MarketStockEOD, HistoricalData } from '../../domain';
+import {
+  MarketSymbol,
+  SummaryDetail,
+  EndOfDay,
+  tickerMap,
+  MarketStockEOD,
+  HistoricalData,
+  IntraDayChartMap,
+  ChartPeriod,
+} from '../../domain';
 import axios, { AxiosInstance } from 'axios';
+import * as NodeCache from 'node-cache';
+
+const cache = new NodeCache({ deleteOnExpire: true });
 
 @Service()
 export default class MarketService {
@@ -14,6 +27,16 @@ export default class MarketService {
       baseURL: this.baseUrl,
       params: { access_key: marketStackConfig.accessKey },
     });
+  }
+
+  private isValidSymbol(symbol: string) {
+    return Object.keys(tickerMap).some((type: keyof typeof tickerMap) => {
+      return Object.prototype.hasOwnProperty.call(tickerMap[type], symbol);
+    });
+  }
+
+  private isValidPeriod(period: string) {
+    return Object.prototype.hasOwnProperty.call(IntraDayChartMap, period);
   }
 
   private convertSymbolsToQueryString(symbols: MarketSymbol[]) {
@@ -39,6 +62,11 @@ export default class MarketService {
     return { ...eod, display_name: displayName, diff, growthRate };
   }
 
+  private getIntraDayOptions(period: ChartPeriod) {
+    const { interval, dateFrom, dateTo } = IntraDayChartMap[period];
+    return { interval, date_from: dateFrom(), date_to: dateTo() };
+  }
+
   /**
    * getLatestEOD
    *
@@ -47,7 +75,10 @@ export default class MarketService {
    * @author dogyeong
    * @param {MarketSymbol[]} symbols ticker 심볼 배열
    */
+  @Caching({ ttl: 30, cache, runOnStart: false })
   public async getLatestEOD(symbols: MarketSymbol[]): Promise<EndOfDay[]> {
+    if (!symbols.every(this.isValidSymbol.bind(this))) throw new Error('invalid symbol');
+
     const symbolQueryStr = this.convertSymbolsToQueryString(symbols);
     const { data: response } = await this.axiosClient.get('/eod/latest', {
       params: { symbols: symbolQueryStr },
@@ -64,7 +95,10 @@ export default class MarketService {
    * @author dogyeong
    * @param {MarketSymbol} symbol ticker 심볼
    */
+  @Caching({ ttl: 30, cache, runOnStart: false })
   public async getSummaryDetail(symbol: MarketSymbol): Promise<SummaryDetail> {
+    if (!this.isValidSymbol(symbol)) throw new Error('invalid symbol');
+
     const { summaryDetail } = await yahooFinance.quote({
       symbol,
       modules: ['summaryDetail'],
@@ -81,13 +115,19 @@ export default class MarketService {
    * @author dogyeong
    * @param {MarketSymbol} symbol ticker 심볼
    */
-  public async getHistoricalData(symbol: MarketSymbol): Promise<HistoricalData> {
-    const { data: response } = await this.axiosClient.get(`/tickers/${symbol}/eod`);
+  @Caching({ ttl: 30, cache, runOnStart: false })
+  public async getHistoricalData(symbol: MarketSymbol, period: ChartPeriod): Promise<HistoricalData> {
+    if (!this.isValidSymbol(symbol)) throw new Error('invalid symbol');
+    if (!this.isValidPeriod(period)) throw new Error('invalid period');
+
+    const { data: response } = await this.axiosClient.get(`/tickers/${symbol}/intraday`, {
+      params: this.getIntraDayOptions(period),
+    });
     const displayName = this.getDisplayName(symbol);
 
     return {
       display_name: displayName,
-      data: response?.data?.eod ?? [],
+      data: response?.data?.intraday ?? [],
     };
   }
 }
