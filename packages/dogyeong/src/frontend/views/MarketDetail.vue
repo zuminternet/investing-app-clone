@@ -9,18 +9,59 @@
       </HeaderTitle>
     </Header>
     <main>
-      <section ref="chartContainer" class="chart-container"></section>
-      <section v-if="summaryDetail">
-        <h3>개요</h3>
-        <p>금일 저가 {{ summaryDetail.dayLow }}</p>
-        <p>금일 고가 {{ summaryDetail.dayHigh }}</p>
-        <p>금일 시가 {{ summaryDetail.open }}</p>
-        <p>52주 최고가 {{ summaryDetail.fiftyTwoWeekLow }}</p>
-        <p>52주 최저가 {{ summaryDetail.fiftyTwoWeekHigh }}</p>
+      <section class="chart-section">
+        <div ref="chartContainer" class="chart-container"></div>
+        <div class="button-container">
+          <button @click="changeChartPeriod('1d')">1일</button>
+          <button @click="changeChartPeriod('1w')">1주</button>
+          <button @click="changeChartPeriod('1m')">1달</button>
+          <button @click="changeChartPeriod('1y')">1년</button>
+          <button @click="changeChartPeriod('5y')">5년</button>
+          <button @click="changeChartPeriod('max')">최대</button>
+          <button @click="toggleGraphType" class="chart-btn">&#128480;</button>
+        </div>
       </section>
-      <div>
-        <NewsTemplate v-if="news" :news="news" :opinions="opinions" url-prefix="/news/new" />
-      </div>
+      <section class="summary-section" v-if="summaryDetail">
+        <h2>개요</h2>
+        <table>
+          <tbody>
+            <tr>
+              <td>일일 변동폭</td>
+              <td>{{ summaryDetail.dayLow }} - {{ summaryDetail.dayHigh }}</td>
+            </tr>
+            <tr>
+              <td>52주 가격변동폭</td>
+              <td>{{ summaryDetail.fiftyTwoWeekLow }} - {{ summaryDetail.fiftyTwoWeekHigh }}</td>
+            </tr>
+            <tr>
+              <td>총 시가</td>
+              <td>{{ summaryDetail.marketCap }}</td>
+            </tr>
+            <tr>
+              <td>매수가/매도가</td>
+              <td>{{ summaryDetail.bid }}/{{ summaryDetail.ask }}</td>
+            </tr>
+            <tr>
+              <td>거래량</td>
+              <td>{{ summaryDetail.volume }}</td>
+            </tr>
+            <tr>
+              <td>평균 거래량</td>
+              <td>{{ summaryDetail.averageVolume }}</td>
+            </tr>
+            <tr>
+              <td>이전 종가</td>
+              <td>{{ summaryDetail.previousClose }}</td>
+            </tr>
+            <tr>
+              <td>시가</td>
+              <td>{{ summaryDetail.open }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+      <ArticleTemplate sectionTitle="뉴스" :articles="news" url-prefix="/news/new" />
+      <ArticleTemplate sectionTitle="의견" :articles="opinions" url-prefix="/news/new" />
     </main>
     <BottomNav></BottomNav>
   </Layout>
@@ -34,19 +75,21 @@ import Layout from '@/components/Layout/Layout.vue';
 import { Header, HeaderTitle, HeaderButton } from '@/components/Header';
 import BottomNav from '@/components/BottomNav/BottomNav.vue';
 import { createChart } from '@/chart';
-import NewsTemplate from '@/components/NewsTemplate/NewsTemplate.vue';
+import ArticleTemplate from '@/components/ArticleTemplate/ArticleTemplate.vue';
 
 const chartLightThemeOption = {
   bgColor: '#fafffa',
   blueColor: 'blue',
   redColor: 'red',
   textColor: 'black',
+  lineFillColor: '#f0f4ff',
+  lineStrokeColor: '#84bbf3',
 };
 
 export default Vue.extend({
   name: 'MarketDetail',
 
-  components: { Layout, Header, HeaderTitle, BottomNav, HeaderButton, NewsTemplate },
+  components: { Layout, Header, HeaderTitle, BottomNav, HeaderButton, ArticleTemplate },
 
   data() {
     return {
@@ -56,6 +99,7 @@ export default Vue.extend({
       name: '',
       news: null,
       opinions: null,
+      symbol: '',
     };
   },
 
@@ -67,24 +111,24 @@ export default Vue.extend({
   },
 
   created() {
-    const symbol = this.$route.params.id;
+    this.symbol = this.$route.params.id;
 
-    getSummary(symbol)
+    getSummary(this.symbol)
       .then((summaryDetail) => (this.summaryDetail = summaryDetail))
       .catch(console.error);
 
-    getChart(symbol)
+    getChart({ symbol: this.symbol, period: '1y' })
       .then((chart) => {
         this.chartData = chart.data;
         this.name = chart.display_name;
       })
       .catch(console.error);
 
-    getNewNews({ tickers: symbol })
+    getNewNews({ tickers: this.symbol })
       .then((news) => (this.news = news))
       .catch(console.error);
 
-    getNewNews({ tickers: symbol })
+    getNewNews({ tickers: this.symbol })
       .then((opinions) => (this.opinions = opinions))
       .catch(console.error);
   },
@@ -100,8 +144,71 @@ export default Vue.extend({
     back() {
       this.$router.back();
     },
+    changeChartPeriod(period) {
+      getChart({ symbol: this.symbol, period })
+        .then((chart) => (this.chartData = chart.data))
+        .catch(console.error);
+    },
+    toggleGraphType() {
+      this.chart.toggleGraphType();
+    },
   },
 });
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss">
+.chart-section {
+  margin-bottom: 60px;
+
+  .chart-container {
+    margin-bottom: 12px;
+  }
+
+  .button-container {
+    padding: 0 12px;
+
+    button {
+      padding: 4px 6px;
+      font-size: 15px;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+      margin-right: 4px;
+      color: var(--text-color);
+
+      &:hover {
+        background-color: var(--border-color);
+      }
+    }
+  }
+}
+
+.summary-section {
+  padding: 0 12px;
+  margin-bottom: 60px;
+
+  h2 {
+    margin-bottom: 8px;
+  }
+
+  table {
+    width: 100%;
+
+    tbody {
+      tr {
+        td {
+          padding: 8px 0;
+          font-weight: bold;
+          font-size: 16px;
+
+          &:first-child {
+            padding-right: 8px;
+            width: 30%;
+            min-width: 160px;
+            font-weight: normal;
+          }
+        }
+      }
+    }
+  }
+}
+</style>
