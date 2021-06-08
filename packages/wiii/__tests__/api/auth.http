@@ -1,0 +1,6 @@
+# 로그인
+# 실패
+curl -d "email=test@2.com&password=my" 127.0.0.1:8080/auth/in
+
+# 성공
+curl -d "email=test@2.com&password=mysfdsdfs" 127.0.0.1:8080/auth/in
