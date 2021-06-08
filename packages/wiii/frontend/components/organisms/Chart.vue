@@ -1,14 +1,15 @@
 <template>
-  <canvas ref="canvas" class="area dark"></canvas>
+  <canvas ref="canvas" class="area"></canvas>
 </template>
 
 <script lang="ts">
+import Vue from 'vue';
+
 import EsService from '@/services/chart/eventSource';
 import { TimespanEnum } from '@/type/apis';
 import { CanvasOptionEnum, MAColorEnum } from '@/type/chart';
 import { drawBasicCandleChart } from '@/utils/chart';
 import withTime from '@/utils/timer';
-import Vue from 'vue';
 
 import { GetHistoricalOptions } from '../../../domain/apiOptions';
 import { getDateString, times } from '../../../domain/date';
