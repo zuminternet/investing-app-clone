@@ -3,7 +3,7 @@ import { resolve } from 'path';
 import { ConnectionOptions } from 'typeorm';
 import { IS_PRO_MODE } from '../../domain/utilFunc';
 
-config({ path: resolve(__dirname, '../.db.env') });
+config({ path: resolve(__dirname, './.db.env') });
 
 export enum DBName {
   redis = 'redis',
@@ -12,7 +12,9 @@ export enum DBName {
 
 const BASE_CHARSET = 'utf8mb4_general_ci' as const;
 
-export const secretKey = process.env.SECRETKEY;
+export const SECRET_KEY = process.env.SECRET_KEY;
+
+export const SALT_ROUND = Number(process.env.SALT_ROUND);
 
 export const RedisConnOptions = {
   host: process.env.DOCKER_REDIS_HOST,

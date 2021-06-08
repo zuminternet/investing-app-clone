@@ -1,7 +1,7 @@
 import { resolve } from 'path';
 import { config } from 'dotenv';
 
-config({ path: resolve(__dirname, '../.market.env') });
+config({ path: resolve(__dirname, './.market.env') });
 
 /** @description Constants for MarketStack */
 export const MarketStackConfigs = {
