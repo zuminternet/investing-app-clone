@@ -3,9 +3,11 @@
  * @description
  * - for MySQL User table
  */
-import { DBName } from '../../config/db';
+import { BeforeInsert, BeforeUpdate, Column, Entity, Index, ObjectID, ObjectIdColumn } from 'typeorm';
+import { DBName, SALT_ROUND } from '../../config/db';
 import { CreateUserProps, SocialProviers } from '../../db/types';
-import { Column, Entity, Index, ObjectID, ObjectIdColumn } from 'typeorm';
+import { genSalt, hash, compare } from 'bcrypt';
+
 import Base from './Base';
 import Reply from './Reply';
 
@@ -38,7 +40,7 @@ export default class User extends Base {
   @Column({ length: 50, nullable: false })
   password: string;
 
-  @Column((type) => Reply)
+  @Column(() => Reply)
   repls: Reply[];
 
   /**
@@ -64,7 +66,21 @@ export default class User extends Base {
   }
 
   /**
-   * session 확인 위한 JWT 발급
+   * 저장 및 변경시 hash된 상태로 저장
    */
-  async getJWT() {}
+  @BeforeInsert()
+  @BeforeUpdate()
+  async hashingPW(): Promise<void> {
+    if (!this.password) return;
+    try {
+      const salt = await genSalt(SALT_ROUND);
+      this.password = await hash(this.password, salt);
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  async comparePW(pwd: string): Promise<boolean> {
+    return await compare(pwd, this.password);
+  }
 }
