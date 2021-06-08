@@ -8,9 +8,8 @@ import { MongoDBConnOptions, RedisConnOptions } from '../config/db';
 import { Connection, createConnection } from 'typeorm';
 import { createClient } from 'redis';
 
-// import MongoDBDao from './dao/mongodb';
-// import MySQLDao from './dao/mysql';
-// import { getConnections } from './index';
+import MongoDBDao from './dao/mongodb';
+
 export const getMongoConnection = async () => {
   try {
     const conn = await createConnection(MongoDBConnOptions);
