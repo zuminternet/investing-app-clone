@@ -1,18 +1,23 @@
 /**
  * User Model
  * @description
- * - for MySQL User table
+ * - for MongoDB User table
  */
 import { BeforeInsert, BeforeUpdate, Column, Entity, Index, ObjectID, ObjectIdColumn } from 'typeorm';
-import { DBName, SALT_ROUND } from '../../config/db';
-import { CreateUserProps, SocialProviers } from '../../db/types';
+import { SALT_ROUND } from '../../config/db';
+import { CreateUserProps, SocialProviers } from '../types';
 import { genSalt, hash, compare } from 'bcrypt';
 
-import Base from './Base';
-import Reply from './Reply';
+import Base from './Base.entity';
+import Reply from './Reply.entity';
 
-@Entity({ database: DBName.mongoDB, name: 'Users' })
-export default class User extends Base {
+interface UserEntity {
+  hashingPW: () => void;
+  comparePW: (password: string) => Promise<boolean | void>;
+}
+
+@Entity({ database: 'mongodb', name: 'Users' })
+export class User extends Base implements UserEntity {
   @ObjectIdColumn()
   id!: ObjectID;
 
@@ -40,8 +45,8 @@ export default class User extends Base {
   @Column({ length: 50, nullable: false })
   password: string;
 
-  @Column(() => Reply)
-  repls: Reply[];
+  // @Column(() => Reply)
+  // repls: Reply[];
 
   /**
    * @property
@@ -58,13 +63,6 @@ export default class User extends Base {
   @Column({ type: 'enum', enum: ['gg', 'gh', 'fb'], nullable: true })
   provider: SocialProviers;
 
-  constructor({ nickname, email, password }: CreateUserProps) {
-    super();
-    this.email = email;
-    this.nickname = nickname;
-    this.password = password;
-  }
-
   /**
    * 저장 및 변경시 hash된 상태로 저장
    */
@@ -80,7 +78,14 @@ export default class User extends Base {
     }
   }
 
-  async comparePW(pwd: string): Promise<boolean> {
-    return await compare(pwd, this.password);
+  /**
+   * 로그인시 PW 비교
+   */
+  async comparePW(pwd: string): Promise<boolean | void> {
+    try {
+      return await compare(pwd, this.password);
+    } catch (e) {
+      return console.error(e);
+    }
   }
 }

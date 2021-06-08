@@ -2,13 +2,9 @@ import { config } from 'dotenv';
 import { resolve } from 'path';
 import { ConnectionOptions } from 'typeorm';
 import { IS_PRO_MODE } from '../../domain/utilFunc';
+import { User } from '../db/entity/User.entity';
 
 config({ path: resolve(__dirname, './.db.env') });
-
-export enum DBName {
-  redis = 'redis',
-  mongoDB = 'mongodb',
-}
 
 const BASE_CHARSET = 'utf8mb4_general_ci' as const;
 
@@ -22,13 +18,14 @@ export const RedisConnOptions = {
 } as const;
 
 export const MongoDBConnOptions: ConnectionOptions = {
-  name: DBName.mongoDB,
-  type: DBName.mongoDB,
+  type: 'mongodb',
   host: process.env.DOCKER_MONGO_HOST,
   port: +process.env.DOCKER_MONGO_PORT,
   database: process.env.DOCKER_MONGO_DB,
   username: process.env.DOCKER_MONGO_USER,
   password: process.env.DOCKER_MONGO_PASS,
   logging: true,
-  synchronize: process.env.NODE_ENV === 'production' ? false : true,
-} as const;
+  cache: true,
+  entities: [User],
+  // synchronize: process.env.NODE_ENV === 'production' ? false : true,
+};

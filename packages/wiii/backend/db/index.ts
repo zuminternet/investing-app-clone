@@ -8,12 +8,9 @@ import { MongoDBConnOptions, RedisConnOptions } from '../config/db';
 import { Connection, createConnection } from 'typeorm';
 import { createClient } from 'redis';
 
-import MongoDBDao from './dao/mongodb';
-
 export const getMongoConnection = async () => {
   try {
     const conn = await createConnection(MongoDBConnOptions);
-    console.info(`[DB] MongoDB Connected`);
     return conn;
   } catch (e) {
     return console.error(e);
