@@ -2,12 +2,9 @@ import { isValidObjectId, ObjectId } from 'mongoose';
 import { Service } from 'zum-portal-core/backend/decorator/Alias';
 import { Caching } from 'zum-portal-core/backend/decorator/Caching';
 import Article, { ArticleType, ArticleDoc } from '../model/ArticleModel';
+import * as NodeCache from 'node-cache';
 
-interface QueryProps {
-  offset?: number;
-  limit?: number;
-  tickers?: string[];
-}
+const cache = new NodeCache({ deleteOnExpire: true });
 
 @Service()
 export default class ArticleService {
@@ -15,8 +12,8 @@ export default class ArticleService {
     return tickers ? { tickers: { $in: tickers } } : {};
   }
 
-  @Caching({ ttl: 10, runOnStart: false })
-  public async getNews({ offset = 0, limit = 10, tickers }: QueryProps = {}): Promise<ArticleDoc[]> {
+  @Caching({ ttl: 30, runOnStart: false, cache })
+  public async getNews(offset = 0, limit = 10, tickers?: string[]): Promise<ArticleDoc[]> {
     const tickerOption = this.getTickerOption(tickers);
     const query = { type: ArticleType.news, ...tickerOption };
 
@@ -26,7 +23,7 @@ export default class ArticleService {
       .limit(limit)
       .lean<ArticleDoc[]>();
   }
-
+    
   public async getNewsForSearch({ offset = 0, limit = 10, tickers }: QueryProps = {}): Promise<ArticleDoc[]> {
     const tickerOption = this.getTickerOption(tickers);
     const query = { type: ArticleType.news, ...tickerOption };
@@ -38,7 +35,7 @@ export default class ArticleService {
       .lean<ArticleDoc[]>();
   }
 
-  @Caching({ ttl: 10, runOnStart: false })
+  @Caching({ ttl: 30, runOnStart: false, cache })
   public async getOpinions({ offset = 0, limit = 10, tickers }: QueryProps = {}): Promise<ArticleDoc[]> {
     const tickerOption = this.getTickerOption(tickers);
     const query = { type: ArticleType.opinions, ...tickerOption };
@@ -61,7 +58,7 @@ export default class ArticleService {
       .lean<ArticleDoc[]>();
   }
 
-  @Caching({ ttl: 10, runOnStart: false })
+  @Caching({ ttl: 30, runOnStart: false, cache })
   public async getArticleById(id: ObjectId | string): Promise<ArticleDoc> {
     if (!isValidObjectId(id)) throw new Error('invalid id');
 
