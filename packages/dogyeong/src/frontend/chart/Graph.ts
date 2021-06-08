@@ -5,6 +5,13 @@ export interface GraphColorOptions {
   bgColor: string;
   redColor: string;
   blueColor: string;
+  lineStrokeColor: string;
+  lineFillColor: string;
+}
+
+export enum GraphType {
+  line,
+  candle,
 }
 
 export default class Graph {
@@ -16,6 +23,7 @@ export default class Graph {
   public barWidth: number;
   private colorOptions: GraphColorOptions;
   private listeners: any[];
+  private graphType: GraphType = GraphType.candle;
 
   constructor({ canvas, colorOptions }) {
     this.canvas = canvas;
@@ -74,6 +82,10 @@ export default class Graph {
     return this.candles[index];
   }
 
+  public toggleGraphType() {
+    this.graphType = this.graphType === GraphType.candle ? GraphType.line : GraphType.candle;
+  }
+
   public subscribe(listener) {
     this.listeners.push(listener);
   }
@@ -114,10 +126,14 @@ export default class Graph {
       ctx.fillRect(0, 0, this.width, this.height);
     });
 
-    candles.forEach((candle) => {
-      this.drawWick(ctx, candle);
-      this.drawBody(ctx, candle);
-    });
+    if (this.graphType === GraphType.candle) {
+      candles.forEach((candle) => {
+        this.drawWick(ctx, candle);
+        this.drawBody(ctx, candle);
+      });
+    } else {
+      this.drawLine(ctx, candles);
+    }
   }
 
   private drawBody(ctx: CanvasRenderingContext2D, candle: Candle) {
@@ -137,6 +153,27 @@ export default class Graph {
       ctx.beginPath();
       ctx.moveTo(wickCenter, wickTop);
       ctx.lineTo(wickCenter, wickBottom);
+      ctx.stroke();
+    });
+  }
+
+  private drawLine(ctx: CanvasRenderingContext2D, candles: Candle[]) {
+    drawHelper(ctx, () => {
+      ctx.fillStyle = this.colorOptions.lineFillColor;
+      ctx.beginPath();
+      ctx.moveTo(candles[0].wickCenter, this.height);
+      candles.forEach(({ wickCenter, bodyY, bodyH }) => ctx.lineTo(wickCenter, bodyY + bodyH));
+      ctx.lineTo(candles.slice(-1)[0].wickCenter, this.height);
+      ctx.fill();
+    });
+
+    drawHelper(ctx, () => {
+      ctx.strokeStyle = this.colorOptions.lineStrokeColor;
+      ctx.lineJoin = 'round';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(candles[0].wickCenter, candles[0].bodyY + candles[0].bodyH);
+      candles.slice(1).forEach(({ wickCenter, bodyY, bodyH }) => ctx.lineTo(wickCenter, bodyY + bodyH));
       ctx.stroke();
     });
   }
