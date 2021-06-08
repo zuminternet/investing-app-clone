@@ -2,7 +2,7 @@ import { Controller, GetMapping } from 'zum-portal-core/backend/decorator/Contro
 import { Request, Response } from 'express';
 import { Inject } from 'zum-portal-core/backend/decorator/Alias';
 import MarketService from 'common/backend/service/MarketService';
-import { tickerMap, StockSymbol, IndexSymbol, CryptoSymbol, MarketSymbol } from 'common/domain';
+import { tickerMap, StockSymbol, IndexSymbol, CryptoSymbol, MarketSymbol, ChartPeriod } from 'common/domain';
 
 @Controller({ path: '/api/market' })
 export class MarketController {
@@ -56,7 +56,8 @@ export class MarketController {
   public async getChart(req: Request, res: Response) {
     try {
       const { symbol } = req.params;
-      const chart = await this.marketService.getHistoricalData(symbol as MarketSymbol);
+      const { period } = req.query;
+      const chart = await this.marketService.getHistoricalData(symbol as MarketSymbol, period as ChartPeriod);
       res.json(chart);
     } catch (err) {
       res.status(500).json({ err: err.message ?? err });
