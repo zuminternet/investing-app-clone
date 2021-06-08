@@ -6,7 +6,8 @@ import createStore from '@/store';
 
 initializer(() => {
   Vue.prototype._$router = createRouter();
-  Vue.prototype._$store = createStore();
+  /** vue-module-decorators에서 new Store()로만 생성하게 되어있음.. */
+  Vue.prototype._$store = createStore;
 
   return new Vue({
     el: '#app',

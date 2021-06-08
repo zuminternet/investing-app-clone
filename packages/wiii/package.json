@@ -8,7 +8,10 @@
     "frontend:dev": "cross-env ZUM_FRONT_MODE=dev vue-cli-service serve",
     "frontend:build": "vue-cli-service build --no-clean && cross-env ZUM_FRONT_MODE=ssr vue-cli-service build --no-clean",
     "frontend:test": "jest --watchAll --silent --colors",
-    "backend:dev": "cross-env NODE_ENV=development nodemon --exec ts-node --transpile-only backend/Server.ts"
+    "backend:dev": "cross-env NODE_ENV=development nodemon --exec ts-node --transpile-only backend/Server.ts",
+    "db:up": "docker-compose up -d",
+    "db:stop": "docker-compose stop",
+    "db:restart": "docker-compose restart"
   },
   "dependencies": {
     "@polygon.io/client-js": "^2.1.2",

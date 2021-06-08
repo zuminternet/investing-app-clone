@@ -1,28 +1,25 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 
-import { views } from '@/type/views';
-import { actionTypes } from '@/store/types';
-import chart from '@/store/modules/chart';
+import Theme, { ThemeState } from '@/store/modules/theme';
+import Reply from '@/store/modules/reply';
+import { RouteState } from '@/store/modules/route';
+import { getModule } from 'vuex-module-decorators';
+
+export interface RootState {
+  Theme: ThemeState;
+  Route: RouteState;
+}
 
 Vue.use(Vuex);
 
-export default () =>
-  new Vuex.Store({
-    state: {
-      currentView: views.Home,
-    },
-    mutations: {
-      setCurrentView(state, selectedView) {
-        state.currentView = selectedView;
-      },
-    },
-    actions: {
-      setCurrentView(context, selectedView) {
-        return context.commit(actionTypes.setCurrentView, selectedView);
-      },
-    },
-    modules: {
-      chart,
-    },
-  });
+const store = new Vuex.Store({
+  modules: {
+    Theme,
+    Reply,
+  },
+});
+
+export const ThemeModule = getModule(Theme, store);
+
+export default store;
