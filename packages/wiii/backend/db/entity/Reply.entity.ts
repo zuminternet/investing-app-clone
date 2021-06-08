@@ -6,9 +6,10 @@
 import { ReplyProps } from '../types';
 import { Column, Entity, ManyToOne, ObjectID, ObjectIdColumn } from 'typeorm';
 import Base from './Base.entity';
+import { User } from './User.entity';
 
 @Entity({ database: 'mongodb', name: 'Repls' })
-export default class Reply extends Base {
+export class Reply extends Base {
   @ObjectIdColumn()
   id: ObjectID;
 
@@ -25,8 +26,12 @@ export default class Reply extends Base {
    * - User table id
    * - DAO에서 userID 조회후 입력; JOIN X
    */
-  @Column({ nullable: false })
-  userId: number;
+  @ManyToOne(
+    (type) => User,
+    (User) => User.repls,
+    { cascade: ['insert', 'update'] },
+  )
+  userId: User;
 
   /**
    * @property
@@ -40,10 +45,6 @@ export default class Reply extends Base {
    * 현 댓글이 대댓글인 경우 원(부모) 댓글
    */
   @Column({ nullable: true })
-  @ManyToOne(
-    () => Reply,
-    (reply) => reply.id,
-  )
   parentReply: Reply;
 
   /**
@@ -68,9 +69,8 @@ export default class Reply extends Base {
   @Column({ default: 0 })
   like: number;
 
-  constructor(props: ReplyProps) {
+  constructor(docId, userId, content) {
     super();
-    const { docId, userId, content } = props;
     this.docId = docId;
     this.userId = userId;
     this.content = content;

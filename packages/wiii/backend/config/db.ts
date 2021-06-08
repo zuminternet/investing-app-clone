@@ -3,6 +3,7 @@ import { resolve } from 'path';
 import { ConnectionOptions } from 'typeorm';
 import { IS_PRO_MODE } from '../../domain/utilFunc';
 import { User } from '../db/entity/User.entity';
+import { Reply } from '../db/entity/Reply.entity';
 
 config({ path: resolve(__dirname, './.db.env') });
 
@@ -26,6 +27,7 @@ export const MongoDBConnOptions: ConnectionOptions = {
   password: process.env.DOCKER_MONGO_PASS,
   logging: true,
   cache: true,
-  entities: [User],
+  entities: [User, Reply],
   // synchronize: process.env.NODE_ENV === 'production' ? false : true,
+  useUnifiedTopology: true,
 };

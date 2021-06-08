@@ -9,9 +9,9 @@ export interface CreateUserProps extends UserProps {
   nickname: string;
 }
 
-export interface CheckUserProps extends UserProps {
-  token: string;
-}
+// export interface CheckUserProps extends UserProps {
+//   token: string;
+// }
 
 export enum SocialProviers {
   google = 'gg',

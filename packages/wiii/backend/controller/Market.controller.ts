@@ -4,7 +4,7 @@ import { Controller, GetMapping } from 'zum-portal-core/backend/decorator/Contro
 import SSE from './SSE';
 import { GetHistoricalOptions } from '../../domain/apiOptions';
 import { marketHome, marketName, marketSubpaths } from '../../domain/apiUrls';
-import { MarketService } from '../service/MarketService';
+import { MarketService } from '../service/Market.service';
 import { times } from '../../domain/date';
 import { Inject } from 'zum-portal-core/backend/decorator/Alias';
 

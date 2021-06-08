@@ -1,9 +1,9 @@
 /** 밀리세컨 단위 */
-const SEC_ONE = 1000;
-const HOUR_ONE = 60 * 60 * SEC_ONE;
-const DAY_ONE = 24 * HOUR_ONE;
-const WEEK_ONE = DAY_ONE * 7;
-const YEAR_ONE = DAY_ONE * 365;
+export const SEC_ONE = 1000 as const;
+export const HOUR_ONE = 60 * 60 * SEC_ONE;
+export const DAY_ONE = 24 * HOUR_ONE;
+export const WEEK_ONE = DAY_ONE * 7;
+export const YEAR_ONE = DAY_ONE * 365;
 
 export const times = {
   /** server data caching 60s (s 단위) */

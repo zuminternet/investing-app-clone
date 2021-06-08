@@ -3,10 +3,10 @@
  * DB 관련 로직 구현
  * - typeorm - connections
  */
-
 import { MongoDBConnOptions, RedisConnOptions } from '../config/db';
-import { Connection, createConnection } from 'typeorm';
+import { createConnection } from 'typeorm';
 import { createClient } from 'redis';
+const { host, port } = RedisConnOptions;
 
 export const getMongoConnection = async () => {
   try {
@@ -17,7 +17,6 @@ export const getMongoConnection = async () => {
   }
 };
 
-const { host, port } = RedisConnOptions;
 export const getRedisConnection = () => {
   try {
     const client = createClient(port, host);
