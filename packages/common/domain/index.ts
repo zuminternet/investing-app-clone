@@ -62,27 +62,27 @@ export const tickerMap = {
     AAPL: {
       name: '애플',
       investingId: 'equities/apple-computer-inc',
-      category: 'zum-investing-app',
+      category: 'NASDAQ',
     },
     GOOG: {
       name: '구글',
       investingId: 'equities/apple-computer-inc',
-      category: 'zum-investing-app',
+      category: 'NASDAQ',
     },
     TSLA: {
       name: '테슬라',
       investingId: 'equities/apple-computer-inc',
-      category: 'zum-investing-app',
+      category: 'NASDAQ',
     },
     AMZN: {
       name: '아마존',
       investingId: 'equities/amazon-com-inc',
-      category: 'zum-investing-app',
+      category: 'NASDAQ',
     },
     PYPL: {
       name: '페이팔',
       investingId: 'equities/apple-computer-inc',
-      category: 'zum-investing-app',
+      category: 'NASDAQ',
     },
   },
 } as const;

@@ -226,7 +226,9 @@ export class ApiController {
   public async getSearchedItems(request: Request, response: Response) {
     try {
       const { keyword, email } = request.query;
-      let { data: items } = await this.searchService.getSearchedItems({ keyword });
+      let items = await this.searchService.getSearchedItems({ keyword });
+
+      console.log(items, 'con');
 
       if (items) {
         for (let i = 0; i < items.length; i++) {
