@@ -1,7 +1,12 @@
 <template>
   <Layout>
     <Header>
-      <HeaderTitle>뉴스</HeaderTitle>
+      <HeaderTitle>
+        <template #right>
+          <RouterLink to="/search">&#128269;</RouterLink>
+        </template>
+        뉴스
+      </HeaderTitle>
       <HeaderNav>
         <HeaderNavItem
           v-for="route in navRoutes"

@@ -5,6 +5,9 @@
         <template #left>
           <HeaderButton @clickHeaderButton="back">🠔</HeaderButton>
         </template>
+        <template #right>
+          <RouterLink to="/search">&#128269;</RouterLink>
+        </template>
         {{ name }}
       </HeaderTitle>
     </Header>
@@ -29,12 +32,13 @@
 <script lang="ts">
 import Vue from 'vue';
 import { getSummary, getChart } from '@/services/financeService';
-import { getNewNews } from '@/services/articleService';
+import { getNewNews, getNewOpinions } from '@/services/articleService';
 import Layout from '@/components/Layout/Layout.vue';
 import { Header, HeaderTitle, HeaderButton } from '@/components/Header';
 import BottomNav from '@/components/BottomNav/BottomNav.vue';
 import { createChart } from '@/chart';
 import NewsTemplate from '@/components/NewsTemplate/NewsTemplate.vue';
+// import ReplySection from 'common/frontend/components/ReplySection/index.vue';
 
 const chartLightThemeOption = {
   bgColor: '#fafffa',
@@ -46,7 +50,15 @@ const chartLightThemeOption = {
 export default Vue.extend({
   name: 'MarketDetail',
 
-  components: { Layout, Header, HeaderTitle, BottomNav, HeaderButton, NewsTemplate },
+  components: {
+    Layout,
+    Header,
+    HeaderTitle,
+    BottomNav,
+    HeaderButton,
+    NewsTemplate,
+    // ReplySection,
+  },
 
   data() {
     return {
@@ -56,6 +68,7 @@ export default Vue.extend({
       name: '',
       news: null,
       opinions: null,
+      symbol: '',
     };
   },
 
@@ -67,24 +80,24 @@ export default Vue.extend({
   },
 
   created() {
-    const symbol = this.$route.params.id;
+    this.symbol = this.$route.params.id;
 
-    getSummary(symbol)
+    getSummary(this.symbol)
       .then((summaryDetail) => (this.summaryDetail = summaryDetail))
       .catch(console.error);
 
-    getChart(symbol)
+    getChart(this.symbol)
       .then((chart) => {
         this.chartData = chart.data;
         this.name = chart.display_name;
       })
       .catch(console.error);
 
-    getNewNews({ tickers: symbol })
+    getNewNews({ tickers: this.symbol })
       .then((news) => (this.news = news))
       .catch(console.error);
 
-    getNewNews({ tickers: symbol })
+    getNewOpinions({ tickers: this.symbol })
       .then((opinions) => (this.opinions = opinions))
       .catch(console.error);
   },
