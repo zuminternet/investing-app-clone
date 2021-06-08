@@ -8,7 +8,7 @@ import { tickerMap } from '../../domain';
 
 export interface getSearchedItemsInfo {
   keyword: string;
-  email: string;
+  email?: string;
 }
 
 @Service()
@@ -32,8 +32,8 @@ export default class SearchService {
   // })
   public async getSearchedItems({ keyword }: getSearchedItemsInfo) {
     const { accessKey } = marketStackConfig;
-    let { data: result } = await axios.get(`http://api.marketstack.com/v1/tickers?access_key=${accessKey}&search=${keyword}`);
-    let { data: items } = result;
+    const { data: result } = await axios.get(`http://api.marketstack.com/v1/tickers?access_key=${accessKey}&search=${keyword}`);
+    const { data: items } = result;
     const displayedItems = [];
 
     if (items) {
