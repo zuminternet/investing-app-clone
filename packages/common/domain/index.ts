@@ -154,16 +154,7 @@ export interface HistoricalData {
   data: MarketStockEOD[];
 }
 
-/**
- * 1d -> 5m
- * 1w -> 30m
- * 1m -> 1h
- * 6m -> 3h
- * 1y -> 12h
- * 5y -> 24h
- * max -> 24h
- */
-const getPastDate = ({ day = 0, month = 0, year = 0 } = {}) => {
+const getPastDateString = ({ day = 0, month = 0, year = 0 } = {}) => {
   const date = new Date();
   const y = date.getFullYear();
   const m = date.getMonth();
@@ -172,43 +163,44 @@ const getPastDate = ({ day = 0, month = 0, year = 0 } = {}) => {
   date.setMonth(m - month);
   date.setDate(d - day);
 
-  return date;
-};
-
-const formatDate = (date: Date) => {
-  return date.toISOString().replace(/\..*/, '+0000');
+  return date
+    .toLocaleDateString()
+    .split('. ')
+    .map(Number)
+    .map((n) => n.toString().padStart(2, '0'))
+    .join('-');
 };
 
 export const IntraDayChartMap = {
   '1d': {
-    interval: '5min',
-    dateFrom: () => formatDate(getPastDate({ day: 1 })),
-    dateTo: () => formatDate(new Date()),
+    interval: 'd',
+    dateFrom: () => getPastDateString({ day: 1 }),
+    dateTo: () => getPastDateString(),
   },
   '1w': {
-    interval: '30min',
-    dateFrom: () => formatDate(getPastDate({ day: 7 })),
-    dateTo: () => formatDate(new Date()),
+    interval: 'd',
+    dateFrom: () => getPastDateString({ day: 7 }),
+    dateTo: () => getPastDateString(),
   },
   '1m': {
-    interval: '1hour',
-    dateFrom: () => formatDate(getPastDate({ month: 1 })),
-    dateTo: () => formatDate(new Date()),
+    interval: 'd',
+    dateFrom: () => getPastDateString({ month: 1 }),
+    dateTo: () => getPastDateString(),
   },
   '1y': {
-    interval: '12hour',
-    dateFrom: () => formatDate(getPastDate({ year: 1 })),
-    dateTo: () => formatDate(new Date()),
+    interval: 'd',
+    dateFrom: () => getPastDateString({ year: 1 }),
+    dateTo: () => getPastDateString(),
   },
   '5y': {
-    interval: '24hour',
-    dateFrom: () => formatDate(getPastDate({ year: 1 })),
-    dateTo: () => formatDate(new Date()),
+    interval: 'w',
+    dateFrom: () => getPastDateString({ year: 5 }),
+    dateTo: () => getPastDateString(),
   },
   max: {
-    interval: '24hour',
-    dateFrom: () => formatDate(getPastDate({ year: 1000 })),
-    dateTo: () => formatDate(new Date()),
+    interval: 'm',
+    dateFrom: () => getPastDateString({ year: 1000 }),
+    dateTo: () => getPastDateString(),
   },
 } as const;
 

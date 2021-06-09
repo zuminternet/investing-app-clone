@@ -64,7 +64,7 @@ export default class MarketService {
 
   private getIntraDayOptions(period: ChartPeriod) {
     const { interval, dateFrom, dateTo } = IntraDayChartMap[period];
-    return { interval, date_from: dateFrom(), date_to: dateTo() };
+    return { period: interval, from: dateFrom(), to: dateTo() };
   }
 
   /**
@@ -120,14 +120,15 @@ export default class MarketService {
     if (!this.isValidSymbol(symbol)) throw new Error('invalid symbol');
     if (!this.isValidPeriod(period)) throw new Error('invalid period');
 
-    const { data: response } = await this.axiosClient.get(`/tickers/${symbol}/intraday`, {
-      params: this.getIntraDayOptions(period),
+    const response = await yahooFinance.historical({
+      symbol,
+      ...this.getIntraDayOptions(period),
     });
     const displayName = this.getDisplayName(symbol);
 
     return {
       display_name: displayName,
-      data: response?.data?.intraday ?? [],
+      data: response ?? [],
     };
   }
 }

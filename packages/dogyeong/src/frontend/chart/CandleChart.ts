@@ -31,6 +31,8 @@ const defaultColors: CandleChartColorOptions = {
   redColor: '#26a69a',
   blueColor: '#ef5350',
   textColor: '#efefef',
+  lineStrokeColor: '#26a69a',
+  lineFillColor: '#3b5351',
 };
 
 export default class CandleChart {
@@ -133,8 +135,8 @@ export default class CandleChart {
 
       // body
       const height = this.graph.height;
-      const bodyTop = Math.max(open, close);
-      const bodyBottom = Math.min(open, close);
+      const bodyTop = Math.max(open ?? close, close ?? open);
+      const bodyBottom = Math.min(open ?? close, close ?? open);
       const bodyTopY = Math.round(((bodyTop - this.minPrice) / (this.maxPrice - this.minPrice)) * height);
       const bodyBottomY = Math.round(((bodyBottom - this.minPrice) / (this.maxPrice - this.minPrice)) * height);
       const bodyLeft = this.graph.getCandleBodyLeft(index);
@@ -171,5 +173,10 @@ export default class CandleChart {
     this.graph.draw(this.candles);
     this.priceAxis.draw(this.minPrice, this.maxPrice);
     this.timeAxis.draw(this.candles, this.firstCandleIndex, this.lastCandleIndex);
+  }
+
+  public toggleGraphType() {
+    this.graph.toggleGraphType();
+    this.graph.draw(this.candles);
   }
 }
