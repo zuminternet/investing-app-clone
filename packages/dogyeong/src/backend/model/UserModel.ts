@@ -2,6 +2,17 @@ import mongoose from 'common/backend/mongoose';
 
 const { Schema, model } = mongoose;
 
+export interface UserDoc extends mongoose.Document {
+  email: string;
+  name: string;
+  password: string;
+  isGoogleUser: boolean;
+  id?: string;
+  verifiedEmail?: boolean;
+  picture?: string;
+  locale?: string;
+}
+
 const UserSchema = new Schema({
   email: String,
   name: String,
@@ -14,6 +25,6 @@ const UserSchema = new Schema({
   locale: String,
 });
 
-const User = model('Users', UserSchema);
+const User = model<UserDoc>('Users', UserSchema);
 
 export default User;

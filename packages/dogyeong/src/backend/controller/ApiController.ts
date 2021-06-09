@@ -1,10 +1,11 @@
-import { Controller, GetMapping, PostMapping } from 'zum-portal-core/backend/decorator/Controller';
+import { Controller, GetMapping, PostMapping, PutMapping } from 'zum-portal-core/backend/decorator/Controller';
 import { Request, Response } from 'express';
 import { Inject } from 'zum-portal-core/backend/decorator/Alias';
 import AuthService from '../service/AuthService';
-import UserService, { GoogleUserInfo, UserInfo } from '../service/UserService';
+import UserService from '../service/UserService';
 import TokenService from '../service/TokenService';
 import { authConfig } from '../config';
+import { UserDoc } from '../model/UserModel';
 
 @Controller({ path: '/api' })
 export class ApiController {
@@ -34,14 +35,16 @@ export class ApiController {
 
       const userInfo = await this.authService.getUserInfo(grantCode);
 
-      if (!userInfo) return res.json({});
+      if (!userInfo) return res.status(400).json({ message: 'Invalid grant code' });
 
-      // 가입 안되어있으면 계정을 생성하고, 유저 정보 반환
-      const user = await this.userService.createGoogleUser(userInfo);
+      let user = await this.userService.getUserByEmail(userInfo.email);
+
+      if (!user) user = await this.userService.createGoogleUser(userInfo);
+
       const token = this.tokenService.createToken(user);
 
       res.cookie(authConfig.accessTokenCookie, token, authConfig.cookieOptions);
-      res.json({ user: { name: user.name } });
+      res.json({ user: { name: user.name, isGoogleUser: true } });
     } catch (err) {
       res.status(500).json({ err: err.message ?? err });
     }
@@ -57,7 +60,7 @@ export class ApiController {
       const token = this.tokenService.createToken(user);
 
       res.cookie(authConfig.accessTokenCookie, token, authConfig.cookieOptions);
-      res.json({ user: { name: user.name } });
+      res.json({ user: { name: user.name, isGoogleUser: false } });
     } catch (err) {
       res.status(500).json({ err: err.message ?? err });
     }
@@ -67,12 +70,17 @@ export class ApiController {
   public async getUser(req: Request, res: Response) {
     try {
       const token = req.cookies[authConfig.accessTokenCookie];
-      const { name } = this.tokenService.verifyToken(token) as GoogleUserInfo | UserInfo;
+      const { email } = this.tokenService.verifyToken(token) as UserDoc;
+      const user = await this.userService.getUserByEmail(email);
 
-      res.json({ user: { name } });
+      if (!user) throw new Error();
+
+      const { name, isGoogleUser } = user;
+
+      res.json({ user: { name, isGoogleUser } });
     } catch (err) {
       res.clearCookie(authConfig.accessTokenCookie);
-      res.status(403).json('invalid token');
+      res.status(403).json('Invalid token');
     }
   }
 
@@ -80,5 +88,28 @@ export class ApiController {
   public logout(req: Request, res: Response) {
     res.clearCookie(authConfig.accessTokenCookie);
     res.end();
+  }
+
+  @PutMapping({ path: ['/user'] })
+  public async changeUserInfo(req: Request, res: Response) {
+    try {
+      const { password, name } = req.body;
+
+      if (!password && !name) return res.status(400).send('Invalid parameters');
+
+      const token = req.cookies[authConfig.accessTokenCookie];
+
+      if (!token) return res.status(400).send('Invalid token');
+
+      const { email } = this.tokenService.verifyToken(token) as UserDoc;
+
+      if (!email) return res.status(400).send('Invalid token');
+
+      const user = await this.userService.updateUser({ email, password, name });
+
+      res.json(user);
+    } catch (err) {
+      res.status(500).json({ err: err.message ?? err });
+    }
   }
 }
