@@ -17,7 +17,6 @@ const actions = {
   async getSearchedItems({ commit }, { keyword, email }) {
     try {
       const items = await getSearchedItems({ keyword, email });
-      console.log(items, 'items');
 
       if (items) {
         commit('setSearchedItems', items);
@@ -71,7 +70,13 @@ const actions = {
 // mutatuons 설정
 const mutations = {
   setSearchedItems(state, items) {
-    state.searchedItems = items;
+    const searchedItems = [];
+
+    items.forEach((item) => {
+      item = { ...item, category: item.stock_exchange.acronym };
+      searchedItems.push(item);
+    });
+    state.searchedItems = searchedItems;
   },
 
   setSearchedNews(state, news) {

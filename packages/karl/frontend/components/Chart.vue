@@ -84,6 +84,7 @@ export default {
       valueData: [],
       tpCache: [],
       isCandle: true,
+      period: 'd',
     };
   },
 
@@ -113,7 +114,8 @@ export default {
     },
 
     currentValue() {
-      if (this.endIndex !== null) {
+      if (this.endIndex !== null && this.endIndex < this.data.length) {
+        // console.log(this.data[this.endIndex].close);
         return this.data[this.endIndex].close;
       }
 
@@ -136,7 +138,7 @@ export default {
       this.ctx.beginPath();
       this.ctx.moveTo(this.graphBoxMargin, this.graphBoxMargin + this.graphBoxHeight);
 
-      let interval = Math.floor((this.endIndex - this.startIndex) / 10);
+      let interval = Math.floor((this.endIndex - this.startIndex) / 7);
 
       if (interval === 1) {
         interval = 2;
@@ -156,7 +158,7 @@ export default {
           this.ctx.fillStyle = close >= open ? 'red' : 'blue';
           this.ctx.strokeStyle = close >= open ? 'red' : 'blue';
 
-          let candleWidth = 5;
+          let candleWidth = 4;
 
           this.ctx.fillRect(
             this.graphBoxMargin + this.unitWidth * (i - this.startIndex) - candleWidth / 2,
@@ -298,7 +300,6 @@ export default {
     touchStartHandler(event) {
       event.preventDefault();
       console.log('start');
-      console.log(event);
 
       const touches = event.targetTouches;
       this.tpCache = [];
@@ -430,6 +431,18 @@ export default {
     handleChartMenuButtonClick(event) {
       const { value } = event.target;
 
+      if (value === 'D') {
+        this.period = 'd';
+      }
+
+      if (value === 'W') {
+        this.period = 'w';
+      }
+
+      if (value === 'M') {
+        this.period = 'm';
+      }
+
       if (value === 'Linear') {
         this.isCandle = false;
       }
@@ -439,7 +452,8 @@ export default {
       }
     },
 
-    redrawForWatch() {
+    redrawChart() {
+      console.log(this.data);
       this.unitHeight = null;
       this.timeData = [];
       this.valueData = [];
@@ -456,11 +470,54 @@ export default {
 
       this.drawSelectedLine();
     },
+
+    getFromAndTo(period) {
+      const today = new Date();
+      let from = null;
+      let to = null;
+      let diff;
+
+      if (period === 'd') {
+        diff = 5184000000;
+      }
+
+      if (period === 'w') {
+        diff = 15552000000;
+      }
+
+      if (period === 'm') {
+        diff = 63072000000;
+      }
+
+      const fromDay = new Date();
+      fromDay.setTime(today.getTime() - diff);
+      from = `${fromDay.getFullYear()}`;
+
+      from += fromDay.getMonth() + 1 >= 10 ? `-${fromDay.getMonth() + 1}` : `-0${fromDay.getMonth() + 1}`;
+      from += fromDay.getDate() >= 10 ? `-${fromDay.getDate()}` : `-0${fromDay.getDate()}`;
+
+      to = `${today.getFullYear()}`;
+
+      to += today.getMonth() + 1 >= 10 ? `-${today.getMonth() + 1}` : `-0${today.getMonth() + 1}`;
+      to += today.getDate() >= 10 ? `-${today.getDate()}` : `-0${today.getDate()}`;
+
+      console.log(from);
+      console.log(to);
+
+      return { from, to };
+    },
+
+    async getHistoricalDataForPeriod(period) {
+      const { from, to } = this.getFromAndTo(period);
+      this.data = await getHistoricalData({ symbol: this.symbol, from, to, period });
+      this.data.reverse();
+    },
   },
 
   async mounted() {
-    this.data = await getHistoricalData({ symbol: this.symbol, from: '2021-04-04', to: '2021-06-04', period: 'd' });
-    this.data.reverse();
+    await this.getHistoricalDataForPeriod(this.period);
+
+    console.log(this.data);
     this.endIndex = this.data.length - 1;
     this.startIndex = 0;
 
@@ -480,15 +537,23 @@ export default {
 
   watch: {
     startIndex() {
-      this.redrawForWatch();
+      this.redrawChart();
     },
 
     isCandle() {
-      this.redrawForWatch();
+      this.redrawChart();
     },
 
     selectedIndex() {
-      this.redrawForWatch();
+      this.redrawChart();
+    },
+
+    async period() {
+      await this.getHistoricalDataForPeriod(this.period);
+      this.endIndex = this.data.length - 1;
+      this.startIndex = 0;
+
+      this.redrawChart();
     },
   },
 };
