@@ -32,7 +32,10 @@
   "devDependencies": {
     "@babel/plugin-transform-runtime": "^7.14.2",
     "@types/bcrypt": "^5.0.0",
+    "@types/connect-redis": "^0.0.16",
+    "@types/express-session": "^1.17.3",
     "@types/jest": "^26.0.23",
+    "@types/redis": "^2.8.29",
     "@typescript-eslint/parser": "^4.24.0",
     "@vue/cli-plugin-babel": "^4.5.13",
     "@vue/cli-plugin-typescript": "^4.5.13",

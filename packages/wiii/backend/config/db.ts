@@ -4,6 +4,7 @@ import { ConnectionOptions } from 'typeorm';
 import { IS_PRO_MODE } from '../../domain/utilFunc';
 import { User } from '../db/entity/User.entity';
 import { Reply } from '../db/entity/Reply.entity';
+import { ClientOpts } from 'redis';
 
 config({ path: resolve(__dirname, './.db.env') });
 
@@ -15,8 +16,8 @@ export const SALT_ROUND = Number(process.env.SALT_ROUND);
 
 export const RedisConnOptions = {
   host: process.env.DOCKER_REDIS_HOST,
-  port: process.env.DOCKER_REDIS_PORT,
-} as const;
+  port: Number(process.env.DOCKER_REDIS_PORT),
+} as ClientOpts;
 
 export const MongoDBConnOptions: ConnectionOptions = {
   type: 'mongodb',

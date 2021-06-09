@@ -14,11 +14,11 @@
 import { SECRET_KEY, RedisConnOptions } from '../../config/db';
 import session from 'express-session';
 import redisConn from 'connect-redis';
-import { createClient } from 'redis';
+import { createClient, RedisClient } from 'redis';
 
 class Redis {
   private _session;
-  private client;
+  private client: RedisClient;
 
   constructor() {
     this.connect();
@@ -27,42 +27,45 @@ class Redis {
   private connect() {
     this.client = createClient(RedisConnOptions);
     const redisStore = redisConn(session);
-    this._session = session({ secret: SECRET_KEY, store: new redisStore(this.client), saveUninitialized: true, resave: false });
+    this._session = session({
+      secret: SECRET_KEY,
+      store: new redisStore({ client: this.client }),
+      saveUninitialized: true,
+      resave: false,
+    });
   }
 
   get session() {
     return this._session;
   }
 
-  public setValue(key, value) {
-    const result = this.client.set(key, value, (err, reply) => {
-      /** @todo error */
-      if (err) throw new Error(err);
-      console.log({ reply });
-      if (reply.toString('utf8') === 'OK') return true;
-    });
-    console.table({ result });
+  public setValue(key: string, value: string) {
+    try {
+      const reply = this.client.set(key, value);
+      return reply.toString() === 'OK' ? true : false;
+    } catch (e) {
+      return console.error(e);
+    }
   }
 
-  public getValue(key) {
-    const result = this.client.get(key, (err, reply) => {
-      /** @todo error */
-      if (err) throw new Error(err);
-      console.log({ reply });
-      if (reply.toString('utf8') === 'OK') return true;
-    });
-    console.table({ result });
+  public getValue(key: string) {
+    try {
+      const reply = this.client.get(key);
+      const result = reply.toString();
+      return result;
+    } catch (e) {
+      return console.error(e);
+    }
   }
 
-  public delete(key) {
-    // const result = this.client.del(key, (err, reply) => {
-    //   /** @todo error */
-    //   if (err) throw new Error(err);
-    //   console.log({ reply });
-    //   if (reply.toString('utf8') === 'OK') return true;
-    // });
-    // console.table({ result });
+  public delete(key: string) {
+    try {
+      const reply = this.client.del(key);
+      return reply.toString() === 'OK' ? true : false;
+    } catch (e) {
+      return console.error(e);
+    }
   }
 }
 
-export default new Redis();
+export const redis = new Redis();

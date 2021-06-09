@@ -6,7 +6,7 @@ import { container } from 'tsyringe';
 import logger from 'zum-portal-core/backend/util/Logger';
 import chalk from 'chalk';
 
-import Redis from './utils/auth/redis';
+import { redis } from './utils/auth/redis';
 
 @Singleton()
 export class AppContainer extends BaseAppContainer {
@@ -19,7 +19,7 @@ export class AppContainer extends BaseAppContainer {
    */
   constructor(@Yml('application') private application) {
     super();
-    this.app.use(Redis.session);
+    this.app.use(redis.session);
   }
 
   /**
