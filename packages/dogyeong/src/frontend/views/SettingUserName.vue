@@ -32,6 +32,7 @@ export default Vue.extend({
   methods: {
     changeUserName() {
       changeUserInfo({ name: this.username })
+        .then(() => this.$store.dispatch('fetchCurrentUser'))
         .then(() => this.$router.replace('/setting'))
         .catch(console.error);
     },
