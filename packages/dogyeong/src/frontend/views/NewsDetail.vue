@@ -5,6 +5,9 @@
         <template #left>
           <HeaderButton @clickHeaderButton="back">🠔</HeaderButton>
         </template>
+        <template #right>
+          <RouterLink to="/search">&#128269;</RouterLink>
+        </template>
         {{ headerTitle }}
       </HeaderTitle>
     </Header>

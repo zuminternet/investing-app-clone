@@ -23,7 +23,7 @@ export default class ArticleService {
       .limit(limit)
       .lean<ArticleDoc[]>();
   }
-    
+
   public async getNewsForSearch({ offset = 0, limit = 10, tickers }: QueryProps = {}): Promise<ArticleDoc[]> {
     const tickerOption = this.getTickerOption(tickers);
     const query = { type: ArticleType.news, ...tickerOption };
@@ -36,7 +36,7 @@ export default class ArticleService {
   }
 
   @Caching({ ttl: 30, runOnStart: false, cache })
-  public async getOpinions({ offset = 0, limit = 10, tickers }: QueryProps = {}): Promise<ArticleDoc[]> {
+  public async getOpinions(offset = 0, limit = 10, tickers?: string[]): Promise<ArticleDoc[]> {
     const tickerOption = this.getTickerOption(tickers);
     const query = { type: ArticleType.opinions, ...tickerOption };
 

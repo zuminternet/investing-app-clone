@@ -220,3 +220,8 @@ export const times = {
 
 // 개발 모드
 export const isProductionMode = process.env.MODE_ENV === 'production';
+
+export const getTickerArray = (tickers: string[] | string | undefined): string[] | undefined => {
+  if (typeof tickers === 'string') return [tickers];
+  return tickers;
+};

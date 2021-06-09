@@ -5,6 +5,9 @@
         <template #left>
           <HeaderButton @clickHeaderButton="back">🠔</HeaderButton>
         </template>
+        <template #right>
+          <RouterLink to="/search">&#128269;</RouterLink>
+        </template>
         {{ name }}
       </HeaderTitle>
     </Header>
@@ -70,11 +73,12 @@
 <script lang="ts">
 import Vue from 'vue';
 import { getSummary, getChart } from '@/services/financeService';
-import { getNewNews } from '@/services/articleService';
+import { getNewNews, getNewOpinions } from '@/services/articleService';
 import Layout from '@/components/Layout/Layout.vue';
 import { Header, HeaderTitle, HeaderButton } from '@/components/Header';
 import BottomNav from '@/components/BottomNav/BottomNav.vue';
 import { createChart } from '@/chart';
+// import ReplySection from 'common/frontend/components/ReplySection/index.vue';
 import ArticleTemplate from '@/components/ArticleTemplate/ArticleTemplate.vue';
 
 const chartLightThemeOption = {
@@ -89,7 +93,15 @@ const chartLightThemeOption = {
 export default Vue.extend({
   name: 'MarketDetail',
 
-  components: { Layout, Header, HeaderTitle, BottomNav, HeaderButton, ArticleTemplate },
+  components: {
+    Layout,
+    Header,
+    HeaderTitle,
+    BottomNav,
+    HeaderButton,
+    ArticleTemplate,
+    // ReplySection,
+  },
 
   data() {
     return {
@@ -128,7 +140,7 @@ export default Vue.extend({
       .then((news) => (this.news = news))
       .catch(console.error);
 
-    getNewNews({ tickers: this.symbol })
+    getNewOpinions({ tickers: this.symbol })
       .then((opinions) => (this.opinions = opinions))
       .catch(console.error);
   },
