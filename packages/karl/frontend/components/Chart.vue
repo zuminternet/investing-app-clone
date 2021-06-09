@@ -439,6 +439,10 @@ export default {
         this.period = 'w';
       }
 
+      if (value === 'M') {
+        this.period = 'm';
+      }
+
       if (value === 'Linear') {
         this.isCandle = false;
       }
@@ -449,6 +453,7 @@ export default {
     },
 
     redrawChart() {
+      console.log(this.data);
       this.unitHeight = null;
       this.timeData = [];
       this.valueData = [];
@@ -478,6 +483,10 @@ export default {
 
       if (period === 'w') {
         diff = 15552000000;
+      }
+
+      if (period === 'm') {
+        diff = 63072000000;
       }
 
       const fromDay = new Date();
