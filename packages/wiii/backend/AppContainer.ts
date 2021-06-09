@@ -19,6 +19,11 @@ export class AppContainer extends BaseAppContainer {
    */
   constructor(@Yml('application') private application) {
     super();
+    this.app.use((req, res, next) => {
+      res.header('Access-Control-Allow-Origin', '*');
+      res.header('Access-Control-Allow-Headers', '*');
+      next();
+    });
     this.app.use(redis.session);
   }
 
