@@ -15,10 +15,14 @@ import { SECRET_KEY, RedisConnOptions } from '../../config/db';
 import session from 'express-session';
 import redisConn from 'connect-redis';
 import { createClient, RedisClient } from 'redis';
+import { promisify } from 'util';
 
 class Redis {
   private _session;
   private client: RedisClient;
+  private asyncGet;
+  private asyncSet;
+  private asyncDel;
 
   constructor() {
     this.connect();
@@ -33,35 +37,37 @@ class Redis {
       saveUninitialized: true,
       resave: false,
     });
+    this.asyncGet = promisify(this.client.get).bind(this.client);
+    this.asyncSet = promisify(this.client.set).bind(this.client);
+    this.asyncDel = promisify(this.client.del).bind(this.client);
   }
 
   get session() {
     return this._session;
   }
 
-  public setValue(key: string, value: string) {
+  public async setValue(key: string, value: string) {
     try {
-      const reply = this.client.set(key, value);
-      return reply.toString() === 'OK' ? true : false;
+      const result = await this.asyncSet(key, value);
+      return result === 'OK' ? true : false;
     } catch (e) {
       return console.error(e);
     }
   }
 
-  public getValue(key: string) {
+  public async getValue(key: string) {
     try {
-      const reply = this.client.get(key);
-      const result = reply.toString();
-      return result;
+      const value = await this.asyncGet(key);
+      return value;
     } catch (e) {
       return console.error(e);
     }
   }
 
-  public delete(key: string) {
+  public async delete(key: string) {
     try {
-      const reply = this.client.del(key);
-      return reply.toString() === 'OK' ? true : false;
+      const result = await this.asyncDel(key);
+      return result === 'OK' ? true : false;
     } catch (e) {
       return console.error(e);
     }

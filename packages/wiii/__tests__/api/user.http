@@ -1,6 +1,8 @@
-curl -d "nickname=hello&email=test@com.com&password=mymymymym12124" 127.0.0.1:8080/user/signUp
+curl -d "nickname=hello&email=test@com.com&password=mymymymym12124" 127.0.0.1:8080/user/
+curl -d "nickname=hello&email=test2@com.com&password=mymymymym12124" 127.0.0.1:8080/user/
 
-curl -d "nickname=hello&email=test@1com&password=my" 127.0.0.1:8080/user/signUp
+
+curl -d "nickname=hello&email=test@1com&password=my" 127.0.0.1:8080/user/
 
 POST 127.0.0.1:8080/user/signUp HTTP/1.1
 content-type: application/json

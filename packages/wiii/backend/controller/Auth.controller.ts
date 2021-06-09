@@ -5,7 +5,7 @@ import { AuthService } from '../service/Auth.service';
 import { ApiError } from '../utils/error/api';
 import { TOKEN_COOKIE_KEY } from '../config/auth';
 import { HOUR_ONE } from '../../domain/date';
-import { signToken } from '../utils/auth/jwt';
+import { signToken, verifyToken } from '../utils/auth/jwt';
 import { redis } from '../utils/auth/redis';
 
 /**
@@ -39,7 +39,7 @@ export class UserController {
       const token = signToken({ data: email });
       if (!token) throw loginErr();
 
-      const isSessionOK = redis.setValue(`sess:${email}`, token);
+      const isSessionOK = await redis.setValue(`sess:${email}`, token);
       if (!isSessionOK) throw loginErr();
 
       res.cookie(TOKEN_COOKIE_KEY, token, { httpOnly: true, maxAge: HOUR_ONE * 2 });
@@ -59,7 +59,7 @@ export class UserController {
     try {
       const token = cookies[TOKEN_COOKIE_KEY];
       console.table({ token });
-      if (!token) throw logOutErr();
+      if (!verifyToken(token)) throw logOutErr();
 
       const { email } = params;
       const isDeleted = redis.delete(`sess:${email}`);
