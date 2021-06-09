@@ -41,6 +41,16 @@
       </div>
     </template>
 
+    <template v-if="isNews">
+      <div class="header-title-box">
+        <p>{{ newsTitle }}</p>
+      </div>
+      <empty-space></empty-space>
+      <div class="header-button-box">
+        <header-button isGoSearchButton></header-button>
+      </div>
+    </template>
+
     <template v-if="isBookmark">
       <header-button isBackButton></header-button>
       <div class="header-title-box">
@@ -95,6 +105,11 @@ export default {
       default: false,
     },
 
+    isNews: {
+      type: Boolean,
+      default: false,
+    },
+
     itemDetail: {
       type: Object,
       default() {
@@ -137,9 +152,12 @@ export default {
   },
 
   data() {
+    const { INVESTING_COM, BOOKMARK, NEWS } = text;
+
     return {
-      marketTitle: text.INVESTING_COM,
-      bookmarkTitle: text.BOOKMARK,
+      marketTitle: INVESTING_COM,
+      bookmarkTitle: BOOKMARK,
+      newsTitle: NEWS,
     };
   },
 
