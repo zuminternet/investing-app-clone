@@ -17,7 +17,7 @@ export default () => {
       async login({ commit }, { email, password }) {
         try {
           const { user } = await authService.login({ email, password });
-          commit('setUser', user.name);
+          commit('setUser', user);
         } catch (e) {
           console.error(e);
           throw e;
@@ -29,7 +29,7 @@ export default () => {
           const { gapi } = window;
           const { code } = await gapi.auth2.getAuthInstance().grantOfflineAccess(googleAuthOptions);
           const { user } = await authService.googleLogin(code);
-          commit('setUser', user.name);
+          commit('setUser', user);
         } catch (e) {
           console.error(e);
           throw e;
@@ -39,7 +39,7 @@ export default () => {
       async fetchCurrentUser({ commit }) {
         try {
           const { user } = await authService.fetchUser();
-          commit('setUser', user.name);
+          commit('setUser', user);
         } catch (e) {
           commit('setUser', null);
         }
