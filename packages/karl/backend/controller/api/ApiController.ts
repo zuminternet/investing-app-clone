@@ -4,10 +4,10 @@ import { Inject } from 'zum-portal-core/backend/decorator/Alias';
 
 import UserService from '../../service/UserService';
 import AuthService from '../../service/AuthService';
-import SearchService from '../../../../common/backend/service/SearchService';
+import ChartService from '../../service/ChartService';
 import MarketService from '../../service/MarketService';
+import SearchService from '../../../../common/backend/service/SearchService';
 import ItemDetailService from '../../../../common/backend/service/ItemDetailService';
-// import ArticleService from '../../service/ArticleService';
 import ArticleService from '../../../../common/backend/service/ArticleService';
 import BookmarkService from '../../../../common/backend/service/BookmarkService';
 
@@ -23,6 +23,7 @@ export class ApiController {
     @Inject(ItemDetailService) private itemDetailService: ItemDetailService,
     @Inject(ArticleService) private articleService: ArticleService,
     @Inject(BookmarkService) private bookmarkService: BookmarkService,
+    @Inject(ChartService) private chartService: ChartService,
   ) {}
 
   private getTickerArray(tickers: any) {
@@ -423,10 +424,26 @@ export class ApiController {
         return response.status(200).send(bookmarks);
       }
 
-      response.sendStatus(409);
+      response.sendStatus(404);
     } catch (error) {
       console.log(error);
       response.json(error);
+    }
+  }
+
+  @GetMapping({ path: '/chart/historical' })
+  public async getHistoricalData(request: Request, response: Response) {
+    try {
+      const { symbol, from, to, period } = request.query;
+      const data = await this.chartService.getHistoricalData({ symbol, from, to, period });
+
+      if (data) {
+        return response.status(200).send(data);
+      }
+
+      response.sendStatus(404);
+    } catch (error) {
+      console.log(error);
     }
   }
 }

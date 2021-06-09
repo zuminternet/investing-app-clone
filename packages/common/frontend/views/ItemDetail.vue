@@ -82,6 +82,8 @@ import NewsTextBox from '../components/News/NewsTextBox.vue';
 import NewsTextBoxTitle from '../components/News/NewsTextBoxTitle.vue';
 import NewsTextBoxDesc from '../components/News/NewsTextBoxDesc.vue';
 
+import { getHistoricalData } from '../../../karl/frontend/apis';
+
 export default {
   name: 'ItemDetail',
   components: {
@@ -133,6 +135,8 @@ export default {
     this.getItemDetail({ symbols, email, name });
     this.getNews({ offset: 0, limit: 20, tickers });
     this.getAnalyses({ offset: 0, limit: 20, tickers });
+
+    getHistoricalData({ symbol: 'AAPL', from: '2021-04-04', to: '2021-06-04', period: 'd' });
   },
 };
 </script>
