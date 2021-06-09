@@ -5,6 +5,8 @@ import { AuthService } from '../service/Auth.service';
 import { ApiError } from '../utils/error/api';
 import { TOKEN_COOKIE_KEY } from '../config/auth';
 import { HOUR_ONE } from '../../domain/date';
+import { signToken } from '../utils/auth/jwt';
+import { redis } from '../utils/auth/redis';
 
 /**
  * @description
@@ -30,8 +32,15 @@ export class UserController {
     const loginErr = () => this.error(`Post Sign In`, this.logIn.name);
     try {
       const { email, password } = body;
-      const token = await this.service.login({ email, password });
+      const isValid = await this.service.login({ email, password });
+      if (!isValid) throw loginErr();
+
+      // jwt token -> redis
+      const token = signToken({ data: email });
       if (!token) throw loginErr();
+
+      const isSessionOK = redis.setValue(`sess:${email}`, token);
+      if (!isSessionOK) throw loginErr();
 
       res.cookie(TOKEN_COOKIE_KEY, token, { httpOnly: true, maxAge: HOUR_ONE * 2 });
       res.status(200).json({ message: 'Success to Log-in' });
@@ -53,7 +62,9 @@ export class UserController {
       if (!token) throw logOutErr();
 
       const { email } = params;
-      this.service.logout(email);
+      const isDeleted = redis.delete(`sess:${email}`);
+      if (!isDeleted) throw logOutErr();
+
       res.clearCookie(TOKEN_COOKIE_KEY);
       res.redirect('/');
     } catch (e) {

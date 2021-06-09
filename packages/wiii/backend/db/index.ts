@@ -8,6 +8,9 @@ import { createConnection } from 'typeorm';
 import { createClient } from 'redis';
 const { host, port } = RedisConnOptions;
 
+export { UserRepository } from './repository/User.repository';
+export { ReplyRepository } from './repository/Reply.repository';
+
 export const getMongoConnection = async () => {
   try {
     const conn = await createConnection(MongoDBConnOptions);
