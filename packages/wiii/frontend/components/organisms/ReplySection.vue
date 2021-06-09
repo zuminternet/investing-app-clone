@@ -17,6 +17,7 @@ import { mapActions } from 'vuex';
 import ReplyInput from '@/components/molecules/ReplyNewInput';
 import ReplySort from '@/components/molecules/ReplySort';
 import Card from '@/components/molecules/ReplyCard';
+import { StoreNames } from '@/store';
 
 export default Vue.extend({
   name: 'ReplySection',
@@ -41,12 +42,12 @@ export default Vue.extend({
   },
 
   async mounted() {
-    this.repls = await this.getRandRepls();
+    // this.repls = await this.getRandRepls();
     this.sortText = this.sortTexts[this.sortIdx];
   },
 
   methods: {
-    ...mapActions('Reply', ['getRandomRepls']),
+    ...mapActions(StoreNames.Reply, ['getRandomRepls']),
     /**
      * @todo vuex에서 데이터 가져오기 by ticker
      * @property replId
@@ -60,7 +61,6 @@ export default Vue.extend({
       try {
         const result = await this.getRandomRepls();
         if (!result?.length) throw new Error('No Result');
-
         return result;
       } catch (e) {
         console.error(e);

@@ -7,6 +7,8 @@
   padding: 0;
   width: 100%;
   transition: all 0.15s ease-out;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue',
+    sans-serif;
 }
 
 .center {
@@ -37,7 +39,7 @@
   // margin-bottom: $margin-padding-15;
   margin: 7px 0;
   padding: 10px;
-  border-radius: 10px;
+  border-radius: $border-radius-10;
 
   background-color: $grey-100;
   color: $grey-700;
@@ -63,6 +65,40 @@
   @extend .boundary;
 
   cursor: pointer;
+}
+
+.router-link,
+button {
+  @extend .reset;
+  @extend .center;
+
+  padding: 10px;
+  border-radius: $border-radius-10;
+  border: none;
+  font-size: 1rem;
+  line-height: 1.1rem;
+  text-decoration: none;
+  background-color: $grey-100;
+  color: $grey-700;
+  cursor: pointer;
+
+  &:hover:not(:disabled) {
+    color: $grey-100;
+    background-color: $blue-700;
+    font-weight: bold;
+    text-decoration: rgba($grey-100, 0.5) underline 3px;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+}
+
+.router-link {
+  &-exact-active {
+    color: $blue-700;
+    font-weight: bold;
+  }
 }
 
 // DARK

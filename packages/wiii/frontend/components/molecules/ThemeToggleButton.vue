@@ -1,5 +1,5 @@
 <template>
-  <Button @click.native="themeToggler" :class="color">{{ buttonTitle }}</Button>
+  <Button @click.native="themeToggler" class="theme-button" :class="color">{{ buttonTitle }}</Button>
 </template>
 
 <script lang="ts">
@@ -43,21 +43,24 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
-$size: 50px;
-
-button {
+.theme-button {
   position: fixed;
-  width: $size;
-  height: $size;
+  padding: 0;
+  width: $button-size;
+  height: $button-size;
   right: 7%;
   bottom: 5%;
   font-size: 0.6rem;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue',
-    sans-serif;
-  word-break: keep-all;
-  border: 0;
   border-radius: 50px;
   box-shadow: 0 0 0.2rem 0.1rem rgba($grey-700, 0.7);
+  font-weight: 300;
+  text-decoration: none;
+
+  &:hover {
+    font-weight: initial;
+    text-decoration: none;
+    background-color: $shallow-blue;
+  }
 }
 
 ._dark {

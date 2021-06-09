@@ -22,6 +22,8 @@ export default Vue.extend({
   .label-text {
     display: block;
     font-size: 0.8rem;
+    font-weight: 500;
+    font-style: oblique;
     line-height: 1.2rem;
     color: $grey-700;
   }

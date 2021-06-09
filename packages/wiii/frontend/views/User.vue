@@ -13,7 +13,6 @@ import { mapGetters, mapActions } from 'vuex';
 import Header from '@/components/organisms/Header';
 import Footer from '@/components/organisms/Footer';
 import { viewsTitle } from '@/type/views';
-import { RootActions } from '@/store';
 
 export default Vue.extend({
   name: 'UserView',

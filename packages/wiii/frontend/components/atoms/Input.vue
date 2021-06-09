@@ -1,5 +1,5 @@
 <template>
-  <input :type="type" class="card" />
+  <input :type="type" class="card" @input="$emit('change-input-handler', $event)" :value="newValue" />
 </template>
 
 <script lang="ts">
@@ -11,6 +11,10 @@ export default Vue.extend({
       type: String,
       default: 'text',
     },
+    newValue: {
+      type: String,
+      default: '',
+    },
   },
 });
 </script>
@@ -21,6 +25,7 @@ input {
 
   text-align: center;
   font-size: 1rem;
+  font-style: oblique;
   padding: 15px 0;
   line-height: 1.1rem;
   border: 0;
