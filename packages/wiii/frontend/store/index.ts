@@ -13,11 +13,13 @@ const store = new Store({
   state: {
     ticker: undefined,
     auth: false,
+    email: undefined,
   },
 
   getters: {
-    getTicker: (state) => state.ticker,
-    getAuth: (state) => state.auth,
+    getTicker: ({ ticker }) => ticker,
+    getAuth: ({ auth }) => auth,
+    getEmail: ({ email }) => email,
   },
 
   mutations: {

@@ -33,7 +33,9 @@ export class ReplyController {
       const { docId, email, content } = body;
       const result = await this.replyService.createReply({ docId, email, content });
       if (!result) throw postReplyError();
-      res.status(200).json({ message: 'Success to add new Reply' });
+
+      res.set({ 'Access-Control-Allow-Origin': '*' });
+      res.json({ message: 'Success to add new Reply' });
     } catch (e) {
       console.error(e);
       res.status(500).send({ message: `Fail to add new Reply: ${e}` });

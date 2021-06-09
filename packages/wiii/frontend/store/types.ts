@@ -1,6 +1,7 @@
 export interface RootState {
   ticker: string;
   auth: boolean;
+  email: string;
 }
 
 export enum RootActions {
