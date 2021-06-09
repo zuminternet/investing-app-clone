@@ -3,7 +3,7 @@ import { Service } from 'zum-portal-core/backend/decorator/Alias';
 import { ApiError } from '../utils/error/api';
 import { UserRepository } from '../db/repository/User.repository';
 import { signToken, verifyToken } from '../utils/auth/jwt';
-import Redis from '../utils/auth/redis';
+import { redis } from '../utils/auth/redis';
 
 /**
  * @description
@@ -12,11 +12,9 @@ import Redis from '../utils/auth/redis';
  */
 @Service()
 export class AuthService {
-  private error: (msg: string, name: string) => ApiError;
+  private error = (msg: string, name: string) => new ApiError(`Fail to ${msg}`, `---Service:Auth:${name}: `);
 
-  constructor() {
-    this.error = (msg, name) => new ApiError(`Fail to ${msg}`, `---Service:${name}: `);
-  }
+  constructor() {}
 
   /**
    * login
@@ -30,7 +28,10 @@ export class AuthService {
 
       // jwt token -> redis
       const token = signToken({ data: email });
-      Redis.setValue(`sess:token:${email}`, token);
+      if (!token) throw loginErr();
+
+      const isSessionOK = redis.setValue(`sess:token:${email}`, token);
+      if (!isSessionOK) throw loginErr();
 
       return token;
     } catch (e) {
@@ -39,15 +40,14 @@ export class AuthService {
   }
 
   /**
-   * login
+   * logout
    */
-  public async logout({ email }): Promise<string | void> {
+  public async logout(email: string): Promise<boolean | void> {
     const logoutErr = () => this.error(`Logout`, this.logout.name);
     try {
-      const token = signToken({ data: email });
-      Redis.delete(`sess:token:${email}`);
-
-      return token;
+      const isDeleted = redis.delete(`sess:token:${email}`);
+      if (!isDeleted) throw logoutErr();
+      return true;
     } catch (e) {
       return console.error(e);
     }

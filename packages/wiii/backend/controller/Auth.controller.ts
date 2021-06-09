@@ -16,11 +16,9 @@ import { HOUR_ONE } from '../../domain/date';
  */
 @Controller({ path: '/auth' })
 export class UserController {
-  private error: (msg: string, funcName: string) => ApiError;
+  private error = (msg: string, funcName: string) => new ApiError(`Fail to ${msg}`, `---Ctrl:Auth:${funcName}: `);
 
-  constructor(@Inject(AuthService) private service: AuthService) {
-    this.error = (msg, funcName) => new ApiError(`Fail to ${msg}`, `---API:Ctrl:Auth:${funcName}: `);
-  }
+  constructor(@Inject(AuthService) private service: AuthService) {}
 
   /**
    * 로그인; Post
@@ -47,12 +45,15 @@ export class UserController {
    * 로그아웃; Get
    */
   @GetMapping({ path: '/out' })
-  public async logOut({ cookies }: Request, res: Response) {
-    const logOutErr = () => this.error(`Post Log in`, this.logOut.name);
+  public async logOut({ cookies, params }: Request, res: Response) {
+    const logOutErr = () => this.error(`Get Log out`, this.logOut.name);
     try {
       const token = cookies[TOKEN_COOKIE_KEY];
+      console.table({ token });
       if (!token) throw logOutErr();
 
+      const { email } = params;
+      this.service.logout(email);
       res.clearCookie(TOKEN_COOKIE_KEY);
       res.redirect('/');
     } catch (e) {
