@@ -12,7 +12,7 @@ import { verifyToken } from '../utils/auth/jwt';
  * @todo
  * - path enum
  */
-@Controller({ path: '/reply' })
+@Controller({ path: '/api/reply' })
 export class ReplyController {
   private error = (msg: string, funcName: string) => new ApiError(`Fail to ${msg}`, `---Ctrl:Reply:${funcName}: `);
   constructor(@Inject(ReplyService) private replyService: ReplyService) {}

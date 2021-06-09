@@ -1,10 +1,10 @@
 # 로그인
 # 실패
-curl -d "email=test@2.com&password=my" 127.0.0.1:8080/auth/in
+curl -d "email=test@2.com&password=my" 127.0.0.1:8080/api/auth/in
 
 # 성공
-curl -d "email=test@2.com&password=mysfdsdfs" 127.0.0.1:8080/auth/in
-curl -d "email=test2@com.com&password=mymymymym12124" 127.0.0.1:8080/auth/in
+curl -d "email=test@2.com&password=mysfdsdfs" 127.0.0.1:8080/api/auth/in
+curl -d "email=test2@com.com&password=mymymymym12124" 127.0.0.1:8080/api/auth/in
 
 # 로그아웃; GET, token cookie 필요
-curl -X GET -b "x-access-token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjoidGVzdDJAY29tLmNvbSIsImlhdCI6MTYyMzIxODEyNCwiZXhwIjoxNjIzMjI1MzI0fQ.9kW1Ss365zYUr6Fq5gwa8fAxecJpcF4I1d3q5x6vWBQ" "http://127.0.0.1:8080/auth/out?email=test2@com.com"
+curl -X GET -b "x-access-token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjoidGVzdDJAY29tLmNvbSIsImlhdCI6MTYyMzIxODEyNCwiZXhwIjoxNjIzMjI1MzI0fQ.9kW1Ss365zYUr6Fq5gwa8fAxecJpcF4I1d3q5x6vWBQ" "http://127.0.0.1:8080/api/auth/out?email=test2@com.com"

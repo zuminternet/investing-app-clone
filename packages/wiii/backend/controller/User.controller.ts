@@ -13,7 +13,7 @@ import { TOKEN_COOKIE_KEY } from '../config/auth';
  * @todo
  * - path enum
  */
-@Controller({ path: '/user' })
+@Controller({ path: '/api/user' })
 export class UserController {
   private error = (msg: string, funcName: string) => new ApiError(`Fail to ${msg}`, `---Ctrl:User:${funcName}: `);
 

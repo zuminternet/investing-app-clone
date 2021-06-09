@@ -16,7 +16,7 @@ import { redis } from '../utils/auth/redis';
  * @todo
  * - path enum
  */
-@Controller({ path: '/auth' })
+@Controller({ path: '/api/auth' })
 export class UserController {
   private error = (msg: string, funcName: string) => new ApiError(`Fail to ${msg}`, `---Ctrl:Auth:${funcName}: `);
 
