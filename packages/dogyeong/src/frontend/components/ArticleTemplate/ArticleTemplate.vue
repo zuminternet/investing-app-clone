@@ -1,38 +1,26 @@
 <template>
-  <div>
-    <section class="news-section">
-      <NewsHeadline v-if="headline" :to="`${prefix}${headline._id}`">
-        <NewsImage :src="headline.image_url" />
+  <section class="article-section">
+    <h2 v-if="sectionTitle">{{ sectionTitle }}</h2>
+    <NewsHeadline v-if="headline" :to="`${prefix}${headline._id}`">
+      <NewsImage :src="headline.image_url" />
+      <NewsTextBox>
+        <NewsTextBoxTitle>{{ headline.title }}</NewsTextBoxTitle>
+        <NewsTextBoxDesc :author="headline.source" :publish-date="headline.date" />
+      </NewsTextBox>
+    </NewsHeadline>
+    <NewsList v-if="articles">
+      <NewsListItem v-for="{ _id, image_url, date, source, title } in articles" :key="_id" :to="`${prefix}${_id}`">
+        <NewsImage :src="image_url" />
         <NewsTextBox>
-          <NewsTextBoxTitle>{{ headline.title }}</NewsTextBoxTitle>
-          <NewsTextBoxDesc :author="headline.source" :publish-date="headline.date" />
+          <NewsTextBoxTitle>{{ title }}</NewsTextBoxTitle>
+          <NewsTextBoxDesc :author="source" :publish-date="date" />
         </NewsTextBox>
-      </NewsHeadline>
-      <NewsList v-if="news">
-        <NewsListItem v-for="newsItem in news" :key="newsItem._id" :to="`${prefix}${newsItem._id}`">
-          <NewsImage :src="newsItem.image_url" />
-          <NewsTextBox>
-            <NewsTextBoxTitle>{{ newsItem.title }}</NewsTextBoxTitle>
-            <NewsTextBoxDesc :author="newsItem.source" :publish-date="newsItem.date" />
-          </NewsTextBox>
-        </NewsListItem>
-      </NewsList>
-      <button class="more-button" @click="$emit('clickFetchNewsButton')">더 많은 뉴스 ></button>
-    </section>
-    <section class="opinions-section">
-      <h2 class="section-title">분석 및 의견</h2>
-      <NewsList v-if="opinions">
-        <NewsListItem v-for="opinion in opinions" :key="opinion._id" :to="`${prefix}${opinion._id}`">
-          <NewsImage :src="opinion.image_url" rounded />
-          <NewsTextBox>
-            <NewsTextBoxTitle>{{ opinion.title }}</NewsTextBoxTitle>
-            <NewsTextBoxDesc :author="opinion.source" :publish-date="opinion.date" />
-          </NewsTextBox>
-        </NewsListItem>
-      </NewsList>
-      <button class="more-button" @click="$emit('clickFetchOpinionsButton')">더 많은 분석 & 견해 ></button>
-    </section>
-  </div>
+      </NewsListItem>
+    </NewsList>
+    <button v-if="moreButtonText" class="more-button" @click="$emit('clickMoreButton')">
+      {{ moreButtonText }}
+    </button>
+  </section>
 </template>
 
 <script lang="ts">
@@ -48,7 +36,7 @@ import {
 } from 'common/frontend/components/News';
 
 export default Vue.extend({
-  name: 'NewsTemplate',
+  name: 'ArticleTemplate',
 
   components: {
     NewsHeadline,
@@ -65,17 +53,21 @@ export default Vue.extend({
       type: Object,
       default: null,
     },
-    news: {
+    articles: {
       type: Array,
-      default: null,
-    },
-    opinions: {
-      type: Array,
-      default: null,
+      default: [],
     },
     urlPrefix: {
       type: String,
       required: true,
+    },
+    moreButtonText: {
+      type: String,
+      default: null,
+    },
+    sectionTitle: {
+      type: String,
+      default: null,
     },
   },
 
@@ -90,9 +82,12 @@ export default Vue.extend({
 </script>
 
 <style lang="scss">
-.news-section,
-.opinions-section {
-  padding-bottom: 36px;
+.article-section {
+  padding-bottom: 40px;
+
+  h2 {
+    padding: 12px;
+  }
 
   .news-headline {
     a .news-text-container {

@@ -21,25 +21,35 @@
     <main>
       <Swiper ref="swiper" @endSlide="onEndSlide">
         <SwiperSlide>
-          <NewsTemplate
-            v-if="headline"
+          <ArticleTemplate
             :headline="headline"
-            :news="normalNews"
-            :opinions="newOpinions"
+            :articles="normalNews"
             url-prefix="/news/new"
-            @clickFetchNewsButton="getNewNews"
-            @clickFetchOpinionsButton="getNewOpinions"
+            moreButtonText="더 많은 뉴스 >"
+            @clickMoreButton="getNewNews"
+          />
+          <ArticleTemplate
+            :articles="newOpinions"
+            url-prefix="/news/new"
+            moreButtonText="더 많은 의견 >"
+            sectionTitle="분석 및 의견"
+            @clickMoreButton="getNewOpinions"
           />
         </SwiperSlide>
         <SwiperSlide>
-          <NewsTemplate
-            v-if="headline"
+          <ArticleTemplate
             :headline="headline"
-            :news="normalNews"
-            :opinions="newOpinions"
+            :articles="normalNews"
             url-prefix="/news/popular"
-            @clickFetchNewsButton="getPopularNews"
-            @clickFetchOpinionsButton="getPopularOpinions"
+            moreButtonText="더 많은 뉴스 >"
+            @clickMoreButton="getPopularNews"
+          />
+          <ArticleTemplate
+            :articles="newOpinions"
+            url-prefix="/news/popular"
+            moreButtonText="더 많은 의견 >"
+            sectionTitle="분석 및 의견"
+            @clickMoreButton="getPopularOpinions"
           />
         </SwiperSlide>
       </Swiper>
@@ -54,7 +64,7 @@ import BottomNav from '@/components/BottomNav/BottomNav.vue';
 import { Header, HeaderTitle, HeaderNav, HeaderNavItem } from '@/components/Header';
 import Layout from '@/components/Layout/Layout.vue';
 import { Swiper, SwiperSlide } from '@/components/Swiper';
-import NewsTemplate from '@/components/NewsTemplate/NewsTemplate.vue';
+import ArticleTemplate from '@/components/ArticleTemplate/ArticleTemplate.vue';
 import swiperMixin from '@/mixin/swiperMixin';
 import { mapActions, mapState } from 'vuex';
 
@@ -70,7 +80,7 @@ export default Vue.extend({
     HeaderNav,
     Swiper,
     SwiperSlide,
-    NewsTemplate,
+    ArticleTemplate,
   },
 
   mixins: [
