@@ -1,4 +1,4 @@
-import { getSearchedItems, getSearchedNews, getSearchedAnalyses } from '../../apis';
+import { getSearchedItems, getNews, getAnalyses } from '../../apis';
 
 // 초기 state 값 설정
 const state = () => ({
@@ -32,7 +32,7 @@ const actions = {
 
   async getSearchedNews({ commit }, { offset, limit, tickers }) {
     try {
-      const news = await getSearchedNews({ offset, limit, tickers });
+      const news = await getNews({ offset, limit, tickers });
 
       if (news) {
         commit('setSearchedNews', news);
@@ -48,7 +48,7 @@ const actions = {
 
   async getSearchedAnalyses({ commit }, { offset, limit, tickers }) {
     try {
-      const analyses = await getSearchedAnalyses({ offset, limit, tickers });
+      const analyses = await getAnalyses({ offset, limit, tickers });
 
       if (analyses) {
         commit('setSearchedAnalyses', analyses);

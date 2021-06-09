@@ -87,6 +87,8 @@ export const tickerMap = {
   },
 } as const;
 
+export const tickerKeys = [...Object.keys(tickerMap.stock), ...Object.keys(tickerMap.index), ...Object.keys(tickerMap.crypto)];
+
 export type IndexSymbol = keyof typeof tickerMap.index;
 
 export type CryptoSymbol = keyof typeof tickerMap.crypto;
