@@ -25,6 +25,13 @@ export interface getSearchedItemsInfo {
   keyword: string;
 }
 
+export interface getHistoricalDataInfo {
+  symbol: string;
+  from: string;
+  to: string;
+  period: string;
+}
+
 const createUser = async ({ name, email, password, googleId }: createUserInfo) => {
   try {
     const result = await Axios.post(
@@ -160,6 +167,9 @@ const getIndices = async () => {
   }
 };
 
+/**
+ * @description home page 렌더링에 필요한 cpyto currencies를 가져오는 front-side API 호출 함수
+ */
 const getCryptos = async () => {
   try {
     const result = await Axios.get(`${devURL}/api/market/cryptos`);
@@ -174,11 +184,22 @@ const getCryptos = async () => {
   }
 };
 
-/**
- * @description home page 렌더링에 필요한 cpyto currencies를 가져오는 front-side API 호출 함수
- */
-const getCryptoCurrencies = async () => {
+const getHistoricalData = async ({ symbol, from, to, period }: getHistoricalDataInfo) => {
   try {
+    const result = await Axios.get(`${devURL}/api/chart/historical`, {
+      params: {
+        symbol,
+        from,
+        to,
+        period,
+      },
+    });
+
+    if (result.status === 200) {
+      const { data } = result;
+
+      return data;
+    }
   } catch (error) {
     console.log(error);
   }
@@ -191,7 +212,7 @@ export {
   loginUserByGoogleOAuth,
   getStocks,
   getIndices,
-  getCryptoCurrencies,
   createArticles,
   getCryptos,
+  getHistoricalData,
 };
