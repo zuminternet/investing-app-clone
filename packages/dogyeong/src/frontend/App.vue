@@ -36,7 +36,9 @@ export default Vue.extend({
 });
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
+@import '@/styles/index.scss';
+
 #app {
   background-color: var(--app-bg-color);
   overflow: hidden;
