@@ -26,11 +26,6 @@ export class ApiController {
     @Inject(ChartService) private chartService: ChartService,
   ) {}
 
-  private getTickerArray(tickers: any) {
-    if (typeof tickers === 'string') return [tickers];
-    return tickers;
-  }
-
   @GetMapping({ path: '/user' })
   public async getUser(request: Request, response: Response) {
     try {
@@ -282,7 +277,8 @@ export class ApiController {
   public async getNews(request: Request, response: Response) {
     try {
       const { offset, limit, tickers } = request.query;
-      const news = await this.articleService.getNews({ offset: +offset, limit: +limit, tickers: this.getTickerArray(tickers) });
+
+      const news = await this.articleService.getNews(+offset, +limit, tickers);
 
       if (news) {
         return response.status(200).send(news);
@@ -308,7 +304,7 @@ export class ApiController {
       const news = await this.articleService.getNewsForSearch({
         offset: +offset,
         limit: +limit,
-        tickers: this.getTickerArray(tickers),
+        tickers,
       });
 
       if (news) {
@@ -331,11 +327,7 @@ export class ApiController {
   public async getAnalyses(request: Request, response: Response) {
     try {
       const { offset, limit, tickers } = request.query;
-      const analyses = await this.articleService.getOpinions({
-        offset: +offset,
-        limit: +limit,
-        // tickers: this.getTickerArray(tickers),
-      });
+      const analyses = await this.articleService.getOpinions(+offset, +limit, tickers);
 
       if (analyses) {
         return response.status(200).send(analyses);
@@ -354,7 +346,7 @@ export class ApiController {
       const analyses = await this.articleService.getOpinionsForSearch({
         offset: +offset,
         limit: +limit,
-        // tickers: this.getTickerArray(tickers),
+        tickers,
       });
 
       if (analyses) {

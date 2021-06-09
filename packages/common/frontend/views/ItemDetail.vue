@@ -137,8 +137,8 @@ export default {
     const tickers = [symbols];
 
     this.getItemDetail({ symbols, email, name });
-    // this.getNews({ offset: 0, limit: 20, tickers });
-    // this.getAnalyses({ offset: 0, limit: 20, tickers });
+    this.getNews({ offset: 0, limit: 20, tickers });
+    this.getAnalyses({ offset: 0, limit: 20, tickers });
   },
 };
 </script>
