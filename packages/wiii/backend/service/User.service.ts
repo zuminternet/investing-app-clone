@@ -6,7 +6,7 @@ import {
 } from 'typeorm';
 import { Service } from 'zum-portal-core/backend/decorator/Alias';
 import { ApiError } from '../utils/error/api';
-import { UserRepository } from '../db/repository/User.repository';
+import { UserRepository } from '../db/';
 
 /**
  * @description
@@ -15,20 +15,19 @@ import { UserRepository } from '../db/repository/User.repository';
  */
 @Service()
 export class UserService {
-  private error: (msg: string, name: string) => ApiError;
+  private error = (msg: string, name: string) => new ApiError(`Fail to ${msg}`, `---Service:User:${name}: `);
 
-  constructor() {
-    this.error = (msg, name) => new ApiError(`Fail to ${msg}`, `---Service:${name}: `);
-  }
+  constructor() {}
 
   /**
+   * 생성 및 수정
    * @return DB 쿼리 결과에 따라 true/void
    */
   public async createUser({ nickname, email, password }) {
-    const createErr = () => this.error(`Save New User`, this.createUser.name);
+    const createError = () => this.error(`Save New User`, this.createUser.name);
     try {
       const result = await getCustomRepository(UserRepository).createUser({ nickname, email, password });
-      if (!result) throw createErr();
+      if (!result) throw createError();
       return true;
     } catch (e) {
       return console.error(e);
@@ -37,10 +36,6 @@ export class UserService {
 
   /**
    * @todo getOneUser
-   */
-
-  /**
-   * @todo updateUser
    */
 
   /**

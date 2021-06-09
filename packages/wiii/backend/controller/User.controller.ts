@@ -15,11 +15,9 @@ import { TOKEN_COOKIE_KEY } from '../config/auth';
  */
 @Controller({ path: '/user' })
 export class UserController {
-  private error: (msg: string, funcName: string) => ApiError;
+  private error = (msg: string, funcName: string) => new ApiError(`Fail to ${msg}`, `---Ctrl:User:${funcName}: `);
 
-  constructor(@Inject(UserService) private service: UserService) {
-    this.error = (msg, funcName) => new ApiError(`Fail to ${msg}`, `---API:Ctrl:User:${funcName}: `);
-  }
+  constructor(@Inject(UserService) private service: UserService) {}
 
   /**
    * 회원 가입; Post
