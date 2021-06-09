@@ -1,6 +1,6 @@
 import { drawHelper } from '@/chart/utils';
 import { Candle } from '@/chart/CandleChart';
-import PubSub from '@/chart/PubSub';
+import Canvas from '@/chart/Canvas';
 
 export interface GraphColorOptions {
   bgColor: string;
@@ -15,21 +15,15 @@ export enum GraphType {
   candle,
 }
 
-export default class Graph extends PubSub {
-  private readonly canvas: HTMLCanvasElement;
-  public width: number;
-  public height: number;
+export default class Graph extends Canvas {
   public candles: Candle[];
   public rightOffset: number;
   public barWidth: number;
   private colorOptions: GraphColorOptions;
   private graphType: GraphType = GraphType.candle;
 
-  constructor({ canvas, colorOptions }) {
-    super();
-    this.canvas = canvas;
-    this.width = this.canvas.width;
-    this.height = this.canvas.height;
+  constructor({ $container, canvas, colorOptions }) {
+    super($container, canvas);
     this.rightOffset = 0;
     this.barWidth = 7;
     this.colorOptions = colorOptions;

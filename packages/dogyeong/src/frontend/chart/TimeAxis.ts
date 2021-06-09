@@ -1,6 +1,6 @@
 import { drawHelper } from '@/chart/utils';
 import { Candle } from '@/chart/CandleChart';
-import PubSub from '@/chart/PubSub';
+import Canvas from '@/chart/Canvas';
 
 export interface AxisColorOptions {
   bgColor: string;
@@ -8,6 +8,7 @@ export interface AxisColorOptions {
 }
 
 interface TimeAxisProps {
+  $container: HTMLElement;
   canvas: HTMLCanvasElement;
   colorOptions: AxisColorOptions;
 }
@@ -30,10 +31,7 @@ const timeUnit = {
 
 type TimeUnit = typeof timeUnit[keyof typeof timeUnit];
 
-export default class TimeAxis extends PubSub {
-  private readonly canvas: HTMLCanvasElement;
-  private width: number;
-  private height: number;
+export default class TimeAxis extends Canvas {
   private minTime: number;
   private maxTime: number;
   private timeGapUnit: TimeUnit;
@@ -43,11 +41,8 @@ export default class TimeAxis extends PubSub {
   private readonly textAlign = 'center';
   private timeLines: TimeLine[];
 
-  constructor({ canvas, colorOptions }: TimeAxisProps) {
-    super();
-    this.canvas = canvas;
-    this.width = this.canvas.width;
-    this.height = this.canvas.height;
+  constructor({ $container, canvas, colorOptions }: TimeAxisProps) {
+    super($container, canvas);
     this.colorOptions = colorOptions;
   }
 

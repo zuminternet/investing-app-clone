@@ -1,6 +1,6 @@
 import { crispPixel, drawHelper } from '@/chart/utils';
 import { AxisColorOptions } from '@/chart/TimeAxis';
-import PubSub from '@/chart/PubSub';
+import Canvas from '@/chart/Canvas';
 
 interface PriceLine {
   y: number;
@@ -8,14 +8,12 @@ interface PriceLine {
 }
 
 interface PriceAxisProps {
+  $container: HTMLElement;
   canvas: HTMLCanvasElement;
   colorOptions: AxisColorOptions;
 }
 
-export default class PriceAxis extends PubSub {
-  private readonly canvas: HTMLCanvasElement;
-  private width: number;
-  private height: number;
+export default class PriceAxis extends Canvas {
   private minPrice: number;
   private maxPrice: number;
   private innerPrices: number[];
@@ -24,11 +22,8 @@ export default class PriceAxis extends PubSub {
   private readonly font = '12px sans-serif';
   private readonly textBaseline = 'middle';
 
-  constructor({ canvas, colorOptions }: PriceAxisProps) {
-    super();
-    this.canvas = canvas;
-    this.width = this.canvas.width;
-    this.height = this.canvas.height;
+  constructor({ $container, canvas, colorOptions }: PriceAxisProps) {
+    super($container, canvas);
     this.colorOptions = colorOptions;
   }
 

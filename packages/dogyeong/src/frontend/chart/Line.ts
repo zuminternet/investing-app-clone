@@ -20,8 +20,6 @@ export default class Line {
 
   constructor(canvas: HTMLCanvasElement, colorOptions: LineColorOptions) {
     this.canvas = canvas;
-    this.width = this.canvas.width;
-    this.height = this.canvas.height;
     this.lineColor = colorOptions.graphLineColor;
   }
 
@@ -30,6 +28,9 @@ export default class Line {
   }
 
   public drawLines(lines: VerticalLine[] | HorizontalLine[] = []) {
+    this.width = this.canvas.width;
+    this.height = this.canvas.height;
+
     lines.forEach(this.drawLine.bind(this));
   }
 

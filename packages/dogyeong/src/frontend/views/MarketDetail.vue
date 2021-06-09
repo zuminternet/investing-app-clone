@@ -22,6 +22,7 @@
           <button @click="changeChartPeriod('5y')">5년</button>
           <button @click="changeChartPeriod('max')">최대</button>
           <button class="chart-btn" @click="toggleGraphType">&#128480;</button>
+          <button v-if="fullscreenEnabled" @click="requestFullscreen">Full</button>
         </div>
       </section>
       <section v-if="summaryDetail" class="summary-section">
@@ -78,7 +79,6 @@ import Layout from '@/components/Layout/Layout.vue';
 import { Header, HeaderTitle, HeaderButton } from '@/components/Header';
 import BottomNav from '@/components/BottomNav/BottomNav.vue';
 import { createChart } from '@/chart';
-// import ReplySection from 'common/frontend/components/ReplySection/index.vue';
 import ArticleTemplate from '@/components/ArticleTemplate/ArticleTemplate.vue';
 
 const chartLightThemeOption = {
@@ -101,7 +101,6 @@ export default Vue.extend({
     BottomNav,
     HeaderButton,
     ArticleTemplate,
-    // ReplySection,
   },
 
   data() {
@@ -114,6 +113,12 @@ export default Vue.extend({
       opinions: null,
       symbol: '',
     };
+  },
+
+  computed: {
+    fullscreenEnabled() {
+      return document.fullscreenEnabled;
+    },
   },
 
   watch: {
@@ -164,6 +169,9 @@ export default Vue.extend({
     },
     toggleGraphType() {
       this.chart.toggleGraphType();
+    },
+    requestFullscreen() {
+      this.$refs.chartContainer.requestFullscreen();
     },
   },
 });
