@@ -138,7 +138,7 @@ export default {
       this.ctx.beginPath();
       this.ctx.moveTo(this.graphBoxMargin, this.graphBoxMargin + this.graphBoxHeight);
 
-      let interval = Math.floor((this.endIndex - this.startIndex) / 10);
+      let interval = Math.floor((this.endIndex - this.startIndex) / 7);
 
       if (interval === 1) {
         interval = 2;

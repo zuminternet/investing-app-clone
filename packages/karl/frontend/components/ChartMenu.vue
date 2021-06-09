@@ -9,9 +9,6 @@
     <button class="chart-menu-button" @click="$emit('handle-chart-menu-button-click', $event)" value="M">
       M
     </button>
-    <button class="chart-menu-button" @click="$emit('handle-chart-menu-button-click', $event)" value="Y">
-      Y
-    </button>
     <button v-if="isCandle" class="chart-menu-button" @click="$emit('handle-chart-menu-button-click', $event)" value="Linear">
       Linear
     </button>
