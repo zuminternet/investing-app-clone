@@ -2,18 +2,20 @@ import { Controller, GetMapping, PostMapping } from 'zum-portal-core/backend/dec
 import { Inject } from 'zum-portal-core/backend/decorator/Alias';
 import { Request, Response } from 'express';
 import { ReplyService } from '../service/Reply.service';
+import { ApiError } from '../utils/error/api';
+import { TOKEN_COOKIE_KEY } from '../config/auth';
+import { verifyToken } from '../utils/auth/jwt';
 
 /**
  * @description
- * 회원관리 관련 api controller
- * - 회원가입
- * - logIn, logOut
+ * 댓글 CRUD api controller
  * @todo
  * - path enum
  */
 @Controller({ path: '/reply' })
 export class ReplyController {
-  constructor(@Inject(ReplyService) private userService: ReplyService) {}
+  private error = (msg: string, funcName: string) => new ApiError(`Fail to ${msg}`, `---Ctrl:Reply:${funcName}: `);
+  constructor(@Inject(ReplyService) private replyService: ReplyService) {}
 
   /**
    * 댓글 등록 Post
@@ -21,12 +23,17 @@ export class ReplyController {
    * - middleware; validate
    */
   @PostMapping({ path: '/' })
-  public async postSignIn({ body }: Request, res: Response) {
+  public async postNewReply({ cookies, body }: Request, res: Response) {
+    const postReplyError = () => this.error(`Post new Reply`, this.postNewReply.name);
     try {
-      // const { nickname, email, password } = body;
-      // const result = await this.userService.saveNewUser({ nickname, email, password });
-      // if (!result) throw new Error(`[SignUp] Fail to Sign-up`);
-      res.status(200);
+      // jwt 인증 확인
+      const token = cookies[TOKEN_COOKIE_KEY];
+      if (!verifyToken(token)) throw postReplyError();
+
+      const { docId, email, content } = body;
+      const result = await this.replyService.createReply({ docId, email, content });
+      if (!result) throw postReplyError();
+      res.status(200).json({ message: 'Success to add new Reply' });
     } catch (e) {
       console.error(e);
       res.status(500).send({ message: `Fail to add new Reply: ${e}` });
@@ -37,17 +44,22 @@ export class ReplyController {
    * 해당 페이지 댓글 불러오기
    * @todo
    */
-  @GetMapping({ path: '/' })
-  public async getReplsByDoc({ body }: Request, res: Response) {
+  @GetMapping({ path: '/:docId' })
+  public async getReplsByDoc({ params }: Request, res: Response) {
+    const getReplsError = () => this.error(`Get Replies`, this.getReplsByDoc.name);
     try {
-      // const { email, password } = body;
-      // if (!email || !password) throw new Error(`[SignIn] Must Have Email or Password`);
+      const { docId } = params;
+      console.log({ docId });
+      if (!docId) throw getReplsError();
 
-      // const isSuccess = await this.userService.login({ email, password });
-      res.status(200).json({ message: 'Success to Sign-up' });
+      const results = this.replyService.getAllReplsByDocId(docId);
+      console.table(results);
+      if (!results) throw getReplsError();
+
+      res.status(200).json({ message: 'Success to Get All Replies', results });
     } catch (e) {
       console.error(e);
-      res.status(500).send({ message: `Fail to add new Reply: ${e}` });
+      res.status(400).send({ message: `Fail to Get All Replies: ${e.message}` });
     }
   }
 }

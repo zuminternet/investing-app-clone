@@ -69,7 +69,7 @@ export class Reply extends Base {
   @Column({ default: 0 })
   like: number;
 
-  constructor(docId, userId, content) {
+  constructor(docId: string, userId: User, content: string) {
     super();
     this.docId = docId;
     this.userId = userId;

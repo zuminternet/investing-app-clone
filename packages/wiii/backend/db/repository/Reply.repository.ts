@@ -1,16 +1,7 @@
 import { Reply } from '../entity/Reply.entity';
-import { User } from '../entity/User.entity';
-import { CheckUserProps, CreateReplyProps } from '../types';
-import {
-  getRepository,
-  MongoRepository,
-  ObjectID,
-  UpdateResult,
-  getConnection,
-  Connection,
-  EntityRepository,
-  EntityManager,
-} from 'typeorm';
+import { MongoRepository, EntityRepository, getCustomRepository } from 'typeorm';
+import { RepoError } from '../../utils/error/api';
+import { UserRepository } from './User.repository';
 
 /**
  * UserRepository DAO - TypeORM
@@ -18,9 +9,12 @@ import {
  * - 사용자 생성 인증 수정 삭제
  * - 사용자 댓글 id 배열 추가
  */
-@EntityRepository()
-export class ReplyRepository {
-  constructor(private manager: EntityManager) {}
+@EntityRepository(Reply)
+export class ReplyRepository extends MongoRepository<Reply> {
+  private error = (msg: string, name: string) => new RepoError(`Fail to ${msg}`, `-----Repo:Reply:${name}: `);
+  constructor() {
+    super();
+  }
 
   /**
    * createReply
@@ -28,27 +22,24 @@ export class ReplyRepository {
    * - 댓글 생성 및 수정
    * - MongoDB에선 동일 document id에 save하면 update되므로 별도의 수정 로직 불필요
    */
-  public async createReply(props: CreateReplyProps): Promise<boolean | void> {
+  public async createReply(props): Promise<boolean | void> {
+    const createError = () => this.error(`Create Reply`, this.createReply.name);
     try {
-      const { id, email, docId, content } = props;
-      /**
-       * @description
-       * - User의 findIdByMail method 사용시 현 Entity에서 MySQL DAO instance 생성해야 함
-       *   - static Method로 생성시 this에서 manager/repository 객체 사라짐
-       * - 굳이 instance 생성할 필요없고, 해당 id 찾는 로직만 필요하므로 queryBuilder 사용
-       * @todo
-       * - 함수 분리
-       */
-      const userId = await this.manager
-        .createQueryBuilder(Reply, 'reply')
-        .where('reply.id = :id', { id })
-        .getRawOne();
+      const { docId, email, content } = props;
 
-      const reply = await this.manager.create(Reply, { id, docId, userId, content });
-      await this.manager.save(reply);
+      /** @todo 예외처리 */
+      if (!content.trim().length) throw createError();
+
+      const users = await getCustomRepository(UserRepository).find({ email });
+      if (users.length !== 1) throw createError();
+      const [user] = users;
+
+      const reply = this.create({ docId, userId: user, content });
+      const result = await this.save(reply);
+      console.dir({ result });
+      if (!result) throw createError();
       return true;
     } catch (e) {
-      console.error(`[DB:Repo:User] createReply`);
       return console.error(e);
     }
   }
@@ -58,14 +49,18 @@ export class ReplyRepository {
    * @description
    * - 문서번호에 해당하는 모든 댓글
    */
-  // public async getAllRepliesByDocID(docId: string): Promise<[Reply[], number] | void> {
-  //   try {
-  //     return await this.findAndCount({ where: { docId: { $eq: docId } } });
-  //   } catch (e) {
-  //     console.error(`[DB:Repo:User] getAllRepliesByDocID`)
-  //     return console.error(e);
-  //   }
-  // }
+  public async getAllRepliesByDocID(docId: string): Promise<[Reply[], number] | void> {
+    const getAllError = () => this.error(`Get All Repls by docId`, this.getAllRepliesByDocID.name);
+    try {
+      const results = await this.findAndCount({ where: { docId: { $eq: docId } } });
+      console.dir(results);
+      if (!results) throw getAllError();
+
+      return results;
+    } catch (e) {
+      return console.error(e);
+    }
+  }
 
   /**
    * getOneReply
