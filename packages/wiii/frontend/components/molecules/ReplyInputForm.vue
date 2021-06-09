@@ -10,9 +10,11 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import { mapGetters, mapActions } from 'vuex';
 import TextArea from '@/components/atoms/TextArea.vue';
 import Button from '@/components/atoms/Button.vue';
 import debounce from '@/utils/debounce';
+import { StoreNames } from '@/store';
 
 export default Vue.extend({
   data() {
@@ -21,9 +23,30 @@ export default Vue.extend({
     };
   },
 
+  // props: {
+  //   ticker: {
+  //     type: String,
+  //     required: true,
+  //   },
+  // },
+
   components: { TextArea, Button },
 
+  mounted() {
+    console.log({ route_ticker: this.ticker });
+  },
+
+  computed: {
+    ...mapGetters(['getTicker']),
+    ticker() {
+      return this.getTicker;
+    },
+  },
+
   methods: {
+    ...mapActions(StoreNames.Reply, {
+      //
+    }),
     cancelInput() {
       this.replyText = '';
       this.$emit('change-current-input', 'none');
@@ -38,11 +61,19 @@ export default Vue.extend({
      * @todo debounce 함수 제대로 안만들어진건지 alert 계속 실행되는 문제..
      */
     submitReply(replyText) {
+      const docId = this.ticker;
+      console.log({ docId });
+
       const reset = this.cancelInput;
-      return debounce(function() {
-        reset();
-        return alert(replyText);
-      }, 500)();
+      reset();
+      alert(replyText);
+
+      // return debounce(function() {
+      //   reset();
+      //   alert(replyText);
+
+      //   return;
+      // }, 500)();
     },
   },
 });
