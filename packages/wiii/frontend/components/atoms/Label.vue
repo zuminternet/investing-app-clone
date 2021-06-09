@@ -1,5 +1,7 @@
 <template>
-  <label :for="forId" class="noselect"><slot /></label>
+  <div class="label-wrapper">
+    <label :for="forId" class="reset noselect label-text"><slot /></label>
+  </div>
 </template>
 
 <script lang="ts">
@@ -16,10 +18,12 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
-label {
-  width: 100%;
-  text-align: left;
-  font-size: 0.8rem;
-  color: $grey-700;
+.label-wrapper {
+  .label-text {
+    display: block;
+    font-size: 0.8rem;
+    line-height: 1.2rem;
+    color: $grey-700;
+  }
 }
 </style>

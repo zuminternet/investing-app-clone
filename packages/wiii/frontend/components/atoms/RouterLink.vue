@@ -22,6 +22,7 @@ export default Vue.extend({
 .router-link {
   @extend .card;
 
+  line-height: 1.2rem;
   text-decoration: none;
 
   &:hover {
