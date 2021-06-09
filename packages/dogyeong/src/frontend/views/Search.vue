@@ -1,116 +1,131 @@
 <template>
-  <div class="search-page">
-    <multipurpose-header :userInfo="userInfo" isSearch @search-input-value-change="requestSearch"></multipurpose-header>
-    <custom-swiper :navigatorButtonNames="swiperNavigatorButtonNames">
-      <swiper-slide>
-        <item-card-list :items="searchedItems" :excludedHeight="100" :userInfo="userInfo" isSearch></item-card-list>
-      </swiper-slide>
-      <swiper-slide>
-        <list-wrapper :excludedHeight="100">
-          <news-list>
-            <news-list-item v-for="element in searchedNews" :key="element.id" :to="''">
-              <news-image :src="element.image_url" />
-              <news-text-box>
-                <news-text-box-title>{{ element.title }}</news-text-box-title>
-                <news-text-box-desc :author="element.source" :publishDate="element.date"></news-text-box-desc>
-              </news-text-box>
-            </news-list-item>
-          </news-list>
-        </list-wrapper>
-      </swiper-slide>
-      <swiper-slide>
-        <list-wrapper :excludedHeight="100">
-          <news-list>
-            <news-list-item v-for="element in searchedAnalyses" :key="element.id" :to="''">
-              <news-image :src="element.image_url" />
-              <news-text-box>
-                <news-text-box-title>{{ element.title }}</news-text-box-title>
-                <news-text-box-desc :author="element.source" :publishDate="element.date"></news-text-box-desc>
-              </news-text-box>
-            </news-list-item>
-          </news-list>
-        </list-wrapper>
-      </swiper-slide>
-    </custom-swiper>
-  </div>
+  <Layout>
+    <header :class="$style.header">
+      <HeaderButton @clickHeaderButton="back">&#8592;</HeaderButton>
+      <input v-model="keyword" type="text" autofocus placeholder="종목 검색" @keypress.enter="requestSearch" />
+      <button :class="$style['search-button']" @click="requestSearch">Search</button>
+    </header>
+    <main>
+      <custom-swiper :navigator-button-names="swiperNavigatorButtonNames" :class="$style.swiper">
+        <swiper-slide>
+          <ul>
+            <li v-for="{ name, symbol, category } in searchedItems" :key="symbol" :class="$style['search-item']">
+              <span :class="$style['item-title']">{{ name }}</span>
+              <span>{{ symbol }} | {{ category }}</span>
+            </li>
+          </ul>
+        </swiper-slide>
+        <swiper-slide>
+          <ArticleTemplate :articles="searchedNews" url-prefix="news/new" />
+        </swiper-slide>
+        <swiper-slide>
+          <ArticleTemplate :articles="searchedAnalyses" url-prefix="news/new" />
+        </swiper-slide>
+      </custom-swiper>
+    </main>
+    <BottomNav />
+  </Layout>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from 'vue';
 import { SwiperSlide } from 'vue-awesome-swiper';
 import { mapState, mapActions } from 'vuex';
-import MultipurposeHeader from 'common/frontend/components/MultipurposeHeader.vue';
-import ListWrapper from 'common/frontend/components/ListWrapper.vue';
 import CustomSwiper from 'common/frontend/components/CustomSwiper.vue';
-import ItemCard from 'common/frontend/components/ItemCard.vue';
-import ItemCardList from 'common/frontend/components/ItemCardList.vue';
-import {
-  NewsList,
-  NewsListItem,
-  NewsImage,
-  NewsTextBox,
-  NewsTextBoxTitle,
-  NewsTextBoxDesc,
-} from 'common/frontend/components/News';
+import Layout from '@/components/Layout/Layout.vue';
+import BottomNav from '@/components/BottomNav/BottomNav.vue';
+import { HeaderButton } from '@/components/Header';
+import ArticleTemplate from '@/components/ArticleTemplate/ArticleTemplate.vue';
 
-export default {
+export default Vue.extend({
   name: 'Search',
 
   components: {
-    MultipurposeHeader,
     CustomSwiper,
-    ItemCard,
-    ItemCardList,
     SwiperSlide,
-    NewsList,
-    NewsListItem,
-    NewsImage,
-    NewsTextBox,
-    NewsTextBoxTitle,
-    NewsTextBoxDesc,
-    ListWrapper,
-  },
-
-  computed: {
-    ...mapState({
-      userInfo: (state) => state.user,
-      searchedItems: (state) => state.search.searchedItems,
-      searchedNews: (state) => state.search.searchedNews,
-      searchedAnalyses: (state) => state.search.searchedAnalyses,
-    }),
+    Layout,
+    BottomNav,
+    HeaderButton,
+    ArticleTemplate,
   },
 
   data() {
     return {
       swiperNavigatorButtonNames: ['종목', '뉴스', '분석'],
+      keyword: '',
     };
   },
 
-  methods: {
-    ...mapActions('search', ['getSearchedItems', 'getSearchedNews', 'getSearchedAnalyses', 'clearSearchStore']),
-
-    requestSearch(event) {
-      const keyword = event.target.value;
-      const email = this.userInfo.userEmail;
-
-      if (keyword) {
-        const tickers = [keyword];
-        this.getSearchedItems({ keyword, email });
-        this.getSearchedNews({ offset: 0, limit: 10, tickers });
-        this.getSearchedAnalyses({ offset: 0, limit: 10, tickers });
-      }
-    },
+  computed: {
+    ...mapState({
+      userInfo: (state) => state.user,
+      searchedItems: ({ search }) => search.searchedItems,
+      searchedNews: ({ search }) => search.searchedNews,
+      searchedAnalyses: ({ search }) => search.searchedAnalyses,
+    }),
   },
 
   beforeDestroy() {
     this.clearSearchStore();
   },
-};
+  methods: {
+    ...mapActions('search', ['getSearchedItems', 'getSearchedNews', 'getSearchedAnalyses', 'clearSearchStore']),
+
+    requestSearch() {
+      const email = this.userInfo.userEmail;
+
+      if (!this.keyword) return;
+
+      const tickers = [this.keyword];
+      this.getSearchedItems({ keyword: this.keyword, email });
+      this.getSearchedNews({ offset: 0, limit: 10, tickers });
+      this.getSearchedAnalyses({ offset: 0, limit: 10, tickers });
+    },
+
+    back() {
+      this.$router.back();
+    },
+  },
+});
 </script>
 
-<style scoped lang="scss">
-.search-page {
+<style lang="scss" module>
+.header {
+  padding: 6px 12px;
+  height: 60px;
+  border-bottom: 1px solid var(--border-color);
   display: flex;
-  flex-direction: column;
-  flex: 1;
+
+  input {
+    flex: 1;
+    padding: 4px 8px;
+    appearance: none;
+    border: 0;
+    border-bottom: 1px solid var(--text-color);
+    background-color: transparent;
+    color: var(--text-color);
+    font-size: 16px;
+  }
+}
+
+.search-button {
+  padding: 4px 8px;
+  margin-left: 12px;
+  border-radius: 8px;
+
+  &:hover {
+    background-color: var(--border-color);
+  }
+}
+
+.search-item {
+  padding: 24px 12px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.item-title {
+  font-size: 18px;
+  display: block;
+  margin-bottom: 4px;
 }
 </style>
