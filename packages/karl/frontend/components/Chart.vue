@@ -84,6 +84,7 @@ export default {
       valueData: [],
       tpCache: [],
       isCandle: true,
+      period: 'd',
     };
   },
 
@@ -156,7 +157,7 @@ export default {
           this.ctx.fillStyle = close >= open ? 'red' : 'blue';
           this.ctx.strokeStyle = close >= open ? 'red' : 'blue';
 
-          let candleWidth = 5;
+          let candleWidth = 4;
 
           this.ctx.fillRect(
             this.graphBoxMargin + this.unitWidth * (i - this.startIndex) - candleWidth / 2,
@@ -298,7 +299,6 @@ export default {
     touchStartHandler(event) {
       event.preventDefault();
       console.log('start');
-      console.log(event);
 
       const touches = event.targetTouches;
       this.tpCache = [];
@@ -456,11 +456,44 @@ export default {
 
       this.drawSelectedLine();
     },
+
+    getFromAndTo(period) {
+      const today = new Date();
+      let from = null;
+      let to = null;
+
+      if (period === 'd') {
+        const thirtyDay = 5184000000;
+        const fromDay = new Date();
+        fromDay.setTime(today.getTime() - thirtyDay);
+        from = `${fromDay.getFullYear()}`;
+
+        from += fromDay.getMonth() + 1 >= 10 ? `-${fromDay.getMonth() + 1}` : `-0${fromDay.getMonth() + 1}`;
+        from += fromDay.getDate() >= 10 ? `-${fromDay.getDate()}` : `-0${fromDay.getDate()}`;
+
+        to = `${today.getFullYear()}`;
+
+        to += today.getMonth() + 1 >= 10 ? `-${today.getMonth() + 1}` : `-0${today.getMonth() + 1}`;
+        to += today.getDate() >= 10 ? `-${today.getDate()}` : `-0${today.getDate()}`;
+
+        console.log(from);
+        console.log(to);
+      }
+
+      return { from, to };
+    },
+
+    async getHistoricalDataForPeriod(period) {
+      const { from, to } = this.getFromAndTo(period);
+      this.data = await getHistoricalData({ symbol: this.symbol, from, to, period });
+      this.data.reverse();
+    },
   },
 
   async mounted() {
-    this.data = await getHistoricalData({ symbol: this.symbol, from: '2021-04-04', to: '2021-06-04', period: 'd' });
-    this.data.reverse();
+    await this.getHistoricalDataForPeriod(this.period);
+
+    console.log(this.data);
     this.endIndex = this.data.length - 1;
     this.startIndex = 0;
 
