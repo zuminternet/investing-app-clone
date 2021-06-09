@@ -20,8 +20,6 @@ export default class ChartService {
       period,
     });
 
-    console.log(data);
-
     if (data) {
       return data;
     }

@@ -195,8 +195,6 @@ const getHistoricalData = async ({ symbol, from, to, period }: getHistoricalData
       },
     });
 
-    console.log(result);
-
     if (result.status === 200) {
       const { data } = result;
 
