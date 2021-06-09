@@ -12,7 +12,7 @@
       </HeaderTitle>
     </Header>
     <main v-if="isLoading">
-      <div class="message">loading...</div>
+      <LoadingSpinner />
     </main>
     <main v-else-if="isError">
       <div class="message">Error!</div>
@@ -38,6 +38,7 @@ import { Header, HeaderTitle, HeaderButton } from '@/components/Header';
 import Layout from '@/components/Layout/Layout.vue';
 import { getArticle } from '@/services/articleService';
 import { fromNow } from 'common/frontend/utils';
+import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner.vue';
 
 export default Vue.extend({
   name: 'NewsDetail',
@@ -48,6 +49,7 @@ export default Vue.extend({
     HeaderTitle,
     Layout,
     HeaderButton,
+    LoadingSpinner,
   },
 
   filters: {
