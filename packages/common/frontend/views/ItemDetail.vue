@@ -6,6 +6,7 @@
       <swiper-slide>
         <list-wrapper :excludedHeight="210">
           <!-- 차트 컴포넌트 자리  -->
+          <chart :canvasWidth="300" :canvasHeight="300" :symbol="symbolForChart"></chart>
           <item-detail-overview-box :itemDetail="itemDetail"></item-detail-overview-box>
           <!-- 댓글 컴포넌트 자리 -->
           <sub-content-box :text="newsText">
@@ -81,8 +82,7 @@ import NewsImage from '../components/News/NewsImage.vue';
 import NewsTextBox from '../components/News/NewsTextBox.vue';
 import NewsTextBoxTitle from '../components/News/NewsTextBoxTitle.vue';
 import NewsTextBoxDesc from '../components/News/NewsTextBoxDesc.vue';
-
-import { getHistoricalData } from '../../../karl/frontend/apis';
+import Chart from '../../../karl/frontend/components/Chart.vue';
 
 export default {
   name: 'ItemDetail',
@@ -101,17 +101,19 @@ export default {
     NewsTextBoxTitle,
     NewsTextBoxDesc,
     ListWrapper,
+    Chart,
   },
 
   data() {
     const { OVERLALL, NEWS, ANALYSIS, OPINION, CHART, MARKET, BOOKMARK, MORE } = text;
+
     return {
       swiperNavigatorButtonNames: [OVERLALL, NEWS, ANALYSIS, OPINION, CHART],
       bottomNavigatorButtonNames: [MARKET, NEWS, BOOKMARK, MORE],
       newsText: NEWS,
       analysisText: ANALYSIS,
       opnionText: OPINION,
-      chartData: [],
+      symbolForChart: '',
     };
   },
 
@@ -128,16 +130,15 @@ export default {
     ...mapActions('itemDetail', ['getItemDetail', 'getNews', 'getAnalyses']),
   },
 
-  created() {
+  async created() {
     const { symbols, name } = this.$route.query;
+    this.symbolForChart = symbols;
     const email = this.userInfo.userEmail;
     const tickers = [symbols];
 
     this.getItemDetail({ symbols, email, name });
-    this.getNews({ offset: 0, limit: 20, tickers });
-    this.getAnalyses({ offset: 0, limit: 20, tickers });
-
-    this.chartData = getHistoricalData({ symbol: 'AAPL', from: '2021-04-04', to: '2021-06-04', period: 'd' });
+    // this.getNews({ offset: 0, limit: 20, tickers });
+    // this.getAnalyses({ offset: 0, limit: 20, tickers });
   },
 };
 </script>

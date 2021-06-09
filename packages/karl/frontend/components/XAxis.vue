@@ -1,10 +1,5 @@
 <template>
-  <canvas
-    ref="xaxis"
-    :width="this.canvasWidth"
-    :height="this.canvasHeight"
-    class="xaxis"
-  ></canvas>
+  <canvas ref="xaxis" :width="this.canvasWidth" :height="this.canvasHeight" class="xaxis"></canvas>
 </template>
 
 <script>
@@ -30,7 +25,7 @@ export default {
 
     startIndex: {
       type: Number,
-      required: true,
+      default: 0,
     },
 
     graphBoxMargin: {
@@ -58,10 +53,8 @@ export default {
 
         this.ctx.fillText(
           displayedTime,
-          this.graphBoxMargin +
-            this.unitWidth * (index - this.startIndex) -
-            this.ctx.measureText(displayedTime).width / 2,
-          10
+          this.graphBoxMargin + this.unitWidth * (index - this.startIndex) - this.ctx.measureText(displayedTime).width / 2,
+          10,
         );
       }
     },

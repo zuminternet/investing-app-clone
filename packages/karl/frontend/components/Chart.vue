@@ -35,8 +35,7 @@
 import XAxis from './XAxis.vue';
 import YAxis from './YAxis.vue';
 import ChartMenu from './ChartMenu.vue';
-
-import chartData from '../../chartData.json';
+import { getHistoricalData } from '../apis';
 
 export default {
   name: 'Chart',
@@ -56,6 +55,11 @@ export default {
       type: Number,
       required: true,
     },
+
+    symbol: {
+      type: String,
+      required: true,
+    },
   },
 
   data() {
@@ -67,12 +71,12 @@ export default {
       currentHeight: 0,
       graphBoxColor: 'green',
       graphColor: 'green',
-      data: chartData,
-      baseStartIndex: null,
+      data: [],
+      baseStartIndex: 0,
       baseEndIndex: null,
       targetStartIndex: null,
       targetEndIndex: null,
-      startIndex: 0,
+      startIndex: null,
       selectedIndex: null,
       selectedValue: 0,
       endIndex: null,
@@ -109,36 +113,28 @@ export default {
     },
 
     currentValue() {
-      return this.data[this.endIndex].close;
+      if (this.endIndex !== null) {
+        return this.data[this.endIndex].close;
+      }
+
+      return 0;
     },
 
     selectedHeight() {
-      return (
-        this.graphBoxMargin +
-        this.graphBoxHeight -
-        (this.selectedValue - this.floorValue) * this.heightRatio
-      );
+      return this.graphBoxMargin + this.graphBoxHeight - (this.selectedValue - this.floorValue) * this.heightRatio;
     },
   },
 
   methods: {
     drawGraphBox() {
       this.ctx.strokeStyle = this.graphBoxColor;
-      this.ctx.strokeRect(
-        this.graphBoxMargin,
-        this.graphBoxMargin,
-        this.graphBoxWidth,
-        this.graphBoxHeight
-      );
+      this.ctx.strokeRect(this.graphBoxMargin, this.graphBoxMargin, this.graphBoxWidth, this.graphBoxHeight);
     },
 
     drawGraph() {
       this.ctx.strokeStyle = this.graphColor;
       this.ctx.beginPath();
-      this.ctx.moveTo(
-        this.graphBoxMargin,
-        this.graphBoxMargin + this.graphBoxHeight
-      );
+      this.ctx.moveTo(this.graphBoxMargin, this.graphBoxMargin + this.graphBoxHeight);
 
       let interval = Math.floor((this.endIndex - this.startIndex) / 10);
 
@@ -152,25 +148,10 @@ export default {
         for (let i = this.startIndex; i < this.endIndex + 1; i++) {
           const { date: time, close, open, high, low } = this.data[i];
 
-          this.unitHeight =
-            this.graphBoxMargin +
-            this.graphBoxHeight -
-            (close - this.floorValue) * this.heightRatio;
-
-          let unitOpen =
-            this.graphBoxMargin +
-            this.graphBoxHeight -
-            (open - this.floorValue) * this.heightRatio;
-
-          let unitHigh =
-            this.graphBoxMargin +
-            this.graphBoxHeight -
-            (high - this.floorValue) * this.heightRatio;
-
-          let unitLow =
-            this.graphBoxMargin +
-            this.graphBoxHeight -
-            (low - this.floorValue) * this.heightRatio;
+          this.unitHeight = this.graphBoxMargin + this.graphBoxHeight - (close - this.floorValue) * this.heightRatio;
+          let unitOpen = this.graphBoxMargin + this.graphBoxHeight - (open - this.floorValue) * this.heightRatio;
+          let unitHigh = this.graphBoxMargin + this.graphBoxHeight - (high - this.floorValue) * this.heightRatio;
+          let unitLow = this.graphBoxMargin + this.graphBoxHeight - (low - this.floorValue) * this.heightRatio;
 
           this.ctx.fillStyle = close >= open ? 'red' : 'blue';
           this.ctx.strokeStyle = close >= open ? 'red' : 'blue';
@@ -178,23 +159,15 @@ export default {
           let candleWidth = 5;
 
           this.ctx.fillRect(
-            this.graphBoxMargin +
-              this.unitWidth * (i - this.startIndex) -
-              candleWidth / 2,
+            this.graphBoxMargin + this.unitWidth * (i - this.startIndex) - candleWidth / 2,
             this.unitHeight,
             candleWidth,
-            Math.abs(this.unitHeight - unitOpen)
+            Math.abs(this.unitHeight - unitOpen),
           );
 
-          this.ctx.moveTo(
-            this.graphBoxMargin + this.unitWidth * (i - this.startIndex),
-            unitHigh
-          );
+          this.ctx.moveTo(this.graphBoxMargin + this.unitWidth * (i - this.startIndex), unitHigh);
 
-          this.ctx.lineTo(
-            this.graphBoxMargin + this.unitWidth * (i - this.startIndex),
-            unitLow
-          );
+          this.ctx.lineTo(this.graphBoxMargin + this.unitWidth * (i - this.startIndex), unitLow);
 
           this.ctx.strokeStyle = this.graphColor;
 
@@ -208,24 +181,15 @@ export default {
         for (let i = this.startIndex; i < this.endIndex + 1; i++) {
           const { date: time, close: value } = this.data[i];
 
-          this.unitHeight =
-            this.graphBoxMargin +
-            this.graphBoxHeight -
-            (value - this.floorValue) * this.heightRatio;
+          this.unitHeight = this.graphBoxMargin + this.graphBoxHeight - (value - this.floorValue) * this.heightRatio;
 
-          this.ctx.lineTo(
-            this.graphBoxMargin + this.unitWidth * (i - this.startIndex),
-            this.unitHeight
-          );
+          this.ctx.lineTo(this.graphBoxMargin + this.unitWidth * (i - this.startIndex), this.unitHeight);
 
           if (i % interval === 0) {
             this.timeData.push([time, i]);
           }
         }
-        this.ctx.lineTo(
-          this.graphBoxMargin + this.graphBoxWidth,
-          this.graphBoxMargin + this.graphBoxHeight
-        );
+        this.ctx.lineTo(this.graphBoxMargin + this.graphBoxWidth, this.graphBoxMargin + this.graphBoxHeight);
       }
 
       this.ctx.closePath();
@@ -249,14 +213,8 @@ export default {
       this.ctx.globalAlpha = 0.2;
 
       this.ctx.beginPath();
-      this.ctx.moveTo(
-        this.graphBoxMargin,
-        this.graphBoxMargin + (this.graphBoxHeight / 5) * index + 4
-      );
-      this.ctx.lineTo(
-        this.graphBoxMargin + this.graphBoxWidth,
-        this.graphBoxMargin + (this.graphBoxHeight / 5) * index + 4
-      );
+      this.ctx.moveTo(this.graphBoxMargin, this.graphBoxMargin + (this.graphBoxHeight / 5) * index + 4);
+      this.ctx.lineTo(this.graphBoxMargin + this.graphBoxWidth, this.graphBoxMargin + (this.graphBoxHeight / 5) * index + 4);
       this.ctx.closePath();
       this.ctx.stroke();
 
@@ -305,13 +263,10 @@ export default {
       for (let i = 0; i < this.timeData.length; i++) {
         let index = this.timeData[i][1];
         this.ctx.beginPath();
-        this.ctx.moveTo(
-          this.graphBoxMargin + this.unitWidth * (index - this.startIndex),
-          this.graphBoxMargin
-        );
+        this.ctx.moveTo(this.graphBoxMargin + this.unitWidth * (index - this.startIndex), this.graphBoxMargin);
         this.ctx.lineTo(
           this.graphBoxMargin + this.unitWidth * (index - this.startIndex),
-          this.graphBoxMargin + this.graphBoxHeight
+          this.graphBoxMargin + this.graphBoxHeight,
         );
         this.ctx.closePath();
         this.ctx.stroke();
@@ -324,24 +279,16 @@ export default {
         // X 축
         this.ctx.beginPath();
         this.ctx.moveTo(this.graphBoxMargin, this.selectedHeight);
-        this.ctx.lineTo(
-          this.graphBoxMargin + this.graphBoxWidth,
-          this.selectedHeight
-        );
+        this.ctx.lineTo(this.graphBoxMargin + this.graphBoxWidth, this.selectedHeight);
         this.ctx.closePath();
         this.ctx.stroke();
 
         // Y 축
         this.ctx.beginPath();
-        this.ctx.moveTo(
-          this.graphBoxMargin +
-            this.unitWidth * (this.selectedIndex - this.startIndex),
-          this.graphBoxMargin
-        );
+        this.ctx.moveTo(this.graphBoxMargin + this.unitWidth * (this.selectedIndex - this.startIndex), this.graphBoxMargin);
         this.ctx.lineTo(
-          this.graphBoxMargin +
-            this.unitWidth * (this.selectedIndex - this.startIndex),
-          this.graphBoxMargin + this.graphBoxHeight
+          this.graphBoxMargin + this.unitWidth * (this.selectedIndex - this.startIndex),
+          this.graphBoxMargin + this.graphBoxHeight,
         );
         this.ctx.closePath();
         this.ctx.stroke();
@@ -351,38 +298,28 @@ export default {
     touchStartHandler(event) {
       event.preventDefault();
       console.log('start');
+      console.log(event);
 
       const touches = event.targetTouches;
       this.tpCache = [];
 
-      touches.forEach(touch => {
-        this.tpCache.push(touch);
-      });
+      for (let i = 0; i < touches.length; i++) {
+        this.tpCache.push(touches[i]);
+      }
 
       if (event.targetTouches.length === 1) {
         this.selectedIndex =
-          this.startIndex +
-          Math.round(
-            (event.targetTouches[0].clientX - this.graphBoxMargin) /
-              this.unitWidth
-          ) -
-          1;
+          this.startIndex + Math.round((event.targetTouches[0].clientX - this.graphBoxMargin) / this.unitWidth) - 1;
 
         this.selectedValue = this.data[this.selectedIndex].close;
       } else if (event.targetTouches.length === 2) {
         this.selectedIndex = null;
 
-        const pointIndex1 = Math.round(
-          (touches[0].clientX - this.graphBoxMargin) / this.unitWidth
-        );
-        const pointIndex2 = Math.round(
-          (touches[1].clientX - this.graphBoxMargin) / this.unitWidth
-        );
+        const pointIndex1 = Math.round((touches[0].clientX - this.graphBoxMargin) / this.unitWidth);
+        const pointIndex2 = Math.round((touches[1].clientX - this.graphBoxMargin) / this.unitWidth);
 
-        this.targetStartIndex =
-          Math.min(pointIndex1, pointIndex2) + this.startIndex;
-        this.targetEndIndex =
-          Math.max(pointIndex1, pointIndex2) + this.startIndex;
+        this.targetStartIndex = Math.min(pointIndex1, pointIndex2) + this.startIndex;
+        this.targetEndIndex = Math.max(pointIndex1, pointIndex2) + this.startIndex;
       }
     },
 
@@ -407,26 +344,19 @@ export default {
     },
 
     handlePinchZoom(event) {
-      if (
-        event.targetTouches.length === 2 &&
-        event.changedTouches.length === 2
-      ) {
+      if (event.targetTouches.length === 2 && event.changedTouches.length === 2) {
         let leftBasePointClientX = -1;
         let rightBasePointClientX = -1;
         let leftBasePoint = -1;
         let rightBasePoint = -1;
 
         for (let i = 0; i < this.tpCache.length; i++) {
-          if (
-            this.tpCache[i].identifier === event.targetTouches[0].identifier
-          ) {
+          if (this.tpCache[i].identifier === event.targetTouches[0].identifier) {
             leftBasePoint = i;
             leftBasePointClientX = this.tpCache[i].clientX;
           }
 
-          if (
-            this.tpCache[i].identifier === event.targetTouches[1].identifier
-          ) {
+          if (this.tpCache[i].identifier === event.targetTouches[1].identifier) {
             rightBasePoint = i;
             rightBasePointClientX = this.tpCache[i].clientX;
           }
@@ -439,22 +369,14 @@ export default {
         }
 
         if (leftBasePoint >= 0 && rightBasePoint >= 0) {
-          const leftDiff =
-            this.tpCache[leftBasePoint].clientX -
-            event.targetTouches[leftBasePoint].clientX;
+          const leftDiff = this.tpCache[leftBasePoint].clientX - event.targetTouches[leftBasePoint].clientX;
 
-          const rightDiff =
-            this.tpCache[rightBasePoint].clientX -
-            event.targetTouches[rightBasePoint].clientX;
+          const rightDiff = this.tpCache[rightBasePoint].clientX - event.targetTouches[rightBasePoint].clientX;
 
           const totalDiff = Math.abs(leftDiff) + Math.abs(rightDiff);
           const diffIndex = Math.round(totalDiff / 20);
 
-          if (
-            leftDiff > 0 &&
-            rightDiff < 0 &&
-            this.endIndex - this.startIndex > 5
-          ) {
+          if (leftDiff > 0 && rightDiff < 0 && this.endIndex - this.startIndex > 5) {
             if (this.startIndex < this.targetStartIndex) {
               if (this.baseStartIndex + diffIndex > this.targetStartIndex) {
                 this.startIndex = this.targetStartIndex;
@@ -488,26 +410,18 @@ export default {
             }
           }
         }
-      } else if (
-        event.targetTouches.length === 1 &&
-        event.changedTouches.length === 1
-      ) {
+      } else if (event.targetTouches.length === 1 && event.changedTouches.length === 1) {
         const diff = this.tpCache[0].clientX - event.targetTouches[0].clientX;
         const diffIndex = Math.round(Math.abs(diff) / 20);
 
         if (diff > 0 && this.baseEndIndex + diffIndex <= this.data.length - 1) {
           this.startIndex = this.baseStartIndex + diffIndex;
           this.endIndex =
-            this.baseEndIndex + diffIndex > this.data.length - 1
-              ? this.data.length - 1
-              : this.baseEndIndex + diffIndex;
+            this.baseEndIndex + diffIndex > this.data.length - 1 ? this.data.length - 1 : this.baseEndIndex + diffIndex;
         }
 
         if (diff < 0 && this.baseStartIndex - diffIndex >= 0) {
-          this.startIndex =
-            this.baseStartIndex - diffIndex < 0
-              ? 0
-              : this.baseStartIndex - diffIndex;
+          this.startIndex = this.baseStartIndex - diffIndex < 0 ? 0 : this.baseStartIndex - diffIndex;
           this.endIndex = this.baseEndIndex - diffIndex;
         }
       }
@@ -544,17 +458,13 @@ export default {
     },
   },
 
-  created() {
-    this.startIndex = 0;
-    this.endIndex = this.data.length - 1;
+  async mounted() {
+    this.data = await getHistoricalData({ symbol: this.symbol, from: '2021-04-04', to: '2021-06-04', period: 'd' });
     this.data.reverse();
+    this.endIndex = this.data.length - 1;
+    this.startIndex = 0;
 
-    console.log(this.data);
-  },
-
-  mounted() {
     this.ctx = this.$refs.graph.getContext('2d');
-
     this.baseStartIndex = 0;
     this.baseEndIndex = this.data.length - 1;
 
