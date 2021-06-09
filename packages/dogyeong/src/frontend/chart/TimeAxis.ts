@@ -1,5 +1,6 @@
 import { drawHelper } from '@/chart/utils';
 import { Candle } from '@/chart/CandleChart';
+import PubSub from '@/chart/PubSub';
 
 export interface AxisColorOptions {
   bgColor: string;
@@ -13,7 +14,12 @@ interface TimeAxisProps {
 
 interface DrawTimeProps {
   ctx: CanvasRenderingContext2D;
-  candle: Candle;
+  timeLine: TimeLine;
+}
+
+interface TimeLine {
+  x: number;
+  text: string;
 }
 
 const timeUnit = {
@@ -24,7 +30,7 @@ const timeUnit = {
 
 type TimeUnit = typeof timeUnit[keyof typeof timeUnit];
 
-export default class TimeAxis {
+export default class TimeAxis extends PubSub {
   private readonly canvas: HTMLCanvasElement;
   private width: number;
   private height: number;
@@ -35,8 +41,10 @@ export default class TimeAxis {
   private readonly font = '12px sans-serif';
   private readonly textBaseline = 'middle';
   private readonly textAlign = 'center';
+  private timeLines: TimeLine[];
 
   constructor({ canvas, colorOptions }: TimeAxisProps) {
+    super();
     this.canvas = canvas;
     this.width = this.canvas.width;
     this.height = this.canvas.height;
@@ -48,6 +56,8 @@ export default class TimeAxis {
   }
 
   public draw(candles, firstCandleIndex, lastCandleIndex) {
+    if (firstCandleIndex < 0 || lastCandleIndex < 0) return;
+
     this.minTime = new Date(candles[firstCandleIndex].date).getTime();
     this.maxTime = new Date(candles[lastCandleIndex].date).getTime();
     this.timeGapUnit = this.getTimeGapUnit();
@@ -58,10 +68,18 @@ export default class TimeAxis {
 
     const visibleCandles = candles.slice(firstCandleIndex, lastCandleIndex + 1);
 
-    visibleCandles.forEach((candle) => this.drawTime({ ctx, candle }));
+    this.timeLines = visibleCandles.reduce((res, candle) => {
+      const timeLine = this.getTimeLine(candle);
+      if (timeLine) res.push(timeLine);
+      return res;
+    }, []);
+
+    this.timeLines.forEach((timeLine) => this.drawTime({ ctx, timeLine }));
+
+    this.publish(this.timeLines);
   }
 
-  private drawTime({ ctx, candle }: DrawTimeProps) {
+  private getTimeLine(candle: Candle) {
     const date = new Date(candle.date);
     const m = date.getMonth() + 1;
     const d = date.getDate();
@@ -72,6 +90,13 @@ export default class TimeAxis {
     if (this.timeGapUnit === month && d !== 1) return;
     if (![1, 10, 20].includes(d)) return;
 
+    return {
+      x: candle.wickCenter,
+      text: date.toLocaleDateString(),
+    };
+  }
+
+  private drawTime({ ctx, timeLine: { x, text } }: DrawTimeProps) {
     drawHelper(ctx, () => {
       ctx.strokeStyle = this.colorOptions.textColor;
       ctx.fillStyle = this.colorOptions.textColor;
@@ -79,10 +104,10 @@ export default class TimeAxis {
       ctx.textBaseline = this.textBaseline;
       ctx.textAlign = this.textAlign;
       ctx.beginPath();
-      ctx.moveTo(candle.wickCenter, 0);
-      ctx.lineTo(candle.wickCenter, 20);
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x, 20);
       ctx.stroke();
-      ctx.fillText(date.toLocaleDateString(), candle.wickCenter, 35);
+      ctx.fillText(text, x, 35);
     });
   }
 

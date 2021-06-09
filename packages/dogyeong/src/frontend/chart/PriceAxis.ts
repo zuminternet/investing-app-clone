@@ -1,30 +1,31 @@
 import { crispPixel, drawHelper } from '@/chart/utils';
 import { AxisColorOptions } from '@/chart/TimeAxis';
+import PubSub from '@/chart/PubSub';
+
+interface PriceLine {
+  y: number;
+  text: string;
+}
 
 interface PriceAxisProps {
   canvas: HTMLCanvasElement;
   colorOptions: AxisColorOptions;
 }
 
-interface DrawPriceProps {
-  ctx: CanvasRenderingContext2D;
-  price: number;
-  minPrice: number;
-  maxPrice: number;
-}
-
-export default class PriceAxis {
+export default class PriceAxis extends PubSub {
   private readonly canvas: HTMLCanvasElement;
   private width: number;
   private height: number;
   private minPrice: number;
   private maxPrice: number;
   private innerPrices: number[];
+  private priceLines: PriceLine[] = [];
   private colorOptions: AxisColorOptions;
   private readonly font = '12px sans-serif';
   private readonly textBaseline = 'middle';
 
   constructor({ canvas, colorOptions }: PriceAxisProps) {
+    super();
     this.canvas = canvas;
     this.width = this.canvas.width;
     this.height = this.canvas.height;
@@ -37,8 +38,9 @@ export default class PriceAxis {
     const ctx = this.getCtx();
 
     this.drawBackground(ctx);
-
-    this.innerPrices.forEach((price) => this.drawPrice({ ctx, price, minPrice, maxPrice }));
+    this.getPriceLines();
+    this.drawPrices();
+    this.publish(this.priceLines);
   }
 
   private getCtx() {
@@ -84,20 +86,29 @@ export default class PriceAxis {
     });
   }
 
-  private drawPrice({ ctx, price, minPrice, maxPrice }: DrawPriceProps) {
-    const priceY = Math.round(((price - minPrice) / (maxPrice - minPrice)) * this.height);
-    const lineY = crispPixel(this.height - priceY);
+  private getPriceLines() {
+    this.priceLines = this.innerPrices.map((price) => {
+      const priceY = Math.round(((price - this.minPrice) / (this.maxPrice - this.minPrice)) * this.height);
+      const lineY = crispPixel(this.height - priceY);
+      return { y: lineY, text: price.toString() };
+    });
+  }
 
-    drawHelper(ctx, () => {
-      ctx.strokeStyle = this.colorOptions.textColor;
-      ctx.fillStyle = this.colorOptions.textColor;
-      ctx.font = this.font;
-      ctx.textBaseline = this.textBaseline;
-      ctx.beginPath();
-      ctx.moveTo(0, lineY);
-      ctx.lineTo(10, lineY);
-      ctx.stroke();
-      ctx.fillText(`${price}`, 14, lineY);
+  private drawPrices() {
+    const ctx = this.getCtx();
+
+    this.priceLines.forEach(({ y, text }) => {
+      drawHelper(ctx, () => {
+        ctx.strokeStyle = this.colorOptions.textColor;
+        ctx.fillStyle = this.colorOptions.textColor;
+        ctx.font = this.font;
+        ctx.textBaseline = this.textBaseline;
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(10, y);
+        ctx.stroke();
+        ctx.fillText(`${text}`, 14, y);
+      });
     });
   }
 }

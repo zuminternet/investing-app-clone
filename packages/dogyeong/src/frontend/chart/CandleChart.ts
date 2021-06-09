@@ -3,8 +3,9 @@ import PriceAxis from '@/chart/PriceAxis';
 import TimeAxis, { AxisColorOptions } from '@/chart/TimeAxis';
 import { createCanvas, crispPixel } from '@/chart/utils';
 import { CandleChartData } from '../../backend/service/MarketService';
+import Line, { LineColorOptions } from '@/chart/Line';
 
-export interface CandleChartColorOptions extends GraphColorOptions, AxisColorOptions {}
+export interface CandleChartColorOptions extends GraphColorOptions, AxisColorOptions, LineColorOptions {}
 
 export interface Candle {
   date: string;
@@ -33,6 +34,7 @@ const defaultColors: CandleChartColorOptions = {
   textColor: '#efefef',
   lineStrokeColor: '#26a69a',
   lineFillColor: '#3b5351',
+  graphLineColor: '#333',
 };
 
 export default class CandleChart {
@@ -45,6 +47,7 @@ export default class CandleChart {
   private graph: Graph;
   private priceAxis: PriceAxis;
   private timeAxis: TimeAxis;
+  private line: Line;
 
   constructor({ $container, colorOptions = defaultColors }: CandleChartProps) {
     this.$container = $container;
@@ -58,11 +61,16 @@ export default class CandleChart {
 
     $container.appendChild($table);
 
-    this.graph = new Graph({ canvas: createCanvas($graphContainer), colorOptions });
+    const graphCanvas = createCanvas($graphContainer);
+
+    this.graph = new Graph({ canvas: graphCanvas, colorOptions });
     this.priceAxis = new PriceAxis({ canvas: createCanvas($priceAxisContainer), colorOptions });
     this.timeAxis = new TimeAxis({ canvas: createCanvas($timeAxisContainer), colorOptions });
+    this.line = new Line(graphCanvas, colorOptions);
 
     this.graph.subscribe(this.draw.bind(this));
+    this.timeAxis.subscribe(this.line.drawLines.bind(this.line));
+    this.priceAxis.subscribe(this.line.drawLines.bind(this.line));
   }
 
   private createTable({ bgColor }: CandleChartColorOptions) {
@@ -73,10 +81,10 @@ export default class CandleChart {
     $table.style.backgroundColor = bgColor;
     $table.innerHTML = `
       <tr>
-        <td></td><td style="width: 100px;"></td>
+        <td></td><td style="width: 88px;"></td>
       </tr>
       <tr style="height: 60px;">
-        <td></td><td style="width: 100px;"></td>
+        <td></td><td style="width: 88px;"></td>
       </tr>
     `;
 
@@ -170,13 +178,14 @@ export default class CandleChart {
   private draw() {
     this.calculateScale();
     this.calculateCoordinates();
-    this.graph.draw(this.candles);
-    this.priceAxis.draw(this.minPrice, this.maxPrice);
+    this.graph.clearBg();
     this.timeAxis.draw(this.candles, this.firstCandleIndex, this.lastCandleIndex);
+    this.priceAxis.draw(this.minPrice, this.maxPrice);
+    this.graph.draw(this.candles);
   }
 
   public toggleGraphType() {
     this.graph.toggleGraphType();
-    this.graph.draw(this.candles);
+    this.draw();
   }
 }

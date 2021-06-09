@@ -21,10 +21,10 @@
           <button @click="changeChartPeriod('1y')">1년</button>
           <button @click="changeChartPeriod('5y')">5년</button>
           <button @click="changeChartPeriod('max')">최대</button>
-          <button @click="toggleGraphType" class="chart-btn">&#128480;</button>
+          <button class="chart-btn" @click="toggleGraphType">&#128480;</button>
         </div>
       </section>
-      <section class="summary-section" v-if="summaryDetail">
+      <section v-if="summaryDetail" class="summary-section">
         <h2>개요</h2>
         <table>
           <tbody>
@@ -63,8 +63,8 @@
           </tbody>
         </table>
       </section>
-      <ArticleTemplate sectionTitle="뉴스" :articles="news" url-prefix="/news/new" />
-      <ArticleTemplate sectionTitle="의견" :articles="opinions" url-prefix="/news/new" />
+      <ArticleTemplate section-title="뉴스" :articles="news" url-prefix="/news/new" />
+      <ArticleTemplate section-title="의견" :articles="opinions" url-prefix="/news/new" />
     </main>
     <BottomNav></BottomNav>
   </Layout>
@@ -88,6 +88,7 @@ const chartLightThemeOption = {
   textColor: 'black',
   lineFillColor: '#f0f4ff',
   lineStrokeColor: '#84bbf3',
+  graphLineColor: '#eee',
 };
 
 export default Vue.extend({

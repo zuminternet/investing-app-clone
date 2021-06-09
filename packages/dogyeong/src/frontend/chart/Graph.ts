@@ -1,5 +1,6 @@
 import { drawHelper } from '@/chart/utils';
 import { Candle } from '@/chart/CandleChart';
+import PubSub from '@/chart/PubSub';
 
 export interface GraphColorOptions {
   bgColor: string;
@@ -14,7 +15,7 @@ export enum GraphType {
   candle,
 }
 
-export default class Graph {
+export default class Graph extends PubSub {
   private readonly canvas: HTMLCanvasElement;
   public width: number;
   public height: number;
@@ -22,10 +23,10 @@ export default class Graph {
   public rightOffset: number;
   public barWidth: number;
   private colorOptions: GraphColorOptions;
-  private listeners: any[];
   private graphType: GraphType = GraphType.candle;
 
   constructor({ canvas, colorOptions }) {
+    super();
     this.canvas = canvas;
     this.width = this.canvas.width;
     this.height = this.canvas.height;
@@ -86,14 +87,6 @@ export default class Graph {
     this.graphType = this.graphType === GraphType.candle ? GraphType.line : GraphType.candle;
   }
 
-  public subscribe(listener) {
-    this.listeners.push(listener);
-  }
-
-  private publish() {
-    this.listeners.forEach((listener) => listener());
-  }
-
   private zoom(amount: number, mouseOffsetX: number) {
     const scrollOffset = -(this.rightOffset - this.width + mouseOffsetX); // 마우스와 rightOffset간의 거리
     this.verticalScroll(scrollOffset * 0.01 * (amount > 0 ? 1 : -1));
@@ -118,13 +111,17 @@ export default class Graph {
     return this.getCandleBodyLeft(index) + this.barWidth - 1;
   }
 
-  public draw(candles: Candle[]) {
+  public clearBg() {
     const ctx = this.getCtx();
 
     drawHelper(ctx, () => {
       ctx.fillStyle = this.colorOptions.bgColor;
       ctx.fillRect(0, 0, this.width, this.height);
     });
+  }
+
+  public draw(candles: Candle[]) {
+    const ctx = this.getCtx();
 
     if (this.graphType === GraphType.candle) {
       candles.forEach((candle) => {
