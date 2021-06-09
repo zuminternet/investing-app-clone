@@ -6,6 +6,7 @@ export default [
     path: paths.MarketsRouter,
     name: views.Markets,
     component: () => import('@/views/Markets.vue'),
+    props: ({ params: { type, ticker } }) => ({ type, ticker }),
   },
   {
     path: paths.User,
@@ -16,6 +17,7 @@ export default [
     path: paths.News,
     name: views.News,
     component: () => import('@/views/News.vue'),
+    props: ({ params: { ticker } }) => ({ ticker }),
   },
   {
     path: paths.Home,
