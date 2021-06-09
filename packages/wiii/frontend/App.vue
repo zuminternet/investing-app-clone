@@ -9,9 +9,10 @@
 import { createNamespacedHelpers } from 'vuex';
 import ThemeToggleButton from '@/components/molecules/ThemeToggleButton';
 import '@/styles/index.scss';
+import { StoreNames } from '@/store';
 import { ThemeMapper } from './store/modules/theme';
 
-const { mapGetters } = createNamespacedHelpers('Theme');
+const { mapGetters } = createNamespacedHelpers(StoreNames.Theme);
 
 export default {
   name: 'App',

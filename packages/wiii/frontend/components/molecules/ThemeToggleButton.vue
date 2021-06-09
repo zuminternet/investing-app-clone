@@ -4,11 +4,12 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import {createNamespacedHelpers} from 'vuex'
+import { createNamespacedHelpers } from 'vuex';
 import Button from '@/components/atoms/Button';
 
+import { StoreNames } from '@/store';
 import { ThemeMapper, ThemeName } from '@/store/modules/theme';
-const { mapGetters, mapActions } = createNamespacedHelpers('Theme')
+const { mapGetters, mapActions } = createNamespacedHelpers(StoreNames.Theme);
 
 export default Vue.extend({
   name: 'ThemeToggleButton',
@@ -17,7 +18,7 @@ export default Vue.extend({
 
   computed: {
     ...mapGetters({
-      curTheme: ThemeMapper.GET_THEME
+      curTheme: ThemeMapper.GET_THEME,
     }),
 
     isDark() {
@@ -35,8 +36,8 @@ export default Vue.extend({
 
   methods: {
     ...mapActions({
-      themeToggler: ThemeMapper.TOGGLE_THEME
-    })
+      themeToggler: ThemeMapper.TOGGLE_THEME,
+    }),
   },
 });
 </script>
