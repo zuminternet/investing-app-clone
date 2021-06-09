@@ -4,3 +4,6 @@ curl -d "email=test@2.com&password=my" 127.0.0.1:8080/auth/in
 
 # 성공
 curl -d "email=test@2.com&password=mysfdsdfs" 127.0.0.1:8080/auth/in
+
+# 로그아웃; GET, token cookie 필요
+curl -X GET "http://127.0.0.1:8080/auth/out?email=test@2.com"
