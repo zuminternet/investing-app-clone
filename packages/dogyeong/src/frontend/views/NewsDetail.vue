@@ -12,20 +12,20 @@
       </HeaderTitle>
     </Header>
     <main v-if="isLoading">
-      <div class="message">loading...</div>
+      <div :class="$style.message">loading...</div>
     </main>
     <main v-else-if="isError">
-      <div class="message">Error!</div>
+      <div :class="$style.message">Error!</div>
     </main>
     <main v-else>
-      <section class="article-header">
-        <h3 class="article-title">{{ article.title }}</h3>
-        <p class="article-info">{{ article.source }} | {{ article.date | formatDate }}</p>
-      </section>
-      <section class="article-main">
-        <img class="article-img" :src="article.image_url" />
-        <p class="article-text">{{ article.text }}</p>
-      </section>
+      <ArticleDetailSection>
+        <ArticleDetailTitle>{{ article.title }}</ArticleDetailTitle>
+        <ArticleDetailSubInfo :class="$style.sub">{{ article.source }} | {{ article.date | formatDate }}</ArticleDetailSubInfo>
+      </ArticleDetailSection>
+      <ArticleDetailSection>
+        <ArticleDetailBodyImage :src="article.image_url" />
+        <ArticleDetailBodyText>{{ article.text }}</ArticleDetailBodyText>
+      </ArticleDetailSection>
     </main>
     <BottomNav></BottomNav>
   </Layout>
@@ -38,6 +38,13 @@ import { Header, HeaderTitle, HeaderButton } from '@/components/Header';
 import Layout from '@/components/Layout/Layout.vue';
 import { getArticle } from '@/services/articleService';
 import { fromNow } from 'common/frontend/utils';
+import {
+  ArticleDetailSection,
+  ArticleDetailTitle,
+  ArticleDetailSubInfo,
+  ArticleDetailBodyText,
+  ArticleDetailBodyImage,
+} from 'common/frontend/components/ArticleDetail';
 
 export default Vue.extend({
   name: 'NewsDetail',
@@ -48,6 +55,11 @@ export default Vue.extend({
     HeaderTitle,
     Layout,
     HeaderButton,
+    ArticleDetailSection,
+    ArticleDetailTitle,
+    ArticleDetailSubInfo,
+    ArticleDetailBodyText,
+    ArticleDetailBodyImage,
   },
 
   filters: {
@@ -93,35 +105,13 @@ export default Vue.extend({
 });
 </script>
 
-<style lang="scss" scoped>
-main {
-  .article-header {
-    padding: 12px;
+<style lang="scss" module>
+.sub {
+  border-color: var(--border-color);
+}
 
-    .article-title {
-      margin-bottom: 12px;
-    }
-    .article-info {
-      border-bottom: 1px solid var(--border-color);
-      padding-bottom: 8px;
-      word-break: keep-all;
-    }
-  }
-
-  .article-main {
-    padding: 12px;
-
-    .article-img {
-      width: 100%;
-    }
-    .article-text {
-      padding: 20px 0;
-    }
-  }
-
-  .message {
-    padding: 12px;
-    font-size: 18px;
-  }
+.message {
+  padding: 12px;
+  font-size: 18px;
 }
 </style>
