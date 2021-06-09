@@ -1,7 +1,8 @@
-import { VuexModule, Module, Mutation, Action, getModule } from 'vuex-module-decorators';
-import store from '@/store';
+import { Module } from 'vuex';
+import { RootState } from '@/store';
 
 export interface ThemeState {
+  isDark: boolean;
   curTheme: string;
 }
 
@@ -10,32 +11,42 @@ export enum ThemeName {
   dark = 'dark',
 }
 
-/**
- * Theme Module
- * - 테마 상태 localstorage에 저장, 나중에 접속 시에도 활용 가능하도록
- * - 앱실행과 동시에 적용하기 위해 dynamic 지정하지 않음
- */
-@Module({ namespaced: true, name: 'theme', store, preserveState: localStorage.getItem('theme') !== null })
-export default class Theme extends VuexModule implements ThemeState {
-  private isDark = false;
-  curTheme: string = ThemeName.zum;
-
-  getCurTheme() {
-    return this.curTheme;
-  }
-
-  get theme() {
-    return this.curTheme;
-  }
-
-  @Mutation
-  private TOGGLETHEME() {
-    this.isDark = !this.isDark;
-    this.curTheme = this.isDark ? ThemeName.dark : ThemeName.zum;
-  }
-
-  @Action
-  public toggleTheme() {
-    this.TOGGLETHEME();
-  }
+export const enum ThemeMapper {
+  GET_THEME = 'GET_THEME',
+  TOGGLE_THEME = 'TOGGLE_THEME',
 }
+
+/**
+ *
+ * vuex-module-decorators가 제대로 작동하지 않는 문제로 Vuex 원래 코드로 변경
+ */
+
+const Theme = {
+  namespaced: true,
+
+  state: {
+    isDark: false,
+    curTheme: ThemeName.zum,
+  },
+
+  getters: {
+    [ThemeMapper.GET_THEME](state) {
+      return state.curTheme;
+    },
+  },
+
+  mutations: {
+    toggleTheme(state) {
+      state.isDark = !state.isDark;
+      state.curTheme = state.isDark ? ThemeName.dark : ThemeName.zum;
+    },
+  },
+
+  actions: {
+    [ThemeMapper.TOGGLE_THEME]({ commit }) {
+      commit('toggleTheme');
+    },
+  },
+} as Module<ThemeState, RootState>;
+
+export default Theme;

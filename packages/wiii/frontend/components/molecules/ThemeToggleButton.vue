@@ -4,9 +4,11 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import {createNamespacedHelpers} from 'vuex'
 import Button from '@/components/atoms/Button';
-import { ThemeModule } from '@/store';
-import { ThemeName } from '@/store/modules/theme';
+
+import { ThemeMapper, ThemeName } from '@/store/modules/theme';
+const { mapGetters, mapActions } = createNamespacedHelpers('Theme')
 
 export default Vue.extend({
   name: 'ThemeToggleButton',
@@ -14,8 +16,12 @@ export default Vue.extend({
   components: { Button },
 
   computed: {
+    ...mapGetters({
+      curTheme: ThemeMapper.GET_THEME
+    }),
+
     isDark() {
-      return ThemeModule.theme === ThemeName.dark;
+      return this.curTheme === ThemeName.dark;
     },
 
     buttonTitle() {
@@ -28,9 +34,9 @@ export default Vue.extend({
   },
 
   methods: {
-    themeToggler() {
-      return ThemeModule.toggleTheme();
-    },
+    ...mapActions({
+      themeToggler: ThemeMapper.TOGGLE_THEME
+    })
   },
 });
 </script>

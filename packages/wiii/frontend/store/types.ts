@@ -1,3 +1,7 @@
+export interface RootState {
+  //
+}
+
 export enum actionTypes {
   setCurrentView = 'setCurrentView',
 }

@@ -6,9 +6,12 @@
 </template>
 
 <script>
-import { ThemeModule } from '@/store/';
+import { createNamespacedHelpers } from 'vuex';
 import ThemeToggleButton from '@/components/molecules/ThemeToggleButton';
 import '@/styles/index.scss';
+import { ThemeMapper } from './store/modules/theme';
+
+const { mapGetters } = createNamespacedHelpers('Theme');
 
 export default {
   name: 'App',
@@ -16,9 +19,9 @@ export default {
   components: { ThemeToggleButton },
 
   computed: {
-    theme() {
-      return ThemeModule.theme;
-    },
+    ...mapGetters({
+      theme: ThemeMapper.GET_THEME,
+    }),
   },
 };
 </script>

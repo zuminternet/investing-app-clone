@@ -1,7 +1,13 @@
+import { Module } from 'vuex';
 import { AxiosStatic } from 'axios';
+import { RootState } from '@/store';
 import { range } from '../../../domain/utilFunc';
 
 declare const Axios: AxiosStatic;
+
+interface ReplyState {
+  //
+}
 
 const state = () => {
   //
@@ -78,6 +84,6 @@ const Reply = {
   getters,
   mutations,
   actions,
-};
+} as Module<ReplyState, RootState>;
 
 export default Reply;
