@@ -1,6 +1,6 @@
 export interface RootState {
   ticker: string;
-  //
+  auth: boolean;
 }
 
 export enum RootActions {
@@ -10,6 +10,7 @@ export enum RootActions {
 export enum StoreNames {
   Theme = 'Theme',
   Reply = 'Reply',
+  Auth = 'Auth',
   User = 'User',
 }
 

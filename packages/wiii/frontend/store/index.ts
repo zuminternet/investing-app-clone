@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Vuex, { Store } from 'vuex';
 
 import Theme from '@/store/modules/theme';
+import Auth from '@/store/modules/auth';
 import Reply from '@/store/modules/reply';
 import { RootActions } from '@/store/types';
 export * from '@/store/types';
@@ -11,10 +12,12 @@ Vue.use(Vuex);
 const store = new Store({
   state: {
     ticker: undefined,
+    auth: false,
   },
 
   getters: {
     getTicker: (state) => state.ticker,
+    getAuth: (state) => state.auth,
   },
 
   mutations: {
@@ -31,6 +34,7 @@ const store = new Store({
 
   modules: {
     Theme,
+    Auth,
     Reply,
   },
 });
