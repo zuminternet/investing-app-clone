@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import { Login, Home, Signup } from '../views';
+import { Login, Home, Signup, News } from '../views';
 import ItemDetail from '../../../common/frontend/views/ItemDetail.vue';
 import Search from '../../../common/frontend/views/Search.vue';
 import Bookmark from '../../../common/frontend/views/Bookmark.vue';
@@ -29,6 +29,11 @@ export default () => {
         path: '/market',
         name: 'Market',
         component: Home,
+      },
+      {
+        path: '/news',
+        name: 'News',
+        component: News,
       },
       {
         path: '/item-detail',
