@@ -4,15 +4,6 @@ declare const Axios: AxiosStatic;
 
 const devURL = 'http://localhost:3000';
 
-enum indicesCprytosMap {
-  DOW_JONES_30 = 'TSLA',
-  NASDAQ_100 = 'NVDA',
-  NIKKEI_255 = 'BABA',
-  BIT_COIN = 'NFLX',
-  LITE_COIN = 'BAC',
-  ETHEREUM = 'GOOGL',
-}
-
 export interface getSearchedItemsInfo {
   keyword: string;
   email: string;
@@ -115,7 +106,7 @@ const getItemDetail = async ({ symbols, email }: getItemDetailInfo) => {
   try {
     const result = await Axios.get(`${devURL}/api/item-detail`, {
       params: {
-        symbols: indicesCprytosMap[symbols] ? indicesCprytosMap[symbols] : symbols,
+        symbols,
         email,
       },
     });
