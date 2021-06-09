@@ -13,6 +13,7 @@
     </Header>
     <main>
       <section class="chart-section">
+        <LoadingSpinner v-if="isChartLoading" />
         <div ref="chartContainer" class="chart-container"></div>
         <div class="button-container">
           <button @click="changeChartPeriod('1d')">1일</button>
@@ -21,10 +22,10 @@
           <button @click="changeChartPeriod('1y')">1년</button>
           <button @click="changeChartPeriod('5y')">5년</button>
           <button @click="changeChartPeriod('max')">최대</button>
-          <button @click="toggleGraphType" class="chart-btn">&#128480;</button>
+          <button class="chart-btn" @click="toggleGraphType">&#128480;</button>
         </div>
       </section>
-      <section class="summary-section" v-if="summaryDetail">
+      <section v-if="summaryDetail" class="summary-section">
         <h2>개요</h2>
         <table>
           <tbody>
@@ -80,6 +81,7 @@ import BottomNav from '@/components/BottomNav/BottomNav.vue';
 import { createChart } from '@/chart';
 // import ReplySection from 'common/frontend/components/ReplySection/index.vue';
 import ArticleTemplate from '@/components/ArticleTemplate/ArticleTemplate.vue';
+import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner.vue';
 
 const chartLightThemeOption = {
   bgColor: '#fafffa',
@@ -101,6 +103,7 @@ export default Vue.extend({
     HeaderButton,
     ArticleTemplate,
     // ReplySection,
+    LoadingSpinner,
   },
 
   data() {
@@ -112,6 +115,7 @@ export default Vue.extend({
       news: null,
       opinions: null,
       symbol: '',
+      isChartLoading: true,
     };
   },
 
@@ -133,6 +137,7 @@ export default Vue.extend({
       .then((chart) => {
         this.chartData = chart.data;
         this.name = chart.display_name;
+        this.isChartLoading = false;
       })
       .catch(console.error);
 
@@ -157,8 +162,12 @@ export default Vue.extend({
       this.$router.back();
     },
     changeChartPeriod(period) {
+      this.isChartLoading = true;
       getChart({ symbol: this.symbol, period })
-        .then((chart) => (this.chartData = chart.data))
+        .then((chart) => {
+          this.chartData = chart.data;
+          this.isChartLoading = false;
+        })
         .catch(console.error);
     },
     toggleGraphType() {
@@ -171,6 +180,7 @@ export default Vue.extend({
 <style lang="scss">
 .chart-section {
   margin-bottom: 60px;
+  position: relative;
 
   .chart-container {
     margin-bottom: 12px;
