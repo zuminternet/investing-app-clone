@@ -114,7 +114,8 @@ export default {
     },
 
     currentValue() {
-      if (this.endIndex !== null) {
+      if (this.endIndex !== null && this.endIndex < this.data.length) {
+        // console.log(this.data[this.endIndex].close);
         return this.data[this.endIndex].close;
       }
 
@@ -430,6 +431,14 @@ export default {
     handleChartMenuButtonClick(event) {
       const { value } = event.target;
 
+      if (value === 'D') {
+        this.period = 'd';
+      }
+
+      if (value === 'W') {
+        this.period = 'w';
+      }
+
       if (value === 'Linear') {
         this.isCandle = false;
       }
@@ -439,7 +448,7 @@ export default {
       }
     },
 
-    redrawForWatch() {
+    redrawChart() {
       this.unitHeight = null;
       this.timeData = [];
       this.valueData = [];
@@ -461,24 +470,30 @@ export default {
       const today = new Date();
       let from = null;
       let to = null;
+      let diff;
 
       if (period === 'd') {
-        const thirtyDay = 5184000000;
-        const fromDay = new Date();
-        fromDay.setTime(today.getTime() - thirtyDay);
-        from = `${fromDay.getFullYear()}`;
-
-        from += fromDay.getMonth() + 1 >= 10 ? `-${fromDay.getMonth() + 1}` : `-0${fromDay.getMonth() + 1}`;
-        from += fromDay.getDate() >= 10 ? `-${fromDay.getDate()}` : `-0${fromDay.getDate()}`;
-
-        to = `${today.getFullYear()}`;
-
-        to += today.getMonth() + 1 >= 10 ? `-${today.getMonth() + 1}` : `-0${today.getMonth() + 1}`;
-        to += today.getDate() >= 10 ? `-${today.getDate()}` : `-0${today.getDate()}`;
-
-        console.log(from);
-        console.log(to);
+        diff = 5184000000;
       }
+
+      if (period === 'w') {
+        diff = 15552000000;
+      }
+
+      const fromDay = new Date();
+      fromDay.setTime(today.getTime() - diff);
+      from = `${fromDay.getFullYear()}`;
+
+      from += fromDay.getMonth() + 1 >= 10 ? `-${fromDay.getMonth() + 1}` : `-0${fromDay.getMonth() + 1}`;
+      from += fromDay.getDate() >= 10 ? `-${fromDay.getDate()}` : `-0${fromDay.getDate()}`;
+
+      to = `${today.getFullYear()}`;
+
+      to += today.getMonth() + 1 >= 10 ? `-${today.getMonth() + 1}` : `-0${today.getMonth() + 1}`;
+      to += today.getDate() >= 10 ? `-${today.getDate()}` : `-0${today.getDate()}`;
+
+      console.log(from);
+      console.log(to);
 
       return { from, to };
     },
@@ -513,15 +528,23 @@ export default {
 
   watch: {
     startIndex() {
-      this.redrawForWatch();
+      this.redrawChart();
     },
 
     isCandle() {
-      this.redrawForWatch();
+      this.redrawChart();
     },
 
     selectedIndex() {
-      this.redrawForWatch();
+      this.redrawChart();
+    },
+
+    async period() {
+      await this.getHistoricalDataForPeriod(this.period);
+      this.endIndex = this.data.length - 1;
+      this.startIndex = 0;
+
+      this.redrawChart();
     },
   },
 };

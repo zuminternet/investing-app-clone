@@ -1,47 +1,21 @@
 <template>
   <div class="chart-menu" :style="style">
-    <button
-      class="chart-menu-button"
-      @click="$emit('handle-chart-menu-button-click', $event)"
-      value="1D"
-    >
-      1D
+    <button class="chart-menu-button" @click="$emit('handle-chart-menu-button-click', $event)" value="D">
+      D
     </button>
-    <button
-      class="chart-menu-button"
-      @click="$emit('handle-chart-menu-button-click', $event)"
-      value="1W"
-    >
-      1W
+    <button class="chart-menu-button" @click="$emit('handle-chart-menu-button-click', $event)" value="W">
+      W
     </button>
-    <button
-      class="chart-menu-button"
-      @click="$emit('handle-chart-menu-button-click', $event)"
-      value="1M"
-    >
-      1M
+    <button class="chart-menu-button" @click="$emit('handle-chart-menu-button-click', $event)" value="M">
+      M
     </button>
-    <button
-      class="chart-menu-button"
-      @click="$emit('handle-chart-menu-button-click', $event)"
-      value="1Y"
-    >
-      1Y
+    <button class="chart-menu-button" @click="$emit('handle-chart-menu-button-click', $event)" value="Y">
+      Y
     </button>
-    <button
-      v-if="isCandle"
-      class="chart-menu-button"
-      @click="$emit('handle-chart-menu-button-click', $event)"
-      value="Linear"
-    >
+    <button v-if="isCandle" class="chart-menu-button" @click="$emit('handle-chart-menu-button-click', $event)" value="Linear">
       Linear
     </button>
-    <button
-      v-if="!isCandle"
-      class="chart-menu-button"
-      @click="$emit('handle-chart-menu-button-click', $event)"
-      value="Candle"
-    >
+    <button v-if="!isCandle" class="chart-menu-button" @click="$emit('handle-chart-menu-button-click', $event)" value="Candle">
       Candle
     </button>
   </div>
