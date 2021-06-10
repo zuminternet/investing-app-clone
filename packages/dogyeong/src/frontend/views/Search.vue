@@ -5,21 +5,42 @@
       <input v-model="keyword" type="text" autofocus placeholder="종목 검색" @keypress.enter="requestSearch" />
       <button :class="$style['search-button']" @click="requestSearch">Search</button>
     </header>
-    <main>
+    <main :class="$style.main">
+      <LoadingSpinner v-if="isLoading" />
       <custom-swiper :navigator-button-names="swiperNavigatorButtonNames" :class="$style.swiper">
         <swiper-slide>
           <ul>
-            <li v-for="{ name, symbol, category } in searchedItems" :key="symbol" :class="$style['search-item']">
-              <span :class="$style['item-title']">{{ name }}</span>
-              <span>{{ symbol }} | {{ category }}</span>
+            <li v-for="{ name, symbol, category, isBookmarked } in items" :key="symbol" :class="$style['search-item']">
+              <div>
+                <span :class="$style['item-title']">{{ name }}</span>
+                <span>{{ symbol }} | {{ category }}</span>
+              </div>
+              <div>
+                <button
+                  v-if="isBookmarked"
+                  :class="$style['bookmark-button']"
+                  type="button"
+                  @click="onRemoveBookmark({ symbol, name })"
+                >
+                  &#9733;
+                </button>
+                <button
+                  v-else
+                  :class="$style['bookmark-button']"
+                  type="button"
+                  @click="onAddBookmark({ symbol, name, category })"
+                >
+                  &#9734;
+                </button>
+              </div>
             </li>
           </ul>
         </swiper-slide>
         <swiper-slide>
-          <ArticleTemplate :articles="searchedNews" url-prefix="news/new" />
+          <ArticleTemplate :articles="news" url-prefix="news/new" />
         </swiper-slide>
         <swiper-slide>
-          <ArticleTemplate :articles="searchedAnalyses" url-prefix="news/new" />
+          <ArticleTemplate :articles="opinions" url-prefix="news/new" />
         </swiper-slide>
       </custom-swiper>
     </main>
@@ -30,12 +51,14 @@
 <script lang="ts">
 import Vue from 'vue';
 import { SwiperSlide } from 'vue-awesome-swiper';
-import { mapState, mapActions } from 'vuex';
 import CustomSwiper from 'common/frontend/components/CustomSwiper.vue';
 import Layout from '@/components/Layout/Layout.vue';
 import BottomNav from '@/components/BottomNav/BottomNav.vue';
 import { HeaderButton } from '@/components/Header';
 import ArticleTemplate from '@/components/ArticleTemplate/ArticleTemplate.vue';
+import { searchItems, searchNews, searchOpinions } from '@/services/searchService';
+import { addBookmark, removeBookmark } from '@/services/bookmarkService';
+import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner.vue';
 
 export default Vue.extend({
   name: 'Search',
@@ -47,39 +70,66 @@ export default Vue.extend({
     BottomNav,
     HeaderButton,
     ArticleTemplate,
+    LoadingSpinner,
   },
 
   data() {
     return {
       swiperNavigatorButtonNames: ['종목', '뉴스', '분석'],
       keyword: '',
+      items: [],
+      news: [],
+      opinions: [],
+      isLoading: false,
     };
   },
 
-  computed: {
-    ...mapState({
-      userInfo: (state) => state.user,
-      searchedItems: ({ search }) => search.searchedItems,
-      searchedNews: ({ search }) => search.searchedNews,
-      searchedAnalyses: ({ search }) => search.searchedAnalyses,
-    }),
-  },
+  computed: {},
 
-  beforeDestroy() {
-    this.clearSearchStore();
-  },
   methods: {
-    ...mapActions('search', ['getSearchedItems', 'getSearchedNews', 'getSearchedAnalyses', 'clearSearchStore']),
+    async requestSearch() {
+      try {
+        if (!this.keyword) return;
 
-    requestSearch() {
-      const email = this.userInfo.userEmail;
+        this.isLoading = true;
 
-      if (!this.keyword) return;
+        const keyword = this.keyword;
+        const itemPromise = searchItems({ keyword });
+        const newsPromise = searchNews({ keyword });
+        const opinionPromise = searchOpinions({ keyword });
 
-      const tickers = [this.keyword];
-      this.getSearchedItems({ keyword: this.keyword, email });
-      this.getSearchedNews({ offset: 0, limit: 10, tickers });
-      this.getSearchedAnalyses({ offset: 0, limit: 10, tickers });
+        this.items = await itemPromise;
+        this.news = await newsPromise;
+        this.opinions = await opinionPromise;
+
+        this.isLoading = false;
+      } catch (e) {
+        console.error(e);
+      }
+    },
+
+    onAddBookmark({ symbol, name, category }) {
+      addBookmark({ symbol, name, category })
+        .then(({ symbol }) => {
+          const item = this.findItemBySymbol(symbol);
+          if (!item) return;
+          item.isBookmarked = true;
+        })
+        .catch(console.error);
+    },
+
+    onRemoveBookmark({ symbol, name }) {
+      removeBookmark({ symbol, name })
+        .then((symbol) => {
+          const item = this.findItemBySymbol(symbol);
+          if (!item) return;
+          item.isBookmarked = false;
+        })
+        .catch(console.error);
+    },
+
+    findItemBySymbol(symbol: string) {
+      return this.items.find((item) => item.symbol === symbol);
     },
 
     back() {
@@ -118,14 +168,26 @@ export default Vue.extend({
   }
 }
 
+.main {
+  position: relative;
+}
+
 .search-item {
   padding: 24px 12px;
   border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
 }
 
 .item-title {
   font-size: 18px;
   display: block;
   margin-bottom: 4px;
+}
+
+.bookmark-button {
+  font-size: 24px;
+  height: 100%;
+  padding: 4px;
 }
 </style>
