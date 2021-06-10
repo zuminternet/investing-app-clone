@@ -1,5 +1,5 @@
 <template>
-  <span>
+  <span :class="{ 'button-active': buttonActive }">
     <slot></slot>
   </span>
 </template>
@@ -7,8 +7,18 @@
 <script>
 export default {
   name: 'CustomText',
-  props: ['fontSize'],
+  props: {
+    buttonActive: {
+      type: Boolean,
+      default: false,
+    },
+  },
 };
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.button-active {
+  color: var(--active-button-color);
+  font-weight: bold;
+}
+</style>
