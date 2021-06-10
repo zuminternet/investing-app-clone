@@ -169,13 +169,12 @@ button {
   button {
     background-color: rgba($shallow-blue, 0.8);
     color: rgba($grey-300, 0.5);
-    font-size: 0.6rem;
 
     &:hover {
       background-color: $deep-dark;
       text-decoration: none;
     }
-    
+
     &:disabled {
       cursor: not-allowed;
     }

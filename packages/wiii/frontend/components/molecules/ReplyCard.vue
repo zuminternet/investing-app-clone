@@ -168,6 +168,7 @@ $maxHeight: 50px;
 
     button {
       width: max-content;
+      font-size: 0.7rem;
     }
 
     .reply-likes {
