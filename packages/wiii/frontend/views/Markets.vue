@@ -5,6 +5,7 @@
       <keep-alive>
         <component :is="type"></component>
       </keep-alive>
+      <Reply />
     </main>
     <Footer />
   </div>
@@ -19,6 +20,7 @@ import Footer from '@/components/organisms/Footer';
 import Indexes from '@/components/templates/Markets/Indexes';
 import Stocks from '@/components/templates/Markets/Stocks';
 import Coins from '@/components/templates/Markets/Coins';
+import Reply from '@/components/organisms/ReplySection.vue';
 import { RootActions } from '@/store';
 
 export default Vue.extend({
@@ -30,6 +32,7 @@ export default Vue.extend({
     Indexes,
     Stocks,
     Coins,
+    Reply,
   },
 
   data() {
