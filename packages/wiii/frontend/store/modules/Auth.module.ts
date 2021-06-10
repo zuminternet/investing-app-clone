@@ -40,6 +40,7 @@ const AuthStore = {
       try {
         const result = await signup(email, password, nickname);
         if (!result) throw Error();
+        return true;
       } catch (e) {
         return console.error(e);
       }

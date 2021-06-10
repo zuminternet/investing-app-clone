@@ -10,7 +10,7 @@ import { createNamespacedHelpers } from 'vuex';
 import ThemeToggleButton from '@/components/molecules/ThemeToggleButton';
 import '@/styles/index.scss';
 import { StoreNames } from '@/store';
-import { ThemeMapper } from './store/modules/theme';
+import { ThemeMapper } from './store/modules/Theme.module';
 
 const { mapGetters } = createNamespacedHelpers(StoreNames.Theme);
 

@@ -8,7 +8,7 @@ import { createNamespacedHelpers } from 'vuex';
 import Button from '@/components/atoms/Button';
 
 import { StoreNames } from '@/store';
-import { ThemeMapper, ThemeName } from '@/store/modules/theme';
+import { ThemeMapper, ThemeName } from '@/store/modules/Theme.module';
 const { mapGetters, mapActions } = createNamespacedHelpers(StoreNames.Theme);
 
 export default Vue.extend({

@@ -1,9 +1,9 @@
 import Vue from 'vue';
 import Vuex, { Store } from 'vuex';
 
-import Theme from '@/store/modules/theme';
-import Auth from '@/store/modules/auth';
-import Reply from '@/store/modules/reply';
+import Theme from '@/store/modules/Theme.module';
+import Auth from '@/store/modules/Auth.module';
+import Reply from '@/store/modules/Reply.module';
 import { RootActions } from '@/store/types';
 export * from '@/store/types';
 
