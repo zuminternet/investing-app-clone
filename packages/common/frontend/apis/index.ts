@@ -86,7 +86,7 @@ const getItemDetail = async ({ symbols, email }: getItemDetailInfo) => {
  * @param param0
  * @returns Promise
  */
-const getNews = async ({ offset, limit, tickers }: getNewsAndAnalysesInfo) => {
+const getNews = async ({ offset = 0, limit = 10, tickers = [] }: getNewsAndAnalysesInfo) => {
   try {
     const result = await Axios.get(`${devURL}/api/articles/news`, {
       params: { offset, limit, tickers },
