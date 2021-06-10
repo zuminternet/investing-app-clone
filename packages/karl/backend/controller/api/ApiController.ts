@@ -276,21 +276,13 @@ export class ApiController {
     try {
       const { offset, limit } = request.query;
       let { tickers } = request.query;
-      let keyword;
-      let news;
+      const [keyword] = tickers;
 
-      if (tickers) {
-        [keyword] = tickers;
-        tickers = tickerKeys.filter((key) => {
-          return key.includes(keyword);
-        });
+      tickers = tickerKeys.filter((key) => {
+        return key.includes(keyword);
+      });
 
-        news = await this.articleService.getNews(+offset, +limit, tickers);
-      }
-
-      if (!tickers) {
-        news = await this.articleService.getNews(+offset, +limit);
-      }
+      const news = await this.articleService.getNews(+offset, +limit, tickers);
 
       if (news) {
         return response.status(200).send(news);
@@ -313,21 +305,13 @@ export class ApiController {
     try {
       const { offset, limit } = request.query;
       let { tickers } = request.query;
-      let keyword;
-      let analyses;
+      const [keyword] = tickers;
 
-      if (tickers) {
-        [keyword] = tickers;
-        tickers = tickerKeys.filter((key) => {
-          return key.includes(keyword);
-        });
+      tickers = tickerKeys.filter((key) => {
+        return key.includes(keyword);
+      });
 
-        analyses = await this.articleService.getOpinions(+offset, +limit, tickers);
-      }
-
-      if (!tickers) {
-        analyses = await this.articleService.getOpinions(+offset, +limit);
-      }
+      const analyses = await this.articleService.getOpinions(+offset, +limit, tickers);
 
       if (analyses) {
         return response.status(200).send(analyses);
