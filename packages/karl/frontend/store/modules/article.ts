@@ -1,4 +1,4 @@
-// import { getIndices, getStocks, getCryptos } from '../../apis';
+import { getNews, getAnalyses } from '../../../../common/frontend/apis';
 
 // 초기 state 값 설정
 const state = () => ({
@@ -27,13 +27,30 @@ const actions = {
   //     console.log(error);
   //   }
   // },
+  async getNews({ commit }) {
+    try {
+      const news = await getNews({});
+
+      console.log(news);
+
+      if (news) {
+        commit('setNews', news);
+
+        return true;
+      }
+
+      throw new Error('Getting news was failed in article store');
+    } catch (error) {
+      console.log(error);
+    }
+  },
 };
 
 // mutatuons 설정
 const mutations = {
-  // setStockItems(state, stocks) {
-  //   state.stockItems = stocks;
-  // },
+  setNews(state, news) {
+    state.news = news;
+  },
 };
 
 export default {
