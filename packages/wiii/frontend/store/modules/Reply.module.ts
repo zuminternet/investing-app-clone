@@ -3,6 +3,7 @@ import { AxiosStatic } from 'axios';
 import { RootState } from '@/store';
 import { range } from '../../../domain/utilFunc';
 import { getRandomText, getRandomUser } from '@/services/reply/random';
+import { getRepls } from '@/services/reply';
 
 declare const Axios: AxiosStatic;
 
@@ -14,32 +15,29 @@ const Reply = {
   getters: {
     //
   },
+
   actions: {
     insertReply: async ({ rootGetters: { getTicker, getAuth, getEmail } }, { contents }) => {
       try {
         if (!getAuth) return;
 
-        const result = await Axios.post(
+        const { data, status, statusText } = await Axios.post(
           `/api/reply/`,
           { docId: getTicker, email: getEmail, contents },
           { withCredentials: true },
         );
-        console.log({ insertResult: result });
+        if (status >= 400) throw Error(statusText);
         return true;
       } catch (e) {
         return console.error(e);
       }
     },
 
-    getReplsByDocID: async ({ rootGetters: { getTicker } }) => {
+    getReplsByDocID: async ({ commit, rootGetters: { getTicker } }) => {
       try {
-        const {
-          data: { results },
-          status,
-          statusText,
-        } = await Axios.get(`/api/reply/${getTicker}`);
-
-        if (status >= 400) throw Error(statusText);
+        const results = await getRepls(getTicker);
+        console.log({ results });
+        if (!results) return;
         return results;
       } catch (e) {
         return console.error(e);
