@@ -192,14 +192,4 @@ const getBookmarks = async (email: string) => {
   }
 };
 
-export {
-  getSearchedAnalyses,
-  getSearchedItems,
-  getItemDetail,
-  getNews,
-  getAnalyses,
-  createBookmark,
-  getBookmarks,
-  deleteBookmark,
-  getSearchedNews,
-};
+export { getSearchedItems, getItemDetail, getNews, getAnalyses, createBookmark, getBookmarks, deleteBookmark };
