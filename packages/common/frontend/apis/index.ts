@@ -178,7 +178,11 @@ const deleteBookmark = async ({ email, symbol, name, category }: deleteBookmarkI
 
 const getBookmarks = async (email: string) => {
   try {
-    const result = await Axios.get(`${devURL}/api/bookmark?email=${email}`);
+    const result = await Axios.get(`${devURL}/api/bookmark`, {
+      params: {
+        email,
+      },
+    });
 
     if (result.status === 200) {
       let { data: bookmarks } = result;

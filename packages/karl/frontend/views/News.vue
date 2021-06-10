@@ -5,6 +5,15 @@
       <swiper-slide>
         <list-wrapper :excludedHeight="150">
           <news-list>
+            <news-headline>
+              <news-image :src="news[0].image_url" />
+              <news-text-box>
+                <news-text-box-title>
+                  {{ news[0].title }}
+                </news-text-box-title>
+                <news-text-box-desc :author="news[0].source" :publishDate="news[0].date"></news-text-box-desc>
+              </news-text-box>
+            </news-headline>
             <news-list-item v-for="element in news" :key="element.id" :to="''">
               <news-image :src="element.image_url" />
               <news-text-box>
