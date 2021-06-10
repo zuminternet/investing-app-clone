@@ -1,3 +1,5 @@
+import { tickerMap } from '../../../../common/domain';
+
 import { getNews, getAnalyses } from '../../../../common/frontend/apis';
 
 // 초기 state 값 설정
@@ -8,25 +10,33 @@ const state = () => ({
 // getter 설정
 
 const getters = {
-  // itemCollections: (state) => {
-  //   return [state.indicesItems, state.stockItems, state.cryptoItems];
-  // },
+  stockNews: (state) => {
+    const stockNews = state.news.filter((element) => {
+      const { tickers } = element;
+
+      return tickers.some((ticker) => {
+        return tickerMap.stock[ticker];
+      });
+    });
+
+    return stockNews;
+  },
+
+  cryptoNews: (state) => {
+    const cryptoNews = state.news.filter((element) => {
+      const { tickers } = element;
+
+      return tickers.some((ticker) => {
+        return tickerMap.crypto[ticker];
+      });
+    });
+
+    return cryptoNews;
+  },
 };
 
 // actions 설정
 const actions = {
-  // async getStocks({ commit }) {
-  //   try {
-  //     const stocks = await getStocks();
-  //     if (stocks) {
-  //       commit('setStockItems', stocks);
-  //       return true;
-  //     }
-  //     throw new Error('Getting stocks was failed in market store');
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // },
   async getNews({ commit }) {
     try {
       const news = await getNews({});
