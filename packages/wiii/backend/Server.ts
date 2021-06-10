@@ -9,12 +9,12 @@ import { Reply } from './db/entity/Reply.entity';
     if (!mongoConn) throw new Error(`[DB] MongoDB Connection Failed`);
     console.info(`[DB] MongoDB Connected; '${mongoConn.name}'`);
     /** MongoDB 초기화 */
-    mongoConn.getMongoRepository(Reply).deleteMany({});
+    // mongoConn.getMongoRepository(Reply).deleteMany({});
 
-    import('./db/dummy.js').then(async ({ default: data }) => {
-      const result = await mongoConn.getCustomRepository(ReplyRepository).insertMany(data);
-      console.table({ dummies: result.result.n });
-    });
+    // import('./db/dummy.js').then(async ({ default: data }) => {
+    //   const result = await mongoConn.getCustomRepository(ReplyRepository).insertMany(data);
+    //   console.table({ dummies: result.result.n });
+    // });
 
     getRedisConnection();
 

@@ -4,7 +4,6 @@ import { SECRET_KEY } from '../../config/db';
 export const verifyToken = (token: string, options?: VerifyOptions) => {
   try {
     const verified = verify(token, SECRET_KEY, { ...options });
-    console.info({ verified });
     return verified;
   } catch (e) {
     return console.error(e);
