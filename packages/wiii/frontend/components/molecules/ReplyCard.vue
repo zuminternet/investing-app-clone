@@ -50,10 +50,13 @@ export default Vue.extend({
     userThumbnail: {
       type: String,
     },
+    userMail: {
+      type: String,
+    },
     userName: {
       type: String,
     },
-    date: {
+    updatedAt: {
       type: Date,
     },
     contents: {
@@ -70,11 +73,11 @@ export default Vue.extend({
 
   computed: {
     dateString() {
-      const { date } = this;
-      return `'${date
+      const { updatedAt } = this;
+      return `'${updatedAt
         .getFullYear()
         .toString()
-        .slice(-2)}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date
+        .slice(-2)}/${(updatedAt.getMonth() + 1).toString().padStart(2, '0')}/${updatedAt
         .getDate()
         .toString()
         .padStart(2, '0')}`;

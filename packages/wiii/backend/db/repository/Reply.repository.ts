@@ -25,19 +25,23 @@ export class ReplyRepository extends MongoRepository<Reply> {
   public async createReply(props): Promise<boolean | void> {
     const createError = () => this.error(`Create Reply`, this.createReply.name);
     try {
-      const { docId, email, content } = props;
+      const { docId, email, contents } = props;
 
       /** @todo 예외처리 */
-      if (!content.trim().length) throw createError();
+      if (!contents.trim().length) throw createError();
 
       const users = await getCustomRepository(UserRepository).find({ email });
       if (users.length !== 1) throw createError();
       const [user] = users;
 
-      const reply = this.create({ docId, userId: user, content });
+      const reply = this.create({ docId, userMail: user.email, userName: user.nickname, contents });
+      if (props.parentReplyId) {
+        reply.parentReply = (await getCustomRepository(ReplyRepository).findOne({ docId: props.parentReplyId })).id;
+      }
+
       const result = await this.save(reply);
-      console.dir({ result });
       if (!result) throw createError();
+
       return true;
     } catch (e) {
       return console.error(e);
@@ -49,11 +53,10 @@ export class ReplyRepository extends MongoRepository<Reply> {
    * @description
    * - 문서번호에 해당하는 모든 댓글
    */
-  public async getAllRepliesByDocID(docId: string): Promise<[Reply[], number] | void> {
+  public async getAllRepliesByDocID(docId: string): Promise<Reply[] | void> {
     const getAllError = () => this.error(`Get All Repls by docId`, this.getAllRepliesByDocID.name);
     try {
-      const results = await this.findAndCount({ where: { docId: { $eq: docId } } });
-      console.dir(results);
+      const results = await this.find({ where: { docId } });
       if (!results) throw getAllError();
 
       return results;

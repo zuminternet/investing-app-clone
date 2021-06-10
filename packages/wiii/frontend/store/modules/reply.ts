@@ -15,11 +15,15 @@ const Reply = {
     //
   },
   actions: {
-    insertReply: async ({ rootGetters: { getTicker, getAuth, getEmail } }, { content }) => {
+    insertReply: async ({ rootGetters: { getTicker, getAuth, getEmail } }, { contents }) => {
       try {
         if (!getAuth) return;
 
-        const result = await Axios.post(`/api/reply/`, { docId: getTicker, email: getEmail, content }, { withCredentials: true });
+        const result = await Axios.post(
+          `/api/reply/`,
+          { docId: getTicker, email: getEmail, contents },
+          { withCredentials: true },
+        );
         console.log({ insertResult: result });
         return true;
       } catch (e) {
@@ -29,9 +33,14 @@ const Reply = {
 
     getReplsByDocID: async ({ rootGetters: { getTicker } }) => {
       try {
-        const result = await Axios.get(`/api/reply/list?ticker=${getTicker}`);
-        console.log({ result });
-        return result;
+        const {
+          data: { results },
+          status,
+          statusText,
+        } = await Axios.get(`/api/reply/${getTicker}`);
+
+        if (status >= 400) throw Error(statusText);
+        return results;
       } catch (e) {
         return console.error(e);
       }
@@ -65,6 +74,7 @@ const Reply = {
         const randomRepls = Array.from({ length: nums });
         for (const i of range(0, nums)) {
           const {
+            email,
             login: { uuid, username },
             picture: { thumbnail },
           } = users[i];
@@ -73,13 +83,14 @@ const Reply = {
             replId: uuid,
             userThumbnail: thumbnail,
             userName: username,
-            date: new Date(Date.now() * Math.random()),
+            userMail: email,
+            updatedAt: new Date(Date.now() * Math.random()),
             contents: messagesArr[i],
             likes: Math.floor(Math.random() * 50),
           };
         }
 
-        return randomRepls.sort((a, b) => b.date - a.date);
+        return randomRepls.sort((a, b) => b.updatedAt - a.updatedAt);
       } catch (e) {
         return console.error(e);
       }

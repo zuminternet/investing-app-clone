@@ -3,9 +3,9 @@
     <ReplySort @change-sort="changeSort" :sortText="sortText" />
     <ReplyInput v-bind="{ curInputId }" @change-current-input="changeCurInput" />
     <Card
-      v-for="{ replId, userThumbnail, userName, contents, date, likes } in repls"
+      v-for="{ id: replId, userThumbnail, userName, userMail, contents, updatedAt, likes } in repls"
       :key="replId"
-      v-bind="{ replId, userThumbnail, userName, contents, date, likes, curInputId }"
+      v-bind="{ replId, userThumbnail, userName, userMail, contents, updatedAt: new Date(updatedAt), likes, curInputId }"
       @change-current-input="changeCurInput"
     />
   </section>
@@ -42,21 +42,14 @@ export default Vue.extend({
   },
 
   async mounted() {
-    // this.repls = await this.getRandRepls();
+    this.repls = await this.getReplsByDocID();
+
     this.sortText = this.sortTexts[this.sortIdx];
   },
 
   methods: {
-    ...mapActions(StoreNames.Reply, ['getRandomRepls']),
-    /**
-     * @todo vuex에서 데이터 가져오기 by ticker
-     * @property replId
-     * @property userThumbnail
-     * @property userName
-     * @property date
-     * @property contents
-     * @property likes
-     */
+    ...mapActions(StoreNames.Reply, ['getRandomRepls', 'getReplsByDocID']),
+
     async getRandRepls() {
       try {
         const result = await this.getRandomRepls();
@@ -70,7 +63,7 @@ export default Vue.extend({
     changeSort() {
       this.sortIdx = (this.sortIdx + 1) % 2;
       this.sortText = this.sortTexts[this.sortIdx];
-      this.repls = this.repls.sort((a, b) => (this.sortIdx === 0 ? b.date - a.date : b.likes - a.likes));
+      this.repls = this.repls.sort((a, b) => (this.sortIdx === 0 ? b.updatedAt - a.updatedAt : b.likes - a.likes));
     },
 
     changeCurInput(idx: string) {

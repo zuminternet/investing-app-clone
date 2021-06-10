@@ -30,11 +30,9 @@ export class ReplyController {
       const token = cookies[TOKEN_COOKIE_KEY];
       if (!verifyToken(token)) throw postReplyError();
 
-      const { docId, email, content } = body;
-      const result = await this.replyService.createReply({ docId, email, content });
+      const result = await this.replyService.createReply({ ...body });
       if (!result) throw postReplyError();
 
-      res.set({ 'Access-Control-Allow-Origin': '*' });
       res.json({ message: 'Success to add new Reply' });
     } catch (e) {
       console.error(e);
@@ -47,15 +45,13 @@ export class ReplyController {
    * @todo
    */
   @GetMapping({ path: '/:docId' })
-  public async getReplsByDoc({ params }: Request, res: Response) {
+  public async getReplsByDoc({ params: { docId } }: Request, res: Response) {
     const getReplsError = () => this.error(`Get Replies`, this.getReplsByDoc.name);
     try {
-      const { docId } = params;
       console.log({ docId });
       if (!docId) throw getReplsError();
 
-      const results = this.replyService.getAllReplsByDocId(docId);
-      console.table(results);
+      const results = await this.replyService.getAllReplsByDocId(docId);
       if (!results) throw getReplsError();
 
       res.status(200).json({ message: 'Success to Get All Replies', results });

@@ -54,7 +54,7 @@ export default Vue.extend({
      */
     async submitReply(replyText) {
       const reset = this.cancelInput;
-      const isInserted = await this.insertReply({ content: this.replyText });
+      const isInserted = await this.insertReply({ contents: this.replyText });
       /** @todo 실패 UI */
       if (!isInserted) return;
       reset();

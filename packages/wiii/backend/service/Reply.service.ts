@@ -20,8 +20,7 @@ export class ReplyService {
   public async createReply(props) {
     const createError = () => this.error(`Create Reply`, this.createReply.name);
     try {
-      const { docId, email, content } = props;
-      const result = await getCustomRepository(ReplyRepository).createReply({ docId, email, content });
+      const result = await getCustomRepository(ReplyRepository).createReply({ ...props });
       if (!result) throw createError();
       return true;
     } catch (e) {
@@ -37,6 +36,7 @@ export class ReplyService {
     const getAllError = () => this.error(`Get All Repls By docId`, this.getAllReplsByDocId.name);
     try {
       const results = await getCustomRepository(ReplyRepository).getAllRepliesByDocID(docId);
+
       if (!results) throw getAllError();
 
       return results;

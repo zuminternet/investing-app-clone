@@ -1,7 +1,7 @@
 <template>
   <div class="area rows-space-between ">
     <Link v-for="{ id, name, href } in HomeMenuData" :key="id" :name="name" :href="href" />
-    <Link :name="'🏄‍♂️'" :href="'/user'" id="menu-user" />
+    <Link :name="hasAuth" :href="'/user'" id="menu-user" />
   </div>
 </template>
 
@@ -21,6 +21,12 @@ export default Vue.extend({
     return {
       HomeMenuData,
     };
+  },
+
+  computed: {
+    hasAuth() {
+      return this.$store.getters.hasAuth ? '🚀' : '🏄‍♂️';
+    },
   },
 });
 </script>
