@@ -10,8 +10,8 @@
 import Vue from 'vue';
 import { mapActions } from 'vuex';
 import ReplyInput from '@/components/molecules/ReplyNewInput.vue';
-import ReplySort from '@/components/molecules/ReplySort';
-import Card from '@/components/molecules/ReplyCard';
+import ReplySort from '@/components/molecules/ReplySort.vue';
+import Card from '@/components/molecules/ReplyCard.vue';
 import { StoreNames } from '@/store';
 
 export default Vue.extend({

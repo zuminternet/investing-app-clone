@@ -49,6 +49,7 @@ export default Vue.extend({
     },
     userThumbnail: {
       type: String,
+      default: 'https://picsum.photos/200',
     },
     userMail: {
       type: String,
