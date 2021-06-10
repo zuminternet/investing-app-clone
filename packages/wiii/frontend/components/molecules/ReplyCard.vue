@@ -162,6 +162,10 @@ $maxHeight: 50px;
     align-items: center;
     cursor: default;
 
+    button {
+      width: max-content;
+    }
+
     .reply-likes {
       text-align: center;
       font-weight: bold;

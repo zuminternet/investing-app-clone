@@ -23,13 +23,6 @@ export default Vue.extend({
     };
   },
 
-  // props: {
-  //   ticker: {
-  //     type: String,
-  //     required: true,
-  //   },
-  // },
-
   components: { TextArea, Button },
 
   mounted() {

@@ -1,7 +1,7 @@
 <template>
   <ReplyForm v-if="isValid" @change-current-input="inputToggle" />
   <div v-else id="reply-open" class="card noselect" @click="inputToggle(inputId)">
-    <Words :class="formDisabled">댓글 달기</Words>
+    <Words>댓글 달기</Words>
   </div>
 </template>
 
@@ -55,6 +55,7 @@ export default Vue.extend({
     background-color: $grey-500;
     color: $grey-100;
   }
+
   .disabled {
     cursor: not-allowed;
   }

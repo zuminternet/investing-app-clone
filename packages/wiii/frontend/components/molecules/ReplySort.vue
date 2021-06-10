@@ -1,6 +1,6 @@
 <template>
   <div class="reply-sort noselect">
-    정렬: <Button @click.native="$emit('change-sort')">{{ sortText }}</Button>
+    정렬: <Button class="reply-sort-button" @click.native="$emit('change-sort')">{{ sortText }}</Button>
   </div>
 </template>
 
@@ -32,11 +32,13 @@ export default Vue.extend({
   font-size: 0.7rem;
   color: $grey-700;
 
-  button {
+  &-button {
+    width: max-content;
     background-color: $grey-100;
-    border: 2px solid $grey-100;
+    border: none;
     margin-left: 2px;
     font-weight: bold;
+    font-size: 0.7rem;
   }
 }
 </style>

@@ -54,7 +54,7 @@ export default Vue.extend({
   border-radius: 50px;
   box-shadow: 0 0 0.2rem 0.1rem rgba($grey-700, 0.7);
   font-weight: 300;
-  text-decoration: none;
+  overflow-wrap: break-word;
 
   &:hover {
     font-weight: initial;
