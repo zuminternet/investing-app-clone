@@ -55,6 +55,16 @@ export default () => {
         name: 'Signup',
         component: () => import('@/views/Signup.vue'),
       },
+      {
+        path: '/change-username',
+        name: 'ChangeUserName',
+        component: () => import('@/views/SettingUserName.vue'),
+      },
+      {
+        path: '/change-password',
+        name: 'ChangePassword',
+        component: () => import('@/views/SettingPassword.vue'),
+      },
     ],
   });
 };

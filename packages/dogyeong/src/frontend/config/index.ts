@@ -14,6 +14,7 @@ export const apiEndpoints = {
   getPopularNews: '/api/article/news/popular',
   getPopularOpinions: '/api/article/opinions/popular',
   getArticle: '/api/article',
+  changeUserInfo: '/api/user',
 };
 
 export const googleAuthInitConfig = {

@@ -12,6 +12,11 @@ interface SignupProps extends LoginProps {
   name: string;
 }
 
+interface ChangeUserInfoProps {
+  name?: string;
+  password?: string;
+}
+
 interface User {
   user: {
     name: string;
@@ -41,4 +46,11 @@ export const fetchUser = async (): Promise<User> => {
 
 export const logout = async () => {
   return Axios.get(apiEndpoints.logout);
+};
+
+export const changeUserInfo = ({ name, password }: ChangeUserInfoProps = {}) => {
+  return Axios.put(apiEndpoints.changeUserInfo, {
+    name,
+    password,
+  });
 };

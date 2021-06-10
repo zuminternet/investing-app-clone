@@ -7,8 +7,12 @@
       <div class="setting-item">
         <label> <input v-model="isDark" type="checkbox" /> 어두운 테마 </label>
       </div>
-      <div v-if="!user" class="setting-item"><RouterLink to="/login">로그인</RouterLink></div>
-      <div v-else @click="logout">로그아웃</div>
+      <button v-if="userName" @click="logout" class="setting-item">로그아웃</button>
+      <RouterLink to="/login" v-else class="setting-item">로그인</RouterLink>
+      <template v-if="userName">
+        <RouterLink to="/change-password" v-if="!isGoogleUser" class="setting-item">비밀번호 변경</RouterLink>
+        <RouterLink to="/change-username" class="setting-item">이름 변경</RouterLink>
+      </template>
     </main>
     <BottomNav></BottomNav>
   </Layout>
@@ -16,7 +20,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { mapMutations, mapActions } from 'vuex';
+import { mapState, mapMutations, mapActions } from 'vuex';
 import Layout from '@/components/Layout/Layout.vue';
 import { Header, HeaderTitle } from '@/components/Header';
 import BottomNav from '@/components/BottomNav/BottomNav.vue';
@@ -27,6 +31,8 @@ export default Vue.extend({
   components: { BottomNav, Layout, Header, HeaderTitle },
 
   computed: {
+    ...mapState(['user']),
+
     isDark: {
       get() {
         return this.$store.state.isDarkTheme;
@@ -35,11 +41,14 @@ export default Vue.extend({
         this.changeTheme(isDark);
       },
     },
-    user() {
-      return this.$store.state.user.user;
+    userName() {
+      return this.user.user?.name;
+    },
+    isGoogleUser() {
+      return this.user.user?.isGoogleUser;
     },
     headerTtile() {
-      return this.user ?? '로그인 해주세요';
+      return this.userName ?? '로그인 해주세요';
     },
   },
 
@@ -52,9 +61,14 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 main {
-  div {
+  .setting-item {
     padding: 18px 12px;
     border-bottom: 1px solid var(--border-color);
+    display: block;
+    width: 100%;
+    text-align: left;
+    font-size: 16px;
+    color: var(--text-color);
   }
 }
 </style>
