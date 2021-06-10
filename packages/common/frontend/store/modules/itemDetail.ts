@@ -15,8 +15,8 @@ const state = () => ({
     acronym: '', //
     high: '', // 최고가
     low: '', // 최저가
-    price: '100',
-    upDownPrice: '100',
+    upDownPrice: '',
+    upDownRate: '',
     time: '100',
     currency: 'dallor',
   },
@@ -33,6 +33,8 @@ const actions = {
   async getItemDetail({ commit }, { symbols, email, name }) {
     try {
       const itemDetail = await getItemDetail({ symbols, email });
+
+      console.log(itemDetail);
 
       if (itemDetail) {
         commit('setItemDetail', { itemDetail, name });
@@ -113,6 +115,8 @@ const mutations = {
       low,
       isBookmarked,
       isStock,
+      upDownPrice: close - adj_close,
+      upDownRate: ((close - adj_close) / close) * 100,
     };
   },
 

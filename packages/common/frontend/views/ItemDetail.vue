@@ -5,7 +5,6 @@
     <custom-swiper :navigatorButtonNames="swiperNavigatorButtonNames">
       <swiper-slide>
         <list-wrapper :excludedHeight="210">
-          <!-- 차트 컴포넌트 자리  -->
           <chart :canvasWidth="300" :canvasHeight="300" :symbol="symbolForChart"></chart>
           <item-detail-overview-box :itemDetail="itemDetail"></item-detail-overview-box>
           <!-- 댓글 컴포넌트 자리 -->
