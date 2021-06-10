@@ -2,7 +2,6 @@ import { Module } from 'vuex';
 import { AxiosStatic } from 'axios';
 import { RootState } from '@/store';
 import { range } from '../../../domain/utilFunc';
-import { SERVER_BASE_URL } from '../../../domain/apiUrls';
 import { getRandomText, getRandomUser } from '@/services/reply/random';
 
 declare const Axios: AxiosStatic;
@@ -20,11 +19,7 @@ const Reply = {
       try {
         if (!getAuth) return;
 
-        const result = await Axios.post(
-          `${SERVER_BASE_URL}/api/reply/`,
-          { docId: getTicker, email: getEmail, content },
-          { withCredentials: true },
-        );
+        const result = await Axios.post(`/api/reply/`, { docId: getTicker, email: getEmail, content }, { withCredentials: true });
         console.log({ insertResult: result });
         return true;
       } catch (e) {
@@ -34,7 +29,7 @@ const Reply = {
 
     getReplsByDocID: async ({ rootGetters: { getTicker } }) => {
       try {
-        const result = await Axios.get(`${SERVER_BASE_URL}/api/reply/list?ticker=${getTicker}`);
+        const result = await Axios.get(`/api/reply/list?ticker=${getTicker}`);
         console.log({ result });
         return result;
       } catch (e) {
@@ -62,7 +57,9 @@ const Reply = {
         const users = await getRandomUser(nums);
         if (!users) throw new Error();
 
-        const {} = await getRandomText(nums);
+        const texts = await getRandomText(nums);
+        if (!texts) throw Error();
+        const { messages } = texts;
         const messagesArr = messages.split('\n\n');
 
         const randomRepls = Array.from({ length: nums });
@@ -70,7 +67,7 @@ const Reply = {
           const {
             login: { uuid, username },
             picture: { thumbnail },
-          } = results[i];
+          } = users[i];
 
           randomRepls[i] = {
             replId: uuid,

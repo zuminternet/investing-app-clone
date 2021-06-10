@@ -5,7 +5,7 @@ declare const Axios: AxiosStatic;
 
 export const login = async (email: string, password: string) => {
   try {
-    const { status, statusText } = await Axios.post(`${SERVER_BASE_URL}/api/auth/in`, { email, password });
+    const { status, statusText } = await Axios.post(`/api/auth/in`, { email, password }, { withCredentials: true });
     if (status >= 400) throw Error(statusText);
     return true;
   } catch (e) {
@@ -15,7 +15,17 @@ export const login = async (email: string, password: string) => {
 
 export const logout = async (email: string) => {
   try {
-    const { status, statusText } = await Axios.get(`${SERVER_BASE_URL}/api/auth/out`, { params: { email } });
+    const { status, statusText } = await Axios.get(`/api/auth/out`, { params: { email } });
+    if (status >= 400) throw Error(statusText);
+    return true;
+  } catch (e) {
+    return console.error(e);
+  }
+};
+
+export const signup = async (email: string, password: string, nickname: string) => {
+  try {
+    const { status, statusText } = await Axios.post(`/api/user/`, { email, password, nickname }, { withCredentials: true });
     if (status >= 400) throw Error(statusText);
     return true;
   } catch (e) {

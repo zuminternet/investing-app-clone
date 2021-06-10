@@ -20,8 +20,6 @@ export class UserRepository extends MongoRepository<User> {
     const dupError = () => this.error(`Check Email Duplicated`, this.checkDuplicatedEmail.name);
     try {
       const findArr = await this.find({ email });
-
-      console.table({ findArr });
       if (findArr.length) throw dupError();
       return true;
     } catch (e) {

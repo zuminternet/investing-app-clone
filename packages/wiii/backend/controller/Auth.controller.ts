@@ -42,10 +42,7 @@ export class UserController {
       const isSessionOK = await redis.setValue(`sess:${email}`, token);
       if (!isSessionOK) throw loginErr();
 
-      res.set({
-        'Set-Cookie': `token=${token}; HttpOnly, Max-Age=${HOUR_ONE * 2}`,
-        'Access-Control-Allow-Origin': '*',
-      });
+      res.cookie(TOKEN_COOKIE_KEY, token, { maxAge: HOUR_ONE * 2, httpOnly: true });
       res.json({ message: 'Success to Log-in' });
     } catch (e) {
       console.error(e);

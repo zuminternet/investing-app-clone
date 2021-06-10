@@ -1,6 +1,6 @@
 import { Module } from 'vuex';
 import { RootState } from '../types';
-import { login, logout } from '@/services/user';
+import { login, logout, signup } from '@/services/user';
 
 interface AuthState {}
 
@@ -34,6 +34,15 @@ const AuthStore = {
 
     getLogout: ({ state, commit }, { email }) => {
       /** @todo */
+    },
+
+    postSignUp: async ({ state, commit }, { email, password, nickname }) => {
+      try {
+        const result = await signup(email, password, nickname);
+        if (!result) throw Error();
+      } catch (e) {
+        return console.error(e);
+      }
     },
   },
 } as Module<AuthState, RootState>;
