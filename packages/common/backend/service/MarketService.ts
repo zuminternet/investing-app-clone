@@ -75,7 +75,7 @@ export default class MarketService {
    * @author dogyeong
    * @param {MarketSymbol[]} symbols ticker 심볼 배열
    */
-  @Caching({ ttl: 30, cache, runOnStart: false })
+  @Caching({ ttl: 99999, cache, runOnStart: false })
   public async getLatestEOD(symbols: MarketSymbol[]): Promise<EndOfDay[]> {
     if (!symbols.every(this.isValidSymbol.bind(this))) throw new Error('invalid symbol');
 
@@ -95,7 +95,7 @@ export default class MarketService {
    * @author dogyeong
    * @param {MarketSymbol} symbol ticker 심볼
    */
-  @Caching({ ttl: 30, cache, runOnStart: false })
+  @Caching({ ttl: 99999, cache, runOnStart: false })
   public async getSummaryDetail(symbol: MarketSymbol): Promise<SummaryDetail> {
     if (!this.isValidSymbol(symbol)) throw new Error('invalid symbol');
 
@@ -115,7 +115,7 @@ export default class MarketService {
    * @author dogyeong
    * @param {MarketSymbol} symbol ticker 심볼
    */
-  @Caching({ ttl: 30, cache, runOnStart: false })
+  @Caching({ ttl: 99999, cache, runOnStart: false })
   public async getHistoricalData(symbol: MarketSymbol, period: ChartPeriod): Promise<HistoricalData> {
     if (!this.isValidSymbol(symbol)) throw new Error('invalid symbol');
     if (!this.isValidPeriod(period)) throw new Error('invalid period');
