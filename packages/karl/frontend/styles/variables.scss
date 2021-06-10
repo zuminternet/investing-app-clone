@@ -1,0 +1,20 @@
+$theme-dark: (
+  'app-bg-color': #090c10,
+);
+
+$theme-light: (
+  'app-bg-color': #eef0f2,
+  'text-color': #000000de,
+);
+
+#app {
+  @each $name, $color in $theme-light {
+    --#{$name}: #{$color};
+  }
+}
+
+#app.dark {
+  @each $name, $color in $theme-dark {
+    --#{$name}: #{$color};
+  }
+}
