@@ -1,20 +1,15 @@
 <template>
   <section class="section">
     <ReplySort @change-sort="changeSort" :sortText="sortText" />
-    <ReplyInput v-bind="{ curInputId }" @change-current-input="changeCurInput" />
-    <Card
-      v-for="{ id: replId, userThumbnail, userName, userMail, contents, updatedAt, likes } in repls"
-      :key="replId"
-      v-bind="{ replId, userThumbnail, userName, userMail, contents, updatedAt: new Date(updatedAt), likes, curInputId }"
-      @change-current-input="changeCurInput"
-    />
+    <ReplyInput v-bind="{ curInputId }" @change-current-input="changeCurInput" @after-submit="afterSubmit" />
+    <Card v-for="(repl, idx) in repls" :key="idx" v-bind="{ ...repl, curInputId }" @change-current-input="changeCurInput" />
   </section>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 import { mapActions } from 'vuex';
-import ReplyInput from '@/components/molecules/ReplyNewInput';
+import ReplyInput from '@/components/molecules/ReplyNewInput.vue';
 import ReplySort from '@/components/molecules/ReplySort';
 import Card from '@/components/molecules/ReplyCard';
 import { StoreNames } from '@/store';
@@ -42,9 +37,8 @@ export default Vue.extend({
   },
 
   async mounted() {
-    this.repls = await this.getReplsByDocID();
-
     this.sortText = this.sortTexts[this.sortIdx];
+    this.repls = await this.getReplsByDocID();
   },
 
   methods: {
@@ -68,6 +62,10 @@ export default Vue.extend({
 
     changeCurInput(idx: string) {
       this.curInputId = idx;
+    },
+
+    async afterSubmit() {
+      this.repls = await this.getReplsByDocID();
     },
   },
 });

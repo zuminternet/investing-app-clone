@@ -1,8 +1,8 @@
 <template>
-  <form id="reply-input" class="card" @submit.prevent="() => submitReply(replyText)">
+  <form id="reply-input" class="card" @submit.prevent="() => submitReply()">
     <TextArea id="reply-input-text" @change-text-handler="changeReplyInput" :newText="replyText" />
     <div id="buttons">
-      <Button id="reply-input-cancel" type="reset" @click.native="cancelInput">Cancel</Button>
+      <Button id="reply-input-cancel" type="reset" @click.native="resetInput">Cancel</Button>
       <Button id="reply-input-submit" type="submit" :disabled="replyText.length === 0">Save</Button>
     </div>
   </form>
@@ -39,7 +39,7 @@ export default Vue.extend({
   methods: {
     ...mapActions(StoreNames.Reply, ['insertReply']),
 
-    cancelInput() {
+    resetInput() {
       this.replyText = '';
       this.$emit('change-current-input', 'none');
     },
@@ -52,12 +52,13 @@ export default Vue.extend({
      * debounce 적용해 한번만 쿼리 전송되도록
      * @todo debounce 함수 제대로 안만들어진건지 alert 계속 실행되는 문제..
      */
-    async submitReply(replyText) {
-      const reset = this.cancelInput;
+    async submitReply() {
       const isInserted = await this.insertReply({ contents: this.replyText });
       /** @todo 실패 UI */
       if (!isInserted) return;
-      reset();
+
+      this.resetInput();
+      this.$emit('after-submit');
     },
   },
 });

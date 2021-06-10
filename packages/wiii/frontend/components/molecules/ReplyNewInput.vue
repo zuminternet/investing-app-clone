@@ -1,5 +1,5 @@
 <template>
-  <ReplyForm v-if="isValid" @change-current-input="inputToggle" />
+  <ReplyForm v-if="isValid" @change-current-input="inputToggle" @after-submit="$emit('after-submit')" />
   <div v-else id="reply-open" class="card noselect" :class="{ disabled: !hasAuth }" @click="inputToggle(inputId)">
     <Words class="reply-valid-text"> {{ validText }} </Words>
   </div>
