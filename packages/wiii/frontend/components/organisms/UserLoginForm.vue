@@ -13,7 +13,7 @@
     <Input id="login-password" :type="'password'" :newValue="password" @change-input-handler="changePWHandler" required></Input>
     <div class="user-buttons">
       <Link :href="'/user/join'" :name="'가입하기'" />
-      <Button type="submit" class="">로그인</Button>
+      <Button type="submit" class="user-sign-button">로그인</Button>
     </div>
   </form>
 </template>
@@ -51,7 +51,7 @@ export default Vue.extend({
 
     async loginSubmitHandler() {
       const isSuccess = await this.postLogin({ email: this.email, password: this.password });
-      
+
       /** @todo UI 실패 처리 */
       if (!isSuccess) return alert('로그인 실패');
       this.$router.push('/user');
@@ -71,7 +71,7 @@ export default Vue.extend({
     justify-content: space-between;
 
     .router-link,
-    button {
+    .user-sign-button {
       width: 120px;
       color: $grey-100;
     }
@@ -80,7 +80,7 @@ export default Vue.extend({
       background-color: $blue-500;
     }
 
-    button {
+    .user-sign-button {
       background-color: $green-500;
     }
   }
