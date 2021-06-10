@@ -21,9 +21,9 @@ export default {
         })
         .catch(console.error);
     },
-  },
 
-  findItemBySymbol(symbol: string) {
-    return this.items.find((item) => item.symbol === symbol);
+    findItemBySymbol(symbol: string) {
+      return this.items.find((item) => item.symbol === symbol);
+    },
   },
 };
