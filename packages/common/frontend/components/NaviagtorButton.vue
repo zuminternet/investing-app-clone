@@ -1,6 +1,11 @@
 <template>
-  <button class="navigator-button" @click="$emit('set-slide-active-index', buttonIndex)">
-    <custom-text :buttonActive="isSwiperNavigatorButton && buttonIndex === slideActiveIndex">
+  <button
+    class="navigator-button"
+    @click="isSwiperNavigatorButton ? $emit('set-slide-active-index', buttonIndex) : $emit('route-to-target-page', $event)"
+  >
+    <custom-text
+      :buttonActive="(isSwiperNavigatorButton && buttonIndex === slideActiveIndex) || (isBottomNavigatorButton && isActivePage)"
+    >
       {{ navigatorButtonName }}
     </custom-text>
   </button>
