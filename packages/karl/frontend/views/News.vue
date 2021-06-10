@@ -31,7 +31,7 @@
       <swiper-slide>
         <list-wrapper :excludedHeight="150">
           <news-list>
-            <news-list-item v-for="element in stockNews" :key="element.id" :to="''">
+            <news-list-item v-for="element in news" :key="element.id" :to="''">
               <news-image :src="element.image_url" />
               <news-text-box>
                 <news-text-box-title>{{ element.title }}</news-text-box-title>
@@ -44,7 +44,7 @@
       <swiper-slide>
         <list-wrapper :excludedHeight="150">
           <news-list>
-            <news-list-item v-for="element in cryptoNews" :key="element.id" :to="''">
+            <news-list-item v-for="element in news" :key="element.id" :to="''">
               <news-image :src="element.image_url" />
               <news-text-box>
                 <news-text-box-title>{{ element.title }}</news-text-box-title>
@@ -61,7 +61,7 @@
 
 <script>
 import { SwiperSlide } from 'vue-awesome-swiper';
-import { mapActions, mapState, mapGetters } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 
 import MultipurposeHeader from '../../../common/frontend/components/MultipurposeHeader.vue';
 import CustomSwiper from '../../../common/frontend/components/CustomSwiper.vue';
@@ -97,11 +97,6 @@ export default {
   computed: {
     ...mapState({
       news: (state) => state.article.news,
-    }),
-
-    ...mapGetters('article', {
-      stockNews: 'stockNews',
-      cryptoNews: 'cryptoNews',
     }),
   },
 
