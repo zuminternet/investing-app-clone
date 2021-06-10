@@ -25,14 +25,14 @@
             :headline="headline"
             :articles="normalNews"
             url-prefix="/news/new"
-            moreButtonText="더 많은 뉴스 >"
+            more-button-text="더 많은 뉴스 >"
             @clickMoreButton="getNewNews"
           />
           <ArticleTemplate
             :articles="newOpinions"
             url-prefix="/news/new"
-            moreButtonText="더 많은 의견 >"
-            sectionTitle="분석 및 의견"
+            more-button-text="더 많은 의견 >"
+            section-title="분석 및 의견"
             @clickMoreButton="getNewOpinions"
           />
         </SwiperSlide>
@@ -41,14 +41,14 @@
             :headline="headline"
             :articles="normalNews"
             url-prefix="/news/popular"
-            moreButtonText="더 많은 뉴스 >"
+            more-button-text="더 많은 뉴스 >"
             @clickMoreButton="getPopularNews"
           />
           <ArticleTemplate
             :articles="newOpinions"
             url-prefix="/news/popular"
-            moreButtonText="더 많은 의견 >"
-            sectionTitle="분석 및 의견"
+            more-button-text="더 많은 의견 >"
+            section-title="분석 및 의견"
             @clickMoreButton="getPopularOpinions"
           />
         </SwiperSlide>
