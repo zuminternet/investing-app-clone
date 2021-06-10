@@ -17,7 +17,8 @@
         </NewsTextBox>
       </NewsListItem>
     </NewsList>
-    <button v-if="moreButtonText" class="more-button" @click="$emit('clickMoreButton')">
+    <div v-if="isLoading" class="spinner-container"><LoadingSpinner /></div>
+    <button v-else-if="moreButtonText" class="more-button" @click="$emit('clickMoreButton')">
       {{ moreButtonText }}
     </button>
   </section>
@@ -34,6 +35,7 @@ import {
   NewsList,
   NewsListItem,
 } from 'common/frontend/components/News';
+import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner.vue';
 
 export default Vue.extend({
   name: 'ArticleTemplate',
@@ -46,6 +48,7 @@ export default Vue.extend({
     NewsImage,
     NewsList,
     NewsListItem,
+    LoadingSpinner,
   },
 
   props: {
@@ -68,6 +71,10 @@ export default Vue.extend({
     sectionTitle: {
       type: String,
       default: null,
+    },
+    isLoading: {
+      type: Boolean,
+      default: false,
     },
   },
 
@@ -124,6 +131,11 @@ export default Vue.extend({
   .section-title {
     font-size: 24px;
     padding: 0px 12px 36px;
+  }
+
+  .spinner-container {
+    height: 140px;
+    position: relative;
   }
 
   .more-button {

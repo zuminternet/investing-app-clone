@@ -13,6 +13,7 @@
     </Header>
     <main>
       <section class="chart-section">
+        <LoadingSpinner v-if="isChartLoading" />
         <div ref="chartContainer" class="chart-container"></div>
         <div class="button-container">
           <button @click="changeChartPeriod('1d')">1일</button>
@@ -80,6 +81,7 @@ import { Header, HeaderTitle, HeaderButton } from '@/components/Header';
 import BottomNav from '@/components/BottomNav/BottomNav.vue';
 import { createChart } from '@/chart';
 import ArticleTemplate from '@/components/ArticleTemplate/ArticleTemplate.vue';
+import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner.vue';
 
 const chartLightThemeOption = {
   bgColor: '#fafffa',
@@ -101,6 +103,7 @@ export default Vue.extend({
     BottomNav,
     HeaderButton,
     ArticleTemplate,
+    LoadingSpinner,
   },
 
   data() {
@@ -112,6 +115,7 @@ export default Vue.extend({
       news: null,
       opinions: null,
       symbol: '',
+      isChartLoading: true,
     };
   },
 
@@ -139,6 +143,7 @@ export default Vue.extend({
       .then((chart) => {
         this.chartData = chart.data;
         this.name = chart.display_name;
+        this.isChartLoading = false;
       })
       .catch(console.error);
 
@@ -163,8 +168,12 @@ export default Vue.extend({
       this.$router.back();
     },
     changeChartPeriod(period) {
+      this.isChartLoading = true;
       getChart({ symbol: this.symbol, period })
-        .then((chart) => (this.chartData = chart.data))
+        .then((chart) => {
+          this.chartData = chart.data;
+          this.isChartLoading = false;
+        })
         .catch(console.error);
     },
     toggleGraphType() {
@@ -180,6 +189,7 @@ export default Vue.extend({
 <style lang="scss">
 .chart-section {
   margin-bottom: 60px;
+  position: relative;
 
   .chart-container {
     margin-bottom: 12px;
