@@ -36,6 +36,9 @@ import Layout from '@/components/Layout/Layout.vue';
 import BottomNav from '@/components/BottomNav/BottomNav.vue';
 import { HeaderButton } from '@/components/Header';
 import ArticleTemplate from '@/components/ArticleTemplate/ArticleTemplate.vue';
+import { searchItems, searchNews, searchOpinions } from '@/services/searchService';
+import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner.vue';
+import bookmarkMixin from '@/mixin/bookmarkMixin';
 
 export default Vue.extend({
   name: 'Search',
@@ -48,6 +51,8 @@ export default Vue.extend({
     HeaderButton,
     ArticleTemplate,
   },
+
+  mixins: [bookmarkMixin],
 
   data() {
     return {
@@ -70,17 +75,6 @@ export default Vue.extend({
   },
   methods: {
     ...mapActions('search', ['getSearchedItems', 'getSearchedNews', 'getSearchedAnalyses', 'clearSearchStore']),
-
-    requestSearch() {
-      const email = this.userInfo.userEmail;
-
-      if (!this.keyword) return;
-
-      const tickers = [this.keyword];
-      this.getSearchedItems({ keyword: this.keyword, email });
-      this.getSearchedNews({ offset: 0, limit: 10, tickers });
-      this.getSearchedAnalyses({ offset: 0, limit: 10, tickers });
-    },
 
     back() {
       this.$router.back();

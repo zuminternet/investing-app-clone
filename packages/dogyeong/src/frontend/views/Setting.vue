@@ -7,10 +7,10 @@
       <div class="setting-item">
         <label> <input v-model="isDark" type="checkbox" /> 어두운 테마 </label>
       </div>
-      <button v-if="userName" @click="logout" class="setting-item">로그아웃</button>
-      <RouterLink to="/login" v-else class="setting-item">로그인</RouterLink>
+      <button v-if="userName" class="setting-item" @click="logout">로그아웃</button>
+      <RouterLink v-else to="/login" class="setting-item">로그인</RouterLink>
       <template v-if="userName">
-        <RouterLink to="/change-password" v-if="!isGoogleUser" class="setting-item">비밀번호 변경</RouterLink>
+        <RouterLink v-if="!isGoogleUser" to="/change-password" class="setting-item">비밀번호 변경</RouterLink>
         <RouterLink to="/change-username" class="setting-item">이름 변경</RouterLink>
       </template>
     </main>
