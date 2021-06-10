@@ -7,26 +7,10 @@ const state = () => ({
 
 // getter 설정
 
-const getters = {
-  // itemCollections: (state) => {
-  //   return [state.indicesItems, state.stockItems, state.cryptoItems];
-  // },
-};
+const getters = {};
 
 // actions 설정
 const actions = {
-  // async getStocks({ commit }) {
-  //   try {
-  //     const stocks = await getStocks();
-  //     if (stocks) {
-  //       commit('setStockItems', stocks);
-  //       return true;
-  //     }
-  //     throw new Error('Getting stocks was failed in market store');
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // },
   async getNews({ commit }) {
     try {
       const news = await getNews({});
