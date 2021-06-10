@@ -21,10 +21,11 @@
           <button @click="changeChartPeriod('1y')">1년</button>
           <button @click="changeChartPeriod('5y')">5년</button>
           <button @click="changeChartPeriod('max')">최대</button>
-          <button @click="toggleGraphType" class="chart-btn">&#128480;</button>
+          <button class="chart-btn" @click="toggleGraphType">&#128480;</button>
+          <button v-if="fullscreenEnabled" @click="requestFullscreen">Full</button>
         </div>
       </section>
-      <section class="summary-section" v-if="summaryDetail">
+      <section v-if="summaryDetail" class="summary-section">
         <h2>개요</h2>
         <table>
           <tbody>
@@ -63,8 +64,8 @@
           </tbody>
         </table>
       </section>
-      <ArticleTemplate sectionTitle="뉴스" :articles="news" url-prefix="/news/new" />
-      <ArticleTemplate sectionTitle="의견" :articles="opinions" url-prefix="/news/new" />
+      <ArticleTemplate section-title="뉴스" :articles="news" url-prefix="/news/new" />
+      <ArticleTemplate section-title="의견" :articles="opinions" url-prefix="/news/new" />
     </main>
     <BottomNav></BottomNav>
   </Layout>
@@ -78,7 +79,6 @@ import Layout from '@/components/Layout/Layout.vue';
 import { Header, HeaderTitle, HeaderButton } from '@/components/Header';
 import BottomNav from '@/components/BottomNav/BottomNav.vue';
 import { createChart } from '@/chart';
-// import ReplySection from 'common/frontend/components/ReplySection/index.vue';
 import ArticleTemplate from '@/components/ArticleTemplate/ArticleTemplate.vue';
 
 const chartLightThemeOption = {
@@ -88,6 +88,7 @@ const chartLightThemeOption = {
   textColor: 'black',
   lineFillColor: '#f0f4ff',
   lineStrokeColor: '#84bbf3',
+  graphLineColor: '#eee',
 };
 
 export default Vue.extend({
@@ -100,7 +101,6 @@ export default Vue.extend({
     BottomNav,
     HeaderButton,
     ArticleTemplate,
-    // ReplySection,
   },
 
   data() {
@@ -113,6 +113,12 @@ export default Vue.extend({
       opinions: null,
       symbol: '',
     };
+  },
+
+  computed: {
+    fullscreenEnabled() {
+      return document.fullscreenEnabled;
+    },
   },
 
   watch: {
@@ -163,6 +169,9 @@ export default Vue.extend({
     },
     toggleGraphType() {
       this.chart.toggleGraphType();
+    },
+    requestFullscreen() {
+      this.$refs.chartContainer.requestFullscreen();
     },
   },
 });
