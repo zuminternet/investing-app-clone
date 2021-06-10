@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import { Login, Home, Signup, News } from '../views';
+import { Login, Home, Signup, News, NewsDetail } from '../views';
 import ItemDetail from '../../../common/frontend/views/ItemDetail.vue';
 import Search from '../../../common/frontend/views/Search.vue';
 import Bookmark from '../../../common/frontend/views/Bookmark.vue';
@@ -16,7 +16,7 @@ export default () => {
 
     routes: [
       {
-        path: '/',
+        path: '/sss',
         name: 'Login',
         component: Login,
       },
@@ -35,6 +35,12 @@ export default () => {
         name: 'News',
         component: News,
       },
+      {
+        path: '/',
+        name: 'NewsDetail',
+        component: NewsDetail,
+      },
+
       {
         path: '/item-detail',
         name: 'ItemDetail',

@@ -26,6 +26,18 @@
       </div>
     </template>
 
+    <template v-if="isNewsDetail">
+      <header-button isBackButton></header-button>
+      <div class="header-title-box">
+        <p>뉴스 상세페이지</p>
+      </div>
+      <empty-space></empty-space>
+      <div class="header-button-box">
+        <!-- <header-button></header-button> -->
+        <header-button isGoSearchButton></header-button>
+      </div>
+    </template>
+
     <template v-if="isSearch">
       <header-button isBackButton></header-button>
       <search-input @search-input-value-change="$emit('search-input-value-change', $event)" />
@@ -91,6 +103,11 @@ export default {
     },
 
     isItemDetail: {
+      type: Boolean,
+      default: false,
+    },
+
+    isNewsDetail: {
       type: Boolean,
       default: false,
     },

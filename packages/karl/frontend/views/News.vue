@@ -2,7 +2,29 @@
   <div class="news-page">
     <multipurpose-header isNews />
     <custom-swiper :navigatorButtonNames="swiperNavigatorButtonNames">
-      <swiper-slide>
+      <swiper-slide v-if="news">
+        <list-wrapper :excludedHeight="150">
+          <news-list>
+            <news-headline v-if="firstNews" :to="'/search'">
+              <news-image :src="firstNews.image_url" />
+              <news-text-box>
+                <news-text-box-title>
+                  {{ firstNews.title }}
+                </news-text-box-title>
+                <news-text-box-desc :author="firstNews.source" :publishDate="firstNews.date"></news-text-box-desc>
+              </news-text-box>
+            </news-headline>
+            <!-- <news-list-item v-for="element in news.slice(1, news.length)" :key="element.id" :to="'/search'">
+              <news-image :src="element.image_url" />
+              <news-text-box>
+                <news-text-box-title>{{ element.title }}</news-text-box-title>
+                <news-text-box-desc :author="element.source" :publishDate="element.date"></news-text-box-desc>
+              </news-text-box>
+            </news-list-item> -->
+          </news-list>
+        </list-wrapper>
+      </swiper-slide>
+      <!-- <swiper-slide v-if="news">
         <list-wrapper :excludedHeight="150">
           <news-list>
             <news-headline>
@@ -23,30 +45,8 @@
             </news-list-item>
           </news-list>
         </list-wrapper>
-      </swiper-slide>
-      <swiper-slide>
-        <list-wrapper :excludedHeight="150">
-          <news-list>
-            <news-headline>
-              <news-image :src="news[0].image_url" />
-              <news-text-box>
-                <news-text-box-title>
-                  {{ news[0].title }}
-                </news-text-box-title>
-                <news-text-box-desc :author="news[0].source" :publishDate="news[0].date"></news-text-box-desc>
-              </news-text-box>
-            </news-headline>
-            <news-list-item v-for="element in news.slice(1, news.length)" :key="element.id" :to="''">
-              <news-image :src="element.image_url" />
-              <news-text-box>
-                <news-text-box-title>{{ element.title }}</news-text-box-title>
-                <news-text-box-desc :author="element.source" :publishDate="element.date"></news-text-box-desc>
-              </news-text-box>
-            </news-list-item>
-          </news-list>
-        </list-wrapper>
-      </swiper-slide>
-      <swiper-slide>
+      </swiper-slide> -->
+      <!-- <swiper-slide v-if="stockNews">
         <list-wrapper :excludedHeight="150">
           <news-list>
             <news-headline>
@@ -67,8 +67,8 @@
             </news-list-item>
           </news-list>
         </list-wrapper>
-      </swiper-slide>
-      <swiper-slide>
+      </swiper-slide> -->
+      <!-- <swiper-slide v-if="cryptoNews">
         <list-wrapper :excludedHeight="150">
           <news-list>
             <news-headline>
@@ -89,7 +89,7 @@
             </news-list-item>
           </news-list>
         </list-wrapper>
-      </swiper-slide>
+      </swiper-slide> -->
     </custom-swiper>
     <bottom-naviagtor :navigatorButtonNames="bottomNavigatorButtonNames" />
   </div>
@@ -139,6 +139,10 @@ export default {
       stockNews: 'stockNews',
       cryptoNews: 'cryptoNews',
     }),
+
+    firstNews() {
+      return this.news[0];
+    },
   },
 
   data() {
@@ -154,7 +158,7 @@ export default {
     ...mapActions('article', ['getNews']),
   },
 
-  mounted() {
+  beforeMount() {
     this.getNews();
   },
 };
