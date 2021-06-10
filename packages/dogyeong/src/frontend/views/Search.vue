@@ -8,12 +8,20 @@
     <main>
       <custom-swiper :navigator-button-names="swiperNavigatorButtonNames" :class="$style.swiper">
         <swiper-slide>
-          <ul>
-            <li v-for="{ name, symbol, category } in searchedItems" :key="symbol" :class="$style['search-item']">
-              <span :class="$style['item-title']">{{ name }}</span>
-              <span>{{ symbol }} | {{ category }}</span>
-            </li>
-          </ul>
+          <BookmarkList>
+            <BookmarkListItem v-for="{ name, symbol, category, isBookmarked } in items" :key="symbol">
+              <BookmarkListItemTitle>{{ name }}</BookmarkListItemTitle>
+              <BookmarkListItemText>{{ symbol }} | {{ category }}</BookmarkListItemText>
+              <template #button>
+                <BookmarkListItemButton v-if="isBookmarked" @click="onRemoveBookmark({ symbol, name })">
+                  &#9733;
+                </BookmarkListItemButton>
+                <BookmarkListItemButton v-else @click="onAddBookmark({ symbol, name, category })">
+                  &#9734;
+                </BookmarkListItemButton>
+              </template>
+            </BookmarkListItem>
+          </BookmarkList>
         </swiper-slide>
         <swiper-slide>
           <ArticleTemplate :articles="searchedNews" url-prefix="news/new" />
@@ -39,6 +47,13 @@ import ArticleTemplate from '@/components/ArticleTemplate/ArticleTemplate.vue';
 import { searchItems, searchNews, searchOpinions } from '@/services/searchService';
 import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner.vue';
 import bookmarkMixin from '@/mixin/bookmarkMixin';
+import {
+  BookmarkList,
+  BookmarkListItem,
+  BookmarkListItemButton,
+  BookmarkListItemTitle,
+  BookmarkListItemText,
+} from '@/components/Bookmark';
 
 export default Vue.extend({
   name: 'Search',
@@ -50,6 +65,12 @@ export default Vue.extend({
     BottomNav,
     HeaderButton,
     ArticleTemplate,
+    LoadingSpinner,
+    BookmarkList,
+    BookmarkListItem,
+    BookmarkListItemButton,
+    BookmarkListItemTitle,
+    BookmarkListItemText,
   },
 
   mixins: [bookmarkMixin],
@@ -112,14 +133,7 @@ export default Vue.extend({
   }
 }
 
-.search-item {
-  padding: 24px 12px;
-  border-bottom: 1px solid var(--border-color);
-}
-
-.item-title {
-  font-size: 18px;
-  display: block;
-  margin-bottom: 4px;
+.main {
+  position: relative;
 }
 </style>
