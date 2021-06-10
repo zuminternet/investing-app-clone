@@ -69,15 +69,15 @@ export class User extends Base implements UserEntity {
    * @property
    * 사용자 password
    */
-  @Column({ length: 50, nullable: false })
+  @Column({ length: 100, nullable: false })
   password!: string;
 
-  @OneToMany(
-    (type) => Reply,
-    (Reply) => Reply.userId,
-    { cascade: ['insert', 'update'] },
-  )
-  repls: Reply[];
+  // @OneToMany(
+  //   (type) => Reply,
+  //   (Reply) => Reply.userId,
+  //   { cascade: ['insert', 'update'] },
+  // )
+  // repls: Reply[];
 
   /**
    * @property

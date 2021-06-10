@@ -3,9 +3,10 @@ import { AxiosStatic } from 'axios';
 
 declare const Axios: AxiosStatic;
 
+/** @todo data에 성공/실패 관련 메시지 담아 UI에 출력? */
 export const login = async (email: string, password: string) => {
   try {
-    const { status, statusText } = await Axios.post(`/api/auth/in`, { email, password }, { withCredentials: true });
+    const { data, status, statusText } = await Axios.post(`/api/auth/in`, { email, password }, { withCredentials: true });
     if (status >= 400) throw Error(statusText);
     return true;
   } catch (e) {
@@ -15,7 +16,7 @@ export const login = async (email: string, password: string) => {
 
 export const logout = async (email: string) => {
   try {
-    const { status, statusText } = await Axios.get(`/api/auth/out`, { params: { email } });
+    const { data, status, statusText } = await Axios.get(`/api/auth/out`, { params: { email } });
     if (status >= 400) throw Error(statusText);
     return true;
   } catch (e) {
@@ -25,7 +26,7 @@ export const logout = async (email: string) => {
 
 export const signup = async (email: string, password: string, nickname: string) => {
   try {
-    const { status, statusText } = await Axios.post(`/api/user/`, { email, password, nickname }, { withCredentials: true });
+    const { data, status, statusText } = await Axios.post(`/api/user/`, { email, password, nickname }, { withCredentials: true });
     if (status >= 400) throw Error(statusText);
     return true;
   } catch (e) {
