@@ -4,14 +4,14 @@ import { Inject } from 'zum-portal-core/backend/decorator/Alias';
 
 import UserService from '../../service/UserService';
 import AuthService from '../../service/AuthService';
-import SearchService from '../../../../common/backend/service/SearchService';
+import ChartService from '../../service/ChartService';
 import MarketService from '../../service/MarketService';
+import SearchService from '../../../../common/backend/service/SearchService';
 import ItemDetailService from '../../../../common/backend/service/ItemDetailService';
-// import ArticleService from '../../service/ArticleService';
 import ArticleService from '../../../../common/backend/service/ArticleService';
 import BookmarkService from '../../../../common/backend/service/BookmarkService';
 
-import { tickerMap } from '../../../../common/domain';
+import { tickerMap, tickerKeys } from '../../../../common/domain';
 
 @Controller({ path: '/api' })
 export class ApiController {
@@ -23,12 +23,8 @@ export class ApiController {
     @Inject(ItemDetailService) private itemDetailService: ItemDetailService,
     @Inject(ArticleService) private articleService: ArticleService,
     @Inject(BookmarkService) private bookmarkService: BookmarkService,
+    @Inject(ChartService) private chartService: ChartService,
   ) {}
-
-  private getTickerArray(tickers: any) {
-    if (typeof tickers === 'string') return [tickers];
-    return tickers;
-  }
 
   @GetMapping({ path: '/user' })
   public async getUser(request: Request, response: Response) {
@@ -228,8 +224,6 @@ export class ApiController {
       const { keyword, email } = request.query;
       let items = await this.searchService.getSearchedItems({ keyword });
 
-      console.log(items, 'con');
-
       if (items) {
         for (let i = 0; i < items.length; i++) {
           const { symbol } = items[i];
@@ -280,35 +274,15 @@ export class ApiController {
   @GetMapping({ path: '/articles/news' })
   public async getNews(request: Request, response: Response) {
     try {
-      const { offset, limit, tickers } = request.query;
-      const news = await this.articleService.getNews({ offset: +offset, limit: +limit, tickers: this.getTickerArray(tickers) });
+      const { offset, limit } = request.query;
+      let { tickers } = request.query;
+      const [keyword] = tickers;
 
-      if (news) {
-        return response.status(200).send(news);
-      }
-
-      response.sendStatus(404);
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  /**
-   * @description DB에서 articles 중 검색된 news만 가져오는 controller
-   * @param request
-   * @param response
-   * @returns
-   */
-  @GetMapping({ path: '/search/news' })
-  public async getNewsForSearch(request: Request, response: Response) {
-    try {
-      const { offset, limit, tickers } = request.query;
-
-      const news = await this.articleService.getNewsForSearch({
-        offset: +offset,
-        limit: +limit,
-        tickers: this.getTickerArray(tickers),
+      tickers = tickerKeys.filter((key) => {
+        return key.includes(keyword);
       });
+
+      const news = await this.articleService.getNews(+offset, +limit, tickers);
 
       if (news) {
         return response.status(200).send(news);
@@ -329,32 +303,15 @@ export class ApiController {
   @GetMapping({ path: '/articles/analyses' })
   public async getAnalyses(request: Request, response: Response) {
     try {
-      const { offset, limit, tickers } = request.query;
-      const analyses = await this.articleService.getOpinions({
-        offset: +offset,
-        limit: +limit,
-        // tickers: this.getTickerArray(tickers),
+      const { offset, limit } = request.query;
+      let { tickers } = request.query;
+      const [keyword] = tickers;
+
+      tickers = tickerKeys.filter((key) => {
+        return key.includes(keyword);
       });
 
-      if (analyses) {
-        return response.status(200).send(analyses);
-      }
-
-      response.sendStatus(404);
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  @GetMapping({ path: '/search/analyses' })
-  public async getAnalysesForSearch(request: Request, response: Response) {
-    try {
-      const { offset, limit, tickers } = request.query;
-      const analyses = await this.articleService.getOpinionsForSearch({
-        offset: +offset,
-        limit: +limit,
-        // tickers: this.getTickerArray(tickers),
-      });
+      const analyses = await this.articleService.getOpinions(+offset, +limit, tickers);
 
       if (analyses) {
         return response.status(200).send(analyses);
@@ -423,10 +380,26 @@ export class ApiController {
         return response.status(200).send(bookmarks);
       }
 
-      response.sendStatus(409);
+      response.sendStatus(404);
     } catch (error) {
       console.log(error);
       response.json(error);
+    }
+  }
+
+  @GetMapping({ path: '/chart/historical' })
+  public async getHistoricalData(request: Request, response: Response) {
+    try {
+      const { symbol, from, to, period } = request.query;
+      const data = await this.chartService.getHistoricalData({ symbol, from, to, period });
+
+      if (data) {
+        return response.status(200).send(data);
+      }
+
+      response.sendStatus(404);
+    } catch (error) {
+      console.log(error);
     }
   }
 }

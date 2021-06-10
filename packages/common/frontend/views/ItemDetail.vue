@@ -6,6 +6,7 @@
       <swiper-slide>
         <list-wrapper :excludedHeight="210">
           <!-- 차트 컴포넌트 자리  -->
+          <chart :canvasWidth="300" :canvasHeight="300" :symbol="symbolForChart"></chart>
           <item-detail-overview-box :itemDetail="itemDetail"></item-detail-overview-box>
           <!-- 댓글 컴포넌트 자리 -->
           <sub-content-box :text="newsText">
@@ -81,6 +82,7 @@ import NewsImage from '../components/News/NewsImage.vue';
 import NewsTextBox from '../components/News/NewsTextBox.vue';
 import NewsTextBoxTitle from '../components/News/NewsTextBoxTitle.vue';
 import NewsTextBoxDesc from '../components/News/NewsTextBoxDesc.vue';
+import Chart from '../../../karl/frontend/components/Chart.vue';
 
 export default {
   name: 'ItemDetail',
@@ -99,16 +101,19 @@ export default {
     NewsTextBoxTitle,
     NewsTextBoxDesc,
     ListWrapper,
+    Chart,
   },
 
   data() {
     const { OVERLALL, NEWS, ANALYSIS, OPINION, CHART, MARKET, BOOKMARK, MORE } = text;
+
     return {
       swiperNavigatorButtonNames: [OVERLALL, NEWS, ANALYSIS, OPINION, CHART],
       bottomNavigatorButtonNames: [MARKET, NEWS, BOOKMARK, MORE],
       newsText: NEWS,
       analysisText: ANALYSIS,
       opnionText: OPINION,
+      symbolForChart: '',
     };
   },
 
@@ -125,8 +130,9 @@ export default {
     ...mapActions('itemDetail', ['getItemDetail', 'getNews', 'getAnalyses']),
   },
 
-  created() {
+  async created() {
     const { symbols, name } = this.$route.query;
+    this.symbolForChart = symbols;
     const email = this.userInfo.userEmail;
     const tickers = [symbols];
 
