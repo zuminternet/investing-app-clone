@@ -4,7 +4,7 @@
       <HeaderTitle>
         시장
         <template #right>
-          <RouterLink to="/search">&#128269;</RouterLink>
+          <SearchButton />
         </template>
       </HeaderTitle>
       <HeaderNav>
@@ -31,7 +31,7 @@
         </SwiperSlide>
       </Swiper>
     </main>
-    <BottomNav></BottomNav>
+    <BottomNav />
   </Layout>
 </template>
 
@@ -46,6 +46,7 @@ import MarketCoin from '@/components/Market/MarketCoin.vue';
 import MarketStock from '@/components/Market/MarketStock.vue';
 import { Swiper, SwiperSlide } from '@/components/Swiper';
 import swiperMixin from '@/mixin/swiperMixin';
+import SearchButton from '@/components/SearchButton/SearchButton.vue';
 
 export default Vue.extend({
   name: 'Index',
@@ -62,6 +63,7 @@ export default Vue.extend({
     Swiper,
     SwiperSlide,
     HeaderNavItem,
+    SearchButton,
   },
 
   mixins: [

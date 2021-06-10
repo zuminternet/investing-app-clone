@@ -6,7 +6,7 @@
           <HeaderButton @clickHeaderButton="back">🠔</HeaderButton>
         </template>
         <template #right>
-          <RouterLink to="/search">&#128269;</RouterLink>
+          <SearchButton />
         </template>
         {{ headerTitle }}
       </HeaderTitle>
@@ -27,7 +27,7 @@
         <ArticleDetailBodyText>{{ article.text }}</ArticleDetailBodyText>
       </ArticleDetailSection>
     </main>
-    <BottomNav></BottomNav>
+    <BottomNav />
   </Layout>
 </template>
 
@@ -39,6 +39,7 @@ import Layout from '@/components/Layout/Layout.vue';
 import { getArticle } from '@/services/articleService';
 import { fromNow } from 'common/frontend/utils';
 import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner.vue';
+import SearchButton from '@/components/SearchButton/SearchButton.vue';
 
 export default Vue.extend({
   name: 'NewsDetail',
@@ -50,6 +51,7 @@ export default Vue.extend({
     Layout,
     HeaderButton,
     LoadingSpinner,
+    SearchButton,
   },
 
   filters: {

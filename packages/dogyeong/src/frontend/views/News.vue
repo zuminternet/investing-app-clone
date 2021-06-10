@@ -3,7 +3,7 @@
     <Header>
       <HeaderTitle>
         <template #right>
-          <RouterLink to="/search">&#128269;</RouterLink>
+          <SearchButton />
         </template>
         뉴스
       </HeaderTitle>
@@ -28,7 +28,7 @@
         </SwiperSlide>
       </Swiper>
     </main>
-    <BottomNav></BottomNav>
+    <BottomNav />
   </Layout>
 </template>
 
@@ -42,6 +42,7 @@ import swiperMixin from '@/mixin/swiperMixin';
 import { mapActions } from 'vuex';
 import ArticleNew from '@/components/Article/ArticleNew.vue';
 import ArticlePopular from '@/components/Article/ArticlePopular.vue';
+import SearchButton from '@/components/SearchButton/SearchButton.vue';
 
 export default Vue.extend({
   name: 'News',
@@ -57,6 +58,7 @@ export default Vue.extend({
     SwiperSlide,
     ArticleNew,
     ArticlePopular,
+    SearchButton,
   },
 
   mixins: [

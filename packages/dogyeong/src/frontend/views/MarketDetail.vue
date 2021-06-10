@@ -6,7 +6,7 @@
           <HeaderButton @clickHeaderButton="back">🠔</HeaderButton>
         </template>
         <template #right>
-          <RouterLink to="/search">&#128269;</RouterLink>
+          <SearchButton />
         </template>
         {{ name }}
       </HeaderTitle>
@@ -68,7 +68,7 @@
       <ArticleTemplate section-title="뉴스" :articles="news" url-prefix="/news/new" />
       <ArticleTemplate section-title="의견" :articles="opinions" url-prefix="/news/new" />
     </main>
-    <BottomNav></BottomNav>
+    <BottomNav />
   </Layout>
 </template>
 
@@ -82,6 +82,7 @@ import BottomNav from '@/components/BottomNav/BottomNav.vue';
 import { createChart } from '@/chart';
 import ArticleTemplate from '@/components/ArticleTemplate/ArticleTemplate.vue';
 import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner.vue';
+import SearchButton from '@/components/SearchButton/SearchButton.vue';
 
 const chartLightThemeOption = {
   bgColor: '#fafffa',
@@ -104,6 +105,7 @@ export default Vue.extend({
     HeaderButton,
     ArticleTemplate,
     LoadingSpinner,
+    SearchButton,
   },
 
   data() {

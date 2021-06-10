@@ -7,7 +7,7 @@
       <input v-model="password" type="password" />
       <button @click="changeUserName">save</button>
     </main>
-    <BottomNav></BottomNav>
+    <BottomNav />
   </Layout>
 </template>
 

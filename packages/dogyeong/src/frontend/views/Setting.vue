@@ -14,7 +14,7 @@
         <RouterLink to="/change-username" class="setting-item">이름 변경</RouterLink>
       </template>
     </main>
-    <BottomNav></BottomNav>
+    <BottomNav />
   </Layout>
 </template>
 
