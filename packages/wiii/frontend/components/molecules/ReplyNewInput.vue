@@ -1,7 +1,7 @@
 <template>
   <ReplyForm v-if="isValid" @change-current-input="inputToggle" />
-  <div v-else id="reply-open" class="card noselect" @click="inputToggle(inputId)">
-    <Words>댓글 달기</Words>
+  <div v-else id="reply-open" class="card noselect" :class="{ disabled: !hasAuth }" @click="inputToggle(inputId)">
+    <Words class="reply-valid-text"> {{ validText }} </Words>
   </div>
 </template>
 
@@ -27,12 +27,21 @@ export default Vue.extend({
   },
 
   computed: {
+    hasAuth() {
+      return this.$store.getters.getAuth;
+    },
+
     isValid() {
-      return this.$store.getters.getAuth && this.curInputId === this.inputId;
+      const { curInputId, inputId } = this;
+      return this.hasAuth && curInputId === inputId;
     },
 
     formDisabled() {
-      return this.isValid ? '' : 'disabled';
+      return this.hasAuth ? '' : 'disabled';
+    },
+
+    validText() {
+      return this.hasAuth ? `댓글 달기` : `댓글 달기는 로그인이 필요합니다`;
     },
   },
 
@@ -55,9 +64,14 @@ export default Vue.extend({
     background-color: $grey-500;
     color: $grey-100;
   }
+}
 
-  .disabled {
-    cursor: not-allowed;
-  }
+.disabled {
+  cursor: not-allowed;
+}
+
+.reply-valid-text {
+  font-style: oblique;
+  font-size: 0.8rem;
 }
 </style>
