@@ -15,10 +15,10 @@
           <BookmarkListItemTitle>{{ name }}</BookmarkListItemTitle>
           <BookmarkListItemText>{{ symbol }} | {{ category }}</BookmarkListItemText>
           <template #button>
-            <BookmarkListItemButton v-if="isBookmarked" @click="onRemoveBookmark({ symbol, name })">
+            <BookmarkListItemButton v-if="isBookmarked" @click="onRemoveBookmark({ items: bookmarks, symbol, name })">
               &#9733;
             </BookmarkListItemButton>
-            <BookmarkListItemButton v-else @click="onAddBookmark({ symbol, name, category })">
+            <BookmarkListItemButton v-else @click="onAddBookmark({ items: bookmarks, symbol, name, category })">
               &#9734;
             </BookmarkListItemButton>
           </template>
