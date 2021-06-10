@@ -4,6 +4,7 @@ import Vuex, { Store } from 'vuex';
 import Theme from '@/store/modules/Theme.module';
 import Auth from '@/store/modules/Auth.module';
 import Reply from '@/store/modules/Reply.module';
+import Market from '@/store/modules/Market.module';
 import { RootActions } from '@/store/types';
 export * from '@/store/types';
 
@@ -38,6 +39,7 @@ const store = new Store({
     Theme,
     Auth,
     Reply,
+    Market,
   },
 });
 

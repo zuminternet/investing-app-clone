@@ -13,6 +13,7 @@ export enum StoreNames {
   Reply = 'Reply',
   Auth = 'Auth',
   User = 'User',
+  Market = 'Market',
 }
 
 export enum ChartDataEnums {
