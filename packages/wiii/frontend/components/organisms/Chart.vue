@@ -4,6 +4,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import { createNamespacedHelpers } from 'vuex';
 
 import EsService from '@/services/chart/eventSource';
 import { TimespanEnum } from '@/type/apis';
@@ -13,13 +14,30 @@ import withTime from '@/utils/timer';
 
 import { GetHistoricalOptions } from '../../../domain/apiOptions';
 import { getDateString, times } from '../../../domain/date';
+import { StoreNames } from '@/store';
+
+const { mapGetters, mapActions } = createNamespacedHelpers(StoreNames.Market);
 
 /**
  * @description
  * Chart wrapper
  */
 export default Vue.extend({
+  name: 'Chart',
+
   props: {
+    chartType: {
+      type: String,
+      default: 'candle',
+    },
+    apiType: {
+      type: String,
+      default: `static`,
+    },
+    width: {
+      type: Number,
+      default: 600,
+    },
     typeName: {
       type: String,
       required: true,
@@ -111,17 +129,27 @@ export default Vue.extend({
   },
 
   computed: {
+    ...mapGetters(['hasStockData']),
     queryString(): GetHistoricalOptions {
-      const { sort, limit, offset } = this.query;
+      const {
+        typeName,
+        ticker,
+        exchange,
+        from,
+        to,
+        multiplier,
+        timespan,
+        query: { sort, limit, offset },
+      } = this;
 
       /** @todo type에 따라 property 다른 부분 처리, 일단 국내주식(MarketStack)에 맞춰서 */
       return {
-        type: this.typeName,
-        ticker: this.ticker,
-        exchange: this.exchange,
-        dateFrom: this.from,
-        dateTo: this.to,
-        interval: `${this.multiplier}${this.timespan}`,
+        type: typeName,
+        ticker,
+        exchange,
+        dateFrom: from,
+        dateTo: to,
+        interval: `${multiplier}${timespan}`,
         sort,
         limit,
         offset,
@@ -129,13 +157,18 @@ export default Vue.extend({
     },
   } /** end of computed */,
 
-  mounted() {
+  async mounted() {
     const chart = this.$refs.canvas as HTMLCanvasElement;
     this.ctx = chart.getContext(CanvasOptionEnum.context2d);
-    withTime(this.es ? null : this.getES(), `Vue-Chart: API -> Draw`);
+    if (this.apiType === `es`) withTime(this.es ? null : this.getES(), `Vue-Chart: API -> Draw`);
+    else {
+      await this.getStatic();
+      this.getChart();
+    }
   },
 
   methods: {
+    ...mapActions(['getTodayStockShort']),
     /**
      * proxy observer 생성
      * @description
@@ -160,6 +193,18 @@ export default Vue.extend({
         console.error(e);
       }
     },
+
+    async getStatic() {
+      try {
+        const data = await this.getTodayStockShort(this.ticker);
+        console.log({ data });
+        // this.histData.data =
+        // console.log(this.histData);
+      } catch (e) {
+        console.error(e);
+      }
+    },
+
     getChart() {
       /**
        * @todo
@@ -176,17 +221,17 @@ export default Vue.extend({
       } = this.histData;
 
       /** Chart Caching */
-      const cachedChart = withTime(
+      withTime(
         drawBasicCandleChart,
         `drawBasicCandleChart`,
       )({
         ctx: this.ctx,
         results,
         count,
-        payload: { total, customNumToShow: 300, smaConfigs: this.smaConfigs },
+        payload: { total, customNumToShow: this.query.limit, smaConfigs: this.smaConfigs, width: this.width },
       });
 
-      this.cachedChart[this.ticker] = cachedChart;
+      // this.cachedChart[this.ticker] = cachedChart;
     },
   },
 });

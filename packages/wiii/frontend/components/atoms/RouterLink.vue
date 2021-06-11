@@ -18,23 +18,4 @@ export default Vue.extend({
 });
 </script>
 
-<style lang="scss" scoped>
-.router-link {
-  @extend .card;
-
-  text-decoration: none;
-
-  &:hover {
-    color: $grey-100;
-    background-color: $blue-700;
-    font-weight: bold;
-    font-style: oblique;
-    text-decoration: $blue-300 underline 3px;
-  }
-
-  &-exact-active {
-    color: $blue-700;
-    font-weight: bold;
-  }
-}
-</style>
+<style lang="scss" scoped></style>

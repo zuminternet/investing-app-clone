@@ -1,9 +1,10 @@
 /** 밀리세컨 단위 */
-const SEC_ONE = 1000;
-const HOUR_ONE = 60 * 60 * SEC_ONE;
-const DAY_ONE = 24 * HOUR_ONE;
-const WEEK_ONE = DAY_ONE * 7;
-const YEAR_ONE = DAY_ONE * 365;
+export const SEC_ONE = 1000 as const;
+export const MINUTE_ONE = SEC_ONE * 60;
+export const HOUR_ONE = 60 * MINUTE_ONE;
+export const DAY_ONE = 24 * HOUR_ONE;
+export const WEEK_ONE = DAY_ONE * 7;
+export const YEAR_ONE = DAY_ONE * 365;
 
 export const times = {
   /** server data caching 60s (s 단위) */
@@ -18,7 +19,7 @@ const addPadToStr = (num: number) => (str: string | number): string => String(st
 const add4Pad = addPadToStr(4);
 const add2Pad = addPadToStr(2);
 
-const getDateFromDate = (date: Date = new Date()): string => {
+export const getDateFromDate = (date: Date = new Date()): string => {
   if (isNaN(date.getTime())) return;
   const yyyy = add4Pad(date.getFullYear());
   const mm = add2Pad(date.getMonth() + 1);

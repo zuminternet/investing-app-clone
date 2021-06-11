@@ -23,11 +23,11 @@ export type marketsType = typeof markets[keyof typeof markets];
 export const paths = {
   Home: '/',
   Markets: '/markets/',
-  MarketsRouter: '/markets/:detail',
+  MarketsRouter: '/markets/:type/:ticker',
   StocksMarket: `/markets/${markets.stocks}`,
   IndexMarket: `/markets/${markets.indexes}`,
   CoinMarket: `/markets/${markets.coins}`,
-  News: '/news',
+  News: '/news/:ticker',
   User: '/user/',
   SignUp: '/user/signup',
   LogIn: '/user/login',
@@ -42,6 +42,6 @@ export enum selectors {
 
 export const HomeMenuData = [
   { id: views.Home, name: '홈', href: paths.Home },
-  { id: views.Markets, name: '마켓', href: paths.StocksMarket },
-  { id: views.News, name: '뉴스', href: paths.News },
+  { id: views.Markets, name: '마켓', href: '/markets/stocks/005930' },
+  { id: views.News, name: '뉴스', href: '/news/005930' },
 ] as const;

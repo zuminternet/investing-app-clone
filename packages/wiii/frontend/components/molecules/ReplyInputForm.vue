@@ -1,8 +1,8 @@
 <template>
-  <form id="reply-input" class="card" @submit.prevent="() => submitReply(replyText)">
+  <form id="reply-input" class="card" @submit.prevent="() => submitReply()">
     <TextArea id="reply-input-text" @change-text-handler="changeReplyInput" :newText="replyText" />
     <div id="buttons">
-      <Button id="reply-input-cancel" type="reset" @click.native="cancelInput">Cancel</Button>
+      <Button id="reply-input-cancel" type="reset" @click.native="resetInput">Cancel</Button>
       <Button id="reply-input-submit" type="submit" :disabled="replyText.length === 0">Save</Button>
     </div>
   </form>
@@ -10,9 +10,11 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import { mapGetters, mapActions } from 'vuex';
 import TextArea from '@/components/atoms/TextArea.vue';
 import Button from '@/components/atoms/Button.vue';
-import debounce from '@/utils/debounce';
+import { StoreNames } from '@/store';
+// import debounce from '@/utils/debounce';
 
 export default Vue.extend({
   data() {
@@ -23,8 +25,21 @@ export default Vue.extend({
 
   components: { TextArea, Button },
 
+  mounted() {
+    console.log({ route_ticker: this.ticker });
+  },
+
+  computed: {
+    ...mapGetters(['getTicker']),
+    ticker() {
+      return this.getTicker;
+    },
+  },
+
   methods: {
-    cancelInput() {
+    ...mapActions(StoreNames.Reply, ['insertReply']),
+
+    resetInput() {
       this.replyText = '';
       this.$emit('change-current-input', 'none');
     },
@@ -37,12 +52,13 @@ export default Vue.extend({
      * debounce 적용해 한번만 쿼리 전송되도록
      * @todo debounce 함수 제대로 안만들어진건지 alert 계속 실행되는 문제..
      */
-    submitReply(replyText) {
-      const reset = this.cancelInput;
-      return debounce(function() {
-        reset();
-        return alert(replyText);
-      }, 500)();
+    async submitReply() {
+      const isInserted = await this.insertReply({ contents: this.replyText });
+      /** @todo 실패 UI */
+      if (!isInserted) return;
+
+      this.resetInput();
+      this.$emit('after-submit');
     },
   },
 });

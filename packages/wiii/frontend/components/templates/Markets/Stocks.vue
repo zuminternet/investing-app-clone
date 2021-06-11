@@ -1,16 +1,29 @@
 <template>
   <main class="area">
-    <Chart class="card" :typeName="`stock`" />
-    <!-- <Chart :typeName="`stock`" :timespan="`week`" :from="`2017-01-24`" /> -->
-    <ReplySection :ticker="'sdfsdf'" />
+    <!-- <Chart class="card" :typeName="`stock`" :ticker="239340" :smaConfigs="[{}]" :width="200" /> -->
+    <!-- <Chart
+      class="card"
+      :typeName="`stock`"
+      :ticker="`239340`"
+      :smaConfigs="[
+        {
+          duration: 20,
+          color: `red`,
+          width: 10,
+        },
+      ]"
+      :width="200"
+    /> -->
+    <Chart class="card" :typeName="`stock`" :apiType="`es`" />
   </main>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import Chart from '@/components/organisms/Chart';
+import { mapGetters } from 'vuex';
 
-import ReplySection from '../../../../../common/frontend/components/ReplySection';
+import Chart from '@/components/organisms/Chart.vue';
+import ReplySection from '@/components/organisms/ReplySection.vue';
 
 export default Vue.extend({
   components: {

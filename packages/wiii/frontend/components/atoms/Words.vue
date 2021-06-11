@@ -32,7 +32,7 @@ export default Vue.extend({});
   }
 
   &.subtitle {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     line-height: 1.5;
   }
 

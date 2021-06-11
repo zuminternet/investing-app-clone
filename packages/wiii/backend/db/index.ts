@@ -3,30 +3,32 @@
  * DB 관련 로직 구현
  * - typeorm - connections
  */
+import { createConnection } from 'typeorm';
+import { createClient } from 'redis';
 
-import { MongoDBConnOptions, MySQLConnOptions } from '../config/db';
-import { Connection, createConnections } from 'typeorm';
-// import MongoDBDao from './dao/mongodb';
-// import MySQLDao from './dao/mysql';
-// import { getConnections } from './index';
+import { MongoDBConnOptions, RedisConnOptions } from '../config/db';
 
-const getConnections = async (): Promise<Connection[]> => {
+export { UserRepository } from './repository/User.repository';
+export { ReplyRepository } from './repository/Reply.repository';
+
+const { host, port } = RedisConnOptions;
+
+export const getMongoConnection = async () => {
   try {
-    const conn = await createConnections([MySQLConnOptions, MongoDBConnOptions]);
-    // new MySQLDao();
-    // new MongoDBDao();
+    const conn = await createConnection(MongoDBConnOptions);
+
     return conn;
   } catch (e) {
-    console.error(e);
-    return;
+    return console.error(e);
   }
 };
 
-const getRedisConnection = () => {
-  //
+export const getRedisConnection = () => {
+  try {
+    const client = createClient(port, host);
+    console.info(`[DB] Redis Connected`);
+    return client;
+  } catch (e) {
+    return console.error(e);
+  }
 };
-
-// export {
-// getConnections,
-// getRedisConnection
-// }

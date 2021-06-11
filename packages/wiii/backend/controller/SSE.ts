@@ -1,7 +1,7 @@
-import { Response } from 'express'
+import { Response } from 'express';
 
-import { MarketService } from '../service/MarketService'
-import { times } from '../../domain/date'
+import { MarketService } from '../service/Market.service';
+import { times } from '../../domain/date';
 
 /**
  * SSE

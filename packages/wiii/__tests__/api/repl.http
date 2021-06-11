@@ -1,0 +1,8 @@
+# 댓글 등록 성공
+curl -X POST -d "docId=AAPL&email=test@2.com&content=testesttestset" -b "x-access-token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjoidGVzdEAyLmNvbSIsImlhdCI6MTYyMzIxNTM4MSwiZXhwIjoxNjIzMjIyNTgxfQ.ylQfh2-VZaI-k438_2SyJ7LH7CrafyFhXkQI9FopQLQ" "localhost:8080/api/reply"
+
+# 댓글 목록 조회
+curl -X GET "localhost:8080/api/repl/list?ticker=005980"
+
+# 댓글 삭제
+curl -X DELETE -d "" "localhost:8080/api/repl/"

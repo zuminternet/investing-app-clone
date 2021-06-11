@@ -1,12 +1,12 @@
 <template>
   <div class="reply-sort noselect">
-    정렬: <Button @click.native="$emit('change-sort')">{{ sortText }}</Button>
+    정렬: <Button class="reply-sort-button" @click.native="$emit('change-sort')">{{ sortText }}</Button>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import Button from '../atoms/Button';
+import Button from '@/components/atoms/Button.vue';
 
 export default Vue.extend({
   name: 'ReplySort',
@@ -32,7 +32,8 @@ export default Vue.extend({
   font-size: 0.7rem;
   color: $grey-700;
 
-  button {
+  &-button {
+    width: 50px;
     background-color: $grey-100;
     border: 2px solid $grey-100;
     margin-left: 2px;
