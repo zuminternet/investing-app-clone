@@ -1,13 +1,16 @@
 $theme-dark: (
   'app-bg-color': #090c10,
-  'text-color': #000000de,
+  'text-color': #eef0f2,
   'active-button-color': #1e90ff,
+  'title-color': #1e90ff,
 );
 
 $theme-light: (
   'app-bg-color': #eef0f2,
   'text-color': #000000de,
   'active-button-color': #1e90ff,
+  'title-color': #1e90ff,
+  'icon-color': #1e90ff,
 );
 
 #app {
