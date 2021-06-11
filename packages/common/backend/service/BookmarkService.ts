@@ -32,7 +32,7 @@ interface deleteBookmarkQueryProps {
   email: string;
   symbol: string;
   name: string;
-  category: string;
+  category?: string;
 }
 
 @Service()

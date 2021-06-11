@@ -9,7 +9,7 @@
         <button type="submit" @click.prevent="onClickSignupBtn">sign up</button>
       </form>
     </main>
-    <BottomNav></BottomNav>
+    <BottomNav />
   </Layout>
 </template>
 

@@ -9,32 +9,20 @@
       <LoadingSpinner v-if="isLoading" />
       <custom-swiper :navigator-button-names="swiperNavigatorButtonNames" :class="$style.swiper">
         <swiper-slide>
-          <ul>
-            <li v-for="{ name, symbol, category, isBookmarked } in items" :key="symbol" :class="$style['search-item']">
-              <div>
-                <span :class="$style['item-title']">{{ name }}</span>
-                <span>{{ symbol }} | {{ category }}</span>
-              </div>
-              <div>
-                <button
-                  v-if="isBookmarked"
-                  :class="$style['bookmark-button']"
-                  type="button"
-                  @click="onRemoveBookmark({ symbol, name })"
-                >
+          <BookmarkList>
+            <BookmarkListItem v-for="{ name, symbol, category, isBookmarked } in items" :key="symbol">
+              <BookmarkListItemTitle>{{ name }}</BookmarkListItemTitle>
+              <BookmarkListItemText>{{ symbol }} | {{ category }}</BookmarkListItemText>
+              <template #button>
+                <BookmarkListItemButton v-if="isBookmarked" @click="onRemoveBookmark({ items, symbol, name })">
                   &#9733;
-                </button>
-                <button
-                  v-else
-                  :class="$style['bookmark-button']"
-                  type="button"
-                  @click="onAddBookmark({ symbol, name, category })"
-                >
+                </BookmarkListItemButton>
+                <BookmarkListItemButton v-else @click="onAddBookmark({ items, symbol, name, category })">
                   &#9734;
-                </button>
-              </div>
-            </li>
-          </ul>
+                </BookmarkListItemButton>
+              </template>
+            </BookmarkListItem>
+          </BookmarkList>
         </swiper-slide>
         <swiper-slide>
           <ArticleTemplate :articles="news" url-prefix="news/new" />
@@ -57,7 +45,15 @@ import BottomNav from '@/components/BottomNav/BottomNav.vue';
 import { HeaderButton } from '@/components/Header';
 import ArticleTemplate from '@/components/ArticleTemplate/ArticleTemplate.vue';
 import { searchItems, searchNews, searchOpinions } from '@/services/searchService';
-import { addBookmark, removeBookmark } from '@/services/bookmarkService';
+import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner.vue';
+import bookmarkMixin from '@/mixin/bookmarkMixin';
+import {
+  BookmarkList,
+  BookmarkListItem,
+  BookmarkListItemButton,
+  BookmarkListItemTitle,
+  BookmarkListItemText,
+} from '@/components/Bookmark';
 import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner.vue';
 
 export default Vue.extend({
@@ -71,7 +67,14 @@ export default Vue.extend({
     HeaderButton,
     ArticleTemplate,
     LoadingSpinner,
+    BookmarkList,
+    BookmarkListItem,
+    BookmarkListItemButton,
+    BookmarkListItemTitle,
+    BookmarkListItemText,
   },
+
+  mixins: [bookmarkMixin],
 
   data() {
     return {
@@ -107,31 +110,6 @@ export default Vue.extend({
         console.error(e);
       }
     },
-
-    onAddBookmark({ symbol, name, category }) {
-      addBookmark({ symbol, name, category })
-        .then(({ symbol }) => {
-          const item = this.findItemBySymbol(symbol);
-          if (!item) return;
-          item.isBookmarked = true;
-        })
-        .catch(console.error);
-    },
-
-    onRemoveBookmark({ symbol, name }) {
-      removeBookmark({ symbol, name })
-        .then((symbol) => {
-          const item = this.findItemBySymbol(symbol);
-          if (!item) return;
-          item.isBookmarked = false;
-        })
-        .catch(console.error);
-    },
-
-    findItemBySymbol(symbol: string) {
-      return this.items.find((item) => item.symbol === symbol);
-    },
-
     back() {
       this.$router.back();
     },
@@ -170,24 +148,5 @@ export default Vue.extend({
 
 .main {
   position: relative;
-}
-
-.search-item {
-  padding: 24px 12px;
-  border-bottom: 1px solid var(--border-color);
-  display: flex;
-  justify-content: space-between;
-}
-
-.item-title {
-  font-size: 18px;
-  display: block;
-  margin-bottom: 4px;
-}
-
-.bookmark-button {
-  font-size: 24px;
-  height: 100%;
-  padding: 4px;
 }
 </style>
