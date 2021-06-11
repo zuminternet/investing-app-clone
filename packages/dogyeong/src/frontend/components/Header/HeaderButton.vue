@@ -13,13 +13,9 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" module>
-button {
+.button {
   padding: 6px;
   margin-right: 8px;
-  border: 0;
-  appearance: none;
-  background-color: transparent;
-  cursor: pointer;
   font-size: 20px;
   color: var(--text-color);
 }
