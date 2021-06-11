@@ -1,10 +1,12 @@
 import { Controller, GetMapping } from 'zum-portal-core/backend/decorator/Controller';
+import { Middleware } from 'zum-portal-core/backend/decorator/Middleware';
 import { Request, Response } from 'express';
 import { Inject } from 'zum-portal-core/backend/decorator/Alias';
 import ArticleService from 'common/backend/service/ArticleService';
 import BookmarkService from 'common/backend/service/BookmarkService';
 import SearchkService from 'common/backend/service/SearchService';
-import { getTickerArray } from 'common/domain';
+import { getMatchedTickers } from 'common/domain';
+import { getUser } from '../middlewares';
 
 @Controller({ path: '/api/search' })
 export class SearchController {
@@ -14,23 +16,28 @@ export class SearchController {
     @Inject(SearchkService) private searchService: SearchkService,
   ) {}
 
+  private async appendIsBookmarked(target: Record<string, unknown>, email: string) {
+    const isBookmarked = await this.bookmarkService.getIsBookmarked({ email: email as string, symbols: target.symbol as string });
+    return { ...target, isBookmarked };
+  }
+
   /**
    * @description search page에 렌더링할 searched items들을 가져오는 메소드
    */
+  @Middleware(getUser)
   @GetMapping({ path: '/items' })
-  public async getSearchedItems(request: Request, response: Response) {
+  public async searchItems(request: Request, response: Response) {
     try {
-      const { keyword, email } = request.query;
+      const { user } = request.body;
+      const { keyword } = request.query;
+
       let items = await this.searchService.getSearchedItems({ keyword: keyword as string });
 
       if (!items) return response.sendStatus(404);
 
-      items = await Promise.all(
-        items.map(async (item) => {
-          const isBookmarked = await this.bookmarkService.getIsBookmarked({ email: email as string, symbols: item.symbol });
-          return { ...item, isBookmarked };
-        }),
-      );
+      const bookmarkAdder = (item) => this.appendIsBookmarked(item, user?.email as string);
+
+      if (user?.email) items = await Promise.all(items.map(bookmarkAdder));
 
       response.json(items);
     } catch (error) {
@@ -41,50 +48,35 @@ export class SearchController {
 
   /**
    * @description DB에서 articles 중 검색된 news만 가져오는 controller
-   * @param request
-   * @param response
-   * @returns
    */
   @GetMapping({ path: '/news' })
-  public async getNewsForSearch(request: Request, response: Response) {
+  public async searchNews(request: Request, response: Response) {
     try {
-      const { offset, limit, tickers } = request.query;
+      const { offset, limit, keyword } = request.query;
+      const tickers = getMatchedTickers(keyword as string);
+      const news = await this.articleService.getNews(+offset, +limit, tickers);
 
-      const news = await this.articleService.getNewsForSearch({
-        offset: +offset,
-        limit: +limit,
-        tickers: getTickerArray(tickers as string[]),
-      });
-
-      if (news) {
-        return response.status(200).send(news);
-      }
-
-      response.sendStatus(404);
+      response.json(news);
     } catch (error) {
       console.log(error);
+      response.sendStatus(404);
     }
   }
 
-  @GetMapping({ path: '/analyses' })
-  public async getAnalysesForSearch(request: Request, response: Response) {
+  /**
+   * @description DB에서 articles 중 검색된 opinions만 가져오는 controller
+   */
+  @GetMapping({ path: '/opinions' })
+  public async searchOpinions(request: Request, response: Response) {
     try {
-      const { offset, limit, tickers } = request.query;
-      const analyses = await this.articleService.getOpinionsForSearch({
-        offset: +offset,
-        limit: +limit,
-        tickers: getTickerArray(tickers as string[]),
-      });
+      const { offset, limit, keyword } = request.query;
+      const tickers = getMatchedTickers(keyword as string);
+      const opinions = await this.articleService.getOpinions(+offset, +limit, tickers);
 
-      console.log(tickers, analyses);
-
-      if (analyses) {
-        return response.status(200).send(analyses);
-      }
-
-      response.sendStatus(404);
+      response.json(opinions);
     } catch (error) {
       console.log(error);
+      response.sendStatus(404);
     }
   }
 }

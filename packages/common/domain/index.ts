@@ -89,6 +89,22 @@ export const tickerMap = {
 
 export const tickerKeys = [...Object.keys(tickerMap.stock), ...Object.keys(tickerMap.index), ...Object.keys(tickerMap.crypto)];
 
+const findMatchedTickers = (keyword: string) => {
+  if (typeof keyword !== 'string') throw new Error('Keyword must be string');
+  return tickerKeys.filter((ticker) => ticker.includes(keyword));
+};
+
+export const getMatchedTickers = (keywords: string | string[]): string[] => {
+  if (typeof keywords === 'string') {
+    return findMatchedTickers(keywords);
+  }
+  if (Array.isArray(keywords)) {
+    return [...new Set(keywords.flatMap(findMatchedTickers))];
+  }
+
+  throw new Error('Keywords must be string or array of string');
+};
+
 export type IndexSymbol = keyof typeof tickerMap.index;
 
 export type CryptoSymbol = keyof typeof tickerMap.crypto;
