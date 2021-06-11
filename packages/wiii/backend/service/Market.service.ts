@@ -3,7 +3,7 @@ import { Caching } from 'zum-portal-core/backend/decorator/Caching';
 
 import { GetHistoricalOptions } from '../../domain/apiOptions';
 import { marketName } from '../../domain/apiUrls';
-import { times } from '../../domain/date';
+import { MINUTE_ONE, times } from '../../domain/date';
 import { devPrint, IS_PRO_MODE } from '../../domain/utilFunc';
 import { fetchHistoricalData as historicalKoreanData } from '../chart/KRX';
 
@@ -25,11 +25,16 @@ const resultValidator = (data, status: number, statusText: string) => {
  */
 @Service()
 export class MarketService {
+  private delay = MINUTE_ONE * 5;
+  private lastRequest: number;
+
   constructor() /**
    * @Yml('marketApi') private MarketApi: any,
    * @Inject(ZumProvisionAdapter) private adapter: ZumProvisionAdapter,
    */
-  {}
+  {
+    this.lastRequest = new Date().getTime() - MINUTE_ONE * 10;
+  }
 
   /**
    * getStockHistorical
@@ -37,7 +42,6 @@ export class MarketService {
    * @description
    * 실무에서는 webSocket 등 실시간 데이터 업데이트 해야 하지만
    * 파일럿 프로젝트에서는 무료 api를 사용하므로 사용량 제한 위해 캐싱 사용,
-   * @todo node-caching 안되는 문제..? client 요청할 때마다 매번 API 요청 보내게 됨..
    */
   @Caching({
     /** 개발모드에서는 1시간에 한 번만 실행 */
@@ -45,16 +49,33 @@ export class MarketService {
     /** 캐싱 기간 초 단위 */
     ttl: IS_PRO_MODE ? times.caching : times.caching * 60,
     runOnStart: false,
-    key: `MarketHistory:${new Date().getHours()}`,
+    key: `MarketHistory:${new Date().getMinutes()}`,
     unless: (result) => !result,
   })
   public async getHistorical(options: GetHistoricalOptions) {
     try {
       const { type, ticker } = options;
+      console.log({ options });
 
       /** response: data, status, statusText, headers, config */
       const { data, status, statusText } = await fetchers[type](options);
       devPrint()({ type, ticker, status, statusText }, `getHistorical fetchers`);
+
+      resultValidator(data, status, statusText);
+
+      return data;
+    } catch (e) {
+      return console.error(e);
+    }
+  }
+
+  public async getHistoricalNoCache(options: GetHistoricalOptions) {
+    try {
+      const { type, ticker } = options;
+
+      /** response: data, status, statusText, headers, config */
+      const { data, status, statusText } = await fetchers[type](options);
+      devPrint()({ type, ticker, status, statusText }, `getHistorical No Cache fetchers`);
 
       resultValidator(data, status, statusText);
 

@@ -74,7 +74,7 @@ const setDefaultValues = (options) => {
   /** 오늘로부터 2년전 데이터; 유료 API => 잦은 요청보다는 한번에 최대한 많은 데이터 요청이 낫다고 판단 */
   if (!date_from || !date_from.trim()) date_from = getDateString(Number(curDate) - times.year2);
   /** interval 시간 단위 변경 */
-  if (interval?.match(`day`)) interval = `24hour`;
+  if (!interval || interval.match(`day`)) interval = `24hour`;
 
   return {
     ...options,

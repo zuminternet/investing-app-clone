@@ -17,9 +17,11 @@ export const drawBasicCandleChart = ({
   ctx,
   results,
   count,
-  payload: { total, customNumToShow, smaConfigs },
+  payload: { total, customNumToShow, smaConfigs, width },
 }: DrawCandleChartOptions): object => {
-  const { zeroX, zeroY, ratio, canvasWidth, canvasHeight } = initCanvas(ctx);
+  const { zeroX, zeroY, ratio, canvasWidth, canvasHeight } = initCanvas(ctx, { width });
+  if (!zeroX || !zeroY || !ratio || !canvasWidth || !canvasHeight) return;
+
   /** 거래량 차트 세로 길이:  가격/일자 구분선 제외한 차트 세로 길이의 5분의 1 */
   const volumeH = zeroY * 0.8;
 
@@ -95,5 +97,5 @@ export const drawBasicCandleChart = ({
   );
 
   /**@description base64 이미지로 저장해, caching */
-  return { data, image: ctx.canvas.toDataURL('image/png', 1) };
+  // return { data, image: ctx.canvas.toDataURL('image/png', 1) };
 };

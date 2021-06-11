@@ -1,5 +1,6 @@
 import { marketsFullUrl } from '../../../domain/apiUrls';
 import { GetHistoricalOptions } from '../../../domain/apiOptions';
+import { MINUTE_ONE } from '../../../domain/date';
 
 /**
  * EventSource Service

@@ -2,8 +2,8 @@
   <main class="area section">
     <Words class="subtitle">Stocks</Words>
     <MarketList :tickers="getStocksTickers" />
-    <Words class="subtitle">Coins</Words>
-    <MarketList :tickers="getCoinsTickers" />
+    <!-- <Words class="subtitle">Coins</Words> -->
+    <!-- <MarketList :tickers="getCoinsTickers" /> -->
   </main>
 </template>
 
@@ -21,14 +21,6 @@ export default Vue.extend({
 
   computed: {
     ...mapGetters(['getStocksTickers', 'getCoinsTickers']),
-  },
-
-  mounted() {
-    //
-  },
-
-  methods: {
-    // ...mapActions(['getTodayCoins']),
   },
 });
 </script>

@@ -5,8 +5,9 @@ import SSE from './SSE';
 import { GetHistoricalOptions } from '../../domain/apiOptions';
 import { marketHome, marketName, marketSubpaths } from '../../domain/apiUrls';
 import { MarketService } from '../service/Market.service';
-import { times } from '../../domain/date';
+import { getDateString, MINUTE_ONE, times, WEEK_ONE } from '../../domain/date';
 import { Inject } from 'zum-portal-core/backend/decorator/Alias';
+import { ApiError } from '../utils/error/api';
 
 /**
  * parseQueryToOptions
@@ -60,9 +61,7 @@ const isOptionsValidate = (options: GetHistoricalOptions): boolean => {
  */
 @Controller({ path: marketHome })
 export class MarketController {
-  constructor(@Inject(MarketService) private marketService: MarketService) {
-    /** @todo Yml 또는 Injection 있는 경우 */
-  }
+  constructor(@Inject(MarketService) private marketService: MarketService) {}
 
   /**
    * sendHistoricalData
@@ -90,14 +89,17 @@ export class MarketController {
       const data = await this.marketService.getHistorical(options);
       this.writeData(data, res);
 
-      const intervalTime = times.sse * 3000;
-      const eventSourceInterval = setInterval(async () => {
-        const data = await this.marketService.getHistorical(options);
-        this.writeData(data, res);
-      }, /** 15s */ intervalTime);
+      // const intervalTime = times.sse * 3000;
+      // const eventSourceInterval = setInterval(async () => {
+      //   const data = await this.marketService.getHistorical(options);
+      //   this.writeData(data, res);
+      // }, /** 15s */ intervalTime);
 
       /** 연결 끊어지는 경우 */
-      res.end(() => clearInterval(eventSourceInterval));
+      res.end(() => {
+        // clearInterval(eventSourceInterval);
+        console.log(`SSE Ended`);
+      });
     } catch (e) {
       console.error(e);
       res.sendStatus(500);
@@ -109,10 +111,26 @@ export class MarketController {
     res.write(`data: ${JSON.stringify(data)}\n\n`);
   }
 
-  @GetMapping({ path: [marketSubpaths.stocks] })
-  public async sendStocksList(req: Request, res: Response) {
+  /** @todo 주식 리스트 데이터 전송 */
+  @GetMapping({ path: ['/stocks'] })
+  public async sendStocksList({ query }: Request, res: Response) {
+    const stockListError = () => new ApiError(`Send Stocks List`, this.sendStocksList.name);
+    const dateFrom = getDateString(new Date().getTime() - WEEK_ONE * 2);
     try {
-      /** @todo 주식 리스트 데이터 전송 */
+      const { stocks } = query;
+
+      const tickers = stocks.split(`-`) as string[];
+      console.log({ tickers });
+      const data = [];
+      for await (const ticker of tickers) {
+        const options = parseQueryToOptions(marketName.historical, { type: `stock`, ticker, dateFrom, limit: `20` });
+        if (!isOptionsValidate(options)) return res.sendStatus(404);
+
+        const d = await this.marketService.getHistoricalNoCache({ type: `stock`, ticker, dateFrom, limit: `20` });
+        data.push({ [ticker]: d });
+      }
+
+      res.send(data);
     } catch (e) {
       console.error(e);
       res.sendStatus(500);
