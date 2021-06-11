@@ -6,6 +6,7 @@ import * as NodeCache from 'node-cache';
 import { FilterQuery } from 'mongoose';
 
 const cache = new NodeCache({ deleteOnExpire: true });
+const cacheTTL = 30;
 
 interface FetchArticlesProps {
   offset: number;
@@ -20,6 +21,8 @@ interface FetchArticlesProps {
  * ArticleService
  *
  * 뉴스, 의견 데이터를 fetch하는 서비스 클래스
+ *
+ * @author dogyeong
  */
 @Service()
 export default class ArticleService {
@@ -59,7 +62,7 @@ export default class ArticleService {
    * @param limit 받아올 article 개수
    * @param tickers ticker 심볼 배열
    */
-  @Caching({ ttl: 30, runOnStart: false, cache })
+  @Caching({ ttl: cacheTTL, runOnStart: false, cache })
   public async getNews(offset = 0, limit = 10, tickers?: string[]): Promise<ArticleDoc[]> {
     const tickerOption = this.getTickerOption(tickers);
     const findQuery = { type: ArticleType.news, ...tickerOption };
@@ -76,7 +79,7 @@ export default class ArticleService {
    * @param limit 받아올 article 개수
    * @param tickers ticker 심볼 배열
    */
-  @Caching({ ttl: 30, runOnStart: false, cache })
+  @Caching({ ttl: cacheTTL, runOnStart: false, cache })
   public async getOpinions(offset = 0, limit = 10, tickers?: string[]): Promise<ArticleDoc[]> {
     const tickerOption = this.getTickerOption(tickers);
     const findQuery = { type: ArticleType.opinions, ...tickerOption };
@@ -91,7 +94,7 @@ export default class ArticleService {
    *
    * @param id ObjectId
    */
-  @Caching({ ttl: 30, runOnStart: false, cache })
+  @Caching({ ttl: cacheTTL, runOnStart: false, cache })
   public async getArticleById(id: ObjectId | string): Promise<ArticleDoc> {
     if (!isValidObjectId(id)) throw new Error('invalid id');
 
