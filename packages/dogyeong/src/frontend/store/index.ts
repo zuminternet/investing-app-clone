@@ -22,14 +22,10 @@ export default () => {
       isDarkTheme: false,
     },
 
-    getters: {},
-
     mutations: {
       changeTheme(state, isDark: boolean) {
         state.isDarkTheme = isDark;
       },
     },
-
-    actions: {},
   });
 };
