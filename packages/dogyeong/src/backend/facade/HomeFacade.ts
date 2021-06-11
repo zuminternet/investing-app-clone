@@ -31,7 +31,8 @@ export class HomeFacade {
       this.ssrHtml[path] = this.ssrHtml[path] || {};
 
       try {
-        this.ssrHtml[path] = process.env.NODE_ENV === 'production' ? await this.renderer.renderToString() : this._emptyHtml;
+        this.ssrHtml[path] =
+          process.env.NODE_ENV === 'production' ? await this.renderer.renderToString({ path }) : this._emptyHtml;
       } catch (e) {
         console.error(e);
       }
