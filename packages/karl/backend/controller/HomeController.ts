@@ -4,7 +4,7 @@ import { Inject } from 'zum-portal-core/backend/decorator/Alias';
 import { Yml } from 'zum-portal-core/backend/decorator/Yml';
 import { HomeFacade } from '../facade/HomeFacade';
 
-@Controller({ path: '/' })
+@Controller({ path: '/*' })
 export class HomeController {
   constructor(@Yml('application') private application: any, @Inject(HomeFacade) private homeFacade: HomeFacade) {}
 

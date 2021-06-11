@@ -3,13 +3,14 @@
     <div class="up-and-down-icon"></div>
     <div>
       <div>
-        <custom-text>{{ price }}</custom-text>
-        <custom-text>{{ upDownPrice }}</custom-text>
+        <custom-text>{{ close }}</custom-text>
+        <custom-text> {{ upDownPrice }}</custom-text>
+        <custom-text> ({{ upDownRate }})</custom-text>
       </div>
-      <div>
+      <!-- <div>
         <custom-text>{{ time }}</custom-text>
         <custom-text>{{ currency }}</custom-text>
-      </div>
+      </div> -->
     </div>
     <empty-space></empty-space>
     <div>
@@ -37,21 +38,25 @@ export default {
   },
 
   computed: {
-    price() {
-      return this.itemDetail.price;
+    close() {
+      return this.itemDetail.close;
     },
 
     upDownPrice() {
       return this.itemDetail.upDownPrice;
     },
 
-    time() {
-      return this.itemDetail.time;
+    upDownRate() {
+      return this.itemDetail.upDownRate;
     },
 
-    currency() {
-      return this.itemDetail.currency;
-    },
+    // time() {
+    //   return this.itemDetail.time;
+    // },
+
+    // currency() {
+    //   return this.itemDetail.currency;
+    // },
   },
 };
 </script>

@@ -86,7 +86,7 @@ const getItemDetail = async ({ symbols, email }: getItemDetailInfo) => {
  * @param param0
  * @returns Promise
  */
-const getNews = async ({ offset, limit, tickers }: getNewsAndAnalysesInfo) => {
+const getNews = async ({ offset = 0, limit = 10, tickers = [] }: getNewsAndAnalysesInfo) => {
   try {
     const result = await Axios.get(`${devURL}/api/articles/news`, {
       params: { offset, limit, tickers },
@@ -178,7 +178,11 @@ const deleteBookmark = async ({ email, symbol, name, category }: deleteBookmarkI
 
 const getBookmarks = async (email: string) => {
   try {
-    const result = await Axios.get(`${devURL}/api/bookmark?email=${email}`);
+    const result = await Axios.get(`${devURL}/api/bookmark`, {
+      params: {
+        email,
+      },
+    });
 
     if (result.status === 200) {
       let { data: bookmarks } = result;
@@ -192,14 +196,4 @@ const getBookmarks = async (email: string) => {
   }
 };
 
-export {
-  getSearchedAnalyses,
-  getSearchedItems,
-  getItemDetail,
-  getNews,
-  getAnalyses,
-  createBookmark,
-  getBookmarks,
-  deleteBookmark,
-  getSearchedNews,
-};
+export { getSearchedItems, getItemDetail, getNews, getAnalyses, createBookmark, getBookmarks, deleteBookmark };

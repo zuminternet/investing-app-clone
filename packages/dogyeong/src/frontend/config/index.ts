@@ -15,6 +15,11 @@ export const apiEndpoints = {
   getPopularOpinions: '/api/article/opinions/popular',
   getArticle: '/api/article',
   changeUserInfo: '/api/user',
+  searchItems: '/api/search/items',
+  searchNews: '/api/search/news',
+  searchOpinions: '/api/search/opinions',
+  addBookmark: '/api/bookmark',
+  removeBookmark: '/api/bookmark',
 };
 
 export const googleAuthInitConfig = {

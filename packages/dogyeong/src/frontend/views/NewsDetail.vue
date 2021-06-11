@@ -40,6 +40,13 @@ import { getArticle } from '@/services/articleService';
 import { fromNow } from 'common/frontend/utils';
 import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner.vue';
 import SearchButton from '@/components/SearchButton/SearchButton.vue';
+import {
+  ArticleDetailSection,
+  ArticleDetailBodyImage,
+  ArticleDetailBodyText,
+  ArticleDetailTitle,
+  ArticleDetailSubInfo,
+} from 'common/frontend/components/ArticleDetail';
 
 export default Vue.extend({
   name: 'NewsDetail',
@@ -52,6 +59,11 @@ export default Vue.extend({
     HeaderButton,
     LoadingSpinner,
     SearchButton,
+    ArticleDetailSection,
+    ArticleDetailBodyText,
+    ArticleDetailBodyImage,
+    ArticleDetailTitle,
+    ArticleDetailSubInfo,
   },
 
   filters: {

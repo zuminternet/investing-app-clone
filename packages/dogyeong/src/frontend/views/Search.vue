@@ -5,7 +5,8 @@
       <input v-model="keyword" type="text" autofocus placeholder="종목 검색" @keypress.enter="requestSearch" />
       <button :class="$style['search-button']" @click="requestSearch">Search</button>
     </header>
-    <main>
+    <main :class="$style.main">
+      <LoadingSpinner v-if="isLoading" />
       <custom-swiper :navigator-button-names="swiperNavigatorButtonNames" :class="$style.swiper">
         <swiper-slide>
           <BookmarkList>
@@ -24,10 +25,10 @@
           </BookmarkList>
         </swiper-slide>
         <swiper-slide>
-          <ArticleTemplate :articles="searchedNews" url-prefix="news/new" />
+          <ArticleTemplate :articles="news" url-prefix="news/new" />
         </swiper-slide>
         <swiper-slide>
-          <ArticleTemplate :articles="searchedAnalyses" url-prefix="news/new" />
+          <ArticleTemplate :articles="opinions" url-prefix="news/new" />
         </swiper-slide>
       </custom-swiper>
     </main>
@@ -38,7 +39,6 @@
 <script lang="ts">
 import Vue from 'vue';
 import { SwiperSlide } from 'vue-awesome-swiper';
-import { mapState, mapActions } from 'vuex';
 import CustomSwiper from 'common/frontend/components/CustomSwiper.vue';
 import Layout from '@/components/Layout/Layout.vue';
 import BottomNav from '@/components/BottomNav/BottomNav.vue';
@@ -54,6 +54,7 @@ import {
   BookmarkListItemTitle,
   BookmarkListItemText,
 } from '@/components/Bookmark';
+import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner.vue';
 
 export default Vue.extend({
   name: 'Search',
@@ -79,24 +80,36 @@ export default Vue.extend({
     return {
       swiperNavigatorButtonNames: ['종목', '뉴스', '분석'],
       keyword: '',
+      items: [],
+      news: [],
+      opinions: [],
+      isLoading: false,
     };
   },
 
-  computed: {
-    ...mapState({
-      userInfo: (state) => state.user,
-      searchedItems: ({ search }) => search.searchedItems,
-      searchedNews: ({ search }) => search.searchedNews,
-      searchedAnalyses: ({ search }) => search.searchedAnalyses,
-    }),
-  },
+  computed: {},
 
-  beforeDestroy() {
-    this.clearSearchStore();
-  },
   methods: {
-    ...mapActions('search', ['getSearchedItems', 'getSearchedNews', 'getSearchedAnalyses', 'clearSearchStore']),
+    async requestSearch() {
+      try {
+        if (!this.keyword) return;
 
+        this.isLoading = true;
+
+        const keyword = this.keyword;
+        const itemPromise = searchItems({ keyword });
+        const newsPromise = searchNews({ keyword });
+        const opinionPromise = searchOpinions({ keyword });
+
+        this.items = await itemPromise;
+        this.news = await newsPromise;
+        this.opinions = await opinionPromise;
+
+        this.isLoading = false;
+      } catch (e) {
+        console.error(e);
+      }
+    },
     back() {
       this.$router.back();
     },

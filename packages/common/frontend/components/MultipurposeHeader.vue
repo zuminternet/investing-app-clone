@@ -26,6 +26,18 @@
       </div>
     </template>
 
+    <template v-if="isNewsDetail">
+      <header-button isBackButton></header-button>
+      <div class="header-title-box">
+        <p>뉴스 상세페이지</p>
+      </div>
+      <empty-space></empty-space>
+      <div class="header-button-box">
+        <!-- <header-button></header-button> -->
+        <header-button isGoSearchButton></header-button>
+      </div>
+    </template>
+
     <template v-if="isSearch">
       <header-button isBackButton></header-button>
       <search-input @search-input-value-change="$emit('search-input-value-change', $event)" />
@@ -34,6 +46,16 @@
     <template v-if="isHome">
       <div class="header-title-box">
         <p>{{ marketTitle }}</p>
+      </div>
+      <empty-space></empty-space>
+      <div class="header-button-box">
+        <header-button isGoSearchButton></header-button>
+      </div>
+    </template>
+
+    <template v-if="isNews">
+      <div class="header-title-box">
+        <p>{{ newsTitle }}</p>
       </div>
       <empty-space></empty-space>
       <div class="header-button-box">
@@ -85,12 +107,22 @@ export default {
       default: false,
     },
 
+    isNewsDetail: {
+      type: Boolean,
+      default: false,
+    },
+
     isHome: {
       type: Boolean,
       default: false,
     },
 
     isBookmark: {
+      type: Boolean,
+      default: false,
+    },
+
+    isNews: {
       type: Boolean,
       default: false,
     },
@@ -137,9 +169,12 @@ export default {
   },
 
   data() {
+    const { INVESTING_COM, BOOKMARK, NEWS } = text;
+
     return {
-      marketTitle: text.INVESTING_COM,
-      bookmarkTitle: text.BOOKMARK,
+      marketTitle: INVESTING_COM,
+      bookmarkTitle: BOOKMARK,
+      newsTitle: NEWS,
     };
   },
 
