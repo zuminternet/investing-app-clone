@@ -15,11 +15,11 @@
 import Vue from 'vue';
 import { mapGetters, mapActions } from 'vuex';
 import { marketsType, viewsTitle } from '@/type/views';
-import Header from '@/components/organisms/Header';
-import Footer from '@/components/organisms/Footer';
-import Indexes from '@/components/templates/Markets/Indexes';
-import Stocks from '@/components/templates/Markets/Stocks';
-import Coins from '@/components/templates/Markets/Coins';
+import Header from '@/components/organisms/Header.vue';
+import Footer from '@/components/organisms/Footer.vue';
+import Indexes from '@/components/templates/Markets/Indexes.vue';
+import Stocks from '@/components/templates/Markets/Stocks.vue';
+import Coins from '@/components/templates/Markets/Coins.vue';
 import Reply from '@/components/organisms/ReplySection.vue';
 import { RootActions } from '@/store';
 

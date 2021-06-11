@@ -20,11 +20,11 @@ const Market = {
 
   state: {
     stockTickers: [
-      // { typeName: `stock`, ticker: '239340', tickerName: '줌인터넷', from: aWeekBefore },
       { typeName: `stock`, ticker: '005930', tickerName: '삼성전자', from: aWeekBefore },
       { typeName: `stock`, ticker: '017670', tickerName: 'SK Telecom', from: aWeekBefore },
-      // { typeName: `stock`, ticker: '035420', tickerName: 'Naver', from: aWeekBefore },
-      // { typeName: `stock`, ticker: '035720', tickerName: '카카오', from: aWeekBefore },
+      { typeName: `stock`, ticker: '035420', tickerName: 'Naver', from: aWeekBefore },
+      { typeName: `stock`, ticker: '035720', tickerName: '카카오', from: aWeekBefore },
+      { typeName: `stock`, ticker: '239340', tickerName: '줌인터넷', from: aWeekBefore },
     ],
     coinTickers: [
       // { typeName: `stock`, ticker: '239340', tickerName: '줌인터넷', from: aWeekBefore },

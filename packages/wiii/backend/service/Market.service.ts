@@ -27,6 +27,7 @@ const resultValidator = (data, status: number, statusText: string) => {
 export class MarketService {
   private delay = MINUTE_ONE * 5;
   private lastRequest: number;
+  private cachedHistory = {};
 
   constructor() /**
    * @Yml('marketApi') private MarketApi: any,
@@ -69,9 +70,21 @@ export class MarketService {
     }
   }
 
-  public async getHistoricalNoCache(options: GetHistoricalOptions) {
+  /**
+   * getCachedHistorical
+   * @description
+   * node-cache의 경우 key 값을 동적으로 정의할 수 없어서
+   * 클래스 property에 저장
+   * @param options
+   * @returns
+   */
+  public async getCachedHistorical(options: GetHistoricalOptions) {
     try {
       const { type, ticker } = options;
+
+      const requestTime = new Date().getTime();
+      const cached = this.cachedHistory[ticker];
+      if (requestTime - this.lastRequest < this.delay && cached) return cached;
 
       /** response: data, status, statusText, headers, config */
       const { data, status, statusText } = await fetchers[type](options);
@@ -79,6 +92,8 @@ export class MarketService {
 
       resultValidator(data, status, statusText);
 
+      this.lastRequest = requestTime;
+      this.cachedHistory[ticker] = data;
       return data;
     } catch (e) {
       return console.error(e);

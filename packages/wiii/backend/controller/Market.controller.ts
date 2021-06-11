@@ -86,7 +86,7 @@ export class MarketController {
       /** @todo 굳이 class로? 그냥 함수로 선언해도 될 듯.. */
       new SSE(res, options);
 
-      const data = await this.marketService.getHistorical(options);
+      const data = await this.marketService.getCachedHistorical(options);
       this.writeData(data, res);
 
       // const intervalTime = times.sse * 3000;
@@ -126,7 +126,7 @@ export class MarketController {
         const options = parseQueryToOptions(marketName.historical, { type: `stock`, ticker, dateFrom, limit: `20` });
         if (!isOptionsValidate(options)) return res.sendStatus(404);
 
-        const d = await this.marketService.getHistoricalNoCache({ type: `stock`, ticker, dateFrom, limit: `20` });
+        const d = await this.marketService.getCachedHistorical({ type: `stock`, ticker, dateFrom, limit: `20` });
         data.push({ [ticker]: d });
       }
 

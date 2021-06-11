@@ -14,7 +14,7 @@
       ]"
       :width="200"
     /> -->
-    <Chart class="card" :typeName="`stock`" :apiType="`es`" />
+    <Chart class="card" :typeName="`stock`" :apiType="`es`" :ticker="ticker" />
   </main>
 </template>
 
@@ -22,13 +22,20 @@
 import Vue from 'vue';
 import { mapGetters } from 'vuex';
 
-import Chart from '@/components/organisms/Chart.vue';
+import Chart from '@/components/molecules/Chart.vue';
 import ReplySection from '@/components/organisms/ReplySection.vue';
 
 export default Vue.extend({
   components: {
     Chart,
     ReplySection,
+  },
+
+  props: {
+    ticker: {
+      type: String,
+      default: '005930',
+    },
   },
 });
 </script>

@@ -17,7 +17,7 @@ export const drawBasicCandleChart = ({
   ctx,
   results,
   count,
-  payload: { total, customNumToShow, smaConfigs, width },
+  payload: { total, customNumToShow, smaConfigs, width, hasAxis, hasVolumes, hasPrices },
 }: DrawCandleChartOptions): object => {
   const { zeroX, zeroY, ratio, canvasWidth, canvasHeight } = initCanvas(ctx, { width });
   if (!zeroX || !zeroY || !ratio || !canvasWidth || !canvasHeight) return;
@@ -44,44 +44,46 @@ export const drawBasicCandleChart = ({
     drawCandle(ctx, data[i], candleWidth, ratio);
   }
 
-  const { volumeRatioH, highest: volumeHigh, lowest: volumeLow } = getVolumeHeightRatio(results, zeroY * 0.2);
-
-  for (const i of range(0, count)) {
-    const { startX, color } = data[i];
-    const { volume } = results[i];
-    drawVolume(ctx, {
-      startX,
-      volume,
-      base: zeroY,
-      candleWidth,
-      ratio: volumeRatioH,
-      color,
-    });
-  }
-
   /** 이동평균선 옵션 받아서 하나씩 그림 */
   for (const { duration, color, width } of smaConfigs) {
     setSMA(ctx, data, { ratio, duration, color, width });
   }
 
   /** 가격 구분선 */
-  setPricePartition(ctx, { highest, lowest, zeroY: volumeH, ratioH, canvasWidth, canvasHeight, ratio });
+  if (hasPrices) setPricePartition(ctx, { highest, lowest, zeroY: volumeH, ratioH, canvasWidth, canvasHeight, ratio });
 
   /** 거래량  구분선 */
-  setPricePartition(ctx, {
-    highest: volumeHigh,
-    lowest: volumeLow,
-    zeroY,
-    ratioH: volumeRatioH,
-    canvasWidth,
-    canvasHeight,
-    ratio,
-    partNum: 2,
-    textBaseline: 'top',
-    fontSize: 20,
-  });
+  if (hasVolumes) {
+    const { volumeRatioH, highest: volumeHigh, lowest: volumeLow } = getVolumeHeightRatio(results, zeroY * 0.2);
 
+    for (const i of range(0, count)) {
+      const { startX, color } = data[i];
+      const { volume } = results[i];
+      drawVolume(ctx, {
+        startX,
+        volume,
+        base: zeroY,
+        candleWidth,
+        ratio: volumeRatioH,
+        color,
+      });
+    }
+
+    setPricePartition(ctx, {
+      highest: volumeHigh,
+      lowest: volumeLow,
+      zeroY,
+      ratioH: volumeRatioH,
+      canvasWidth,
+      canvasHeight,
+      ratio,
+      partNum: 2,
+      textBaseline: 'top',
+      fontSize: 20,
+    });
+  }
   /** 일자구분선 */
+  if (!hasAxis) return;
   setDayPartition(ctx, { data, results, numToShow, count, canvasWidth, canvasHeight, zeroY, ratio });
 
   drawLine(

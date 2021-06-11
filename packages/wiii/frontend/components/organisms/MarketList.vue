@@ -1,10 +1,10 @@
 <template>
   <section id="market-list">
     <Card
-      v-for="({ typeName, ticker, tickerName, from }, idx) in tickers"
+      v-for="{ typeName, ticker, tickerName, from } in tickers"
       :key="ticker"
       v-bind="{ typeName, ticker, tickerName, from }"
-    ></Card>
+    />
   </section>
 </template>
 
@@ -12,6 +12,7 @@
 import Vue from 'vue';
 import { createNamespacedHelpers } from 'vuex';
 import Card from '@/components/molecules/MarketListCard.vue';
+import Link from '@/components/atoms/RouterLink.vue';
 import { StoreNames } from '@/store';
 
 const { mapActions } = createNamespacedHelpers(StoreNames.Market);
@@ -27,20 +28,6 @@ export default Vue.extend({
       required: true,
     },
   },
-
-  // data: {
-  //   marketData: [],
-  // },
-
-  // async mounted() {
-  //   const data = await this.getTodayStocks();
-  //   this.marketData = data;
-  //   console.log(this.marketData[0]);
-  // },
-
-  // methods: {
-  //   ...mapActions(['getTodayStocks']),
-  // },
 });
 </script>
 

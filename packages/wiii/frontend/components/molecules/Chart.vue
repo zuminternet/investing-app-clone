@@ -4,8 +4,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { createNamespacedHelpers } from 'vuex';
-
+import { mapState, createNamespacedHelpers } from 'vuex';
 import EsService from '@/services/chart/eventSource';
 import { TimespanEnum } from '@/type/apis';
 import { CanvasOptionEnum, MAColorEnum } from '@/type/chart';
@@ -43,10 +42,7 @@ export default Vue.extend({
       required: true,
       default: 'stock',
     },
-    ticker: {
-      type: String,
-      default: '005930' /** MarketStack 국내주식 모드, 삼성전자 */,
-    },
+
     multiplier: {
       type: Number,
       default: 1 /** MarketStack => default 1hour => 24hour로  */,
@@ -114,10 +110,8 @@ export default Vue.extend({
    */
   data() {
     return {
-      onReady: false,
       ctx: null,
       options: {
-        ticker: this.ticker,
         multiplier: this.multiplier,
         timespan: this.timespan,
         from: this.from,
@@ -129,7 +123,9 @@ export default Vue.extend({
   },
 
   computed: {
+    ...mapState(['ticker']),
     ...mapGetters(['hasStockData']),
+
     queryString(): GetHistoricalOptions {
       const {
         typeName,
@@ -141,6 +137,8 @@ export default Vue.extend({
         timespan,
         query: { sort, limit, offset },
       } = this;
+
+      console.info({ ticker });
 
       /** @todo type에 따라 property 다른 부분 처리, 일단 국내주식(MarketStack)에 맞춰서 */
       return {
@@ -198,8 +196,7 @@ export default Vue.extend({
       try {
         const data = await this.getTodayStockShort(this.ticker);
         console.log({ data });
-        // this.histData.data =
-        // console.log(this.histData);
+        this.histData.data = data;
       } catch (e) {
         console.error(e);
       }
@@ -219,6 +216,9 @@ export default Vue.extend({
           payload: { total },
         },
       } = this.histData;
+
+      /** @todo 예외처리 */
+      if (!count) return;
 
       /** Chart Caching */
       withTime(
