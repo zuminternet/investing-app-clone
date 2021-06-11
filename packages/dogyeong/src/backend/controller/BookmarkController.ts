@@ -1,4 +1,4 @@
-import { Controller, PostMapping, DeleteMapping } from 'zum-portal-core/backend/decorator/Controller';
+import { Controller, PostMapping, DeleteMapping, GetMapping } from 'zum-portal-core/backend/decorator/Controller';
 import { Request, Response } from 'express';
 import { Inject } from 'zum-portal-core/backend/decorator/Alias';
 import BookmarkService from 'common/backend/service/BookmarkService';
@@ -12,6 +12,22 @@ export class BookmarkController {
     @Inject(BookmarkService) private bookmarkService: BookmarkService,
     @Inject(TokenService) private tokenService: TokenService,
   ) {}
+
+  @Middleware(getUser)
+  @GetMapping({ path: ['/'] })
+  public async getBookmarks(req: Request, res: Response) {
+    try {
+      const { user } = req.body;
+
+      if (!user?.email) throw new Error('invalid user');
+
+      const bookmarks = await this.bookmarkService.getBookmarks(user?.email);
+
+      res.json(bookmarks ?? []);
+    } catch (err) {
+      res.status(500).json({ err: err.message ?? err });
+    }
+  }
 
   @Middleware(getUser)
   @PostMapping({ path: ['/'] })

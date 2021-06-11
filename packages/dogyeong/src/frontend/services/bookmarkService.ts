@@ -18,3 +18,8 @@ export const removeBookmark = async ({ symbol, name }) => {
   });
   return data;
 };
+
+export const getBookmarks = async () => {
+  const { data } = await Axios.get(apiEndpoints.getBookmarks);
+  return data;
+};

@@ -20,6 +20,7 @@ export const apiEndpoints = {
   searchOpinions: '/api/search/opinions',
   addBookmark: '/api/bookmark',
   removeBookmark: '/api/bookmark',
+  getBookmarks: '/api/bookmark',
 };
 
 export const googleAuthInitConfig = {
