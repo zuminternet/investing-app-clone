@@ -9,7 +9,8 @@
       </HeaderTitle>
     </Header>
     <main :class="$style.main">
-      <LoadingSpinner v-if="isLoading" />
+      <div v-if="!isLoggedIn" :class="$style.message">로그인 해주세요 :)</div>
+      <LoadingSpinner v-else-if="isLoading" />
       <div v-else-if="isError" :class="$style.message">
         에러가 발생했습니다! :(
         <button :class="$style.retry" @click="fetchBookmarks">&#8635;</button>
@@ -81,6 +82,9 @@ export default Vue.extend({
   computed: {
     isEmpty() {
       return this.bookmarks.length === 0;
+    },
+    isLoggedIn() {
+      return this.$store.state.user.user;
     },
   },
 
