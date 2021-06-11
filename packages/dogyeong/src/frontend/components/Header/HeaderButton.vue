@@ -1,5 +1,5 @@
 <template>
-  <button @click.prevent="$emit('clickHeaderButton')">
+  <button :class="$style.button" @click.prevent="$emit('clickHeaderButton')">
     <slot></slot>
   </button>
 </template>
@@ -12,7 +12,7 @@ export default Vue.extend({
 });
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss" module>
 button {
   padding: 6px;
   margin-right: 8px;
