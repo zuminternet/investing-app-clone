@@ -14,17 +14,17 @@
                 <news-text-box-desc :author="firstNews.source" :publishDate="firstNews.date"></news-text-box-desc>
               </news-text-box>
             </news-headline>
-            <!-- <news-list-item v-for="element in news.slice(1, news.length)" :key="element.id" :to="'/search'">
+            <news-list-item v-for="element in news.slice(1, news.length)" :key="element.id" :to="'/search'">
               <news-image :src="element.image_url" />
               <news-text-box>
                 <news-text-box-title>{{ element.title }}</news-text-box-title>
                 <news-text-box-desc :author="element.source" :publishDate="element.date"></news-text-box-desc>
               </news-text-box>
-            </news-list-item> -->
+            </news-list-item>
           </news-list>
         </list-wrapper>
       </swiper-slide>
-      <!-- <swiper-slide v-if="news">
+      <swiper-slide v-if="news">
         <list-wrapper :excludedHeight="150">
           <news-list>
             <news-headline>
@@ -45,8 +45,8 @@
             </news-list-item>
           </news-list>
         </list-wrapper>
-      </swiper-slide> -->
-      <!-- <swiper-slide v-if="stockNews">
+      </swiper-slide>
+      <swiper-slide v-if="stockNews">
         <list-wrapper :excludedHeight="150">
           <news-list>
             <news-headline>
@@ -67,8 +67,8 @@
             </news-list-item>
           </news-list>
         </list-wrapper>
-      </swiper-slide> -->
-      <!-- <swiper-slide v-if="cryptoNews">
+      </swiper-slide>
+      <swiper-slide v-if="cryptoNews">
         <list-wrapper :excludedHeight="150">
           <news-list>
             <news-headline>
@@ -89,7 +89,7 @@
             </news-list-item>
           </news-list>
         </list-wrapper>
-      </swiper-slide> -->
+      </swiper-slide>
     </custom-swiper>
     <bottom-naviagtor :navigatorButtonNames="bottomNavigatorButtonNames" />
   </div>

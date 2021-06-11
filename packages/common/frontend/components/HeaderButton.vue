@@ -1,19 +1,14 @@
 <template>
-  <input v-if="isBackButton" class="header-button" type="button" @click="goBack" />
-  <input v-else-if="isGoSearchButton" class="header-button" type="button" @click="goSearch" />
-  <input
-    v-else-if="isAddBookmarkButton && isBookmarkedForLocal"
-    class="header-active-button"
-    type="button"
-    @click="handleBookmark(email, symbol, name, category)"
-  />
-  <input
-    v-else-if="isAddBookmarkButton"
-    class="header-button"
-    type="button"
-    @click="handleBookmark(email, symbol, name, category)"
-  />
-  <input v-else class="header-button" type="button" @click="$emit('handle-header-button-click')" />
+  <button v-if="isBackButton" class="header-button" @click="goBack">
+    <span class="left-arrow">&#8592;</span>
+  </button>
+  <button v-else-if="isGoSearchButton" class="header-button" @click="goSearch">
+    <span class="search">&#9906;</span>
+  </button>
+  <button v-else-if="isAddBookmarkButton" class="header-button" @click="handleBookmark(email, symbol, name, category)">
+    <span v-if="isBookmarkedForLocal" class="full-star">&#9733;</span>
+    <span v-else class="empty-star">&#9734;</span>
+  </button>
 </template>
 
 <script>
@@ -103,14 +98,38 @@ export default {
 .header-button {
   width: 30px;
   height: 30px;
-  background-color: green;
   margin-right: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 0;
 }
 
-.header-active-button {
-  width: 30px;
-  height: 30px;
-  background-color: red;
-  margin-right: 10px;
+.search {
+  font-size: 25px;
+  color: var(--icon-color);
+  font-weight: bold;
+  transform: rotate(320deg);
+}
+
+.left-arrow {
+  font-size: 25px;
+  color: var(--icon-color);
+  font-weight: bold;
+  margin-top: -5px;
+}
+
+.full-star {
+  font-size: 25px;
+  color: var(--icon-color);
+  margin-top: -5px;
+  font-weight: bold;
+}
+
+.empty-star {
+  font-size: 25px;
+  color: var(--icon-color);
+  margin-top: -5px;
+  font-weight: bold;
 }
 </style>

@@ -22,7 +22,9 @@ export default () => {
     },
 
     // 글로벌 영역 상태값.
-    state: {},
+    state: {
+      isDarkTheme: false,
+    },
 
     getters: {},
 

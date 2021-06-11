@@ -1,20 +1,31 @@
 <template>
   <div class="item-detail-price-box">
-    <div class="up-and-down-icon"></div>
+    <div class="up-and-down-icon-box">
+      <span
+        :class="{
+          'up-down-arrow': true,
+          'up-arrow': isUp,
+          'down-arrow': isDown,
+        }"
+        >&#10144;</span
+      >
+    </div>
     <div>
       <div>
-        <custom-text>{{ close }}</custom-text>
-        <custom-text> {{ upDownPrice }}</custom-text>
-        <custom-text> ({{ upDownRate }})</custom-text>
+        <custom-text itemDetailPrice>{{ close }}</custom-text>
+        <template v-if="upDownPrice > 0">
+          <custom-text itemDetailPlus> {{ upDownPrice }}</custom-text>
+          <custom-text itemDetailPlus> ({{ upDownRate }})</custom-text>
+        </template>
+        <template v-else-if="upDownPrice < 0">
+          <custom-text itemDetailMinus> {{ upDownPrice }}</custom-text>
+          <custom-text itemDetailMinus> ({{ upDownRate }})</custom-text>
+        </template>
+        <template v-else>
+          <custom-text itemCardNameAndPrice> {{ upDownPrice }}</custom-text>
+          <custom-text itemCardNameAndPrice> ({{ upDownRate }})</custom-text>
+        </template>
       </div>
-      <!-- <div>
-        <custom-text>{{ time }}</custom-text>
-        <custom-text>{{ currency }}</custom-text>
-      </div> -->
-    </div>
-    <empty-space></empty-space>
-    <div>
-      <button class="share-button"></button>
     </div>
   </div>
 </template>
@@ -39,15 +50,23 @@ export default {
 
   computed: {
     close() {
-      return this.itemDetail.close;
+      return this.itemDetail.close.toFixed(2);
     },
 
     upDownPrice() {
-      return this.itemDetail.upDownPrice;
+      return this.itemDetail.upDownPrice.toFixed(2);
     },
 
     upDownRate() {
-      return this.itemDetail.upDownRate;
+      return this.itemDetail.upDownRate.toFixed(2);
+    },
+
+    isUp() {
+      return this.itemDetail.upDownPrice > 0;
+    },
+
+    isDown() {
+      return this.itemDetail.upDownPrice < 0;
     },
 
     // time() {
@@ -66,14 +85,31 @@ export default {
   display: flex;
   flex-direction: row;
   height: 60px;
-  background-color: hotpink;
+  align-items: center;
+  padding-left: 10px;
 }
 
-.up-and-down-icon {
+.up-and-down-icon-box {
   width: 30px;
   height: 30px;
-  background-color: green;
   margin-right: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.up-down-arrow {
+  font-size: 30px;
+}
+
+.up-arrow {
+  color: var(--red-color);
+  transform: rotate(270deg);
+}
+
+.down-arrow {
+  color: var(--blue-color);
+  transform: rotate(90deg);
 }
 
 .share-button {

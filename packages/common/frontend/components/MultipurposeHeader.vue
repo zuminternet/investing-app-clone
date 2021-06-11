@@ -6,7 +6,7 @@
       </div>
       <div>
         <div>
-          <custom-text>{{ name }}</custom-text>
+          <custom-text pageTitle>{{ name }}</custom-text>
         </div>
         <div v-if="isStock">
           <custom-text>{{ category }} ({{ symbol }})</custom-text>
@@ -29,7 +29,7 @@
     <template v-if="isNewsDetail">
       <header-button isBackButton></header-button>
       <div class="header-title-box">
-        <p>뉴스 상세페이지</p>
+        <custom-text pageTitle>뉴스 상세페이지</custom-text>
       </div>
       <empty-space></empty-space>
       <div class="header-button-box">
@@ -45,7 +45,9 @@
 
     <template v-if="isHome">
       <div class="header-title-box">
-        <p>{{ marketTitle }}</p>
+        <custom-text appTitle>
+          {{ marketTitle }}
+        </custom-text>
       </div>
       <empty-space></empty-space>
       <div class="header-button-box">
@@ -55,7 +57,7 @@
 
     <template v-if="isNews">
       <div class="header-title-box">
-        <p>{{ newsTitle }}</p>
+        <custom-text pageTitle>{{ newsTitle }}</custom-text>
       </div>
       <empty-space></empty-space>
       <div class="header-button-box">
@@ -66,7 +68,7 @@
     <template v-if="isBookmark">
       <header-button isBackButton></header-button>
       <div class="header-title-box">
-        <p>{{ bookmarkTitle }}</p>
+        <custom-text pageTitle>{{ bookmarkTitle }}</custom-text>
       </div>
       <empty-space></empty-space>
       <div class="header-button-box">
