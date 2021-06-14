@@ -22,7 +22,7 @@ export default Vue.extend({
     ...mapState(['auth', 'ticker']),
 
     hasAuth() {
-      return this.auth ? '🚀' : '로그인 🏄‍♂️';
+      return this.auth ? '🚀' : '🏄‍♂️';
     },
 
     homeMenuData() {

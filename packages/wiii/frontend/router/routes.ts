@@ -3,7 +3,7 @@ import Home from '@/views/Home.vue';
 import store from '@/store';
 
 const requireAuth = (to, from, next) => {
-  store.getters.getAuth ? next() : next('/user/login');
+  store.state.auth ? next() : next('/user/login');
 };
 
 export default [
