@@ -3,7 +3,7 @@ import { Service } from 'zum-portal-core/backend/decorator/Alias';
 import { Caching } from 'zum-portal-core/backend/decorator/Caching';
 import Article, { ArticleType, ArticleDoc } from '../model/ArticleModel';
 import * as NodeCache from 'node-cache';
-import { FilterQuery } from 'mongoose';
+import { FilterQuery, Document } from 'mongoose';
 
 const cache = new NodeCache({ deleteOnExpire: true });
 const cacheTTL = 30;
@@ -13,7 +13,7 @@ interface FetchArticlesProps {
   limit: number;
   findQuery: FilterQuery<ArticleDoc>;
   sortQuery: {
-    [key: string]: 1 | -1 | 'asc' | 'desc' | 'ascending' | 'descending';
+    [key in keyof Omit<ArticleDoc, keyof Document>]?: 1 | -1 | 'asc' | 'desc' | 'ascending' | 'descending';
   };
 }
 
