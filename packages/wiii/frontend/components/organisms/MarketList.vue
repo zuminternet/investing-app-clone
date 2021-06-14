@@ -10,12 +10,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { createNamespacedHelpers } from 'vuex';
 import Card from '@/components/molecules/MarketListCard.vue';
-import Link from '@/components/atoms/RouterLink.vue';
-import { StoreNames } from '@/store';
-
-const { mapActions } = createNamespacedHelpers(StoreNames.Market);
 
 export default Vue.extend({
   name: 'MarketList',

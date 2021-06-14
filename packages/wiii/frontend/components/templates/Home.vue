@@ -1,6 +1,6 @@
 <template>
   <main class="area section">
-    <Words class="subtitle">Stocks</Words>
+    <Words class="subtitle noselect">국내주식</Words>
     <MarketList :tickers="getStocksTickers" />
     <!-- <Words class="subtitle">Coins</Words> -->
     <!-- <MarketList :tickers="getCoinsTickers" /> -->
@@ -14,7 +14,7 @@ import MarketList from '@/components/organisms/MarketList.vue';
 import { createNamespacedHelpers } from 'vuex';
 import { StoreNames } from '@/store';
 
-const { mapGetters, mapActions } = createNamespacedHelpers(StoreNames.Market);
+const { mapGetters } = createNamespacedHelpers(StoreNames.Market);
 
 export default Vue.extend({
   components: { Words, MarketList },

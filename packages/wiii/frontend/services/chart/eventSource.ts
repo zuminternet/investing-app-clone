@@ -44,7 +44,7 @@ export default class EsService {
     }
     const params = new URLSearchParams({ ...adjusted }).toString();
 
-    return `${marketsFullUrl.historical}?${params}`;
+    return `/api/markets/hist?${params}`;
   }
 
   private addEventListers() {

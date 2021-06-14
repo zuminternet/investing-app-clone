@@ -7,12 +7,12 @@ import Vue from 'vue';
 import { createNamespacedHelpers } from 'vuex';
 
 import { TimespanEnum } from '@/type/apis';
-import { CanvasOptionEnum, MAColorEnum } from '@/type/chart';
+import { CanvasOptionEnum } from '@/type/chart';
 import { drawBasicCandleChart } from '@/utils/chart';
 import withTime from '@/utils/timer';
 
 import { GetHistoricalOptions } from '../../../domain/apiOptions';
-import { getDateString, times, WEEK_ONE } from '../../../domain/date';
+import { getDateString, WEEK_ONE } from '../../../domain/date';
 import { StoreNames } from '@/store';
 import { reda400 } from '@/styles/index.scss';
 
@@ -23,7 +23,7 @@ const { mapGetters, mapActions } = createNamespacedHelpers(StoreNames.Market);
  * 리스트용 썸네일 차트 데이터
  */
 export default Vue.extend({
-  name: 'ThumbnailChart',
+  name: 'ChartMini',
 
   props: {
     typeName: {
@@ -33,7 +33,7 @@ export default Vue.extend({
     },
     ticker: {
       type: String,
-      default: '005930' /** MarketStack 국내주식 모드, 삼성전자 */,
+      required: true,
     },
   },
 
@@ -84,20 +84,12 @@ export default Vue.extend({
   async mounted() {
     const chart = this.$refs.canvas as HTMLCanvasElement;
     this.ctx = chart.getContext(CanvasOptionEnum.context2d);
-    await this.getStatic();
+    this.chartData = await this.getTodayMiniStocks(this.ticker);
+    this.getChart(this.chartData);
   },
 
   methods: {
-    ...mapActions(['getTodayStockShort']),
-
-    async getStatic() {
-      try {
-        const data = await this.getTodayStockShort(this.ticker);
-        this.getChart(data);
-      } catch (e) {
-        console.error(e);
-      }
-    },
+    ...mapActions(['getTodayMiniStocks']),
 
     getChart({ results, count, payload: { total } }) {
       /** @todo 예외처리 */
@@ -111,7 +103,7 @@ export default Vue.extend({
         drawBasicCandleChart,
         `drawBasicCandleChart`,
       )({
-        ctx: this.ctx,
+        ctx,
         results,
         count,
         payload: { total, customNumToShow: limit, smaConfigs, width: 150 },

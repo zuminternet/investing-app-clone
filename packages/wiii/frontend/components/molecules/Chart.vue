@@ -166,7 +166,7 @@ export default Vue.extend({
   },
 
   methods: {
-    ...mapActions(['getTodayStockShort']),
+    ...mapActions(['getTodayMiniStocks']),
     /**
      * proxy observer 생성
      * @description
@@ -194,7 +194,7 @@ export default Vue.extend({
 
     async getStatic() {
       try {
-        const data = await this.getTodayStockShort(this.ticker);
+        const data = await this.getTodayMiniStocks(this.ticker);
         console.log({ data });
         this.histData.data = data;
       } catch (e) {
@@ -210,12 +210,17 @@ export default Vue.extend({
        * {  results: adjusted, count, payload: { total } }
        */
       const {
-        data: {
-          results,
-          count,
-          payload: { total },
+        ctx,
+        histData: {
+          data: {
+            results,
+            count,
+            payload: { total },
+          },
         },
-      } = this.histData;
+        query: { limit },
+        smaConfigs,
+      } = this;
 
       /** @todo 예외처리 */
       if (!count) return;
@@ -225,13 +230,21 @@ export default Vue.extend({
         drawBasicCandleChart,
         `drawBasicCandleChart`,
       )({
-        ctx: this.ctx,
+        ctx,
         results,
         count,
-        payload: { total, customNumToShow: this.query.limit, smaConfigs: this.smaConfigs, width: this.width },
+        payload: {
+          total,
+          customNumToShow: limit,
+          smaConfigs,
+          width: this.width,
+          hasAxis: true,
+          hasVolumes: true,
+          hasPrices: true,
+        },
       });
 
-      // this.cachedChart[this.ticker] = cachedChart;
+      /** chart base64 로 캐싱하는 내용 삭제 */
     },
   },
 });

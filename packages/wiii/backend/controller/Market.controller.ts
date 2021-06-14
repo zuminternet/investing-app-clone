@@ -89,6 +89,7 @@ export class MarketController {
       const data = await this.marketService.getCachedHistorical(options);
       this.writeData(data, res);
 
+      /** @todo setInterval 하지 않아도, 브라우저에서 2-3초 간격 요청 보냄..? */
       // const intervalTime = times.sse * 3000;
       // const eventSourceInterval = setInterval(async () => {
       //   const data = await this.marketService.getHistorical(options);

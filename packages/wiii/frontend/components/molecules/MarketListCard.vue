@@ -1,22 +1,34 @@
 <template>
-  <article class="card market-list-card">
-    <div class="market-list-card-info">
-      <Link class="market-list-card-link" :href="`/markets/${typeName}s/${ticker}`" :name="tickerName" />
+  <Link v-show="changeData" class="card market-list-card" :href="`/markets/${typeName}s/${ticker}`" :name="''">
+    <div class="market-list-card-info noselect" :class="changeColor">
+      <div class="market-list-card-info-ticker">
+        <Words class="tickerName"> {{ tickerName }}</Words>
+        <Words class="ticker"> ({{ ticker }})</Words>
+      </div>
+      <Words class="market-list-card-info-text">
+        {{ changeSign }}&nbsp;{{ changePrice }}원 / {{ changeSign }} {{ changePercent }} {{ changeText }}
+      </Words>
     </div>
     <Chart v-bind="{ typeName, ticker }" />
-  </article>
+  </Link>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 import Words from '@/components/atoms/Words.vue';
 import Link from '@/components/atoms/RouterLink.vue';
-import Chart from '@/components/molecules/ThumbnailChart.vue';
+import Card from '@/components/molecules/Card.vue';
+import Chart from '@/components/molecules/ChartMini.vue';
+import { createNamespacedHelpers } from 'vuex';
+import { StoreNames } from '@/store';
+
+const { abs } = Math;
+const { mapActions } = createNamespacedHelpers(StoreNames.Market);
 
 export default Vue.extend({
   name: 'MarketListCard',
 
-  components: { Words, Link, Chart },
+  components: { Card, Words, Link, Chart },
 
   props: {
     typeName: String,
@@ -24,30 +36,121 @@ export default Vue.extend({
     tickerName: String,
   },
 
-  methods: {},
+  data() {
+    return {
+      changeData: null,
+      change: null,
+      changePercent: null,
+    };
+  },
 
-  mounted() {},
+  computed: {
+    changePrice() {
+      return abs(this.change).toLocaleString();
+    },
+
+    changeColor() {
+      return this.change === 0 ? 'same' : this.change > 0 ? 'up' : 'down';
+    },
+
+    changeText() {
+      return this.change === 0 ? `보합` : this.change > 0 ? `상승 🚀🚀🚀` : `하락 🔥🔥🔥`;
+    },
+
+    changeSign() {
+      return this.change >= 0 ? '+' : '-';
+    },
+  },
+
+  async beforeMount() {
+    const { results } = await this.getTodayMiniStocks(this.ticker);
+    if (!results?.length) {
+      return (this.changeData = null);
+    }
+    const [today, dayBefore] = (this.changeData = results.slice(0, 2));
+    const { adj_close: todayC } = today;
+    const { adj_close: beforeC } = dayBefore;
+
+    this.change = todayC - beforeC;
+    this.changePercent = `${(abs(this.change / beforeC) * 100).toFixed(2)} %`;
+  },
+
+  methods: {
+    ...mapActions(['getTodayMiniStocks']),
+  },
 });
 </script>
 
 <style lang="scss" scoped>
 .market-list-card {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  background-color: $deep-blue;
+  &.card {
+    width: 100%;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    background-color: $grey-100;
+
+    &.router-link:hover {
+      background-color: rgba($red-800, 0.3);
+      font-weight: inherit;
+      text-decoration: none;
+    }
+  }
 
   &-info {
+    min-height: 70px;
     display: flex;
     flex-direction: column;
-  }
-}
+    justify-content: space-around;
+    padding-left: $margin-padding-15;
 
-.router-link {
-  width: max-content;
+    &-ticker {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: baseline;
+      line-height: 1.3rem;
 
-  &:hover {
-    background-color: rgba($red-800, 0.4);
+      .tickerName {
+        width: max-content;
+        padding-right: 5px;
+        font-weight: bolder;
+        font-size: 1.2rem;
+        text-align: left;
+        text-shadow: none;
+      }
+
+      .ticker {
+        width: 50px;
+        font-weight: normal;
+        font-size: 0.8rem;
+        text-align: right;
+      }
+    }
+
+    &-text {
+      height: max-content;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    &.same {
+      color: $grey-700;
+
+      .dark & {
+        color: $grey-300;
+      }
+    }
+
+    &.up {
+      color: $red-800;
+    }
+
+    &.down {
+      color: $blue-700;
+    }
   }
 }
 </style>
