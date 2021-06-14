@@ -138,8 +138,6 @@ export default Vue.extend({
         query: { sort, limit, offset },
       } = this;
 
-      console.info({ ticker });
-
       /** @todo type에 따라 property 다른 부분 처리, 일단 국내주식(MarketStack)에 맞춰서 */
       return {
         type: typeName,

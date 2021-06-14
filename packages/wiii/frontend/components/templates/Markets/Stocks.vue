@@ -20,7 +20,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 
 import Chart from '@/components/molecules/Chart.vue';
 import ReplySection from '@/components/organisms/ReplySection.vue';
@@ -31,11 +31,8 @@ export default Vue.extend({
     ReplySection,
   },
 
-  props: {
-    ticker: {
-      type: String,
-      default: '005930',
-    },
+  computed: {
+    ...mapState(['ticker']),
   },
 });
 </script>

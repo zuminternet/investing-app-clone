@@ -1,9 +1,16 @@
 <template>
-  <Link v-show="changeData" class="card market-list-card" :href="`/markets/${typeName}s/${ticker}`" :name="''">
+  <Link
+    v-show="changeData"
+    class="card market-list-card"
+    :href="`/markets/${typeName}s/${ticker}`"
+    :name="''"
+    @click.native="setTicker"
+  >
     <div class="market-list-card-info noselect" :class="changeColor">
       <div class="market-list-card-info-ticker">
         <Words class="tickerName"> {{ tickerName }}</Words>
-        <Words class="ticker"> ({{ ticker }})</Words>
+        <Words class="ticker"> ({{ ticker }}) </Words>
+        <Words class="ticker"> {{ changeEmoji }} </Words>
       </div>
       <Words class="market-list-card-info-text">
         {{ changeSign }}&nbsp;{{ changePrice }}원 / {{ changeSign }} {{ changePercent }} {{ changeText }}
@@ -20,7 +27,7 @@ import Link from '@/components/atoms/RouterLink.vue';
 import Card from '@/components/molecules/Card.vue';
 import Chart from '@/components/molecules/ChartMini.vue';
 import { createNamespacedHelpers } from 'vuex';
-import { StoreNames } from '@/store';
+import { RootActions, StoreNames } from '@/store';
 
 const { abs } = Math;
 const { mapActions } = createNamespacedHelpers(StoreNames.Market);
@@ -54,7 +61,11 @@ export default Vue.extend({
     },
 
     changeText() {
-      return this.change === 0 ? `보합` : this.change > 0 ? `상승 🚀🚀🚀` : `하락 🔥🔥🔥`;
+      return this.change === 0 ? `보합` : this.change > 0 ? `상승` : `하락`;
+    },
+
+    changeEmoji() {
+      return this.change === 0 ? `` : this.change > 0 ? `🚀🚀🚀` : `🔥🔥🔥`;
     },
 
     changeSign() {
@@ -77,6 +88,10 @@ export default Vue.extend({
 
   methods: {
     ...mapActions(['getTodayMiniStocks']),
+
+    setTicker() {
+      this.$store.dispatch(RootActions.SET_CURRENT_TICKER, this.ticker);
+    },
   },
 });
 </script>

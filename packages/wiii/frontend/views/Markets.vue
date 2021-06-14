@@ -13,8 +13,8 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { mapGetters, mapActions } from 'vuex';
-import { marketsType, viewsTitle } from '@/type/views';
+import { mapActions } from 'vuex';
+import { viewsTitle } from '@/type/views';
 import Header from '@/components/organisms/Header.vue';
 import Footer from '@/components/organisms/Footer.vue';
 import Indexes from '@/components/templates/Markets/Indexes.vue';
@@ -53,16 +53,9 @@ export default Vue.extend({
     },
   },
 
-  mounted() {
+  beforeMount() {
     this[RootActions.SET_CURRENT_TICKER](this.ticker);
-    /** @todo console 삭제 */
-    console.log({ vuexTicker: this.getTicker, ticker: this.ticker });
     console.assert(this.getTicker === this.ticker);
-  },
-
-  computed: {
-    /** @todo 개발 마무리 단계에서 삭제 */
-    ...mapGetters(['getTicker']),
   },
 
   methods: {
