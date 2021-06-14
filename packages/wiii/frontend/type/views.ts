@@ -42,6 +42,6 @@ export enum selectors {
 
 export const HomeMenuData = [
   { id: views.Home, name: '홈', href: paths.Home },
-  { id: views.Markets, name: '마켓', href: '/markets/stocks/005930' },
-  { id: views.News, name: '뉴스', href: '/news/005930' },
+  { id: views.Markets, name: '마켓', href: '/markets/stocks/' },
+  { id: views.News, name: '뉴스', href: '/news/' },
 ] as const;
