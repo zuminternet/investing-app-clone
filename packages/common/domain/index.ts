@@ -152,7 +152,7 @@ export interface SummaryDetail {
   trailingAnnualDividendYield: number;
 }
 
-export interface MarketStockEOD {
+export interface MarketStackEOD {
   date: Date;
   high: number;
   low: number;
@@ -161,7 +161,7 @@ export interface MarketStockEOD {
   symbol: MarketSymbol;
 }
 
-export interface EndOfDay extends MarketStockEOD {
+export interface EndOfDay extends MarketStackEOD {
   display_name: string;
   diff: number;
   growthRate: number;
@@ -169,7 +169,7 @@ export interface EndOfDay extends MarketStockEOD {
 
 export interface HistoricalData {
   display_name: string;
-  data: MarketStockEOD[];
+  data: MarketStackEOD[];
 }
 
 const getPastDateString = ({ day = 0, month = 0, year = 0 } = {}) => {
