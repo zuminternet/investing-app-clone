@@ -15,7 +15,7 @@
             <BookmarkListItem v-for="{ name, symbol, category, isBookmarked } in items" :key="symbol">
               <BookmarkListItemTitle>{{ name }}</BookmarkListItemTitle>
               <BookmarkListItemText>{{ symbol }} | {{ category }}</BookmarkListItemText>
-              <template #button>
+              <template v-if="isLoggedIn" #button>
                 <BookmarkListItemButton v-if="isBookmarked" @click="onRemoveBookmark({ items, symbol, name })">
                   &#9733;
                 </BookmarkListItemButton>
@@ -93,6 +93,12 @@ export default Vue.extend({
     };
   },
 
+  computed: {
+    isLoggedIn() {
+      return this.$store.state.user.user;
+    },
+  },
+
   methods: {
     async search() {
       try {
@@ -109,10 +115,10 @@ export default Vue.extend({
         this.items = await itemPromise;
         this.news = await newsPromise;
         this.opinions = await opinionPromise;
-
-        this.isLoading = false;
       } catch (e) {
         window.alert(e);
+      } finally {
+        this.isLoading = false;
       }
     },
     back() {
