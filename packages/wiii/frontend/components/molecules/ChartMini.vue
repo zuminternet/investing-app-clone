@@ -98,8 +98,9 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 canvas {
+  border-radius: 7px;
   background-color: white;
-  box-shadow: 0 0 3px 0 $grey-700;
+  box-shadow: 0 0 2px 0 $grey-700;
 
   &.dark {
     box-shadow: 0 0 20px 5px $neon-crimson;

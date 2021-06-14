@@ -100,7 +100,7 @@ export default Vue.extend({
 .market-list-card {
   &.card {
     width: 100%;
-
+    padding: 10px 30px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;

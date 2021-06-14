@@ -29,10 +29,12 @@ export default Vue.extend({
 .market-menus-link {
   background-color: transparent;
 
+  &.router-link-active,
   &.router-link:hover {
     background-color: transparent;
     color: $blue-700;
-    text-decoration-color: $blue-700;
+    font-weight: bolder;
+    text-decoration: underline 3px $blue-700;
   }
 }
 </style>

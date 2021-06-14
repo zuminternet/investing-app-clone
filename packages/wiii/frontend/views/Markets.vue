@@ -2,10 +2,7 @@
   <div class="area">
     <Header :titleText="titleText" />
     <main class="area">
-      <keep-alive>
-        <component :is="type"></component>
-      </keep-alive>
-      <Reply />
+      <router-view />
     </main>
     <Footer />
   </div>

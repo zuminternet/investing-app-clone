@@ -1,11 +1,11 @@
 <template>
   <main class="area section">
     <Words class="subtitle noselect">국내주식</Words>
-    <MarketList :tickers="stockTickers" />
+    <MarketList :tickers="stockTickers.slice(0, 5)" />
     <Words class="subtitle noselect">지수</Words>
-    <!-- <MarketList :tickers="indexTickers" /> -->
+    <MarketList :tickers="indexTickers.slice(0, 5)" />
     <Words class="subtitle noselect">가상화폐</Words>
-    <!-- <MarketList :tickers="coinTickers" /> -->
+    <MarketList :tickers="coinTickers.slice(0, 5)" />
   </main>
 </template>
 

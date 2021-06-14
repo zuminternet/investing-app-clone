@@ -1,45 +1,24 @@
 <template>
-  <main class="area">
-    <!-- <Chart class="card" :typeName="`stock`" :ticker="239340" :smaConfigs="[{}]" :width="200" /> -->
-    <!-- <Chart
-      class="card"
-      :typeName="`stock`"
-      :ticker="`239340`"
-      :smaConfigs="[
-        {
-          duration: 20,
-          color: `red`,
-          width: 10,
-        },
-      ]"
-      :width="200"
-    /> -->
-    <Chart class="card" :typeName="`stock`" :apiType="`es`" :ticker="ticker" />
+  <main class="area section">
+    <MarketList :tickers="stockTickers" />
+    <!-- 주식 관련 뉴스 리스트 -->
   </main>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import { mapState } from 'vuex';
+import { createNamespacedHelpers } from 'vuex';
 
-import Chart from '@/components/molecules/Chart.vue';
-import ReplySection from '@/components/organisms/ReplySection.vue';
+import MarketList from '@/components/organisms/MarketList.vue';
+import { StoreNames } from '@/store';
+
+const { mapState } = createNamespacedHelpers(StoreNames.Market);
 
 export default Vue.extend({
-  components: {
-    Chart,
-    ReplySection,
-  },
+  components: { MarketList },
 
   computed: {
-    ...mapState(['ticker']),
+    ...mapState(['stockTickers']),
   },
 });
 </script>
-
-<style lang="scss" scoped>
-main.area {
-  display: grid;
-  place-content: center;
-}
-</style>
