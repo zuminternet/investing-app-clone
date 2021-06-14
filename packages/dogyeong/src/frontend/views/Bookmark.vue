@@ -103,7 +103,7 @@ export default Vue.extend({
   },
 
   created() {
-    this.fetchBookmarks();
+    if (this.isLoggedIn) this.fetchBookmarks();
   },
 
   methods: {
