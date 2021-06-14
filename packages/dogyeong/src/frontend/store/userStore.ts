@@ -42,6 +42,7 @@ export default () => {
           commit('setUser', user);
         } catch (e) {
           commit('setUser', null);
+          throw e;
         }
       },
 
