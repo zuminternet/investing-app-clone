@@ -1,6 +1,6 @@
 import { range } from '../../../../wiii/domain/utilFunc';
 
-const state = () => {
+const state = {
   //
 };
 

@@ -56,20 +56,20 @@ export default Vue.extend({
   }
 
   &-submit:not(:disabled) {
-    background-color: $green-500;
-    border: solid 2px $green-500;
-    color: $white-900;
+    background-color: rgba(0, 150, 136, 1);
+    border: solid 2px rgba(0, 150, 136, 1);
+    color: hsla(0, 0%, 100%, 1);
 
     &:hover {
-      background-color: $blue-700;
-      border: solid 2px $blue-700;
+      background-color: rgba(25, 118, 210, 1);
+      border: solid 2px rgba(25, 118, 210, 1);
     }
   }
 
   &-cancel {
-    background-color: $red-a400;
-    border: solid 2px $red-a400;
-    color: $white-900;
+    background-color: rgba(255, 23, 68, 1);
+    border: solid 2px rgba(255, 23, 68, 1);
+    color: hsla(0, 0%, 100%, 1);
   }
 }
 </style>

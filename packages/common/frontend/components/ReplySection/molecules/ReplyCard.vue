@@ -165,7 +165,7 @@ $maxHeight: 50px;
     .reply-likes {
       text-align: center;
       font-weight: bold;
-      color: $neon-crimson;
+      color: rgba(249, 0, 79, 1);
     }
   }
 }

@@ -41,7 +41,7 @@ export default Vue.extend({});
     font-size: 0.6rem;
     line-height: 1.3;
     font-style: oblique;
-    color: $grey-500;
+    color: rgba(158, 158, 158, 1);
   }
 }
 </style>

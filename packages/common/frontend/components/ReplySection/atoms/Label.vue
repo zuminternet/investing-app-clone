@@ -20,6 +20,6 @@ label {
   width: 100%;
   text-align: left;
   font-size: 0.8rem;
-  color: $grey-700;
+  color: rgba(97, 97, 97, 1);
 }
 </style>

@@ -41,8 +41,8 @@ export default Vue.extend({
   }
 
   &:hover {
-    background-color: $grey-500;
-    color: $grey-100;
+    background-color: rgba(158, 158, 158, 1);
+    color: rgba(245, 245, 245, 1);
   }
 }
 </style>
