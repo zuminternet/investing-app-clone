@@ -1,17 +1,8 @@
 <template>
-  <input
-    v-if="isAddBookmarkButton && isBookmarkedForLocal"
-    class="item-card-active-button"
-    type="button"
-    @click="handleBookmark(email, symbol, name, category)"
-  />
-  <input
-    v-else-if="isAddBookmarkButton"
-    class="item-card-button"
-    type="button"
-    @click="handleBookmark(email, symbol, name, category)"
-  />
-
+  <button v-if="isAddBookmarkButton" class="item-card-button" @click="handleBookmark(email, symbol, name, category)">
+    <span v-if="isBookmarkedForLocal" class="full-star">&#9733;</span>
+    <span v-else class="empty-star">&#9734;</span>
+  </button>
   <input v-else class="item-card-button" type="button" @click="$emit('handle-item-card-button-click')" />
 </template>
 
@@ -84,14 +75,24 @@ export default {
 .item-card-button {
   width: 30px;
   height: 30px;
-  background-color: green;
   margin-right: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 0;
 }
 
-.item-card-active-button {
-  width: 30px;
-  height: 30px;
-  background-color: red;
-  margin-right: 10px;
+.full-star {
+  font-size: 25px;
+  color: var(--icon-color);
+  margin-top: -5px;
+  font-weight: bold;
+}
+
+.empty-star {
+  font-size: 25px;
+  color: var(--icon-color);
+  margin-top: -5px;
+  font-weight: bold;
 }
 </style>

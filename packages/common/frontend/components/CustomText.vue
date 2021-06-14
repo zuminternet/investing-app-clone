@@ -15,6 +15,8 @@
       'item-detail-normal': itemDetailNormal,
       'overview-row-name': overviewRowName,
       'overview-row-value': overviewRowValue,
+      'sub-content-title': subContentTitle,
+      'chart-menu-active-text': chartMenuActiveText,
     }"
   >
     <slot></slot>
@@ -89,6 +91,16 @@ export default {
       type: Boolean,
       default: false,
     },
+
+    subContentTitle: {
+      type: Boolean,
+      default: false,
+    },
+
+    chartMenuActiveText: {
+      type: Boolean,
+      default: false,
+    },
   },
 };
 </script>
@@ -157,6 +169,16 @@ export default {
 }
 
 .overview-row-value {
+  font-weight: bold;
+}
+
+.sub-content-title {
+  font-weight: bold;
+  margin-left: 5px;
+}
+
+.chart-menu-active-text {
+  color: var(--blue-color);
   font-weight: bold;
 }
 </style>

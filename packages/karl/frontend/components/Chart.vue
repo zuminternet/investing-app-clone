@@ -26,6 +26,7 @@
     <chart-menu
       :canvasWidth="canvasWidth + yAxisWidth"
       :isCandle="isCandle"
+      :period="period"
       @handle-chart-menu-button-click="handleChartMenuButtonClick"
     />
   </div>
@@ -431,15 +432,15 @@ export default {
     handleChartMenuButtonClick(event) {
       const { value } = event.target;
 
-      if (value === 'D') {
+      if (value === 'd') {
         this.period = 'd';
       }
 
-      if (value === 'W') {
+      if (value === 'w') {
         this.period = 'w';
       }
 
-      if (value === 'M') {
+      if (value === 'm') {
         this.period = 'm';
       }
 
