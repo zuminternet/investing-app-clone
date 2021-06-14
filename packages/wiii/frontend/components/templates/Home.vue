@@ -1,9 +1,11 @@
 <template>
   <main class="area section">
     <Words class="subtitle noselect">국내주식</Words>
-    <MarketList :tickers="getStocksTickers" />
-    <!-- <Words class="subtitle">Coins</Words> -->
-    <!-- <MarketList :tickers="getCoinsTickers" /> -->
+    <MarketList :tickers="stockTickers" />
+    <Words class="subtitle noselect">지수</Words>
+    <!-- <MarketList :tickers="indexTickers" /> -->
+    <Words class="subtitle noselect">가상화폐</Words>
+    <!-- <MarketList :tickers="coinTickers" /> -->
   </main>
 </template>
 
@@ -14,13 +16,13 @@ import MarketList from '@/components/organisms/MarketList.vue';
 import { createNamespacedHelpers } from 'vuex';
 import { StoreNames } from '@/store';
 
-const { mapGetters } = createNamespacedHelpers(StoreNames.Market);
+const { mapState } = createNamespacedHelpers(StoreNames.Market);
 
 export default Vue.extend({
   components: { Words, MarketList },
 
   computed: {
-    ...mapGetters(['getStocksTickers', 'getCoinsTickers']),
+    ...mapState(['stockTickers', 'coinsTickers', 'indexTickers']),
   },
 });
 </script>

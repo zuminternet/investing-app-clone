@@ -16,6 +16,7 @@ import { ApiError } from '../utils/error/api';
  * @returns API 요청에 필요한 options 객체
  */
 const parseQueryToOptions = (path: marketName, param): GetHistoricalOptions => {
+  /** /hist */
   if (path === marketName.historical) {
     const { type, ticker, exchange, dateFrom, dateTo, interval, sort, limit, offset } = param;
     return {
@@ -124,10 +125,10 @@ export class MarketController {
       console.log({ tickers });
       const data = [];
       for await (const ticker of tickers) {
-        const options = parseQueryToOptions(marketName.historical, { type: `stock`, ticker, dateFrom, limit: `20` });
+        const options = parseQueryToOptions(marketName.historical, { type: `stock`, ticker, dateFrom });
         if (!isOptionsValidate(options)) return res.sendStatus(404);
 
-        const d = await this.marketService.getCachedHistorical({ type: `stock`, ticker, dateFrom, limit: `20` });
+        const d = await this.marketService.getCachedHistorical({ type: `stock`, ticker, dateFrom });
         data.push({ [ticker]: d });
       }
 

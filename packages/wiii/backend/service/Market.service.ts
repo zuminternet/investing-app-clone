@@ -5,10 +5,10 @@ import { GetHistoricalOptions } from '../../domain/apiOptions';
 import { marketName } from '../../domain/apiUrls';
 import { MINUTE_ONE, times } from '../../domain/date';
 import { devPrint, IS_PRO_MODE } from '../../domain/utilFunc';
-import { fetchHistoricalData as historicalKoreanData } from '../chart/KRX';
+import { fetchHistoricalData as KRX } from '../chart/KRX';
 
 const fetchers = {
-  [marketName.stocks]: historicalKoreanData,
+  [marketName.stocks]: KRX,
   [marketName.indexes]: undefined,
   [marketName.coins]: undefined,
 } as const;
@@ -25,7 +25,8 @@ const resultValidator = (data, status: number, statusText: string) => {
  */
 @Service()
 export class MarketService {
-  private delay = MINUTE_ONE * 5;
+  /** @todo 개발 모드에서 30분 단위 캐싱 */
+  private delay = MINUTE_ONE * 30;
   private lastRequest: number;
   private cachedHistory = {};
 
