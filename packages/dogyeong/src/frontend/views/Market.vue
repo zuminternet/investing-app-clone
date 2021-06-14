@@ -21,13 +21,13 @@
     <main>
       <Swiper ref="swiper" @endSlide="onEndSlide">
         <SwiperSlide>
-          <MarketIndex></MarketIndex>
+          <MarketIndex />
         </SwiperSlide>
         <SwiperSlide>
-          <MarketStock></MarketStock>
+          <MarketStock />
         </SwiperSlide>
         <SwiperSlide>
-          <MarketCoin></MarketCoin>
+          <MarketCoin />
         </SwiperSlide>
       </Swiper>
     </main>
@@ -36,6 +36,11 @@
 </template>
 
 <script lang="ts">
+/**
+ * Market
+ *
+ * [시장]탭에 해당하는 페이지
+ */
 import Vue from 'vue';
 import { mapActions } from 'vuex';
 import { Header, HeaderTitle, HeaderNav, HeaderNavItem } from '@/components/Header';

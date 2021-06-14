@@ -21,7 +21,7 @@ module.exports = {
       root: './packages/common',
       package: './package.json',
       // tsconfig 파일 위치 (root 속성의 상대경로)
-      tsconfig: './tsconfig.frontend.json',
+      tsconfig: './frontend/tsconfig.json',
       snippetFolder: './.vscode/vetur/snippets',
       globalComponents: [],
     },

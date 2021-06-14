@@ -1,12 +1,14 @@
 <template>
   <Layout>
-    <header></header>
+    <Header>
+      <HeaderTitle>계정 생성</HeaderTitle>
+    </Header>
     <main>
-      <form>
-        <input v-model="name" type="text" placeholder="name" />
-        <input v-model="email" type="email" placeholder="email" />
-        <input v-model="password" type="password" placeholder="password" />
-        <button type="submit" @click.prevent="onClickSignupBtn">sign up</button>
+      <form :class="$style.form">
+        <input v-model="name" type="text" placeholder="name" :class="$style.input" />
+        <input v-model="email" type="email" placeholder="email" :class="$style.input" />
+        <input v-model="password" type="password" placeholder="password" :class="$style.input" />
+        <button type="submit" :class="$style.button" @click.prevent="onClickSignupBtn">sign up</button>
       </form>
     </main>
     <BottomNav />
@@ -14,10 +16,16 @@
 </template>
 
 <script lang="ts">
+/**
+ * Signup
+ *
+ * 회원가입 페이지
+ */
 import Vue from 'vue';
 import BottomNav from '@/components/BottomNav/BottomNav.vue';
 import * as authService from '@/services/authService';
 import Layout from '@/components/Layout/Layout.vue';
+import { Header, HeaderTitle } from '@/components/Header';
 
 export default Vue.extend({
   name: 'Signup',
@@ -25,6 +33,8 @@ export default Vue.extend({
   components: {
     BottomNav,
     Layout,
+    Header,
+    HeaderTitle,
   },
 
   data() {
@@ -43,15 +53,18 @@ export default Vue.extend({
           email: this.email,
           password: this.password,
         })
-        .then(() => this.$router.replace('/login'))
-        .catch(console.error);
+        .then(() => {
+          window.alert('계정이 생성되었습니다.');
+          this.$router.replace('/login');
+        })
+        .catch(window.alert);
     },
   },
 });
 </script>
 
-<style lang="scss" scoped>
-form {
+<style lang="scss" module>
+.form {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -60,22 +73,22 @@ form {
   height: 100%;
   max-width: 350px;
   margin: auto;
+}
 
-  input {
-    margin-bottom: 12px;
-    padding: 8px;
-    font-size: 1rem;
-    border-radius: 4px;
-    border: 1px solid var(--border-color);
-  }
+.input {
+  margin-bottom: 12px;
+  padding: 8px;
+  font-size: 1rem;
+  border-radius: 4px;
+  border: 1px solid var(--border-color);
+}
 
-  button {
-    display: block;
-    padding: 8px;
-    background-color: var(--primary-color);
-    font-size: 1rem;
-    border-radius: 4px;
-    color: var(--login-text-color);
-  }
+.button {
+  display: block;
+  padding: 8px;
+  background-color: var(--primary-color);
+  font-size: 1rem;
+  border-radius: 4px;
+  color: var(--login-text-color);
 }
 </style>

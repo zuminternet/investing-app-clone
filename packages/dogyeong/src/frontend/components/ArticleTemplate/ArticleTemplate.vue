@@ -18,9 +18,16 @@
       </NewsListItem>
     </NewsList>
     <div v-if="isLoading" class="spinner-container"><LoadingSpinner /></div>
-    <button v-else-if="moreButtonText" class="more-button" @click="$emit('clickMoreButton')">
-      {{ moreButtonText }}
-    </button>
+    <ErrorMessage v-else-if="isError" style="padding: 40px 0;">
+      불러오는 도중 실패했습니다 :(
+      <ErrorRetryButton @click="$emit('clickMoreButton')" />
+    </ErrorMessage>
+    <template v-else>
+      <ErrorMessage v-if="!articles.length" style="padding: 40px 0;">아직 등록된 기사가 없습니다 :(</ErrorMessage>
+      <button v-if="moreButtonText" class="more-button" @click="$emit('clickMoreButton')">
+        {{ moreButtonText }}
+      </button>
+    </template>
   </section>
 </template>
 
@@ -36,6 +43,8 @@ import {
   NewsListItem,
 } from 'common/frontend/components/News';
 import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner.vue';
+import ErrorMessage from '@/components/Error/ErrorMessage.vue';
+import ErrorRetryButton from '@/components/Error/ErrorRetryButton.vue';
 
 export default Vue.extend({
   name: 'ArticleTemplate',
@@ -49,6 +58,8 @@ export default Vue.extend({
     NewsList,
     NewsListItem,
     LoadingSpinner,
+    ErrorMessage,
+    ErrorRetryButton,
   },
 
   props: {
@@ -58,7 +69,7 @@ export default Vue.extend({
     },
     articles: {
       type: Array,
-      default: [],
+      default: () => [],
     },
     urlPrefix: {
       type: String,
@@ -73,6 +84,10 @@ export default Vue.extend({
       default: null,
     },
     isLoading: {
+      type: Boolean,
+      default: false,
+    },
+    isError: {
       type: Boolean,
       default: false,
     },

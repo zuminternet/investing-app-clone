@@ -3,17 +3,19 @@
     <ArticleTemplate
       :headline="headline"
       :articles="normalNews"
-      url-prefix="/news/new"
+      url-prefix="/news/popular"
       moreButtonText="더 많은 뉴스 >"
       :isLoading="news.isLoading"
+      :isError="news.isError"
       @clickMoreButton="getPopularNews"
     />
     <ArticleTemplate
       :articles="opinions.data"
-      url-prefix="/news/new"
+      url-prefix="/news/popular"
       moreButtonText="더 많은 의견 >"
       sectionTitle="분석 및 의견"
       :isLoading="opinions.isLoading"
+      :isError="opinions.isError"
       @clickMoreButton="getPopularOpinions"
     />
   </div>

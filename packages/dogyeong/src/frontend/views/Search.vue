@@ -3,7 +3,7 @@
     <header :class="$style.header">
       <HeaderButton @clickHeaderButton="back">&#8592;</HeaderButton>
       <input v-model="keyword" type="text" autofocus placeholder="종목 검색" @keypress.enter="requestSearch" />
-      <button :class="$style['search-button']" @click="requestSearch">Search</button>
+      <button :class="$style['search-button']" @click="search">Search</button>
     </header>
     <main :class="$style.main">
       <LoadingSpinner v-if="isLoading" />
@@ -37,6 +37,11 @@
 </template>
 
 <script lang="ts">
+/**
+ * Search
+ *
+ * 검색 페이지
+ */
 import Vue from 'vue';
 import { SwiperSlide } from 'vue-awesome-swiper';
 import CustomSwiper from 'common/frontend/components/CustomSwiper.vue';
@@ -54,7 +59,6 @@ import {
   BookmarkListItemTitle,
   BookmarkListItemText,
 } from '@/components/Bookmark';
-import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner.vue';
 
 export default Vue.extend({
   name: 'Search',
@@ -87,16 +91,15 @@ export default Vue.extend({
     };
   },
 
-  computed: {},
-
   methods: {
-    async requestSearch() {
+    async search() {
       try {
-        if (!this.keyword) return;
+        const keyword = this.keyword;
+
+        if (!keyword) return;
 
         this.isLoading = true;
 
-        const keyword = this.keyword;
         const itemPromise = searchItems({ keyword });
         const newsPromise = searchNews({ keyword });
         const opinionPromise = searchOpinions({ keyword });
@@ -107,7 +110,7 @@ export default Vue.extend({
 
         this.isLoading = false;
       } catch (e) {
-        console.error(e);
+        window.alert(e);
       }
     },
     back() {
