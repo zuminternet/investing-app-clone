@@ -36,3 +36,10 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style lang="scss" scoped>
+main.area {
+  display: grid;
+  place-content: center;
+}
+</style>

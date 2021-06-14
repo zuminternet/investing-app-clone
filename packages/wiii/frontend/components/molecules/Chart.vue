@@ -35,7 +35,7 @@ export default Vue.extend({
     },
     width: {
       type: Number,
-      default: 600,
+      default: 880,
     },
     typeName: {
       type: String,
@@ -111,12 +111,6 @@ export default Vue.extend({
   data() {
     return {
       ctx: null,
-      options: {
-        multiplier: this.multiplier,
-        timespan: this.timespan,
-        from: this.from,
-        to: this.to,
-      },
       histData: {},
       cachedChart: {},
     };
