@@ -10,8 +10,7 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "allowJs": true,
-    "lib": ["ESNext", "DOM", "DOM.Iterable", "ScriptHost"],
-    "typeRoots": ["**/node_modules/@types", "./"]
+    "lib": ["ESNext", "DOM", "DOM.Iterable", "ScriptHost"]
   },
 
   "exclude": ["**/frontend/**", "**/node_modules/**"]
