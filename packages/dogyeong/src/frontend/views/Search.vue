@@ -1,8 +1,8 @@
 <template>
   <Layout>
     <header :class="$style.header">
-      <HeaderButton @clickHeaderButton="back">&#8592;</HeaderButton>
-      <input v-model="keyword" type="text" autofocus placeholder="종목 검색" @keypress.enter="requestSearch" />
+      <HeaderButton @clickHeaderButton="back">🠔</HeaderButton>
+      <input v-model="keyword" type="text" autofocus placeholder="종목 검색" @keypress.enter="search" />
       <button :class="$style['search-button']" @click="search">Search</button>
     </header>
     <main :class="$style.main">
@@ -151,5 +151,12 @@ export default Vue.extend({
 
 .main {
   position: relative;
+}
+
+.swiper {
+  button {
+    color: var(--text-color);
+    font-size: 16px;
+  }
 }
 </style>

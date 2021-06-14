@@ -17,7 +17,7 @@ export default Vue.extend({
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  font-size: 22px;
+  font-size: 20px;
   color: var(--text-color);
 }
 </style>
