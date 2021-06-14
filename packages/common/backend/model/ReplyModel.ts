@@ -19,14 +19,15 @@ export interface ReplyDoc extends mongoose.Document {
   /** 사용자 이름 */
   name?: string;
   userName?: string;
-  /** 원 댓글인지 대댓글인지 판단 */
-  isParent?: boolean;
+  /** 원 댓글인지 대댓글인지 판단; 추후 추가 예정 */
+  // isParent?: boolean;
   /** 대댓글인경우 원댓글 id; ObjectId.toString() */
-  parentReply?: string;
+  // parentReply?: string;
   /** 댓글 내용 */
   contents: string;
   /** 좋아요 수 */
   likes: number;
+  createdAt: Date;
 }
 
 /**
@@ -39,10 +40,11 @@ const ReplySchema = new Schema({
   email: { type: String, required: true },
   name: { type: String },
   userName: { type: String },
-  isParent: { type: Boolean, default: true },
-  parentReply: { type: String },
+  // isParent: { type: Boolean, default: true },
+  // parentReply: { type: String },
   contents: { type: String, required: true },
   likes: { type: Number, default: 0 },
+  createdAt: { type: Date, default: new Date() },
 });
 
 const Reply = model<ReplyDoc>('Reply', ReplySchema);
