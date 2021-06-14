@@ -1,13 +1,15 @@
 <template>
   <Layout>
-    <header :class="$style.header">
+    <header class="search-header">
       <HeaderButton @clickHeaderButton="back">🠔</HeaderButton>
-      <input v-model="keyword" type="text" autofocus placeholder="종목 검색" @keypress.enter="search" />
-      <button :class="$style['search-button']" @click="search">Search</button>
+      <label>
+        <input v-model="keyword" type="text" autofocus placeholder="종목 검색" @keypress.enter="search" />
+        <span @click="search">&#128269;</span>
+      </label>
     </header>
-    <main :class="$style.main">
+    <main class="search-main">
       <LoadingSpinner v-if="isLoading" />
-      <custom-swiper :navigator-button-names="swiperNavigatorButtonNames" :class="$style.swiper">
+      <custom-swiper :navigator-button-names="swiperNavigatorButtonNames">
         <swiper-slide>
           <BookmarkList>
             <BookmarkListItem v-for="{ name, symbol, category, isBookmarked } in items" :key="symbol">
@@ -120,43 +122,53 @@ export default Vue.extend({
 });
 </script>
 
-<style lang="scss" module>
-.header {
-  padding: 6px 12px;
+<style lang="scss">
+.search-header {
+  padding: 8px 12px;
   height: 60px;
   border-bottom: 1px solid var(--border-color);
   display: flex;
+  background-color: var(--header-bg-color);
 
-  input {
+  label {
     flex: 1;
-    padding: 4px 8px;
-    appearance: none;
-    border: 0;
-    border-bottom: 1px solid var(--text-color);
-    background-color: transparent;
-    color: var(--text-color);
-    font-size: 16px;
+    display: flex;
+    position: relative;
+
+    input {
+      flex: 1;
+      padding: 4px 8px;
+      padding-left: 40px;
+      appearance: none;
+      border: 0;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      color: var(--text-color);
+      font-size: 16px;
+      margin-left: 12px;
+      background-color: var(--header-nav-bg-color);
+    }
+
+    span {
+      position: absolute;
+      left: 22px;
+      top: calc(50% - 12px);
+      cursor: pointer;
+    }
   }
 }
 
-.search-button {
-  padding: 4px 8px;
-  margin-left: 12px;
-  border-radius: 8px;
-
-  &:hover {
-    background-color: var(--border-color);
-  }
-}
-
-.main {
+.search-main {
   position: relative;
 }
 
-.swiper {
-  button {
+.swiper-navigator {
+  border-bottom: 1px solid var(--border-color);
+
+  .navigator-button {
     color: var(--text-color);
     font-size: 16px;
+    background-color: var(--header-nav-bg-color);
   }
 }
 </style>

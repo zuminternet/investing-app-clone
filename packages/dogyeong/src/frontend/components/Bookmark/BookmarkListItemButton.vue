@@ -17,6 +17,6 @@ export default Vue.extend({
   font-size: 24px;
   height: 100%;
   padding: 4px;
-  color: var(--text-color);
+  color: var(--primary-color);
 }
 </style>
