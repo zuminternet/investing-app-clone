@@ -9,7 +9,8 @@
     "moduleResolution": "node",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "allowJs": true
+    "allowJs": true,
+    "typeRoots": ["**/node_modules/@types", "./"]
   },
   "exclude": ["**/backend/**", "**/node_modules/**"]
 }
