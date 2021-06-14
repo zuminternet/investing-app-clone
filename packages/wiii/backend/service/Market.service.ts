@@ -89,7 +89,7 @@ export class MarketService {
 
       /** response: data, status, statusText, headers, config */
       const { data, status, statusText } = await fetchers[type](options);
-      devPrint()({ type, ticker, status, statusText }, `getHistorical No Cache fetchers`);
+      devPrint()({ type, ticker, status, statusText, size: data?.results?.length }, `getHistorical No Cache fetchers`);
 
       resultValidator(data, status, statusText);
 

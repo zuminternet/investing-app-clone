@@ -117,7 +117,7 @@ export class MarketController {
   @GetMapping({ path: ['/stocks'] })
   public async sendStocksList({ query }: Request, res: Response) {
     const stockListError = () => new ApiError(`Send Stocks List`, this.sendStocksList.name);
-    const dateFrom = getDateString(new Date().getTime() - WEEK_ONE * 2);
+
     try {
       const { stocks } = query;
 
@@ -125,10 +125,10 @@ export class MarketController {
       console.log({ tickers });
       const data = [];
       for await (const ticker of tickers) {
-        const options = parseQueryToOptions(marketName.historical, { type: `stock`, ticker, dateFrom });
+        const options = parseQueryToOptions(marketName.historical, { type: `stock`, ticker });
         if (!isOptionsValidate(options)) return res.sendStatus(404);
 
-        const d = await this.marketService.getCachedHistorical({ type: `stock`, ticker, dateFrom });
+        const d = await this.marketService.getCachedHistorical({ type: `stock`, ticker });
         data.push({ [ticker]: d });
       }
 
