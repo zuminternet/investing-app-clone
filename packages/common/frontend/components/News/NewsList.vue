@@ -20,6 +20,6 @@ export default Vue.extend({
 <style lang="scss" scoped>
 ul {
   list-style: none;
-  background-color: var(-app-bg-color);
+  padding: 0;
 }
 </style>

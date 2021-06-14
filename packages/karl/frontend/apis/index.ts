@@ -55,20 +55,20 @@ const createUser = async ({ name, email, password, googleId }: createUserInfo) =
   }
 };
 
-const createArticles = async ({ articles }) => {
-  try {
-    const result = await Axios.post(`${devURL}/api/articles`, {
-      articles,
-    });
+// const createArticles = async ({ articles }) => {
+//   try {
+//     const result = await Axios.post(`${devURL}/api/articles`, {
+//       articles,
+//     });
 
-    if (result.status === 201) {
-      return true;
-    }
-    throw new Error('Articles were not created');
-  } catch (error) {
-    console.log(error);
-  }
-};
+//     if (result.status === 201) {
+//       return true;
+//     }
+//     throw new Error('Articles were not created');
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
 
 const getUser = async () => {
   try {
@@ -212,7 +212,8 @@ export {
   loginUserByGoogleOAuth,
   getStocks,
   getIndices,
-  createArticles,
+  // createArticles,
   getCryptos,
   getHistoricalData,
+  getNewsById,
 };

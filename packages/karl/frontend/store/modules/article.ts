@@ -1,9 +1,10 @@
-import { getNews, getAnalyses } from '../../../../common/frontend/apis';
+import { getNews, getAnalyses, getArticleById } from '../../../../common/frontend/apis';
 import { tickerMap } from '../../../../common/domain';
 
 // 초기 state 값 설정
 const state = () => ({
   news: [],
+  articleDetail: {},
 });
 
 // getter 설정
@@ -40,15 +41,25 @@ const actions = {
     try {
       const news = await getNews({});
 
-      console.log(news);
-
       if (news) {
         commit('setNews', news);
 
         return true;
       }
+    } catch (error) {
+      console.log(error);
+    }
+  },
 
-      throw new Error('Getting news was failed in article store');
+  async getArticleById({ commit }, id: string) {
+    try {
+      const article = await getArticleById(id);
+
+      if (article) {
+        commit('setArticleDetail', article);
+
+        return true;
+      }
     } catch (error) {
       console.log(error);
     }
@@ -59,6 +70,9 @@ const actions = {
 const mutations = {
   setNews(state, news) {
     state.news = news;
+  },
+  setArticleDetail(state, article) {
+    state.articleDetail = article;
   },
 };
 

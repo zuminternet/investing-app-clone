@@ -128,6 +128,16 @@ const getAnalyses = async ({ offset, limit, tickers }: getNewsAndAnalysesInfo) =
   }
 };
 
+const getArticleById = async (id: string) => {
+  const result = await Axios.get(`${devURL}/api/article/${id}`);
+
+  if (result.status === 200) {
+    const { data } = result;
+
+    return data;
+  }
+};
+
 /**
  * @description email, symbol을 받아 북마크 추가를 요청하는 front-side API call 함수
  * @param param0
@@ -196,4 +206,4 @@ const getBookmarks = async (email: string) => {
   }
 };
 
-export { getSearchedItems, getItemDetail, getNews, getAnalyses, createBookmark, getBookmarks, deleteBookmark };
+export { getSearchedItems, getItemDetail, getNews, getAnalyses, createBookmark, getBookmarks, deleteBookmark, getArticleById };

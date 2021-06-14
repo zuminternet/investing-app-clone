@@ -17,8 +17,8 @@ const state = () => ({
     low: '', // 최저가
     upDownPrice: '',
     upDownRate: '',
-    time: '100',
-    currency: 'dallor',
+    // time: '100',
+    // currency: 'dallor',
   },
   news: [],
   analyses: [],

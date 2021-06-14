@@ -302,6 +302,23 @@ export class ApiController {
     }
   }
 
+  @GetMapping({ path: '/article/:id' })
+  public async getArticleById(request: Request, response: Response) {
+    try {
+      const { id } = request.params;
+
+      const news = await this.articleService.getArticleById(id);
+
+      if (news) {
+        return response.status(200).send(news);
+      }
+
+      response.sendStatus(404);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   /**
    * @description DB에서 articles 중 analyses만 가져오는 controller
    * @param request
