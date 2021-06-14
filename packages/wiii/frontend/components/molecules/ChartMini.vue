@@ -1,19 +1,18 @@
 <template>
-  <canvas ref="canvas" class="area"></canvas>
+  <canvas width="150px" ref="canvas" class="area"></canvas>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 import { createNamespacedHelpers } from 'vuex';
 
+import { StoreNames } from '@/store';
 import { TimespanEnum } from '@/type/apis';
 import { CanvasOptionEnum } from '@/type/chart';
 import { drawBasicCandleChart } from '@/utils/chart';
 import withTime from '@/utils/timer';
 
-import { GetHistoricalOptions } from '../../../domain/apiOptions';
 import { getDateString, WEEK_ONE } from '../../../domain/date';
-import { StoreNames } from '@/store';
 import { reda400 } from '@/styles/index.scss';
 
 const { mapGetters, mapActions } = createNamespacedHelpers(StoreNames.Market);
@@ -63,22 +62,6 @@ export default Vue.extend({
 
   computed: {
     ...mapGetters(['hasStockData']),
-    queryString(): GetHistoricalOptions {
-      const { typeName, ticker, exchange, from, to, multiplier, timespan, sort, limit, offset } = this;
-
-      /** @todo type에 따라 property 다른 부분 처리, 일단 국내주식(MarketStack)에 맞춰서 */
-      return {
-        type: typeName,
-        ticker,
-        exchange,
-        dateFrom: from,
-        dateTo: to,
-        interval: `${multiplier}${timespan}`,
-        sort,
-        limit,
-        offset,
-      };
-    },
   } /** end of computed */,
 
   async mounted() {
@@ -91,7 +74,7 @@ export default Vue.extend({
   methods: {
     ...mapActions(['getTodayMiniStocks']),
 
-    getChart({ results, count, payload: { total } }) {
+    getChart({ results, count }) {
       /** @todo 예외처리 */
       if (!count) {
         return;
@@ -104,9 +87,9 @@ export default Vue.extend({
         `drawBasicCandleChart`,
       )({
         ctx,
-        results,
-        count,
-        payload: { total, customNumToShow: limit, smaConfigs, width: 150 },
+        results: results.slice(0, limit),
+        count: limit,
+        payload: { customNumToShow: limit, smaConfigs, width: 150 },
       });
     },
   },

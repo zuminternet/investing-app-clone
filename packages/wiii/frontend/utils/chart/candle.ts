@@ -17,9 +17,9 @@ export const drawBasicCandleChart = ({
   ctx,
   results,
   count,
-  payload: { total, customNumToShow, smaConfigs, width, hasAxis, hasVolumes, hasPrices },
+  payload: { customNumToShow, smaConfigs, width, hasAxis, hasVolumes, hasPrices },
 }: DrawCandleChartOptions): object => {
-  const { zeroX, zeroY, ratio, canvasWidth, canvasHeight } = initCanvas(ctx, { width });
+  const { zeroX, zeroY, ratio, canvasWidth, canvasHeight } = initCanvas(ctx, { width, hasAxis });
   if (!zeroX || !zeroY || !ratio || !canvasWidth || !canvasHeight) return;
 
   /** 거래량 차트 세로 길이:  가격/일자 구분선 제외한 차트 세로 길이의 5분의 1 */
@@ -48,6 +48,11 @@ export const drawBasicCandleChart = ({
   for (const { duration, color, width } of smaConfigs) {
     setSMA(ctx, data, { ratio, duration, color, width });
   }
+
+  /** mini-chart 용, axis 없으면 바로 리턴
+   * @todo 차트 보조지표 옵션 많아지는 경우?
+   */
+  if (!hasAxis) return;
 
   /** 가격 구분선 */
   if (hasPrices) setPricePartition(ctx, { highest, lowest, zeroY: volumeH, ratioH, canvasWidth, canvasHeight, ratio });
@@ -82,8 +87,8 @@ export const drawBasicCandleChart = ({
       fontSize: 20,
     });
   }
+
   /** 일자구분선 */
-  if (!hasAxis) return;
   setDayPartition(ctx, { data, results, numToShow, count, canvasWidth, canvasHeight, zeroY, ratio });
 
   drawLine(
