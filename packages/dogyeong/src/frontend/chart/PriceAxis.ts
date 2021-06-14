@@ -16,7 +16,7 @@ interface PriceAxisProps {
 export default class PriceAxis extends Canvas {
   private minPrice: number;
   private maxPrice: number;
-  private innerPrices: number[];
+  private innerPrices: string[];
   private priceLines: PriceLine[] = [];
   private colorOptions: AxisColorOptions;
   private readonly font = '12px sans-serif';
@@ -50,7 +50,7 @@ export default class PriceAxis extends Canvas {
 
   private getInnerPrices() {
     const gap = this.getPriceGapUnit();
-    const prices = [];
+    const prices: string[] = [];
     let index = Math.ceil(this.minPrice / gap);
 
     while (index * gap < this.maxPrice) {
@@ -63,10 +63,17 @@ export default class PriceAxis extends Canvas {
 
   private getPriceGapUnit() {
     const diff = this.maxPrice - this.minPrice;
-    if (diff < 10) return 1;
-    if (diff < 100) return 10;
-    if (diff < 1000) return 100;
-    return 1000;
+    if (diff < 10) return 0.5;
+    if (diff < 20) return 1;
+    if (diff < 40) return 2;
+    if (diff < 80) return 4;
+    if (diff < 100) return 5;
+    if (diff < 200) return 10;
+    if (diff < 500) return 25;
+    if (diff < 1000) return 50;
+    if (diff < 2000) return 100;
+    if (diff < 4000) return 200;
+    return 400;
   }
 
   private drawBackground(ctx: CanvasRenderingContext2D) {
@@ -83,7 +90,7 @@ export default class PriceAxis extends Canvas {
 
   private getPriceLines() {
     this.priceLines = this.innerPrices.map((price) => {
-      const priceY = Math.round(((price - this.minPrice) / (this.maxPrice - this.minPrice)) * this.height);
+      const priceY = Math.round(((+price - this.minPrice) / (this.maxPrice - this.minPrice)) * this.height);
       const lineY = crispPixel(this.height - priceY);
       return { y: lineY, text: price.toString() };
     });
@@ -100,7 +107,7 @@ export default class PriceAxis extends Canvas {
         ctx.textBaseline = this.textBaseline;
         ctx.beginPath();
         ctx.moveTo(0, y);
-        ctx.lineTo(10, y);
+        ctx.lineTo(6, y);
         ctx.stroke();
         ctx.fillText(`${text}`, 14, y);
       });
