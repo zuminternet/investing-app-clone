@@ -22,7 +22,7 @@ export default Vue.extend({
   components: { Words, MarketList },
 
   computed: {
-    ...mapState(['stockTickers', 'coinsTickers', 'indexTickers']),
+    ...mapState(['stockTickers', 'coinTickers', 'indexTickers']),
   },
 });
 </script>
