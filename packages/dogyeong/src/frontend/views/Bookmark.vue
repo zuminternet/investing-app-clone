@@ -9,8 +9,14 @@
       </HeaderTitle>
     </Header>
     <main :class="$style.main">
-      <LoadingSpinner v-if="isLoading" />
-      <BookmarkList>
+      <div v-if="!isLoggedIn" :class="$style.message">로그인 해주세요 :)</div>
+      <LoadingSpinner v-else-if="isLoading" />
+      <div v-else-if="isError" :class="$style.message">
+        에러가 발생했습니다! :(
+        <button :class="$style.retry" @click="fetchBookmarks">&#8635;</button>
+      </div>
+      <div v-else-if="isEmpty" :class="$style.message">관심목록이 비어있습니다 :(</div>
+      <BookmarkList v-else>
         <BookmarkListItem v-for="{ name, symbol, category, isBookmarked } in bookmarks" :key="symbol">
           <BookmarkListItemTitle>{{ name }}</BookmarkListItemTitle>
           <BookmarkListItemText>{{ symbol }} | {{ category }}</BookmarkListItemText>
@@ -69,16 +75,34 @@ export default Vue.extend({
     return {
       bookmarks: [],
       isLoading: false,
+      isError: false,
     };
   },
 
+  computed: {
+    isEmpty() {
+      return this.bookmarks.length === 0;
+    },
+    isLoggedIn() {
+      return this.$store.state.user.user;
+    },
+  },
+
   created() {
-    this.isLoading = true;
-    getBookmarks()
-      .then((bookmarks) => bookmarks.map((bookmark) => ({ ...bookmark, isBookmarked: true })))
-      .then((bookmarks) => (this.bookmarks = bookmarks))
-      .catch(console.error)
-      .finally(() => (this.isLoading = false));
+    this.fetchBookmarks();
+  },
+
+  methods: {
+    fetchBookmarks() {
+      this.isLoading = true;
+      this.isError = false;
+
+      getBookmarks()
+        .then((bookmarks) => bookmarks.map((bookmark) => ({ ...bookmark, isBookmarked: true })))
+        .then((bookmarks) => (this.bookmarks = bookmarks))
+        .catch(() => (this.isError = true))
+        .finally(() => (this.isLoading = false));
+    },
   },
 });
 </script>
@@ -86,5 +110,23 @@ export default Vue.extend({
 <style lang="scss" module>
 .main {
   position: relative;
+}
+
+.message {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 22px;
+  color: var(--text-color);
+}
+
+.retry {
+  border-radius: 100%;
+  background-color: var(--app-bg-color);
+  width: 60px;
+  height: 60px;
+  margin: 20px;
 }
 </style>
