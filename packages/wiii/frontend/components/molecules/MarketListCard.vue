@@ -13,7 +13,7 @@
         <Words class="ticker"> {{ changeEmoji }} </Words>
       </div>
       <Words class="market-list-card-info-text">
-        {{ changeSign }}&nbsp;{{ changePrice }}원 / {{ changeSign }} {{ changePercent }} {{ changeText }}
+        전일대비 {{ changeSign }}&nbsp;{{ changePrice }}원 / {{ changeSign }} {{ changePercent }} {{ changeText }}
       </Words>
     </div>
     <Chart v-bind="{ typeName, ticker }" />
