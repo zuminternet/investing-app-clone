@@ -4,8 +4,9 @@ export const authConfig = {
   cookieOptions: {
     httpOnly: true,
     maxAge: 24 * 3600 * 1000, // 1 day
+    sameSite: 'lax',
   },
-};
+} as const;
 
 export const jwtConfig = {
   secret: 'jwtsecretyeah',
