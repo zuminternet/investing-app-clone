@@ -17,6 +17,8 @@
       'overview-row-value': overviewRowValue,
       'sub-content-title': subContentTitle,
       'chart-menu-active-text': chartMenuActiveText,
+      'o-auth-text': OAuthText,
+      'login-button-text': loginButtonText,
     }"
   >
     <slot></slot>
@@ -101,6 +103,16 @@ export default {
       type: Boolean,
       default: false,
     },
+
+    OAuthText: {
+      type: Boolean,
+      default: false,
+    },
+
+    loginButtonText: {
+      type: Boolean,
+      default: false,
+    },
   },
 };
 </script>
@@ -110,8 +122,13 @@ export default {
   color: var(--text-color);
 }
 
+.login-button-text {
+  font-weight: bold;
+  color: var(--blue-color);
+}
+
 .page-title {
-  font-weight: 900;
+  font-weight: bold;
 }
 
 .button-active {
@@ -121,7 +138,7 @@ export default {
 
 .app-title {
   color: var(--title-color);
-  font-weight: 900;
+  font-weight: bold;
 }
 
 .item-card-name-price {
@@ -143,7 +160,7 @@ export default {
 }
 
 .item-detail-price {
-  font-weight: 900;
+  font-weight: bold;
   font-size: 25px;
 }
 
@@ -179,6 +196,11 @@ export default {
 
 .chart-menu-active-text {
   color: var(--blue-color);
+  font-weight: bold;
+}
+
+.o-auth-text {
+  color: white;
   font-weight: bold;
 }
 </style>

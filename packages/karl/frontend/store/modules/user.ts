@@ -82,8 +82,6 @@ const actions = {
         return true;
       }
     }
-
-    throw new Error('Google OAuth login or create user was failed in user store');
   },
 
   /**
@@ -100,8 +98,6 @@ const actions = {
 
         return true;
       }
-
-      throw new Error('Getting user was failed in user store');
     } catch (error) {
       console.log(error);
     }
@@ -122,8 +118,6 @@ const actions = {
 
         return true;
       }
-
-      throw new Error('Requesting email login was failed in user store');
     } catch (error) {
       console.log(error);
       alert(error);
@@ -140,8 +134,6 @@ const actions = {
 
         return true;
       }
-
-      throw new Error('Getting bookmarks was failed in user store');
     } catch (error) {
       console.log(error);
     }
