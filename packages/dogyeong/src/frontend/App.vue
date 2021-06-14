@@ -20,7 +20,7 @@ import { googleAuthInitConfig } from '@/config';
 export default Vue.extend({
   name: 'App',
 
-  async created() {
+  async mounted() {
     this.initGoogleApi();
     await this.$store.dispatch('fetchCurrentUser');
     if (!this.$store.state.user.user) this.$router.push('/login');
