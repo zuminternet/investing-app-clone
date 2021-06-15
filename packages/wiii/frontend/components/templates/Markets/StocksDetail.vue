@@ -15,13 +15,12 @@
       :width="200"
     /> -->
     <Chart class="card" :typeName="`stock`" :apiType="`es`" :ticker="ticker" />
-    <ReplySection />
+    <ReplySection :ticker="ticker" />
   </main>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import { mapState } from 'vuex';
 
 import Chart from '@/components/molecules/Chart.vue';
 import ReplySection from '@/components/organisms/ReplySection.vue';
@@ -32,8 +31,11 @@ export default Vue.extend({
     ReplySection,
   },
 
-  computed: {
-    ...mapState(['ticker']),
+  props: {
+    /** router로 전달받음 */
+    ticker: {
+      type: String,
+    },
   },
 });
 </script>

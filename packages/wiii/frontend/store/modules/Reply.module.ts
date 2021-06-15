@@ -12,10 +12,8 @@ interface ReplyState {}
 const Reply = {
   namespaced: true,
   state: {},
-  getters: {
-    //
-  },
-
+  getters: {},
+  mutations: {},
   actions: {
     insertReply: async ({ rootGetters: { getTicker, getAuth, getEmail } }, { contents }) => {
       try {
@@ -33,9 +31,9 @@ const Reply = {
       }
     },
 
-    getReplsByDocID: async ({ commit, rootGetters: { getTicker } }) => {
+    getReplsByDocID: async (_, ticker) => {
       try {
-        const results = await getRepls(getTicker);
+        const results = await getRepls(ticker);
         console.log({ results });
         if (!results) return;
         return results;
