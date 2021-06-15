@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" :class="{ dark: $store.state.isDarkTheme }">
     <router-view></router-view>
   </div>
 </template>
@@ -20,5 +20,6 @@ export default {
 
 <style scoped lang="scss">
 #app {
+  background-color: var(--app-bg-color);
 }
 </style>

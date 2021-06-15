@@ -1,7 +1,7 @@
 <template>
   <div id="app" :class="{ dark: $store.state.isDarkTheme }">
     <div class="wrapper">
-      <RouterView></RouterView>
+      <RouterView />
     </div>
   </div>
 </template>
@@ -20,10 +20,15 @@ import { googleAuthInitConfig } from '@/config';
 export default Vue.extend({
   name: 'App',
 
-  async created() {
+  async mounted() {
     this.initGoogleApi();
-    await this.$store.dispatch('fetchCurrentUser');
-    if (!this.$store.state.user.user) this.$router.push('/login');
+
+    try {
+      await this.$store.dispatch('fetchCurrentUser');
+      if (this.isLoginView()) this.$router.replace('/');
+    } catch (e) {
+      if (!this.isLoginView()) this.$router.replace('/login');
+    }
   },
 
   methods: {
@@ -32,11 +37,16 @@ export default Vue.extend({
       const gapi = window.gapi;
       gapi.load(lib, () => gapi.auth2.init(args));
     },
+    isLoginView() {
+      return this.$router.currentRoute.name === 'Login';
+    },
   },
 });
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
+@import '@/styles/index.scss';
+
 #app {
   background-color: var(--app-bg-color);
   overflow: hidden;

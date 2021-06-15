@@ -1,7 +1,12 @@
 <template>
   <Layout>
     <Header>
-      <HeaderTitle>시장</HeaderTitle>
+      <HeaderTitle>
+        시장
+        <template #right>
+          <SearchButton />
+        </template>
+      </HeaderTitle>
       <HeaderNav>
         <HeaderNavItem
           v-for="route in navRoutes"
@@ -16,21 +21,26 @@
     <main>
       <Swiper ref="swiper" @endSlide="onEndSlide">
         <SwiperSlide>
-          <MarketIndex></MarketIndex>
+          <MarketIndex />
         </SwiperSlide>
         <SwiperSlide>
-          <MarketStock></MarketStock>
+          <MarketStock />
         </SwiperSlide>
         <SwiperSlide>
-          <MarketCoin></MarketCoin>
+          <MarketCoin />
         </SwiperSlide>
       </Swiper>
     </main>
-    <BottomNav></BottomNav>
+    <BottomNav />
   </Layout>
 </template>
 
 <script lang="ts">
+/**
+ * Market
+ *
+ * [시장]탭에 해당하는 페이지
+ */
 import Vue from 'vue';
 import { mapActions } from 'vuex';
 import { Header, HeaderTitle, HeaderNav, HeaderNavItem } from '@/components/Header';
@@ -41,6 +51,7 @@ import MarketCoin from '@/components/Market/MarketCoin.vue';
 import MarketStock from '@/components/Market/MarketStock.vue';
 import { Swiper, SwiperSlide } from '@/components/Swiper';
 import swiperMixin from '@/mixin/swiperMixin';
+import SearchButton from '@/components/SearchButton/SearchButton.vue';
 
 export default Vue.extend({
   name: 'Index',
@@ -57,6 +68,7 @@ export default Vue.extend({
     Swiper,
     SwiperSlide,
     HeaderNavItem,
+    SearchButton,
   },
 
   mixins: [

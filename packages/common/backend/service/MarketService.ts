@@ -7,7 +7,7 @@ import {
   SummaryDetail,
   EndOfDay,
   tickerMap,
-  MarketStockEOD,
+  MarketStackEOD,
   HistoricalData,
   IntraDayChartMap,
   ChartPeriod,
@@ -16,7 +16,19 @@ import axios, { AxiosInstance } from 'axios';
 import * as NodeCache from 'node-cache';
 
 const cache = new NodeCache({ deleteOnExpire: true });
+const cacheTTL = 99999;
 
+interface MarketStackEODResponse {
+  data: MarketStackEOD[];
+}
+
+/**
+ * MarketService
+ *
+ * 시장 탭과 관련된 주식, 가상화폐, 지수들의 일일데이터, 상세개요, 차트 데이터 등을 관리하는 서비스
+ *
+ * @author dogyeong
+ */
 @Service()
 export default class MarketService {
   private readonly baseUrl = 'http://api.marketstack.com/v1';
@@ -29,31 +41,54 @@ export default class MarketService {
     });
   }
 
-  private isValidSymbol(symbol: string) {
+  /**
+   * isValidSymbol
+   *
+   * 입력받은 ticker가 tickerMap에 있는지 검사한다
+   *
+   * @param symbol ticker 심볼
+   */
+  private isValidSymbol(symbol: string): boolean {
     return Object.keys(tickerMap).some((type: keyof typeof tickerMap) => {
-      return Object.prototype.hasOwnProperty.call(tickerMap[type], symbol);
+      return {}.hasOwnProperty.call(tickerMap[type], symbol);
     });
   }
 
-  private isValidPeriod(period: string) {
-    return Object.prototype.hasOwnProperty.call(IntraDayChartMap, period);
+  /**
+   * isValidPeriod
+   *
+   * 입력받은 period가 IntraDayChartMap에 있는지 검사한다
+   *
+   * @param period
+   */
+  private isValidPeriod(period: string): boolean {
+    return {}.hasOwnProperty.call(IntraDayChartMap, period);
   }
 
-  private convertSymbolsToQueryString(symbols: MarketSymbol[]) {
-    return symbols.join(',');
-  }
-
+  /**
+   * getDisplayName
+   *
+   * 입력받은 ticker의 화면에 표시될 종목명을 반환한다
+   *
+   * @param symbol ticker 심볼
+   */
   private getDisplayName(symbol: MarketSymbol): string {
-    const { stock, crypto, index } = tickerMap;
+    const tickersByMarket = Object.values(tickerMap);
+    const ticker = tickersByMarket.reduce((prev, cur) => Object.assign(prev, cur), {})[symbol];
 
-    if (stock[symbol]?.name) return stock[symbol].name;
-    if (crypto[symbol]?.name) return crypto[symbol].name;
-    if (index[symbol]?.name) return index[symbol].name;
+    if (!ticker?.name) throw new Error('invalid symbol');
 
-    throw new Error('invalid symbol');
+    return ticker.name;
   }
 
-  private convertEOD(eod: MarketStockEOD): EndOfDay {
+  /**
+   * convertEOD
+   *
+   * eod 데이터에 화면에 표시될 프로퍼티를 추가하는 메소드
+   *
+   * @param eod 마켓스택api로 받아온 eod데이터
+   */
+  private convertEOD(eod: MarketStackEOD): EndOfDay {
     const displayName = this.getDisplayName(eod.symbol);
     const wasChanged = !Number.isNaN(eod.close - eod.open);
     const diff = wasChanged ? +(eod.close - eod.open).toFixed(2) : 0;
@@ -62,9 +97,16 @@ export default class MarketService {
     return { ...eod, display_name: displayName, diff, growthRate };
   }
 
+  /**
+   * getIntraDayOptions
+   *
+   * yahooFinance api로 차트 데이터를 받아올 때 필요한 기간 옵션 객체를 만드는 메소드
+   *
+   * @param period 기간 문자열
+   */
   private getIntraDayOptions(period: ChartPeriod) {
     const { interval, dateFrom, dateTo } = IntraDayChartMap[period];
-    return { interval, date_from: dateFrom(), date_to: dateTo() };
+    return { period: interval, from: dateFrom(), to: dateTo() };
   }
 
   /**
@@ -72,15 +114,14 @@ export default class MarketService {
    *
    * 여러 종목의 가장 최근 end-of-day 데이터를 반환한다
    *
-   * @author dogyeong
    * @param {MarketSymbol[]} symbols ticker 심볼 배열
    */
-  @Caching({ ttl: 30, cache, runOnStart: false })
+  @Caching({ ttl: cacheTTL, cache, runOnStart: false })
   public async getLatestEOD(symbols: MarketSymbol[]): Promise<EndOfDay[]> {
     if (!symbols.every(this.isValidSymbol.bind(this))) throw new Error('invalid symbol');
 
-    const symbolQueryStr = this.convertSymbolsToQueryString(symbols);
-    const { data: response } = await this.axiosClient.get('/eod/latest', {
+    const symbolQueryStr = symbols.join(',');
+    const { data: response } = await this.axiosClient.get<MarketStackEODResponse>('/eod/latest', {
       params: { symbols: symbolQueryStr },
     });
 
@@ -90,12 +131,11 @@ export default class MarketService {
   /**
    * getSummaryDetail
    *
-   * 한 종목의 개요 정보를 반환한다
+   * 한 종목의 개요 정보를 반환하는 메소드
    *
-   * @author dogyeong
    * @param {MarketSymbol} symbol ticker 심볼
    */
-  @Caching({ ttl: 30, cache, runOnStart: false })
+  @Caching({ ttl: cacheTTL, cache, runOnStart: false })
   public async getSummaryDetail(symbol: MarketSymbol): Promise<SummaryDetail> {
     if (!this.isValidSymbol(symbol)) throw new Error('invalid symbol');
 
@@ -110,24 +150,24 @@ export default class MarketService {
   /**
    * getHistoricalData
    *
-   * 한 종목의 HistoricalData를 반환한다
+   * 한 종목의 HistoricalData를 반환하는 메소드
    *
-   * @author dogyeong
    * @param {MarketSymbol} symbol ticker 심볼
    */
-  @Caching({ ttl: 30, cache, runOnStart: false })
+  @Caching({ ttl: cacheTTL, cache, runOnStart: false })
   public async getHistoricalData(symbol: MarketSymbol, period: ChartPeriod): Promise<HistoricalData> {
     if (!this.isValidSymbol(symbol)) throw new Error('invalid symbol');
     if (!this.isValidPeriod(period)) throw new Error('invalid period');
 
-    const { data: response } = await this.axiosClient.get(`/tickers/${symbol}/intraday`, {
-      params: this.getIntraDayOptions(period),
+    const response = await yahooFinance.historical({
+      symbol,
+      ...this.getIntraDayOptions(period),
     });
     const displayName = this.getDisplayName(symbol);
 
     return {
       display_name: displayName,
-      data: response?.data?.intraday ?? [],
+      data: response ?? [],
     };
   }
 }

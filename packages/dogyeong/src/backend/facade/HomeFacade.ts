@@ -9,7 +9,7 @@ type SsrHtml = { [key: string]: SsrHtml | string };
 const INIT_CWD = path.join(process.env.INIT_CWD, process.env.BASE_PATH || '');
 const RESOURCES_PATH = path.join(INIT_CWD, 'resources');
 const TEMPLATES_PATH = path.join(RESOURCES_PATH, 'templates');
-const SSR_PATHS = ['/'];
+const SSR_PATHS = ['/', '/news', '/bookmark', '/setting'];
 
 @Facade()
 export class HomeFacade {
@@ -31,7 +31,8 @@ export class HomeFacade {
       this.ssrHtml[path] = this.ssrHtml[path] || {};
 
       try {
-        this.ssrHtml[path] = process.env.NODE_ENV === 'production' ? await this.renderer.renderToString() : this._emptyHtml;
+        this.ssrHtml[path] =
+          process.env.NODE_ENV === 'production' ? await this.renderer.renderToString({ path }) : this._emptyHtml;
       } catch (e) {
         console.error(e);
       }

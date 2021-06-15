@@ -1,5 +1,5 @@
 import { Service } from 'zum-portal-core/backend/decorator/Alias';
-import User from '../model/UserModel';
+import User, { UserDoc } from '../model/UserModel';
 
 export interface GoogleUserInfo {
   id: string;
@@ -18,17 +18,16 @@ export interface UserInfo {
 
 @Service()
 export default class UserService {
-  public async getUserByEmailAndPassword({ email, password }) {
-    const user = await User.findOne({ email, password }).lean<UserInfo>();
-    return user;
+  public getUserByEmailAndPassword({ email, password }) {
+    return User.findOne({ email, password }).lean<UserDoc>();
   }
 
-  public async createGoogleUser(userInfo: GoogleUserInfo) {
-    return await User.findOneAndUpdate(
-      { email: userInfo.email },
-      { ...userInfo, isGoogleUser: true },
-      { upsert: true, new: true },
-    ).lean<GoogleUserInfo>();
+  public getUserByEmail(email: string) {
+    return User.findOne({ email }).lean<UserDoc>();
+  }
+
+  public createGoogleUser(userInfo: GoogleUserInfo) {
+    return User.create(userInfo);
   }
 
   public async createUser({ name, email, password }) {
@@ -37,5 +36,12 @@ export default class UserService {
     if (user) throw new Error('User already exists');
 
     return await User.create({ name, email, password });
+  }
+
+  public async updateUser({ email, password, name }) {
+    const query: { password?: string; name?: string } = {};
+    if (password) query.password = password;
+    if (name) query.name = name;
+    return await User.findOneAndUpdate({ email }, query, { upsert: false, new: true }).lean<UserDoc>();
   }
 }

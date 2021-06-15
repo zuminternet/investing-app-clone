@@ -17,7 +17,7 @@ export const createCanvas = ($container: HTMLElement) => {
   return canvas;
 };
 
-export const crispPixel = (pixel) => {
+export const crispPixel = (pixel: number): number => {
   const halfThickness = 0.5;
   return (Number.isInteger(pixel) ? pixel : Math.round(pixel - halfThickness)) + halfThickness;
 };

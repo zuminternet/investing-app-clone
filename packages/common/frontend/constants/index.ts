@@ -28,8 +28,8 @@ export const text = {
   CHART: '차트',
   INDICES: '지수',
   STOCK: '주식',
-  EMAIL: '이메일',
-  PASSWORD: '비밀번호',
+  EMAIL: '이메일 입력',
+  PASSWORD: '비밀번호 입력',
   EMAIL_LOGIN: '이메일로 로그인',
   EMAIL_REGISTER: '이메일로 등록',
   REGISTER: '등록',
@@ -45,5 +45,5 @@ export const text = {
   HIGH: '최고가',
   LOW: '최저가',
   NO_INFO: '정보 없음',
-  INVESTING_COM: 'investing.com',
+  INVESTING_COM: 'ZUM-Investing',
 };

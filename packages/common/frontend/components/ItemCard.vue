@@ -3,13 +3,13 @@
     <template v-if="isSearch">
       <div class="wrapper" @click="routeToItemDetail">
         <div class="item-info-box">
-          <custom-text>
+          <custom-text itemCardNameAndPrice>
             {{ name }}
           </custom-text>
 
           <div class="item-sub-info-box">
             <custom-text> {{ symbol }}</custom-text>
-            <custom-text v-if="category"> | {{ category }} </custom-text>
+            <custom-text v-if="category" itemCardTimeAndCategory> | {{ category }} </custom-text>
           </div>
         </div>
         <empty-space></empty-space>
@@ -29,23 +29,33 @@
     <template v-if="isHome || isBookmark">
       <div class="wrapper" @click="routeToItemDetail">
         <div class="item-info-box">
-          <custom-text>
+          <custom-text itemCardNameAndPrice>
             {{ name }}
           </custom-text>
           <div class="item-sub-information">
-            <custom-text>{{ date }}</custom-text>
-            |
-            <custom-text>
-              {{ category }}
-            </custom-text>
+            <custom-text itemCardTimeAndCategory>{{ date }}</custom-text>
+
+            <custom-text itemCardTimeAndCategory> | {{ category }} </custom-text>
           </div>
         </div>
         <empty-space></empty-space>
         <div>
-          <custom-text>{{ price }}</custom-text>
+          <div class="item-card-price-box">
+            <custom-text itemCardNameAndPrice>{{ price }}</custom-text>
+          </div>
           <div>
-            <custom-text>{{ fluctuationPrice }}</custom-text>
-            <custom-text>({{ fluctuationRate }})</custom-text>
+            <template v-if="diff > 0">
+              <custom-text itemCardPlus>{{ diff }}</custom-text>
+              <custom-text itemCardPlus> ({{ growthRate }})</custom-text>
+            </template>
+            <template v-else-if="diff < 0">
+              <custom-text itemCardMinus>{{ diff }}</custom-text>
+              <custom-text itemCardMinus> ({{ growthRate }})</custom-text>
+            </template>
+            <template v-else>
+              <custom-text>{{ diff }}</custom-text>
+              <custom-text> ({{ growthRate }})</custom-text>
+            </template>
           </div>
         </div>
       </div>
@@ -123,12 +133,12 @@ export default {
       return this.item.date;
     },
 
-    fluctuationPrice() {
-      return this.item.diff.toFixed(3);
+    diff() {
+      return this.item.diff.toFixed(2);
     },
 
-    fluctuationRate() {
-      return this.item.growthRate.toFixed(3);
+    growthRate() {
+      return this.item.growthRate.toFixed(2);
     },
   },
 
@@ -145,12 +155,18 @@ export default {
   display: flex;
   flex: 0 0 auto;
   height: 40px;
-  background-color: grey;
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
 
 .wrapper {
   display: flex;
   flex: 1;
+}
+
+.item-card-price-box {
+  display: flex;
+  flex-direction: row-reverse;
 }
 
 .item-info-box {

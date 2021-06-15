@@ -4,21 +4,14 @@ import { Inject } from 'zum-portal-core/backend/decorator/Alias';
 
 import UserService from '../../service/UserService';
 import AuthService from '../../service/AuthService';
-import SearchService from '../../../../common/backend/service/SearchService';
+import ChartService from '../../service/ChartService';
 import MarketService from '../../service/MarketService';
+import SearchService from '../../../../common/backend/service/SearchService';
 import ItemDetailService from '../../../../common/backend/service/ItemDetailService';
-// import ArticleService from '../../service/ArticleService';
 import ArticleService from '../../../../common/backend/service/ArticleService';
 import BookmarkService from '../../../../common/backend/service/BookmarkService';
 
-const fakeTickersMap = {
-  TSLA: true,
-  NVDA: true,
-  NFLX: true,
-  BAC: true,
-  GOOGL: true,
-  BABA: true,
-};
+import { tickerMap, tickerKeys } from '../../../../common/domain';
 
 @Controller({ path: '/api' })
 export class ApiController {
@@ -30,12 +23,8 @@ export class ApiController {
     @Inject(ItemDetailService) private itemDetailService: ItemDetailService,
     @Inject(ArticleService) private articleService: ArticleService,
     @Inject(BookmarkService) private bookmarkService: BookmarkService,
+    @Inject(ChartService) private chartService: ChartService,
   ) {}
-
-  private getTickerArray(tickers: any) {
-    if (typeof tickers === 'string') return [tickers];
-    return tickers;
-  }
 
   @GetMapping({ path: '/user' })
   public async getUser(request: Request, response: Response) {
@@ -210,7 +199,8 @@ export class ApiController {
 
       if (itemDetailInfo) {
         itemDetailInfo.isBookmarked = await this.bookmarkService.getIsBookmarked({ email, symbols });
-        itemDetailInfo.isStock = fakeTickersMap[symbols] ? false : true;
+        itemDetailInfo.isStock = tickerMap.stock[symbols] ? true : false;
+        itemDetailInfo.symbol = symbols;
 
         return resposne.status(200).send(itemDetailInfo);
       }
@@ -232,7 +222,7 @@ export class ApiController {
   public async getSearchedItems(request: Request, response: Response) {
     try {
       const { keyword, email } = request.query;
-      let { data: items } = await this.searchService.getSearchedItems({ keyword });
+      let items = await this.searchService.getSearchedItems({ keyword });
 
       if (items) {
         for (let i = 0; i < items.length; i++) {
@@ -284,8 +274,23 @@ export class ApiController {
   @GetMapping({ path: '/articles/news' })
   public async getNews(request: Request, response: Response) {
     try {
-      const { offset, limit, tickers } = request.query;
-      const news = await this.articleService.getNews({ offset: +offset, limit: +limit, tickers: this.getTickerArray(tickers) });
+      const { offset, limit } = request.query;
+      let { tickers } = request.query;
+      let keyword;
+      let news;
+
+      if (tickers) {
+        [keyword] = tickers;
+        tickers = tickerKeys.filter((key) => {
+          return key.includes(keyword);
+        });
+
+        news = await this.articleService.getNews(+offset, +limit, tickers);
+      }
+
+      if (!tickers) {
+        news = await this.articleService.getNews(+offset, +limit);
+      }
 
       if (news) {
         return response.status(200).send(news);
@@ -297,22 +302,12 @@ export class ApiController {
     }
   }
 
-  /**
-   * @description DB에서 articles 중 검색된 news만 가져오는 controller
-   * @param request
-   * @param response
-   * @returns
-   */
-  @GetMapping({ path: '/search/news' })
-  public async getNewsForSearch(request: Request, response: Response) {
+  @GetMapping({ path: '/article/:id' })
+  public async getArticleById(request: Request, response: Response) {
     try {
-      const { offset, limit, tickers } = request.query;
+      const { id } = request.params;
 
-      const news = await this.articleService.getNewsForSearch({
-        offset: +offset,
-        limit: +limit,
-        tickers: this.getTickerArray(tickers),
-      });
+      const news = await this.articleService.getArticleById(id);
 
       if (news) {
         return response.status(200).send(news);
@@ -333,32 +328,23 @@ export class ApiController {
   @GetMapping({ path: '/articles/analyses' })
   public async getAnalyses(request: Request, response: Response) {
     try {
-      const { offset, limit, tickers } = request.query;
-      const analyses = await this.articleService.getOpinions({
-        offset: +offset,
-        limit: +limit,
-        // tickers: this.getTickerArray(tickers),
-      });
+      const { offset, limit } = request.query;
+      let { tickers } = request.query;
+      let keyword;
+      let analyses;
 
-      if (analyses) {
-        return response.status(200).send(analyses);
+      if (tickers) {
+        [keyword] = tickers;
+        tickers = tickerKeys.filter((key) => {
+          return key.includes(keyword);
+        });
+
+        analyses = await this.articleService.getOpinions(+offset, +limit, tickers);
       }
 
-      response.sendStatus(404);
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  @GetMapping({ path: '/search/analyses' })
-  public async getAnalysesForSearch(request: Request, response: Response) {
-    try {
-      const { offset, limit, tickers } = request.query;
-      const analyses = await this.articleService.getOpinionsForSearch({
-        offset: +offset,
-        limit: +limit,
-        // tickers: this.getTickerArray(tickers),
-      });
+      if (!tickers) {
+        analyses = await this.articleService.getOpinions(+offset, +limit);
+      }
 
       if (analyses) {
         return response.status(200).send(analyses);
@@ -427,10 +413,26 @@ export class ApiController {
         return response.status(200).send(bookmarks);
       }
 
-      response.sendStatus(409);
+      response.sendStatus(404);
     } catch (error) {
       console.log(error);
       response.json(error);
+    }
+  }
+
+  @GetMapping({ path: '/chart/historical' })
+  public async getHistoricalData(request: Request, response: Response) {
+    try {
+      const { symbol, from, to, period } = request.query;
+      const data = await this.chartService.getHistoricalData({ symbol, from, to, period });
+
+      if (data) {
+        return response.status(200).send(data);
+      }
+
+      response.sendStatus(404);
+    } catch (error) {
+      console.log(error);
     }
   }
 }

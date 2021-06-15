@@ -3,8 +3,9 @@ import PriceAxis from '@/chart/PriceAxis';
 import TimeAxis, { AxisColorOptions } from '@/chart/TimeAxis';
 import { createCanvas, crispPixel } from '@/chart/utils';
 import { CandleChartData } from '../../backend/service/MarketService';
+import Line, { LineColorOptions } from '@/chart/Line';
 
-export interface CandleChartColorOptions extends GraphColorOptions, AxisColorOptions {}
+export interface CandleChartColorOptions extends GraphColorOptions, AxisColorOptions, LineColorOptions {}
 
 export interface Candle {
   date: string;
@@ -31,36 +32,72 @@ const defaultColors: CandleChartColorOptions = {
   redColor: '#26a69a',
   blueColor: '#ef5350',
   textColor: '#efefef',
+  lineStrokeColor: '#26a69a',
+  lineFillColor: '#3b5351',
+  graphLineColor: '#333',
 };
 
 export default class CandleChart {
   private readonly $container: HTMLElement;
+  private readonly colorOptions: CandleChartColorOptions;
   private candles: Candle[];
-  private minPrice: number;
-  private maxPrice: number;
+  private minPrice = 0;
+  private maxPrice = 1000;
   private firstCandleIndex: number;
   private lastCandleIndex: number;
   private graph: Graph;
   private priceAxis: PriceAxis;
   private timeAxis: TimeAxis;
+  private line: Line;
 
   constructor({ $container, colorOptions = defaultColors }: CandleChartProps) {
     this.$container = $container;
-    this.minPrice = 0;
-    this.maxPrice = 1000;
+    this.colorOptions = colorOptions;
 
-    const $table = this.createTable(colorOptions);
+    this.initalizeCanvas();
+    this.initializeEvents();
+    this.subscribeEvents();
+  }
+
+  private initalizeCanvas() {
+    const $table = this.createTable(this.colorOptions);
     const $graphContainer = $table.querySelector<HTMLElement>('tr td:first-child');
     const $priceAxisContainer = $table.querySelector<HTMLElement>('tr td:last-child');
     const $timeAxisContainer = $table.querySelector<HTMLElement>('tr:last-child td:first-child');
 
-    $container.appendChild($table);
+    this.$container.appendChild($table);
 
-    this.graph = new Graph({ canvas: createCanvas($graphContainer), colorOptions });
-    this.priceAxis = new PriceAxis({ canvas: createCanvas($priceAxisContainer), colorOptions });
-    this.timeAxis = new TimeAxis({ canvas: createCanvas($timeAxisContainer), colorOptions });
+    const graphCanvas = createCanvas($graphContainer);
 
+    this.graph = new Graph({ $container: $graphContainer, canvas: graphCanvas, colorOptions: this.colorOptions });
+    this.priceAxis = new PriceAxis({
+      $container: $priceAxisContainer,
+      canvas: createCanvas($priceAxisContainer),
+      colorOptions: this.colorOptions,
+    });
+    this.timeAxis = new TimeAxis({
+      $container: $timeAxisContainer,
+      canvas: createCanvas($timeAxisContainer),
+      colorOptions: this.colorOptions,
+    });
+    this.line = new Line(graphCanvas, this.colorOptions);
+  }
+
+  private initializeEvents() {
+    window.addEventListener('resize', () => {
+      const w = this.$container.offsetWidth;
+      const h = this.$container.offsetHeight;
+      this.graph.resize(w - 88, h - 60);
+      this.priceAxis.resize(88, h - 60);
+      this.timeAxis.resize(w - 88, 60);
+      this.draw();
+    });
+  }
+
+  private subscribeEvents() {
     this.graph.subscribe(this.draw.bind(this));
+    this.timeAxis.subscribe(this.line.drawLines.bind(this.line));
+    this.priceAxis.subscribe(this.line.drawLines.bind(this.line));
   }
 
   private createTable({ bgColor }: CandleChartColorOptions) {
@@ -71,10 +108,10 @@ export default class CandleChart {
     $table.style.backgroundColor = bgColor;
     $table.innerHTML = `
       <tr>
-        <td></td><td style="width: 100px;"></td>
+        <td></td><td style="width: 88px;"></td>
       </tr>
       <tr style="height: 60px;">
-        <td></td><td style="width: 100px;"></td>
+        <td></td><td style="width: 88px;"></td>
       </tr>
     `;
 
@@ -133,8 +170,8 @@ export default class CandleChart {
 
       // body
       const height = this.graph.height;
-      const bodyTop = Math.max(open, close);
-      const bodyBottom = Math.min(open, close);
+      const bodyTop = Math.max(open ?? close, close ?? open);
+      const bodyBottom = Math.min(open ?? close, close ?? open);
       const bodyTopY = Math.round(((bodyTop - this.minPrice) / (this.maxPrice - this.minPrice)) * height);
       const bodyBottomY = Math.round(((bodyBottom - this.minPrice) / (this.maxPrice - this.minPrice)) * height);
       const bodyLeft = this.graph.getCandleBodyLeft(index);
@@ -168,8 +205,14 @@ export default class CandleChart {
   private draw() {
     this.calculateScale();
     this.calculateCoordinates();
-    this.graph.draw(this.candles);
-    this.priceAxis.draw(this.minPrice, this.maxPrice);
+    this.graph.clearBg();
     this.timeAxis.draw(this.candles, this.firstCandleIndex, this.lastCandleIndex);
+    this.priceAxis.draw(this.minPrice, this.maxPrice);
+    this.graph.draw(this.candles);
+  }
+
+  public toggleGraphType() {
+    this.graph.toggleGraphType();
+    this.draw();
   }
 }

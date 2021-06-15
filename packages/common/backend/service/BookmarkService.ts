@@ -2,6 +2,8 @@ import { Service } from 'zum-portal-core/backend/decorator/Alias';
 import Bookmark from '../model/BookmarkModel';
 import { investing } from 'investing-com-api';
 
+import { tickerMap } from '../../domain';
+
 export interface InvestingData {
   date: number;
   value: number;
@@ -14,29 +16,6 @@ export interface InvestingApiResponse {
   growthRate: number;
   date: string;
 }
-
-const fakeTickersMap = {
-  TSLA: true,
-  NVDA: true,
-  NFLX: true,
-  BAC: true,
-  GOOGL: true,
-  BABA: true,
-};
-
-enum bookmarkSymbols {
-  AAPL = 'equities/apple-computer-inc', // 애플
-  AMZN = 'equities/amazon-com-inc', // 아마존
-  FB = 'equities/facebook-inc', // 페이스북
-  JPM = 'equities/jp-morgan-chase', // JP 모건
-  TSLA = 'indices/us-30', // 다우 존스
-  NVDA = 'indices/nq-100', // 나스닥
-  BABA = 'indices/japan-ni225', // 니케이
-  NFLX = 'crypto/bitcoin/btc-usd', // 비트코인
-  GOOGL = 'crypto/ethereum/eth-usd?c997650', // 이더리움
-  BAC = 'crypto/litecoin/ltc-usd?c1010798', // 라이트코인
-}
-
 interface createBookmarkQueryProps {
   email: string;
   symbol: string;
@@ -53,7 +32,7 @@ interface deleteBookmarkQueryProps {
   email: string;
   symbol: string;
   name: string;
-  category: string;
+  category?: string;
 }
 
 @Service()
@@ -92,7 +71,7 @@ export default class BookmarkService {
       return false;
     }
 
-    return Bookmark.create({ email, symbol, name, category: fakeTickersMap[symbol] ? 'zum-investing-app' : category });
+    return Bookmark.create({ email, symbol, name, category: tickerMap.stock[symbol] ? category : 'zum-investing-app' });
   }
 
   public async deleteBookmark({ email, symbol, name, category }: deleteBookmarkQueryProps) {
@@ -116,11 +95,22 @@ export default class BookmarkService {
     const displayedBookmarks = [];
 
     for (let i = 0; i < bookmarks.length; i++) {
-      const key = bookmarks[i].symbol;
-
-      const investingId = bookmarkSymbols[key];
-      const investingData = await this.callInvesting(key, investingId);
       const { email, symbol, name, category } = bookmarks[i];
+      let investingId;
+
+      if (tickerMap.index[symbol]) {
+        investingId = tickerMap.index[symbol].investingId;
+      }
+
+      if (tickerMap.stock[symbol]) {
+        investingId = tickerMap.stock[symbol].investingId;
+      }
+
+      if (tickerMap.crypto[symbol]) {
+        investingId = tickerMap.crypto[symbol].investingId;
+      }
+
+      const investingData = await this.callInvesting(symbol, investingId);
 
       displayedBookmarks.push({ email, symbol, name, category, ...investingData });
     }

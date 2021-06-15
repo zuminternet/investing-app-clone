@@ -10,14 +10,14 @@
       </thead>
       <tbody>
         <RouterLink
-          v-for="{ display_name, symbol, date, diff, growthRate, close } in listData"
+          v-for="{ display_name, symbol, date, diff, growthRate, close, exchange } in listData"
           :key="symbol"
           :to="`/market/stock/${symbol}`"
         >
           <tr>
             <td>
               <h4>{{ display_name }}</h4>
-              <span class="date">{{ date }}</span>
+              <span class="date">{{ date | formatDate }} | {{ exchange }}</span>
             </td>
             <td>
               <span class="value" :class="getColorClass(diff)">{{ close }}</span>
@@ -59,6 +59,15 @@ export default Vue.extend({
   name: 'MarketList',
 
   filters: {
+    formatDate(value: string) {
+      return new Date(value)
+        .toLocaleDateString()
+        .replaceAll('. ', '/')
+        .replace('.', '')
+        .split('/')
+        .map((n) => n.padStart(2, '0'))
+        .join('/');
+    },
     formatNumber(value: number) {
       const sign = value > 0 ? '+' : '';
       const fixedValue = value.toFixed(2);
@@ -113,11 +122,16 @@ table {
   }
 
   th {
-    padding: 12px;
+    padding: 20px 12px;
+    font-weight: 400;
   }
 
   td {
-    padding: 6px 12px;
+    padding: 8px 12px;
+
+    h4 {
+      margin-bottom: 4px;
+    }
 
     .date {
       color: var(--sub-text-color);

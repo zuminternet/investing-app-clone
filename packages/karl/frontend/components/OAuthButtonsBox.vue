@@ -1,18 +1,29 @@
 <template>
   <div class="oauth-buttons-box">
-    <o-auth-button>{{ facebookLogin }}</o-auth-button>
-    <o-auth-button @handle-auth-click="this.handleAuthClick">{{ googleLogin }}</o-auth-button>
+    <o-auth-button @handle-auth-click="handleAuthClick">
+      <div>
+        <span class="google-icon">&#71;</span>
+      </div>
+      <div class="ouath-text-box">
+        <custom-text OAuthText>
+          {{ googleLogin }}
+        </custom-text>
+      </div>
+    </o-auth-button>
   </div>
 </template>
 
 <script>
 import OAuthButton from '../components/OAuthButton.vue';
+import CustomText from 'common/frontend/components/CustomText.vue';
+
 import { text } from '../../../common/frontend/constants';
 
 export default {
   name: 'OAuthButtonsBox',
   components: {
     OAuthButton,
+    CustomText,
   },
 
   props: {
@@ -40,5 +51,15 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+.ouath-text-box {
+  flex: 1;
+}
+
+.google-icon {
+  font-size: 25px;
+  font-weight: bold;
+  color: white;
 }
 </style>

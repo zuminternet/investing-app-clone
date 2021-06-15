@@ -9,7 +9,7 @@
   </div>
 </template>
 
-<script lang="ts">
+<script>
 import { mapActions, mapState } from 'vuex';
 
 import OAuthButtonsBox from '../components/OAuthButtonsBox.vue';
@@ -53,19 +53,12 @@ export default {
 
     async submitForEmailRegister(event) {
       try {
-        console.log(event);
         const { name, email, password } = event.$data;
-        console.log(name, email, password);
         const result = await createUser({ name, email, password });
 
         if (result.status === 200) {
           this.routerToLogin();
-
-          // 여기에 이후 dispatch 문이 들어감
-          return;
         }
-
-        throw new Error('invalid register request');
       } catch (error) {
         console.log(error);
         alert(error);

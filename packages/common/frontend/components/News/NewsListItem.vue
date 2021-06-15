@@ -1,9 +1,12 @@
 <template>
   <li class="news-list-item">
-    <article>
+    <article v-if="to">
       <RouterLink class="news-link" :to="to" :style="listStyle">
         <slot></slot>
       </RouterLink>
+    </article>
+    <article v-else class="news-link" :style="listStyle" @click="$emit('handle-click', id)">
+      <slot></slot>
     </article>
   </li>
 </template>
@@ -25,11 +28,16 @@ export default Vue.extend({
   props: {
     to: {
       type: String,
-      required: true,
+      default: '',
     },
     listStyle: {
       type: [Object, String],
       default: () => '',
+    },
+
+    id: {
+      type: String,
+      default: '',
     },
   },
 });

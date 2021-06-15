@@ -15,10 +15,10 @@ const state = () => ({
     acronym: '', //
     high: '', // 최고가
     low: '', // 최저가
-    price: '100',
-    upDownPrice: '100',
-    time: '100',
-    currency: 'dallor',
+    upDownPrice: '',
+    upDownRate: '',
+    // time: '100',
+    // currency: 'dallor',
   },
   news: [],
   analyses: [],
@@ -33,6 +33,8 @@ const actions = {
   async getItemDetail({ commit }, { symbols, email, name }) {
     try {
       const itemDetail = await getItemDetail({ symbols, email });
+
+      console.log(itemDetail);
 
       if (itemDetail) {
         commit('setItemDetail', { itemDetail, name });
@@ -82,37 +84,19 @@ const actions = {
 // mutatuons 설정
 const mutations = {
   setItemDetail(state, { itemDetail, name }) {
-    const {
-      symbol,
-      adj_close,
-      adj_high,
-      adj_low,
-      close,
-      open,
-      volume,
-      stock_exchange,
-      high,
-      low,
-      isBookmarked,
-      isStock,
-    } = itemDetail;
+    const { adj_close, adj_high, adj_low, close, stock_exchange } = itemDetail;
 
     state.itemDetail = {
       ...state.itemDetail,
+      ...itemDetail,
       name,
-      symbol,
       category: stock_exchange.acronym,
       adjClose: adj_close,
       adjHigh: adj_high,
       adjLow: adj_low,
-      close,
-      open,
-      volume,
       acronym: stock_exchange.acronym,
-      high,
-      low,
-      isBookmarked,
-      isStock,
+      upDownPrice: close - adj_close,
+      upDownRate: ((close - adj_close) / close) * 100,
     };
   },
 

@@ -1,9 +1,8 @@
 <template>
   <div class="item-detail-overall-info-row">
-    <custom-text>{{ name }}</custom-text>
+    <custom-text overviewRowName>{{ name }}</custom-text>
     <empty-space></empty-space>
-
-    <custom-text>{{ value }}</custom-text>
+    <custom-text overviewRowValue>{{ value }}</custom-text>
   </div>
 </template>
 
@@ -40,6 +39,7 @@ export default {
 <style scoped lang="scss">
 .item-detail-overall-info-row {
   display: flex;
-  height: 20px;
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
 </style>

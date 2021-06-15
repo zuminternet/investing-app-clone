@@ -9541,7 +9541,7 @@ node-cache@^4.1.1:
     clone "2.x"
     lodash "^4.17.15"
 
-node-cache@~5.1.2:
+node-cache@^5.1.2, node-cache@~5.1.2:
   version "5.1.2"
   resolved "http://ci-portal.zuminternet.com/nexus/repository/zum-portal-npm/node-cache/-/node-cache-5.1.2.tgz#f264dc2ccad0a780e76253a694e9fd0ed19c398d"
   integrity sha512-t1QzWwnk4sjLWaQAS8CHgOJ+RAfmHpxFWmc36IWTiWHQfs0w5JDMBS1b1ZxQteo0vVVuWJvIUKHDkkeK7vIGCg==
@@ -13470,7 +13470,7 @@ vm-browserify@^1.0.1:
   resolved "http://ci-portal.zuminternet.com/nexus/repository/zum-portal-npm/vm-browserify/-/vm-browserify-1.1.2.tgz#78641c488b8e6ca91a75f511e7a3b32a86e5dda0"
   integrity sha512-2ham8XPWTONajOR0ohOKOHXkm3+gaBmGut3SRuu75xLd/RRaY6vqgh8NBYYk7+RW3u5AtzPQZG8F10LHkl0lAQ==
 
-vue-awesome-swiper@4.1.1:
+vue-awesome-swiper@4.1.1, vue-awesome-swiper@^4.1.1:
   version "4.1.1"
   resolved "http://ci-portal.zuminternet.com/nexus/repository/zum-portal-npm/vue-awesome-swiper/-/vue-awesome-swiper-4.1.1.tgz#8f7ab221ad003021d756b86aa618f429924900fe"
   integrity sha512-50um10t6N+lJaORkpwSi1wWuMmBI1sgFc9Znsi5oUykw2cO5DzLaBHcO2JNX21R+Ue4TGoIJDhhxjBHtkFrTEQ==

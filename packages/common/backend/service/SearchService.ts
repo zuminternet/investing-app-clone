@@ -3,11 +3,12 @@ import { Service } from 'zum-portal-core/backend/decorator/Alias';
 import axios from 'axios';
 
 import { marketStackConfig } from '../config';
+import { tickerMap } from '../../domain';
 // import { times, isProductionMode } from '../../domain';
 
 export interface getSearchedItemsInfo {
   keyword: string;
-  email: string;
+  email?: string;
 }
 
 @Service()
@@ -31,10 +32,37 @@ export default class SearchService {
   // })
   public async getSearchedItems({ keyword }: getSearchedItemsInfo) {
     const { accessKey } = marketStackConfig;
-    let { data: items } = await axios.get(`http://api.marketstack.com/v1/tickers?access_key=${accessKey}&search=${keyword}`);
+    const { data: result } = await axios.get(`http://api.marketstack.com/v1/tickers?access_key=${accessKey}&search=${keyword}`);
+    const { data: items } = result;
+    const displayedItems = [];
 
     if (items) {
-      return items;
+      for (let i = 0; i < items.length; i++) {
+        items[i].name = undefined;
+        const { symbol } = items[i];
+        const { acronym } = items[i].stock_exchange;
+
+        if (tickerMap.stock[symbol]) {
+          items[i].name = tickerMap.stock[symbol].name;
+          items[i].category = tickerMap.stock[symbol].category;
+        }
+
+        if (tickerMap.index[symbol]) {
+          items[i].name = tickerMap.index[symbol].name;
+          items[i].category = tickerMap.index[symbol].category;
+        }
+
+        if (tickerMap.crypto[symbol]) {
+          items[i].name = tickerMap.crypto[symbol].name;
+          items[i].category = tickerMap.crypto[symbol].category;
+        }
+
+        if (items[i].name && acronym === items[i].category) {
+          displayedItems.push(items[i]);
+        }
+      }
+
+      return displayedItems;
     }
 
     return false;
