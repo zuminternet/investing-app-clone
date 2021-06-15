@@ -32,6 +32,7 @@ const Reply = {
     },
 
     getReplsByDocID: async (_, ticker) => {
+      if (!ticker) return;
       try {
         const results = await getRepls(ticker);
         console.log({ results });
