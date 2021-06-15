@@ -72,13 +72,6 @@ export class User extends Base implements UserEntity {
   @Column({ length: 100, nullable: false })
   password!: string;
 
-  @OneToMany(
-    (type) => Reply,
-    (Reply) => Reply.userId,
-    { cascade: ['insert', 'update'] },
-  )
-  repls: Reply[];
-
   /**
    * @property
    * 활동 여부 체크 optional
@@ -93,6 +86,20 @@ export class User extends Base implements UserEntity {
    */
   @Column({ type: 'enum', enum: ['gg', 'gh', 'fb'], nullable: true })
   provider: SocialProviers;
+
+  // @OneToMany(
+  //   (type) => Reply,
+  //   (Reply) => Reply.userId,
+  //   { cascade: ['insert', 'update'] },
+  // )
+  // repls: Reply[];
+
+  /**
+   * @property
+   * 작성한 댓글
+   */
+  @Column({ default: {} })
+  repls: object;
 
   /**
    * @property
@@ -121,6 +128,7 @@ export class User extends Base implements UserEntity {
     this.password = password;
     this.nickname = nickname;
     this.isActive = true;
+    this.repls = {};
     this.likes = {};
     this.bookmarkNews = {};
     this.bookmarkTickers = {};
