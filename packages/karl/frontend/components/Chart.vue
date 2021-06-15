@@ -432,24 +432,12 @@ export default {
     handleChartMenuButtonClick(event) {
       const { value } = event.target;
 
-      if (value === 'd') {
-        this.period = 'd';
-      }
-
-      if (value === 'w') {
-        this.period = 'w';
-      }
-
-      if (value === 'm') {
-        this.period = 'm';
-      }
-
       if (value === 'Linear') {
         this.isCandle = false;
-      }
-
-      if (value === 'Candle') {
+      } else if (value === 'Candle') {
         this.isCandle = true;
+      } else {
+        this.period = value;
       }
     },
 
