@@ -87,9 +87,9 @@ export default class CandleChart {
     window.addEventListener('resize', () => {
       const w = this.$container.offsetWidth;
       const h = this.$container.offsetHeight;
-      this.graph.resize(w - 88, h - 60);
-      this.priceAxis.resize(88, h - 60);
-      this.timeAxis.resize(w - 88, 60);
+      this.graph.resize(w - 88, h - 30);
+      this.priceAxis.resize(88, h - 30);
+      this.timeAxis.resize(w - 88, 30);
       this.draw();
     });
   }
@@ -110,7 +110,7 @@ export default class CandleChart {
       <tr>
         <td></td><td style="width: 88px;"></td>
       </tr>
-      <tr style="height: 60px;">
+      <tr style="height: 30px;">
         <td></td><td style="width: 88px;"></td>
       </tr>
     `;
