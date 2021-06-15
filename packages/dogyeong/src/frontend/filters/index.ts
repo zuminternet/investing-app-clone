@@ -12,7 +12,7 @@ export const addComma = (value: string | number) => {
     .join('');
 };
 
-/** 문자로 Date객체를 생성하여 일정한 포맷으로 반환한다 (2021/06/15) */
+/** 문자로 Date객체를 생성하여 일정한 포맷으로 반환한다 ('2021/06/15') */
 export const formatDate = (value: string) => {
   return new Date(value)
     .toLocaleDateString()

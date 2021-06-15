@@ -1,9 +1,9 @@
 <template>
-  <nav>
-    <router-link to="/">시장</router-link>
-    <router-link to="/news">뉴스</router-link>
-    <router-link to="/bookmark">관심목록</router-link>
-    <router-link to="/setting">더보기</router-link>
+  <nav :class="$style.nav">
+    <RouterLink to="/">시장</RouterLink>
+    <RouterLink to="/news">뉴스</RouterLink>
+    <RouterLink to="/bookmark">관심목록</RouterLink>
+    <RouterLink to="/setting">더보기</RouterLink>
   </nav>
 </template>
 
@@ -15,8 +15,8 @@ export default Vue.extend({
 });
 </script>
 
-<style lang="scss" scoped>
-nav {
+<style lang="scss" module>
+.nav {
   background-color: var(--bg-color);
   width: 100%;
   max-width: var(--app-width);
@@ -32,7 +32,7 @@ nav {
     color: var(--sub-text-color);
     font-weight: 500;
 
-    &.router-link-exact-active,
+    &.RouterLink-exact-active,
     &:hover {
       font-weight: 600;
       color: var(--text-color);
