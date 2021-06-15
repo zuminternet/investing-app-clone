@@ -40,19 +40,15 @@ export interface deleteBookmarkInfo {
  * @returns Promise
  */
 const getSearchedItems = async ({ keyword, email }: getSearchedItemsInfo) => {
-  try {
-    const result = await Axios.get(`${devURL}/api/search/items?keyword=${keyword}&email=${email}`);
+  const result = await Axios.get(`${devURL}/api/search/items?keyword=${keyword}&email=${email}`);
 
-    if (result.status === 200) {
-      const { data: searchedItems } = result;
+  if (result.status === 200) {
+    const { data: searchedItems } = result;
 
-      return searchedItems;
-    }
-
-    throw new Error('Getting searched items was failed in front api');
-  } catch (error) {
-    console.log(error);
+    return searchedItems;
   }
+
+  throw new Error('Getting searched items was failed in front api');
 };
 
 /**
@@ -61,24 +57,20 @@ const getSearchedItems = async ({ keyword, email }: getSearchedItemsInfo) => {
  * @returns Promise
  */
 const getItemDetail = async ({ symbols, email }: getItemDetailInfo) => {
-  try {
-    const result = await Axios.get(`${devURL}/api/item-detail`, {
-      params: {
-        symbols,
-        email,
-      },
-    });
+  const result = await Axios.get(`${devURL}/api/item-detail`, {
+    params: {
+      symbols,
+      email,
+    },
+  });
 
-    if (result.status === 200) {
-      const { data: itemDetail } = result;
+  if (result.status === 200) {
+    const { data: itemDetail } = result;
 
-      return itemDetail;
-    }
-
-    throw new Error('Getting item detail was failed in front api');
-  } catch (error) {
-    console.log(error);
+    return itemDetail;
   }
+
+  throw new Error('Getting item detail was failed in front api');
 };
 
 /**
@@ -87,21 +79,17 @@ const getItemDetail = async ({ symbols, email }: getItemDetailInfo) => {
  * @returns Promise
  */
 const getNews = async ({ offset = 0, limit = 10, tickers = [] }: getNewsAndAnalysesInfo) => {
-  try {
-    const result = await Axios.get(`${devURL}/api/articles/news`, {
-      params: { offset, limit, tickers },
-    });
+  const result = await Axios.get(`${devURL}/api/articles/news`, {
+    params: { offset, limit, tickers },
+  });
 
-    if (result.status === 200) {
-      const { data: news } = result;
+  if (result.status === 200) {
+    const { data: news } = result;
 
-      return news;
-    }
-
-    throw new Error('Getting news was failed in front api');
-  } catch (error) {
-    console.log(error);
+    return news;
   }
+
+  throw new Error('Getting news was failed in front api');
 };
 
 /**
@@ -111,21 +99,29 @@ const getNews = async ({ offset = 0, limit = 10, tickers = [] }: getNewsAndAnaly
  */
 
 const getAnalyses = async ({ offset, limit, tickers }: getNewsAndAnalysesInfo) => {
-  try {
-    const result = await Axios.get(`${devURL}/api/articles/analyses`, {
-      params: { offset, limit, tickers },
-    });
+  const result = await Axios.get(`${devURL}/api/articles/analyses`, {
+    params: { offset, limit, tickers },
+  });
 
-    if (result.status === 200) {
-      const { data: analyses } = result;
+  if (result.status === 200) {
+    const { data: analyses } = result;
 
-      return analyses;
-    }
-
-    throw new Error('Getting analyses was failed in front api');
-  } catch (error) {
-    console.log(error);
+    return analyses;
   }
+
+  throw new Error('Getting analyses was failed in front api');
+};
+
+const getArticleById = async (id: string) => {
+  const result = await Axios.get(`${devURL}/api/article/${id}`);
+
+  if (result.status === 200) {
+    const { data } = result;
+
+    return data;
+  }
+
+  throw new Error('Getting article was failed in front api');
 };
 
 /**
@@ -134,40 +130,32 @@ const getAnalyses = async ({ offset, limit, tickers }: getNewsAndAnalysesInfo) =
  * @returns Promise
  */
 const createBookmark = async ({ email, symbol, name, category }: createBookmarkInfo) => {
-  try {
-    const result = await Axios.post(`${devURL}/api/bookmark`, {
-      email,
-      symbol,
-      name,
-      category,
-    });
+  const result = await Axios.post(`${devURL}/api/bookmark`, {
+    email,
+    symbol,
+    name,
+    category,
+  });
 
-    if (result.status === 201) {
-      const { data: bookmark } = result;
+  if (result.status === 201) {
+    const { data: bookmark } = result;
 
-      return bookmark;
-    }
-
-    throw new Error('Creating bookmark was failed in front api');
-  } catch (error) {
-    console.log(error);
+    return bookmark;
   }
+
+  throw new Error('Creating bookmark was failed in front api');
 };
 
 const deleteBookmark = async ({ email, symbol, name, category }: deleteBookmarkInfo) => {
-  try {
-    const result = await Axios.delete(`${devURL}/api/bookmark`, {
-      data: { email, symbol, name, category },
-    });
+  const result = await Axios.delete(`${devURL}/api/bookmark`, {
+    data: { email, symbol, name, category },
+  });
 
-    if (result.status === 200) {
-      return true;
-    }
-
-    return false;
-  } catch (error) {
-    console.log(error);
+  if (result.status === 200) {
+    return true;
   }
+
+  throw new Error('Deleting bookmark was failed in front api');
 };
 
 /**
@@ -177,23 +165,19 @@ const deleteBookmark = async ({ email, symbol, name, category }: deleteBookmarkI
  */
 
 const getBookmarks = async (email: string) => {
-  try {
-    const result = await Axios.get(`${devURL}/api/bookmark`, {
-      params: {
-        email,
-      },
-    });
+  const result = await Axios.get(`${devURL}/api/bookmark`, {
+    params: {
+      email,
+    },
+  });
 
-    if (result.status === 200) {
-      let { data: bookmarks } = result;
+  if (result.status === 200) {
+    let { data: bookmarks } = result;
 
-      return bookmarks;
-    }
-
-    throw new Error('Getting bookmarks was failed in front api');
-  } catch (error) {
-    console.log(error);
+    return bookmarks;
   }
+
+  throw new Error('Getting bookmarks was failed in front api');
 };
 
-export { getSearchedItems, getItemDetail, getNews, getAnalyses, createBookmark, getBookmarks, deleteBookmark };
+export { getSearchedItems, getItemDetail, getNews, getAnalyses, createBookmark, getBookmarks, deleteBookmark, getArticleById };

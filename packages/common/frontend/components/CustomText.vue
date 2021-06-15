@@ -15,6 +15,10 @@
       'item-detail-normal': itemDetailNormal,
       'overview-row-name': overviewRowName,
       'overview-row-value': overviewRowValue,
+      'sub-content-title': subContentTitle,
+      'chart-menu-active-text': chartMenuActiveText,
+      'o-auth-text': OAuthText,
+      'login-button-text': loginButtonText,
     }"
   >
     <slot></slot>
@@ -89,6 +93,26 @@ export default {
       type: Boolean,
       default: false,
     },
+
+    subContentTitle: {
+      type: Boolean,
+      default: false,
+    },
+
+    chartMenuActiveText: {
+      type: Boolean,
+      default: false,
+    },
+
+    OAuthText: {
+      type: Boolean,
+      default: false,
+    },
+
+    loginButtonText: {
+      type: Boolean,
+      default: false,
+    },
   },
 };
 </script>
@@ -98,8 +122,13 @@ export default {
   color: var(--text-color);
 }
 
+.login-button-text {
+  font-weight: bold;
+  color: var(--blue-color);
+}
+
 .page-title {
-  font-weight: 900;
+  font-weight: bold;
 }
 
 .button-active {
@@ -109,7 +138,7 @@ export default {
 
 .app-title {
   color: var(--title-color);
-  font-weight: 900;
+  font-weight: bold;
 }
 
 .item-card-name-price {
@@ -131,7 +160,7 @@ export default {
 }
 
 .item-detail-price {
-  font-weight: 900;
+  font-weight: bold;
   font-size: 25px;
 }
 
@@ -157,6 +186,21 @@ export default {
 }
 
 .overview-row-value {
+  font-weight: bold;
+}
+
+.sub-content-title {
+  font-weight: bold;
+  margin-left: 5px;
+}
+
+.chart-menu-active-text {
+  color: var(--blue-color);
+  font-weight: bold;
+}
+
+.o-auth-text {
+  color: white;
   font-weight: bold;
 }
 </style>
