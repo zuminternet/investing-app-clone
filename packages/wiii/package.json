@@ -22,6 +22,7 @@
     "helmet": "^4.6.0",
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^3.6.7",
+    "mongoose": "^5.12.13",
     "redis": "^3.1.2",
     "typeorm": "^0.2.32",
     "typescript": "^4.2.4",
@@ -34,22 +35,14 @@
     "@types/bcrypt": "^5.0.0",
     "@types/connect-redis": "^0.0.16",
     "@types/express-session": "^1.17.3",
-    "@types/jest": "^26.0.23",
+    "@types/mongoose": "^5.11.97",
     "@types/redis": "^2.8.29",
     "@typescript-eslint/parser": "^4.24.0",
     "@vue/cli-plugin-babel": "^4.5.13",
     "@vue/cli-plugin-typescript": "^4.5.13",
-    "@vue/cli-plugin-unit-jest": "^4.5.13",
     "@vue/eslint-config-typescript": "^7.0.0",
-    "@vue/test-utils": "^1.2.0",
     "babel-core": "^7.0.0-bridge.0",
-    "babel-jest": "^26.6.3",
     "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-vue": "^7.9.0",
-    "jest": "^26.6.3",
-    "jest-environment-jsdom-sixteen": "^2.0.0",
-    "jest-plugin-context": "^2.9.0",
-    "jest-serializer-vue": "^2.0.2",
-    "vue-jest": "^3.0.7"
+    "eslint-plugin-vue": "^7.9.0"
   }
 }
