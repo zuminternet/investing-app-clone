@@ -11,7 +11,9 @@
     </div>
     <Words class="reply-content"> {{ contents }} </Words>
     <div class="reply-reaction noselect">
-      <Button class="reply-likes">👍 {{ likes }}</Button>
+      <Button class="reply-likes" @click.native="toggleLikes" :class="{ 'reply-likes-added': liked }"
+        >👍 {{ changableLikes }}</Button
+      >
       <Button class="reply-rerepl" @click.native="inputToggle(replId)">대댓글 달기</Button>
     </div>
     <ReplyForm v-if="curInputId === replId" @change-current-input="inputToggle" />
@@ -24,10 +26,14 @@
  * @see https://semantic-ui.com/views/comment.html
  */
 import Vue from 'vue';
+import { createNamespacedHelpers } from 'vuex';
 import Button from '@/components/atoms/Button.vue';
 import Words from '@/components/atoms/Words.vue';
 import ReplyForm from '@/components/molecules/ReplyInputForm.vue';
 import lazyloading from '@/utils/lazyloading';
+import { StoreNames } from '@/store';
+
+const { mapActions } = createNamespacedHelpers(StoreNames.Reply);
 
 export default Vue.extend({
   name: 'ReplyCard',
@@ -72,6 +78,13 @@ export default Vue.extend({
     },
   },
 
+  data() {
+    return {
+      liked: false,
+      changableLikes: this.likes,
+    };
+  },
+
   computed: {
     dateString() {
       const { updatedAt } = this;
@@ -91,8 +104,17 @@ export default Vue.extend({
   },
 
   methods: {
+    ...mapActions(['toggleLikesAction']),
+
     inputToggle(id: string | number) {
       this.$emit('change-current-input', id);
+    },
+
+    toggleLikes() {
+      const { replId, liked, changableLikes } = this;
+      this.liked = !liked;
+      this.changableLikes = liked ? changableLikes - 1 : changableLikes + 1;
+      this.toggleLikesAction(replId);
     },
   },
 });
@@ -175,6 +197,11 @@ $maxHeight: 50px;
       text-align: center;
       font-weight: bold;
       color: $neon-crimson;
+
+      &-added {
+        background-color: rgba($red-a400, 0.7);
+        font-weight: bolder;
+      }
     }
   }
 }
