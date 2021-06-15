@@ -1,11 +1,11 @@
 <template>
-  <form class="input-form" @submit.prevent="$emit('handle-submit', { $data })">
+  <form class="email-login-input-form" @submit.prevent="$emit('handle-submit', { $data })">
     <template v-if="this.isRegister">
-      <input class="input" :placeholder="nameText" v-model="name" />
+      <input class="email-login-input" :placeholder="nameText" v-model="name" />
     </template>
-    <input class="input" :placeholder="emailText" v-model="email" />
-    <input class="input" type="password" :placeholder="passwordText" v-model="password" />
-    <input class="submit" type="submit" :value="this.submitButtonText" />
+    <input class="email-login-input" :placeholder="emailText" v-model="email" />
+    <input class="email-login-input" type="password" :placeholder="passwordText" v-model="password" />
+    <input class="email-login-submit" type="submit" :value="this.submitButtonText" />
   </form>
 </template>
 
@@ -53,18 +53,24 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.input-form {
+.email-login-input-form {
   display: flex;
   width: 80%;
   flex-direction: column;
   align-items: center;
 }
 
-.input {
-  margin-top: 5px;
+.email-login-input {
+  margin-top: 15px;
+  border-radius: 20px;
+  border: 0;
+  padding: 10px;
 }
 
-.submit {
-  margin-top: 10px;
+.email-login-submit {
+  margin-top: 15px;
+  color: var(--blue-color);
+  font-weight: bold;
+  border: 0;
 }
 </style>

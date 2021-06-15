@@ -1,7 +1,12 @@
 <template>
   <Layout>
     <Header>
-      <HeaderTitle>뉴스</HeaderTitle>
+      <HeaderTitle>
+        <template #right>
+          <SearchButton />
+        </template>
+        뉴스
+      </HeaderTitle>
       <HeaderNav>
         <HeaderNavItem
           v-for="route in navRoutes"
@@ -16,42 +21,33 @@
     <main>
       <Swiper ref="swiper" @endSlide="onEndSlide">
         <SwiperSlide>
-          <NewsTemplate
-            v-if="headline"
-            :headline="headline"
-            :news="normalNews"
-            :opinions="newOpinions"
-            url-prefix="/news/new"
-            @clickFetchNewsButton="getNewNews"
-            @clickFetchOpinionsButton="getNewOpinions"
-          />
+          <ArticleNew />
         </SwiperSlide>
         <SwiperSlide>
-          <NewsTemplate
-            v-if="headline"
-            :headline="headline"
-            :news="normalNews"
-            :opinions="newOpinions"
-            url-prefix="/news/popular"
-            @clickFetchNewsButton="getPopularNews"
-            @clickFetchOpinionsButton="getPopularOpinions"
-          />
+          <ArticlePopular />
         </SwiperSlide>
       </Swiper>
     </main>
-    <BottomNav></BottomNav>
+    <BottomNav />
   </Layout>
 </template>
 
 <script lang="ts">
+/**
+ * News
+ *
+ * [뉴스] 탭에 해당하는 뉴스/분석 리스트 페이지
+ */
 import Vue from 'vue';
 import BottomNav from '@/components/BottomNav/BottomNav.vue';
 import { Header, HeaderTitle, HeaderNav, HeaderNavItem } from '@/components/Header';
 import Layout from '@/components/Layout/Layout.vue';
 import { Swiper, SwiperSlide } from '@/components/Swiper';
-import NewsTemplate from '@/components/NewsTemplate/NewsTemplate.vue';
 import swiperMixin from '@/mixin/swiperMixin';
-import { mapActions, mapState } from 'vuex';
+import { mapActions } from 'vuex';
+import ArticleNew from '@/components/Article/ArticleNew.vue';
+import ArticlePopular from '@/components/Article/ArticlePopular.vue';
+import SearchButton from '@/components/SearchButton/SearchButton.vue';
 
 export default Vue.extend({
   name: 'News',
@@ -65,7 +61,9 @@ export default Vue.extend({
     HeaderNav,
     Swiper,
     SwiperSlide,
-    NewsTemplate,
+    ArticleNew,
+    ArticlePopular,
+    SearchButton,
   },
 
   mixins: [
@@ -79,8 +77,6 @@ export default Vue.extend({
 
   data() {
     return {
-      news: [],
-      opinions: [],
       navRoutes: [
         { id: 'new', title: '최신', index: 0 },
         { id: 'popular', title: '가장 인기 있는 뉴스', index: 1 },
@@ -89,26 +85,8 @@ export default Vue.extend({
     };
   },
 
-  computed: {
-    headline() {
-      return this.newNews[0];
-    },
-    normalNews() {
-      return this.newNews.slice(1);
-    },
-    ...mapState({ newNews: ({ article }) => article.new.news.data }),
-    ...mapState({ newOpinions: ({ article }) => article.new.opinions.data }),
-  },
-
   methods: {
-    ...mapActions([
-      'getNewNews',
-      'getNewOpinions',
-      'getPopularNews',
-      'getPopularOpinions',
-      'getInitialNewArticles',
-      'getInitialPopularArticles',
-    ]),
+    ...mapActions(['getInitialNewArticles', 'getInitialPopularArticles']),
 
     onClickHeaderNav(id) {
       this.handleHeaderNavClick(id);

@@ -1,9 +1,8 @@
 <template>
   <div class="sub-content-box">
-    <div class="sub-content-box-button" @click="$emit('handle-sub-content-box-button')">
-      <custom-text>{{ text }}</custom-text>
+    <div class="sub-content-title-box">
+      <custom-text subContentTitle>{{ text }}</custom-text>
       <empty-space></empty-space>
-      <div class="right-arrow-img"></div>
     </div>
     <slot></slot>
   </div>
@@ -31,16 +30,12 @@ export default {
   width: 100%;
 }
 
-.sub-content-box-button {
+.sub-content-title-box {
   display: flex;
   height: 20px;
-  background-color: gray;
+  background-color: var(--gray-color);
   align-items: center;
-}
-
-.right-arrow-img {
-  width: 15px;
-  height: 15px;
-  background-color: red;
+  padding-top: 1px;
+  padding-bottom: 1px;
 }
 </style>

@@ -14,6 +14,13 @@ export const apiEndpoints = {
   getPopularNews: '/api/article/news/popular',
   getPopularOpinions: '/api/article/opinions/popular',
   getArticle: '/api/article',
+  changeUserInfo: '/api/user',
+  searchItems: '/api/search/items',
+  searchNews: '/api/search/news',
+  searchOpinions: '/api/search/opinions',
+  addBookmark: '/api/bookmark',
+  removeBookmark: '/api/bookmark',
+  getBookmarks: '/api/bookmark',
 };
 
 export const googleAuthInitConfig = {
@@ -28,3 +35,13 @@ export const googleAuthInitConfig = {
 export const googleAuthOptions = { prompt: 'select_account' };
 
 export const googleAuthHeader = 'inv_google_auth';
+
+export const chartLightThemeOption = {
+  bgColor: '#fafffa',
+  blueColor: 'blue',
+  redColor: 'red',
+  textColor: 'black',
+  lineFillColor: '#f0f4ff',
+  lineStrokeColor: '#84bbf3',
+  graphLineColor: '#eee',
+};

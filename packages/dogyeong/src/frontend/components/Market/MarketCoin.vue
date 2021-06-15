@@ -1,19 +1,18 @@
 <template>
   <div>
-    <div v-if="isLoading">
-      가상화폐 불러오는중..
-    </div>
-    <div v-else-if="isError">
+    <div v-if="isError">
       Error!
     </div>
-    <MarketList
-      v-else
-      :listData="sortedMarketData"
-      :sortByValue="sortByValue"
-      :sortByDiff="sortByDiff"
-      @clickValueTab="changeSortByValue"
-      @clickDiffTab="changeSrotByDiff"
-    ></MarketList>
+    <template v-else>
+      <LoadingSpinner v-if="isLoading" />
+      <MarketList
+        :listData="sortedMarketData"
+        :sortByValue="sortByValue"
+        :sortByDiff="sortByDiff"
+        @clickValueTab="changeSortByValue"
+        @clickDiffTab="changeSrotByDiff"
+      />
+    </template>
   </div>
 </template>
 
@@ -22,11 +21,12 @@ import Vue from 'vue';
 import { mapState } from 'vuex';
 import MarketList from '@/components/Market/MarketList.vue';
 import sortMixin from '@/mixin/sortMixin';
+import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner.vue';
 
 export default Vue.extend({
   name: 'MarketCoin',
 
-  components: { MarketList },
+  components: { MarketList, LoadingSpinner },
 
   mixins: [sortMixin],
 

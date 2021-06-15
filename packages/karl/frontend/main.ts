@@ -1,7 +1,5 @@
 import Vue from 'vue';
-import Router from 'vue-router';
 import 'zum-portal-core/frontend';
-
 import App from './App.vue';
 import createRouter from './router';
 import createStore from './store';

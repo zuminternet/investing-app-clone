@@ -1,0 +1,33 @@
+$theme-dark: (
+  'app-bg-color': #090c10,
+  'text-color': #eef0f2,
+  'active-button-color': #1e90ff,
+  'title-color': #1e90ff,
+  'icon-color': #1e90ff,
+  'red-color': #f10c0c,
+  'blue-color': #1e90ff,
+  'gray-color': #8b949e,
+);
+
+$theme-light: (
+  'app-bg-color': #eef0f2,
+  'text-color': #000000de,
+  'active-button-color': #1e90ff,
+  'title-color': #1e90ff,
+  'icon-color': #1e90ff,
+  'red-color': #f10c0c,
+  'blue-color': #1e90ff,
+  'gray-color': #8b949e,
+);
+
+#app {
+  @each $name, $color in $theme-light {
+    --#{$name}: #{$color};
+  }
+}
+
+#app.dark {
+  @each $name, $color in $theme-dark {
+    --#{$name}: #{$color};
+  }
+}

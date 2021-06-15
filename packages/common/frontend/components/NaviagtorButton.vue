@@ -1,27 +1,26 @@
 <template>
   <button
-    v-if="isSwiperNavigatorButton && buttonIndex !== slideActiveIndex"
     class="navigator-button"
-    @click="$emit('set-slide-active-index', buttonIndex)"
+    @click="isSwiperNavigatorButton ? $emit('set-slide-active-index', buttonIndex) : $emit('route-to-target-page', $event)"
   >
-    {{ navigatorButtonName }}
-  </button>
-  <button
-    v-else-if="(isSwiperNavigatorButton && buttonIndex === slideActiveIndex) || (isBottomNavigatorButton && isActivePage)"
-    class="navigator-button-active"
-  >
-    {{ navigatorButtonName }}
-  </button>
-  <button v-else-if="isBottomNavigatorButton" class="navigator-button" @click="$emit('route-to-target-page', $event)">
-    {{ navigatorButtonName }}
+    <custom-text
+      :buttonActive="(isSwiperNavigatorButton && buttonIndex === slideActiveIndex) || (isBottomNavigatorButton && isActivePage)"
+    >
+      {{ navigatorButtonName }}
+    </custom-text>
   </button>
 </template>
 
 <script>
 import { text } from '../constants';
+import CustomText from './CustomText.vue';
 
 export default {
   name: 'NaviagtorButton',
+  components: {
+    CustomText,
+  },
+
   props: {
     buttonIndex: {
       type: Number,
@@ -81,13 +80,7 @@ export default {
   flex: 1 0 auto;
   align-items: center;
   justify-content: center;
-}
-
-.navigator-button-active {
-  display: flex;
-  flex: 1 0 auto;
-  align-items: center;
-  justify-content: center;
-  background-color: green;
+  border: 0;
+  background-color: var(--app-bg-color);
 }
 </style>

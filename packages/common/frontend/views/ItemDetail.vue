@@ -5,13 +5,13 @@
     <custom-swiper :navigatorButtonNames="swiperNavigatorButtonNames">
       <swiper-slide>
         <list-wrapper :excludedHeight="210">
-          <!-- 차트 컴포넌트 자리  -->
+          <chart :canvasWidth="300" :canvasHeight="300" :symbol="symbolForChart"></chart>
           <item-detail-overview-box :itemDetail="itemDetail"></item-detail-overview-box>
           <!-- 댓글 컴포넌트 자리 -->
           <sub-content-box :text="newsText">
             <news-list>
               <news-list-item v-for="element in news" :key="element.id" :to="''">
-                <news-image :src="element.image_url" />
+                <news-image class="news-image-align" :src="element.image_url" />
                 <news-text-box>
                   <news-text-box-title>{{ element.title }}</news-text-box-title>
                   <news-text-box-desc :author="element.source" :publishDate="element.date"></news-text-box-desc>
@@ -22,7 +22,7 @@
           <sub-content-box :text="analysisText">
             <news-list>
               <news-list-item v-for="element in analyses" :key="element.id" :to="''">
-                <news-image :src="element.image_url" />
+                <news-image class="news-image-align" :src="element.image_url" />
                 <news-text-box>
                   <news-text-box-title>{{ element.title }}</news-text-box-title>
                   <news-text-box-desc :author="element.source" :publishDate="element.date"></news-text-box-desc>
@@ -36,7 +36,7 @@
         <list-wrapper :excludedHeight="210">
           <news-list>
             <news-list-item v-for="element in news" :key="element.id" :to="''">
-              <news-image :src="element.image_url" />
+              <news-image class="news-image-align" :src="element.image_url" />
               <news-text-box>
                 <news-text-box-title>{{ element.title }}</news-text-box-title>
                 <news-text-box-desc :author="element.source" :publishDate="element.date"></news-text-box-desc>
@@ -49,7 +49,7 @@
         <list-wrapper :excludedHeight="210">
           <news-list>
             <news-list-item v-for="element in analyses" :key="element.id" :to="''">
-              <news-image :src="element.image_url" />
+              <news-image class="news-image-align" :src="element.image_url" />
               <news-text-box>
                 <news-text-box-title>{{ element.title }}</news-text-box-title>
                 <news-text-box-desc :author="element.source" :publishDate="element.date"></news-text-box-desc>
@@ -81,6 +81,7 @@ import NewsImage from '../components/News/NewsImage.vue';
 import NewsTextBox from '../components/News/NewsTextBox.vue';
 import NewsTextBoxTitle from '../components/News/NewsTextBoxTitle.vue';
 import NewsTextBoxDesc from '../components/News/NewsTextBoxDesc.vue';
+import Chart from '../../../karl/frontend/components/Chart.vue';
 
 export default {
   name: 'ItemDetail',
@@ -99,16 +100,19 @@ export default {
     NewsTextBoxTitle,
     NewsTextBoxDesc,
     ListWrapper,
+    Chart,
   },
 
   data() {
     const { OVERLALL, NEWS, ANALYSIS, OPINION, CHART, MARKET, BOOKMARK, MORE } = text;
+
     return {
       swiperNavigatorButtonNames: [OVERLALL, NEWS, ANALYSIS, OPINION, CHART],
       bottomNavigatorButtonNames: [MARKET, NEWS, BOOKMARK, MORE],
       newsText: NEWS,
       analysisText: ANALYSIS,
       opnionText: OPINION,
+      symbolForChart: '',
     };
   },
 
@@ -125,8 +129,9 @@ export default {
     ...mapActions('itemDetail', ['getItemDetail', 'getNews', 'getAnalyses']),
   },
 
-  created() {
+  async created() {
     const { symbols, name } = this.$route.query;
+    this.symbolForChart = symbols;
     const email = this.userInfo.userEmail;
     const tickers = [symbols];
 
@@ -142,5 +147,10 @@ export default {
   display: flex;
   flex-direction: column;
   flex: 1;
+}
+
+.news-image-align {
+  display: flex;
+  align-self: center;
 }
 </style>

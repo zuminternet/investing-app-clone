@@ -18,7 +18,7 @@ export interface ArticleDoc extends mongoose.Document {
 }
 
 /**
- * @description 뉴스, 의견 데이터를 위한 모델 스키마
+ * 뉴스, 의견 데이터를 위한 모델 스키마
  */
 const ArticleSchema = new Schema({
   image_url: { type: String, required: true },

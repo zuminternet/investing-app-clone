@@ -5,55 +5,105 @@ export const tickerMap = {
     FB: {
       //  화면에 표시될 종목 이름
       name: '나스닥100',
+      // investingId end point 이름
+      investingId: 'indices/nq-100',
+      // 화면에 표시될 소속 이름
+      category: 'zum-investing-app',
     },
     ADBE: {
       name: '다우존스30',
+      investingId: 'indices/us-30',
+      category: 'zum-investing-app',
     },
     ADI: {
       name: 'S&P500',
+      investingId: 'equities/apple-computer-inc',
+      category: 'zum-investing-app',
     },
     ADP: {
       name: 'foo index',
+      investingId: 'equities/apple-computer-inc',
+      category: 'zum-investing-app',
     },
     ADSK: {
       name: 'bar index',
+      investingId: 'equities/apple-computer-inc',
+      category: 'zum-investing-app',
     },
   },
   crypto: {
     BIDU: {
       name: '비트코인',
+      investingId: 'crypto/bitcoin/btc-usd',
+      category: 'zum-investing-app',
     },
     EBAY: {
       name: '이더리움',
+      investingId: 'crypto/ethereum/eth-usd?c997650',
+      category: 'zum-investing-app',
     },
     INTC: {
       name: 'foo coin',
+      investingId: 'equities/apple-computer-inc',
+      category: 'zum-investing-app',
     },
     MAR: {
       name: 'bar coin',
+      investingId: 'equities/apple-computer-inc',
+      category: 'zum-investing-app',
     },
     MNST: {
       name: 'baz coin',
+      investingId: 'equities/apple-computer-inc',
+      category: 'zum-investing-app',
     },
   },
   stock: {
     AAPL: {
       name: '애플',
+      investingId: 'equities/apple-computer-inc',
+      category: 'NASDAQ',
     },
     GOOG: {
       name: '구글',
+      investingId: 'equities/apple-computer-inc',
+      category: 'NASDAQ',
     },
     TSLA: {
       name: '테슬라',
+      investingId: 'equities/apple-computer-inc',
+      category: 'NASDAQ',
     },
     AMZN: {
       name: '아마존',
+      investingId: 'equities/amazon-com-inc',
+      category: 'NASDAQ',
     },
     PYPL: {
       name: '페이팔',
+      investingId: 'equities/apple-computer-inc',
+      category: 'NASDAQ',
     },
   },
 } as const;
+
+export const tickerKeys = [...Object.keys(tickerMap.stock), ...Object.keys(tickerMap.index), ...Object.keys(tickerMap.crypto)];
+
+const findMatchedTickers = (keyword: string) => {
+  if (typeof keyword !== 'string') throw new Error('Keyword must be string');
+  return tickerKeys.filter((ticker) => ticker.includes(keyword));
+};
+
+export const getMatchedTickers = (keywords: string | string[]): string[] => {
+  if (typeof keywords === 'string') {
+    return findMatchedTickers(keywords);
+  }
+  if (Array.isArray(keywords)) {
+    return [...new Set(keywords.flatMap(findMatchedTickers))];
+  }
+
+  throw new Error('Keywords must be string or array of string');
+};
 
 export type IndexSymbol = keyof typeof tickerMap.index;
 
@@ -102,7 +152,7 @@ export interface SummaryDetail {
   trailingAnnualDividendYield: number;
 }
 
-export interface MarketStockEOD {
+export interface MarketStackEOD {
   date: Date;
   high: number;
   low: number;
@@ -111,7 +161,7 @@ export interface MarketStockEOD {
   symbol: MarketSymbol;
 }
 
-export interface EndOfDay extends MarketStockEOD {
+export interface EndOfDay extends MarketStackEOD {
   display_name: string;
   diff: number;
   growthRate: number;
@@ -119,19 +169,10 @@ export interface EndOfDay extends MarketStockEOD {
 
 export interface HistoricalData {
   display_name: string;
-  data: MarketStockEOD[];
+  data: MarketStackEOD[];
 }
 
-/**
- * 1d -> 5m
- * 1w -> 30m
- * 1m -> 1h
- * 6m -> 3h
- * 1y -> 12h
- * 5y -> 24h
- * max -> 24h
- */
-const getPastDate = ({ day = 0, month = 0, year = 0 } = {}) => {
+const getPastDateString = ({ day = 0, month = 0, year = 0 } = {}) => {
   const date = new Date();
   const y = date.getFullYear();
   const m = date.getMonth();
@@ -140,43 +181,44 @@ const getPastDate = ({ day = 0, month = 0, year = 0 } = {}) => {
   date.setMonth(m - month);
   date.setDate(d - day);
 
-  return date;
-};
-
-const formatDate = (date: Date) => {
-  return date.toISOString().replace(/\..*/, '+0000');
+  return date
+    .toLocaleDateString()
+    .split('. ')
+    .map(Number)
+    .map((n) => n.toString().padStart(2, '0'))
+    .join('-');
 };
 
 export const IntraDayChartMap = {
   '1d': {
-    interval: '5min',
-    dateFrom: () => formatDate(getPastDate({ day: 1 })),
-    dateTo: () => formatDate(new Date()),
+    interval: 'd',
+    dateFrom: () => getPastDateString({ day: 1 }),
+    dateTo: () => getPastDateString(),
   },
   '1w': {
-    interval: '30min',
-    dateFrom: () => formatDate(getPastDate({ day: 7 })),
-    dateTo: () => formatDate(new Date()),
+    interval: 'd',
+    dateFrom: () => getPastDateString({ day: 7 }),
+    dateTo: () => getPastDateString(),
   },
   '1m': {
-    interval: '1hour',
-    dateFrom: () => formatDate(getPastDate({ month: 1 })),
-    dateTo: () => formatDate(new Date()),
+    interval: 'd',
+    dateFrom: () => getPastDateString({ month: 1 }),
+    dateTo: () => getPastDateString(),
   },
   '1y': {
-    interval: '12hour',
-    dateFrom: () => formatDate(getPastDate({ year: 1 })),
-    dateTo: () => formatDate(new Date()),
+    interval: 'd',
+    dateFrom: () => getPastDateString({ year: 1 }),
+    dateTo: () => getPastDateString(),
   },
   '5y': {
-    interval: '24hour',
-    dateFrom: () => formatDate(getPastDate({ year: 1 })),
-    dateTo: () => formatDate(new Date()),
+    interval: 'w',
+    dateFrom: () => getPastDateString({ year: 5 }),
+    dateTo: () => getPastDateString(),
   },
   max: {
-    interval: '24hour',
-    dateFrom: () => formatDate(getPastDate({ year: 1000 })),
-    dateTo: () => formatDate(new Date()),
+    interval: 'm',
+    dateFrom: () => getPastDateString({ year: 1000 }),
+    dateTo: () => getPastDateString(),
   },
 } as const;
 
@@ -196,3 +238,8 @@ export const times = {
 
 // 개발 모드
 export const isProductionMode = process.env.MODE_ENV === 'production';
+
+export const getTickerArray = (tickers: string[] | string | undefined): string[] | undefined => {
+  if (typeof tickers === 'string') return [tickers];
+  return tickers;
+};

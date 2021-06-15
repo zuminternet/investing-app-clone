@@ -1,9 +1,11 @@
 <template>
-  <h1>
+  <div>
     <slot name="left"></slot>
-    <slot></slot>
+    <h1>
+      <slot></slot>
+    </h1>
     <slot name="right"></slot>
-  </h1>
+  </div>
 </template>
 
 <script lang="ts">
@@ -15,7 +17,7 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
-h1 {
+div {
   background-color: var(--header-bg-color);
   width: 100%;
   height: 60px;
@@ -25,5 +27,11 @@ h1 {
   font-size: 20px;
   font-weight: 600;
   border-bottom: 1px solid var(--border-color);
+
+  h1 {
+    font-size: 20px;
+    font-weight: 600;
+    flex: 1;
+  }
 }
 </style>

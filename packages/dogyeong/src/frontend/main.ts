@@ -3,7 +3,6 @@ import 'zum-portal-core/frontend';
 import App from '@/App.vue';
 import createRouter from '@/router';
 import createStore from '@/store';
-import '@/styles/index.scss';
 import 'swiper/swiper-bundle.css';
 
 Vue.prototype._$router = createRouter();
