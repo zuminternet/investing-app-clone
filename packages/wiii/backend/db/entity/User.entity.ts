@@ -72,12 +72,12 @@ export class User extends Base implements UserEntity {
   @Column({ length: 100, nullable: false })
   password!: string;
 
-  // @OneToMany(
-  //   (type) => Reply,
-  //   (Reply) => Reply.userId,
-  //   { cascade: ['insert', 'update'] },
-  // )
-  // repls: Reply[];
+  @OneToMany(
+    (type) => Reply,
+    (Reply) => Reply.userId,
+    { cascade: ['insert', 'update'] },
+  )
+  repls: Reply[];
 
   /**
    * @property
@@ -94,11 +94,36 @@ export class User extends Base implements UserEntity {
   @Column({ type: 'enum', enum: ['gg', 'gh', 'fb'], nullable: true })
   provider: SocialProviers;
 
+  /**
+   * @property
+   * 좋아요 누른 댓글
+   */
+  @Column({ default: {} })
+  likes: object;
+
+  /**
+   * @property
+   * 북마크 종목/지수/코인
+   */
+  @Column({ default: {} })
+  bookmarkTickers: object;
+
+  /**
+   * @property
+   * 북마크 뉴스
+   */
+  @Column({ default: {} })
+  bookmarkNews: {};
+
   constructor(email: string, password: string, nickname: string) {
     super();
     this.email = email;
     this.password = password;
     this.nickname = nickname;
+    this.isActive = true;
+    this.likes = {};
+    this.bookmarkNews = {};
+    this.bookmarkTickers = {};
   }
 
   /**

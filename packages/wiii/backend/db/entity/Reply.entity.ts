@@ -3,12 +3,13 @@
  * @description
  * - for MongoDB Reply table
  */
-import { Column, Entity, ManyToOne, ObjectID, ObjectIdColumn } from 'typeorm';
+import { Column, Entity, Index, ManyToOne, ObjectID, ObjectIdColumn } from 'typeorm';
 import Base from './Base.entity';
 import { User } from './User.entity';
 
 @Entity({ database: 'mongodb', name: 'Repls' })
 export class Reply extends Base {
+  @Index()
   @ObjectIdColumn()
   id: ObjectID;
 
@@ -24,12 +25,12 @@ export class Reply extends Base {
    * 댓글 쓴 사용자 아이디
    * - User table id
    */
-  // @ManyToOne(
-  //   (type) => User,
-  //   (User) => User.repls,
-  //   { cascade: ['insert', 'update'] },
-  // )
-  // userId: User;
+  @ManyToOne(
+    (type) => User,
+    (User) => User.repls,
+    { cascade: ['insert', 'update'] },
+  )
+  userId: User;
 
   /**
    * @fix
