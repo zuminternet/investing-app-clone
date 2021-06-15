@@ -38,6 +38,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import { sortMap } from '@/mixin/sortMixin';
+import { formatDate, formatNumber, formatPercent } from '@/filters';
 
 /**
  * 시장 탭에서 사용하는 리스트 컴포넌트
@@ -59,23 +60,9 @@ export default Vue.extend({
   name: 'MarketList',
 
   filters: {
-    formatDate(value: string) {
-      return new Date(value)
-        .toLocaleDateString()
-        .replaceAll('. ', '/')
-        .replace('.', '')
-        .split('/')
-        .map((n) => n.padStart(2, '0'))
-        .join('/');
-    },
-    formatNumber(value: number) {
-      const sign = value > 0 ? '+' : '';
-      const fixedValue = value.toFixed(2);
-      return `${sign}${fixedValue}`;
-    },
-    formatPercent(value: number) {
-      return `(${value}%)`;
-    },
+    formatDate,
+    formatNumber,
+    formatPercent,
     formatSortText(sortBy: number) {
       if (sortBy === sortMap.desc) return '(내림)';
       if (sortBy === sortMap.asc) return '(오름)';
