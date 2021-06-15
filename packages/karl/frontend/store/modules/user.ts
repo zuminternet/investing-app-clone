@@ -9,6 +9,7 @@ const state = () => ({
   userBookmarks: [],
   isAuthorizedByOAuth: false,
   isLoading: false,
+  isError: false,
 });
 
 // getter 설정
@@ -29,11 +30,16 @@ const actions = {
    *
    * @description signIn 여부에 따라 토큰을 재발급하거나 signIn 하도록하는 action.
    */
-  checkSignInOrSignOut({ dispatch }) {
-    if (googleAuth.isSignedIn.get()) {
-      dispatch('loginUserByGoogleOAuthOrCreateUser');
-    } else {
-      googleAuth.signIn();
+  checkSignInOrSignOut({ dispatch, commit }) {
+    try {
+      if (googleAuth.isSignedIn.get()) {
+        dispatch('loginUserByGoogleOAuthOrCreateUser');
+      } else {
+        googleAuth.signIn();
+      }
+    } catch (error) {
+      console.log(error);
+      commit('setIsError', true);
     }
   },
 
@@ -57,6 +63,7 @@ const actions = {
       });
     } catch (error) {
       console.log(error);
+      commit('setIsError', true);
     }
   },
 
@@ -105,8 +112,6 @@ const actions = {
 
         return true;
       }
-
-      throw new Error('Getting user was failed in user store');
     } catch (error) {
       console.log(error);
     }
@@ -127,14 +132,18 @@ const actions = {
 
         return true;
       }
-
-      throw new Error('Requesting email login was failed in user store');
     } catch (error) {
       console.log(error);
-      alert(error);
+      commit('setIsError', true);
     }
   },
 
+  /**
+   * @description email을 통해 user를 만드는 action
+   * @param param0
+   * @param event
+   * @returns
+   */
   async createUserByEmail({ commit }, event) {
     try {
       const { name, email, password } = event.$data;
@@ -143,10 +152,9 @@ const actions = {
       if (isCreated) {
         return true;
       }
-
-      throw new Error('Creating user was failed in user store');
     } catch (error) {
       console.log(error);
+      commit('setIsError', true);
     }
   },
 
@@ -160,11 +168,18 @@ const actions = {
 
         return true;
       }
-
-      throw new Error('Getting bookmarks was failed in user store');
     } catch (error) {
       console.log(error);
+      commit('setIsError', true);
     }
+  },
+
+  setIsLoading({ commit }, isLoading) {
+    commit('setIsLoading', isLoading);
+  },
+
+  setIsError({ commit }, isError) {
+    commit('setIsError', isError);
   },
 };
 
@@ -188,6 +203,14 @@ const mutations = {
 
   setBookmarks(state, bookmarks) {
     state.userBookmarks = bookmarks;
+  },
+
+  setIsLoading(state, isLoading) {
+    state.isLoading = isLoading;
+  },
+
+  setIsError(state, isError) {
+    state.isError = isError;
   },
 };
 

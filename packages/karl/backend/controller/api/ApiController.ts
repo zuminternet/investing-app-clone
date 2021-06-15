@@ -95,16 +95,12 @@ export class ApiController {
       const user = await this.userService.loginUserByGoogleOAuth(request.body);
       const token = this.authService.issueToken(user);
 
-      if (token) {
-        response.cookie('jwt-token', token, { expires: new Date(Date.now() + 9000000), httpOnly: true });
+      response.cookie('jwt-token', token, { expires: new Date(Date.now() + 9000000), httpOnly: true });
 
-        return response.status(200).send(user);
-      }
-
-      response.sendStatus(401);
+      return response.status(200).send(user);
     } catch (error) {
       console.log(error);
-      response.status(401).json(error);
+      response.sendStatus(401);
     }
   }
 

@@ -1,26 +1,32 @@
 <template>
   <div class="signup-page">
-    <o-auth-buttons-box :handleAuthClick="handleAuthClick"></o-auth-buttons-box>
-    <login-password-input-form
-      :submitButtonText="emailRegister"
-      :isRegister="true"
-      @handle-submit="submitForEmailRegister"
-    ></login-password-input-form>
+    <loading v-if="isLoading"></loading>
+    <error v-else-if="isError"></error>
+
+    <template v-else>
+      <o-auth-buttons-box :handleAuthClick="handleAuthClick"></o-auth-buttons-box>
+      <login-password-input-form
+        :submitButtonText="emailRegister"
+        :isRegister="true"
+        @handle-submit="submitForEmailRegister"
+      ></login-password-input-form>
+    </template>
   </div>
 </template>
 
 <script>
 import { mapActions, mapState } from 'vuex';
 
+import Loading from '../components/Loading.vue';
+import Error from '../components/Error.vue';
 import OAuthButtonsBox from '../components/OAuthButtonsBox.vue';
 import LoginPasswordInputForm from '../components/LoginPasswordInputForm.vue';
 
-import { createUser } from '../apis';
 import { text } from '../../../common/frontend/constants';
 
 export default {
   name: 'Signup',
-  components: { OAuthButtonsBox, LoginPasswordInputForm },
+  components: { OAuthButtonsBox, LoginPasswordInputForm, Loading, Error },
 
   data() {
     const { EMAIL_REGISTER } = text;
@@ -33,11 +39,13 @@ export default {
   computed: {
     ...mapState({
       isAuthorizedByOAuth: (state) => state.user.isAuthorizedByOAuth,
+      isLoading: (state) => state.user.isLoading,
+      isError: (state) => state.user.isError,
     }),
   },
 
   methods: {
-    ...mapActions('user', ['checkSignInOrSignOut', 'createUserByEmail']),
+    ...mapActions('user', ['checkSignInOrSignOut', 'createUserByEmail', 'setIsLoading']),
 
     handleAuthClick() {
       this.checkSignInOrSignOut();
@@ -52,6 +60,7 @@ export default {
     },
 
     async submitForEmailRegister(event) {
+      this.setIsLoading(true);
       if (await this.createUserByEmail(event)) {
         this.routerToLogin();
       }
