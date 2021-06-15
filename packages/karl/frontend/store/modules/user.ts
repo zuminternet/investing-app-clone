@@ -42,17 +42,21 @@ const actions = {
    *
    */
   async googleInitClient({ dispatch }) {
-    await gapi.client.init(googleAuthInitConfig);
-    googleAuth = gapi.auth2.getAuthInstance();
-    googleUser = googleAuth.currentUser.get();
-
-    googleAuth.isSignedIn.listen(async (isSignedIn) => {
+    try {
+      await gapi.client.init(googleAuthInitConfig);
+      googleAuth = gapi.auth2.getAuthInstance();
       googleUser = googleAuth.currentUser.get();
 
-      if (isSignedIn) {
-        dispatch('loginUserByGoogleOAuthOrCreateUser');
-      }
-    });
+      googleAuth.isSignedIn.listen(async (isSignedIn) => {
+        googleUser = googleAuth.currentUser.get();
+
+        if (isSignedIn) {
+          dispatch('loginUserByGoogleOAuthOrCreateUser');
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
   },
 
   /**
@@ -82,6 +86,8 @@ const actions = {
         return true;
       }
     }
+
+    throw new Error('Login by google OAuth or creating user was failed in user store ');
   },
 
   /**
@@ -98,6 +104,8 @@ const actions = {
 
         return true;
       }
+
+      throw new Error('Getting user was failed in user store');
     } catch (error) {
       console.log(error);
     }
@@ -118,6 +126,8 @@ const actions = {
 
         return true;
       }
+
+      throw new Error('Requesting email login was failed in user store');
     } catch (error) {
       console.log(error);
       alert(error);
@@ -134,6 +144,8 @@ const actions = {
 
         return true;
       }
+
+      throw new Error('Getting bookmarks was failed in user store');
     } catch (error) {
       console.log(error);
     }

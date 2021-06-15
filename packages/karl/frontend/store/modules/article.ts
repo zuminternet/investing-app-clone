@@ -46,6 +46,8 @@ const actions = {
 
         return true;
       }
+
+      throw new Error('Getting news was failed in article store');
     } catch (error) {
       console.log(error);
     }
@@ -60,6 +62,8 @@ const actions = {
 
         return true;
       }
+
+      throw new Error('Getting article by id was failed in article store');
     } catch (error) {
       console.log(error);
     }

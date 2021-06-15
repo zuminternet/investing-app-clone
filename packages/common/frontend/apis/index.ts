@@ -176,6 +176,8 @@ const getBookmarks = async (email: string) => {
 
     return bookmarks;
   }
+
+  throw new Error('Getting bookmarks was failed in front api');
 };
 
 export { getSearchedItems, getItemDetail, getNews, getAnalyses, createBookmark, getBookmarks, deleteBookmark, getArticleById };
