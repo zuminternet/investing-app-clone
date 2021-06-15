@@ -4,8 +4,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { createNamespacedHelpers } from 'vuex';
-
+import { mapState, createNamespacedHelpers } from 'vuex';
 import EsService from '@/services/chart/eventSource';
 import { TimespanEnum } from '@/type/apis';
 import { CanvasOptionEnum, MAColorEnum } from '@/type/chart';
@@ -36,17 +35,14 @@ export default Vue.extend({
     },
     width: {
       type: Number,
-      default: 600,
+      default: 880,
     },
     typeName: {
       type: String,
       required: true,
       default: 'stock',
     },
-    ticker: {
-      type: String,
-      default: '005930' /** MarketStack 국내주식 모드, 삼성전자 */,
-    },
+
     multiplier: {
       type: Number,
       default: 1 /** MarketStack => default 1hour => 24hour로  */,
@@ -114,22 +110,16 @@ export default Vue.extend({
    */
   data() {
     return {
-      onReady: false,
       ctx: null,
-      options: {
-        ticker: this.ticker,
-        multiplier: this.multiplier,
-        timespan: this.timespan,
-        from: this.from,
-        to: this.to,
-      },
       histData: {},
       cachedChart: {},
     };
   },
 
   computed: {
+    ...mapState(['ticker']),
     ...mapGetters(['hasStockData']),
+
     queryString(): GetHistoricalOptions {
       const {
         typeName,
@@ -168,7 +158,7 @@ export default Vue.extend({
   },
 
   methods: {
-    ...mapActions(['getTodayStockShort']),
+    ...mapActions(['getTodayMiniStocks']),
     /**
      * proxy observer 생성
      * @description
@@ -196,10 +186,9 @@ export default Vue.extend({
 
     async getStatic() {
       try {
-        const data = await this.getTodayStockShort(this.ticker);
+        const data = await this.getTodayMiniStocks(this.ticker);
         console.log({ data });
-        // this.histData.data =
-        // console.log(this.histData);
+        this.histData.data = data;
       } catch (e) {
         console.error(e);
       }
@@ -213,25 +202,41 @@ export default Vue.extend({
        * {  results: adjusted, count, payload: { total } }
        */
       const {
-        data: {
-          results,
-          count,
-          payload: { total },
+        ctx,
+        histData: {
+          data: {
+            results,
+            count,
+            payload: { total },
+          },
         },
-      } = this.histData;
+        query: { limit },
+        smaConfigs,
+      } = this;
+
+      /** @todo 예외처리 */
+      if (!count) return;
 
       /** Chart Caching */
       withTime(
         drawBasicCandleChart,
         `drawBasicCandleChart`,
       )({
-        ctx: this.ctx,
+        ctx,
         results,
         count,
-        payload: { total, customNumToShow: this.query.limit, smaConfigs: this.smaConfigs, width: this.width },
+        payload: {
+          total,
+          customNumToShow: limit,
+          smaConfigs,
+          width: this.width,
+          hasAxis: true,
+          hasVolumes: true,
+          hasPrices: true,
+        },
       });
 
-      // this.cachedChart[this.ticker] = cachedChart;
+      /** chart base64 로 캐싱하는 내용 삭제 */
     },
   },
 });

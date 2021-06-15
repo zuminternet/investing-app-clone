@@ -47,6 +47,7 @@ export default Vue.extend({
 
   methods: {
     inputToggle(id) {
+      if (!this.isValid) return this.$router.push(`/user/login`);
       this.$emit('change-current-input', id);
     },
   },

@@ -3,21 +3,26 @@ import Home from '@/views/Home.vue';
 import store from '@/store';
 
 const requireAuth = (to, from, next) => {
-  store.getters.getAuth ? next() : next('/user/login');
+  store.state.auth ? next() : next('/user/login');
 };
 
 export default [
   {
-    path: paths.MarketsRouter,
-    name: views.Markets,
+    path: '/markets/',
     component: () => import('@/views/Markets.vue'),
-    props: ({ params: { type, ticker } }) => ({ type, ticker }),
+    children: [
+      { path: 'stocks', component: () => import('@/components/templates/Markets/Stocks.vue') },
+      { path: 'stocks/:ticker', component: () => import('@/components/templates/Markets/StocksDetail.vue') },
+      { path: 'indexes', component: () => import('@/components/templates/Markets/Indexes.vue') },
+      { path: 'indexes/:ticker', component: () => import('@/components/templates/Markets/IndexesDetail.vue') },
+      { path: 'coins', component: () => import('@/components/templates/Markets/Coins.vue') },
+      { path: 'coins/:ticker', component: () => import('@/components/templates/Markets/CoinsDetail.vue') },
+    ],
   },
   {
-    path: paths.News,
+    path: '/news/',
     name: views.News,
     component: () => import('@/views/News.vue'),
-    props: ({ params: { ticker } }) => ({ ticker }),
   },
   {
     path: paths.User,

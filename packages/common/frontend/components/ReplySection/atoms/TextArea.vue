@@ -29,7 +29,7 @@ textarea {
 
   &:focus {
     outline: none;
-    box-shadow: 0 0 2px $grey-700;
+    box-shadow: 0 0 2px rgba(97, 97, 97, 1);
   }
 }
 </style>
