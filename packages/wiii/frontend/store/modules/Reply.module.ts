@@ -3,7 +3,7 @@ import { AxiosStatic } from 'axios';
 import { RootState } from '@/store';
 import { range } from '../../../domain/utilFunc';
 import { getRandomText, getRandomUser } from '@/services/reply/random';
-import { getRepls } from '@/services/reply';
+import { getRepls, toggleLikes } from '@/services/reply';
 
 declare const Axios: AxiosStatic;
 
@@ -31,7 +31,7 @@ const Reply = {
       }
     },
 
-    getReplsByDocID: async (_, ticker) => {
+    getReplsByDocID: async (_, ticker: string) => {
       if (!ticker) return;
       try {
         const results = await getRepls(ticker);
@@ -92,7 +92,16 @@ const Reply = {
         return console.error(e);
       }
     },
-  },
+
+    toggleLikesAction: (_, replId: string) => {
+      if (!replId) return false;
+      try {
+        toggleLikes(replId);
+      } catch (e) {
+        return console.error(e);
+      }
+    },
+  } /** actions */,
 } as Module<ReplyState, RootState>;
 
 export default Reply;
