@@ -1,16 +1,17 @@
 <template>
-  <div class="signup-page">
-    <loading v-if="isLoading"></loading>
-    <error v-else-if="isError"></error>
-
-    <template v-else>
-      <o-auth-buttons-box :handleAuthClick="handleAuthClick"></o-auth-buttons-box>
-      <login-password-input-form
-        :submitButtonText="emailRegister"
-        :isRegister="true"
-        @handle-submit="submitForEmailRegister"
-      ></login-password-input-form>
-    </template>
+  <div v-if="isLoading">
+    <loading></loading>
+  </div>
+  <div v-else-if="isError">
+    <error></error>
+  </div>
+  <div v-else class="signup-page">
+    <o-auth-buttons-box :handleAuthClick="handleAuthClick"></o-auth-buttons-box>
+    <login-password-input-form
+      :submitButtonText="emailRegister"
+      :isRegister="true"
+      @handle-submit="submitForEmailRegister"
+    ></login-password-input-form>
   </div>
 </template>
 

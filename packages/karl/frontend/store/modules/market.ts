@@ -5,6 +5,8 @@ const state = () => ({
   indicesItems: [],
   stockItems: [],
   cryptoItems: [],
+  isLoading: false,
+  isError: false,
 });
 
 // getter 설정
@@ -64,6 +66,10 @@ const actions = {
       console.log(error);
     }
   },
+
+  setIsLoading({ commit }, isLoading) {
+    commit('setIsLoading', isLoading);
+  },
 };
 
 // mutatuons 설정
@@ -78,6 +84,14 @@ const mutations = {
 
   setCryptoItems(state, cryptos) {
     state.cryptoItems = cryptos;
+  },
+
+  setIsLoading(state, isLoading) {
+    state.isLoading = isLoading;
+  },
+
+  setIsError(state, isError) {
+    state.isError = isError;
   },
 };
 

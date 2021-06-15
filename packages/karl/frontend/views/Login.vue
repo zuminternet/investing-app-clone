@@ -1,9 +1,14 @@
 <template>
-  <div class="login-page">
-    <loading v-if="isLoading"></loading>
-    <error v-else-if="isError"></error>
+  <div v-if="isLoading">
+    <loading></loading>
+  </div>
 
-    <template v-else-if="isEmailLogin">
+  <div v-else-if="isError">
+    <error></error>
+  </div>
+
+  <div v-else class="login-page">
+    <template v-if="isEmailLogin">
       <o-auth-buttons-box :handleAuthClick="handleAuthClick" />
       <div class="email-login-input-form-box">
         <login-password-input-form
@@ -15,7 +20,7 @@
         </text-button>
       </div>
     </template>
-    <template v-else-if="!isEmailLogin">
+    <template v-else>
       <div class="zum-logo-box">
         <div class="zum-logo"></div>
       </div>
@@ -133,7 +138,6 @@ export default {
 
   watch: {
     isAuthorizedByOAuth(value) {
-      this.setIsLoading(true);
       if (value) {
         this.routeToMarket();
       }

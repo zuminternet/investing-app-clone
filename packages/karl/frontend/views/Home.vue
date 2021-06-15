@@ -1,5 +1,11 @@
 <template>
-  <div id="home-page">
+  <div v-if="isLoading">
+    <loading></loading>
+  </div>
+  <div v-else-if="isError">
+    <error></error>
+  </div>
+  <div v-else class="home-page">
     <multipurpose-header isHome></multipurpose-header>
     <custom-swiper :navigatorButtonNames="swiperNavigatorButtonNames">
       <swiper-slide v-for="(items, index) in itemCollections" :key="index">
@@ -12,8 +18,10 @@
 
 <script>
 import { SwiperSlide } from 'vue-awesome-swiper';
-import { mapGetters, mapActions } from 'vuex';
+import { mapGetters, mapActions, mapState } from 'vuex';
 
+import Loading from '../components/Loading.vue';
+import Error from '../components/Error.vue';
 import BottomNaviagtor from '../../../common/frontend/components/BottomNaviagtor.vue';
 import MultipurposeHeader from '../../../common/frontend/components/MultipurposeHeader.vue';
 import ItemCardList from '../../../common/frontend/components/ItemCardList.vue';
@@ -29,10 +37,17 @@ export default {
     CustomSwiper,
     ItemCardList,
     SwiperSlide,
+    Loading,
+    Error,
   },
   computed: {
     ...mapGetters('market', {
       itemCollections: 'itemCollections',
+    }),
+
+    ...mapState({
+      isLoading: (state) => state.market.isLoading,
+      isError: (state) => state.market.isError,
     }),
   },
 
@@ -46,19 +61,23 @@ export default {
   },
 
   methods: {
-    ...mapActions('market', ['getStocks', 'getIndices', 'getCryptos']),
+    ...mapActions('market', ['getStocks', 'getIndices', 'getCryptos', 'setIsLoading']),
   },
 
-  created() {
-    this.getStocks();
-    this.getIndices();
-    this.getCryptos();
+  async mounted() {
+    this.setIsLoading(true);
+
+    await this.getStocks();
+    await this.getIndices();
+    await this.getCryptos();
+
+    this.setIsLoading(false);
   },
 };
 </script>
 
 <style scoped lang="scss">
-#home-page {
+.home-page {
   display: flex;
   flex-direction: column;
   flex: 1;

@@ -8,7 +8,7 @@ const state = () => ({
   userGoogleId: '',
   userBookmarks: [],
   isAuthorizedByOAuth: false,
-  isLoading: false,
+  isLoading: true,
   isError: false,
 });
 
@@ -48,7 +48,7 @@ const actions = {
    * @description OAuth flow action. googleAuth 객체를 이용해 signIn 여부를 감지한다.
    *
    */
-  async googleInitClient({ dispatch }) {
+  async googleInitClient({ dispatch, commit }) {
     try {
       await gapi.client.init(googleAuthInitConfig);
       googleAuth = gapi.auth2.getAuthInstance();

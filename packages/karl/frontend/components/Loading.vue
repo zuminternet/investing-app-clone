@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="loading">
     Loading!!
   </div>
 </template>
@@ -10,4 +10,13 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped lang="scss">
+.loading {
+  display: flex;
+
+  height: 100vh;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+</style>
