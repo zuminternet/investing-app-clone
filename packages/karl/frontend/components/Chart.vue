@@ -116,7 +116,6 @@ export default {
 
     currentValue() {
       if (this.endIndex !== null && this.endIndex < this.data.length) {
-        // console.log(this.data[this.endIndex].close);
         return this.data[this.endIndex].close;
       }
 
@@ -430,7 +429,7 @@ export default {
     },
 
     handleChartMenuButtonClick(event) {
-      const { value } = event.target;
+      const { value } = event.target.value ? event.target : event.path[1];
 
       if (value === 'Linear') {
         this.isCandle = false;
@@ -442,7 +441,6 @@ export default {
     },
 
     redrawChart() {
-      console.log(this.data);
       this.unitHeight = null;
       this.timeData = [];
       this.valueData = [];
@@ -506,7 +504,6 @@ export default {
   async mounted() {
     await this.getHistoricalDataForPeriod(this.period);
 
-    console.log(this.data);
     this.endIndex = this.data.length - 1;
     this.startIndex = 0;
 

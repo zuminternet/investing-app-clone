@@ -5,7 +5,7 @@
     <custom-swiper :navigatorButtonNames="swiperNavigatorButtonNames">
       <swiper-slide>
         <list-wrapper :excludedHeight="210">
-          <chart :canvasWidth="300" :canvasHeight="300" :symbol="symbolForChart"></chart>
+          <chart v-if="symbolForChart" :canvasWidth="300" :canvasHeight="300" :symbol="symbolForChart"></chart>
           <item-detail-overview-box :itemDetail="itemDetail"></item-detail-overview-box>
           <!-- 댓글 컴포넌트 자리 -->
           <sub-content-box :text="newsText">
@@ -129,15 +129,15 @@ export default {
     ...mapActions('itemDetail', ['getItemDetail', 'getNews', 'getAnalyses']),
   },
 
-  async created() {
+  async mounted() {
     const { symbols, name } = this.$route.query;
     this.symbolForChart = symbols;
     const email = this.userInfo.userEmail;
     const tickers = [symbols];
 
-    this.getItemDetail({ symbols, email, name });
-    this.getNews({ offset: 0, limit: 20, tickers });
-    this.getAnalyses({ offset: 0, limit: 20, tickers });
+    await this.getItemDetail({ symbols, email, name });
+    await this.getNews({ offset: 0, limit: 20, tickers });
+    await this.getAnalyses({ offset: 0, limit: 20, tickers });
   },
 };
 </script>

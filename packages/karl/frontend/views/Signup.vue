@@ -1,10 +1,6 @@
 <template>
-  <div v-if="isLoading">
-    <loading></loading>
-  </div>
-  <div v-else-if="isError">
-    <error></error>
-  </div>
+  <loading v-if="isLoading">></loading>
+  <error v-else-if="isError"></error>
   <div v-else class="signup-page">
     <o-auth-buttons-box :handleAuthClick="handleAuthClick"></o-auth-buttons-box>
     <login-password-input-form

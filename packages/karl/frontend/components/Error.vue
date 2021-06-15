@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="error">
     Error!!
   </div>
 </template>
@@ -10,4 +10,13 @@ export default {
 };
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.error {
+  display: flex;
+  flex: 1;
+
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+</style>

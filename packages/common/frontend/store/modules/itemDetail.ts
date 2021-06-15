@@ -34,8 +34,6 @@ const actions = {
     try {
       const itemDetail = await getItemDetail({ symbols, email });
 
-      console.log(itemDetail);
-
       if (itemDetail) {
         commit('setItemDetail', { itemDetail, name });
 
