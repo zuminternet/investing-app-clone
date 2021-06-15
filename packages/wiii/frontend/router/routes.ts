@@ -24,8 +24,10 @@ export default [
     /** 뉴스 리스트 */
     component: () => import('@/views/News.vue'),
     children: [
-      /** 종목별 뉴스 */
-      { path: ':ticker', component: () => import('@/components/templates/NewsDetail.vue'), props: true },
+      /**  뉴스 상세 페이지 */
+      { path: ':newsid', component: () => import('@/components/templates/News/Detail.vue'), props: true },
+      /** 뉴스 홈; 뉴스 리스트 */
+      { path: '', component: () => import('@/components/templates/News/index.vue') },
     ],
   },
   {
