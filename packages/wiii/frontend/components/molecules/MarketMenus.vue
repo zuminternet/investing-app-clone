@@ -35,6 +35,11 @@ export default Vue.extend({
     color: $blue-700;
     font-weight: bolder;
     text-decoration: underline 3px $blue-700;
+
+    .dark & {
+      color: $neon-crimson;
+      text-decoration: underline 3px $neon-crimson;
+    }
   }
 }
 </style>
