@@ -10,12 +10,18 @@
         </template>
         {{ name }}
       </HeaderTitle>
+      <div v-if="summaryDetail" :class="$style.price">
+        <span :class="$style['current-price']">{{ summaryDetail.regularMarketOpen }}</span>
+        <span :class="[{ [$style.red]: priceDiff > 0 }, { [$style.blue]: priceDiff < 0 }]">
+          {{ priceDiff | formatPrice }} {{ pricePercent | formatPrice | formatPercent }}
+        </span>
+      </div>
     </Header>
     <main>
-      <section class="chart-section">
+      <section :class="$style['chart-section']">
         <LoadingSpinner v-if="isChartLoading" />
-        <div ref="chartContainer" class="chart-container"></div>
-        <div class="button-container">
+        <div ref="chartContainer" :class="$style['chart-container']"></div>
+        <div :class="$style['button-container']">
           <button @click="changeChartPeriod('1d')">1일</button>
           <button @click="changeChartPeriod('1w')">1주</button>
           <button @click="changeChartPeriod('1m')">1달</button>
@@ -26,7 +32,7 @@
           <button v-if="fullscreenEnabled" @click="requestFullscreen">Full</button>
         </div>
       </section>
-      <section v-if="summaryDetail" class="summary-section">
+      <section v-if="summaryDetail" :class="$style.summary">
         <h2>개요</h2>
         <table>
           <tbody>
@@ -130,6 +136,14 @@ export default Vue.extend({
         .reverse()
         .join('');
     },
+    formatPrice(value: number) {
+      const sign = value > 0 ? '+' : '';
+      const fixedValue = value.toFixed(2);
+      return `${sign}${fixedValue}`;
+    },
+    formatPercent(value: number) {
+      return `(${value}%)`;
+    },
   },
 
   data() {
@@ -156,6 +170,12 @@ export default Vue.extend({
   computed: {
     fullscreenEnabled() {
       return document.fullscreenEnabled;
+    },
+    priceDiff() {
+      return this.summaryDetail?.regularMarketOpen - this.summaryDetail?.previousClose || 0;
+    },
+    pricePercent() {
+      return (this.priceDiff / this.summaryDetail?.regularMarketOpen) * 100;
     },
   },
 
@@ -220,34 +240,55 @@ export default Vue.extend({
 });
 </script>
 
-<style lang="scss">
+<style lang="scss" module>
 .chart-section {
   margin-bottom: 60px;
   position: relative;
+}
 
-  .chart-container {
-    margin-bottom: 12px;
-  }
+.chart-container {
+  margin-bottom: 12px;
+}
 
-  .button-container {
-    padding: 0 12px;
+.button-container {
+  padding: 0 12px;
 
-    button {
-      padding: 4px 6px;
-      font-size: 15px;
-      border-radius: 6px;
-      border: 1px solid var(--border-color);
-      margin-right: 4px;
-      color: var(--text-color);
+  button {
+    padding: 4px 6px;
+    font-size: 15px;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    margin-right: 4px;
+    color: var(--text-color);
 
-      &:hover {
-        background-color: var(--border-color);
-      }
+    &:hover {
+      background-color: var(--border-color);
     }
   }
 }
 
-.summary-section {
+.price {
+  background-color: var(--header-nav-bg-color);
+  padding: 20px 12px;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 18px;
+}
+
+.current-price {
+  font-size: 24px;
+  font-weight: bold;
+  margin-right: 4px;
+}
+
+.red {
+  color: var(--red-color);
+}
+
+.blud {
+  color: var(--blue-color);
+}
+
+.summary {
   padding: 0 12px;
   margin-bottom: 60px;
 
