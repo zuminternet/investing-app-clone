@@ -1,0 +1,6 @@
+{
+  "extends": "../tsconfig.frontend.json",
+  "compilerOptions": {
+    "typeRoots": ["**/node_modules/@types", "./"]
+  }
+}
