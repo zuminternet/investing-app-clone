@@ -13,5 +13,5 @@
     "lib": ["ESNext", "DOM", "DOM.Iterable", "ScriptHost"]
   },
 
-  "exclude": ["**/frontend/**", "**/node_modules/**"]
+  "exclude": ["**/node_modules/**"]
 }
