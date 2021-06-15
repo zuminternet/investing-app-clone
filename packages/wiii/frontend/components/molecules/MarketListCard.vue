@@ -10,8 +10,8 @@
       <div class="market-list-card-info-ticker">
         <Words class="tickerName"> {{ tickerName }}</Words>
         <Words class="ticker"> ({{ ticker }}) </Words>
-        <Words class="ticker"> {{ changeEmoji }} </Words>
       </div>
+      <Words class="market-list-card-info-price"> 현재가 {{ currPrice }}원 {{ changeEmoji }} </Words>
       <Words class="market-list-card-info-text">
         전일대비 {{ changeSign }}&nbsp;{{ changePrice }}원 / {{ changeSign }} {{ changePercent }} {{ changeText }}
       </Words>
@@ -46,6 +46,7 @@ export default Vue.extend({
   data() {
     return {
       changeData: null,
+      currPrice: null,
       change: null,
       changePercent: null,
     };
@@ -83,6 +84,7 @@ export default Vue.extend({
     const { adj_close: beforeC } = dayBefore;
 
     this.change = todayC - beforeC;
+    this.currPrice = todayC.toLocaleString();
     this.changePercent = `${(abs(this.change / beforeC) * 100).toFixed(2)} %`;
   },
 
@@ -132,7 +134,7 @@ export default Vue.extend({
         width: max-content;
         padding-right: 5px;
         font-weight: bolder;
-        font-size: 1.2rem;
+        font-size: 1.3rem;
         text-align: left;
         text-shadow: none;
       }
@@ -143,6 +145,12 @@ export default Vue.extend({
         font-size: 0.8rem;
         text-align: right;
       }
+    }
+
+    &-price {
+      text-align: left;
+      font-size: 1.1rem;
+      font-weight: bolder;
     }
 
     &-text {
