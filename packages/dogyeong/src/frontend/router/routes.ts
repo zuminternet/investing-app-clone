@@ -41,6 +41,7 @@ export default [
     path: routePaths.bookmark,
     name: 'Bookmark',
     component: () => import('@/views/Bookmark.vue'),
+    meta: { requiresAuth: true },
   },
   {
     path: routePaths.signup,
