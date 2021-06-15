@@ -1,4 +1,4 @@
-import { range } from '../../../../wiii/domain/utilFunc';
+import { createReply, getReplsByDocID } from '../../apis/';
 
 const state = {
   //
@@ -14,55 +14,28 @@ const mutations = {
 
 const actions = {
   /**
-   * getRandomRepls
-   * @property replId
-   * @property userThumbnail
-   * @property userName
-   * @property date
-   * @property contents
-   * @property likes
-   * - ReplySection 개발/테스트를 위한 randomuser.me API, metaphorpsum API 활용
-   * - @see https://randomuser.me/documentation#multiple
-   * - @see http://metaphorpsum.com/
+   * 댓글 추가
+   * @param _ state 댓글 상태 굳이 저장할 필요없어 보임
+   * @param props email, docId, contents; 사용자 email, 댓글 달 종목 또는 뉴스 id, 댓글 내용
+   * @returns true / void
    */
-  getRandomRepls: async (): Promise<void | object> => {
+  insertReply: async (_, { email, docId, contents }) => {
     try {
-      const nums = 15;
+      const isOK = await createReply({ email, docId, contents });
+      return isOK;
+    } catch (e) {
+      return console.error(e);
+    }
+  },
 
-      const {
-        data: { results },
-        status,
-        statusText,
-      } = await Axios.get(`https://randomuser.me/api/?results=${nums}`, { responseType: 'json' });
-      if (status >= 400) throw new Error(statusText);
-
-      const {
-        data: messages,
-        status: msgStatus,
-        statusText: msgStatusText,
-      } = await Axios.get(`http://metaphorpsum.com/paragraphs/${nums}`, { responseType: 'text' });
-      if (msgStatus >= 400) throw new Error(msgStatusText);
-
-      const messagesArr = messages.split('\n\n');
-
-      const randomRepls = Array.from({ length: nums });
-      for (const i of range(0, nums)) {
-        const {
-          login: { uuid, username },
-          picture: { thumbnail },
-        } = results[i];
-
-        randomRepls[i] = {
-          replId: uuid,
-          userThumbnail: thumbnail,
-          userName: username,
-          date: new Date(Date.now() * Math.random()),
-          contents: messagesArr[i],
-          likes: Math.floor(Math.random() * 50),
-        };
-      }
-
-      return randomRepls.sort((a, b) => b.date - a.date);
+  /**
+   * 댓글 목록 조회
+   * @param 종목 티커 또는 뉴스 id 로 조회
+   */
+  getRepls: async (_, { docId }) => {
+    try {
+      const repls = await getReplsByDocID(docId);
+      return repls;
     } catch (e) {
       return console.error(e);
     }
