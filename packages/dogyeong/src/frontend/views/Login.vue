@@ -28,6 +28,7 @@
 import Vue from 'vue';
 import { mapActions } from 'vuex';
 import Layout from '@/components/Layout/Layout.vue';
+import { routePaths } from '@/config';
 
 export default Vue.extend({
   name: 'Login',
@@ -57,7 +58,7 @@ export default Vue.extend({
         .catch((e) => window.alert(e?.response?.data ?? e?.error ?? e));
     },
     routeHome() {
-      this.$router.replace('/');
+      this.$router.replace(routePaths.market);
     },
   },
 });

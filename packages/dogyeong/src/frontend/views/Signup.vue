@@ -26,6 +26,7 @@ import BottomNav from '@/components/BottomNav/BottomNav.vue';
 import * as authService from '@/services/authService';
 import Layout from '@/components/Layout/Layout.vue';
 import { Header, HeaderTitle } from '@/components/Header';
+import { routePaths } from '@/config';
 
 export default Vue.extend({
   name: 'Signup',
@@ -55,7 +56,7 @@ export default Vue.extend({
         })
         .then(() => {
           window.alert('계정이 생성되었습니다.');
-          this.$router.replace('/login');
+          this.$router.replace(routePaths.login);
         })
         .catch(window.alert);
     },

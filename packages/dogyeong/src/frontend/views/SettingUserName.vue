@@ -22,6 +22,7 @@ import Layout from '@/components/Layout/Layout.vue';
 import { Header, HeaderTitle } from '@/components/Header';
 import BottomNav from '@/components/BottomNav/BottomNav.vue';
 import { changeUserInfo } from '@/services/authService';
+import { routePaths } from '@/config';
 
 export default Vue.extend({
   name: 'SettingUserName',
@@ -38,7 +39,7 @@ export default Vue.extend({
     changeUserName() {
       changeUserInfo({ name: this.username })
         .then(() => this.$store.dispatch('fetchCurrentUser'))
-        .then(() => this.$router.replace('/setting'))
+        .then(() => this.$router.replace(routePaths.setting))
         .catch(window.alert);
     },
   },
