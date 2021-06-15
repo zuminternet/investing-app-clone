@@ -47,12 +47,19 @@ export class ReplyController {
    * @todo
    */
   @GetMapping({ path: '/:docId' })
-  public async getReplsByDoc({ params: { docId } }: Request, res: Response) {
+  public async getReplsByDoc({ params: { docId }, query, cookies }: Request, res: Response) {
     const getReplsError = () => this.error(`Get Replies`, this.getReplsByDoc.name);
     try {
       if (!docId) throw getReplsError();
 
-      const results = await this.replyService.getAllReplsByDocId(docId);
+      let email;
+      if (query.auth !== 'false') {
+        const token = cookies[TOKEN_COOKIE_KEY];
+        const verified = verifyToken(token);
+        email = verified.data;
+      }
+
+      const results = await this.replyService.getAllReplsByDocId(docId, email);
       if (!results) throw getReplsError();
 
       res.status(200).json({ message: 'Success to Get All Replies', results });

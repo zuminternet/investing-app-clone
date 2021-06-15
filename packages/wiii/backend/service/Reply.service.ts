@@ -31,13 +31,19 @@ export class ReplyService {
    * getAllReplsByDocId
    * @todo 댓글 목록 조회 by docId
    */
-  public async getAllReplsByDocId(docId: string) {
+  public async getAllReplsByDocId(docId: string, email?: string) {
     const getAllError = () => this.error(`Get All Repls By docId`, this.getAllReplsByDocId.name);
 
     const results = await getCustomRepository(ReplyRepository).getAllRepliesByDocID(docId);
     if (!results) throw getAllError();
 
-    return results;
+    if (!email) return results;
+
+    /** 로그인한 사용자인 경우 사용자의 `좋아요` 표시 */
+    const { likes } = await getCustomRepository(UserRepository).findOne({ where: { email } });
+    const userLikeIdsSet = new Set(Object.keys(likes));
+
+    return results.map((res) => ({ ...res, userLike: userLikeIdsSet.has(res.id.toString()) }));
   }
 
   /**
@@ -71,8 +77,7 @@ export class ReplyService {
     }
 
     /** 좋아요 추가 */
-    const result = await replyRepo.updateOne({ _id: objectReplid }, { $set: { likes: likes + 1 } }, { upsert: true });
-    console.log({ result });
+    replyRepo.updateOne({ _id: objectReplid }, { $set: { likes: likes + 1 } }, { upsert: true });
     userRepo.updateOne({ email }, { $set: { likes: { ...userLikes, [replId]: replId } } }, { upsert: true });
     return true;
   }
