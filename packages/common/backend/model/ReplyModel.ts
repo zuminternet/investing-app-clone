@@ -28,6 +28,7 @@ export interface ReplyDoc extends mongoose.Document {
   /** 좋아요 수 */
   likes: number;
   createdAt: Date;
+  updatedAt: Date;
 }
 
 /**
@@ -45,6 +46,7 @@ const ReplySchema = new Schema({
   contents: { type: String, required: true },
   likes: { type: Number, default: 0 },
   createdAt: { type: Date, default: new Date() },
+  updatedAt: { type: Date, default: new Date() },
 });
 
 const Reply = model<ReplyDoc>('Reply', ReplySchema);

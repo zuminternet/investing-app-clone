@@ -27,7 +27,7 @@ export default class ReplyService {
    */
   public async getAllReplsByDocId(docId: string, offset = 0, limit = 15): Promise<ReplyDoc[]> {
     return await Reply.find({ docId })
-      .sort({ createdAt: 'desc' })
+      .sort({ updatedAt: 'desc' })
       .skip(offset)
       .limit(limit)
       .lean<ReplyDoc[]>();
