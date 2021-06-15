@@ -3,7 +3,6 @@
   "compilerOptions": {
     "paths": {
       "@/*": ["./src/frontend/*"]
-    },
-    "typeRoots": ["**/node_modules/@types", "./"]
+    }
   }
 }
