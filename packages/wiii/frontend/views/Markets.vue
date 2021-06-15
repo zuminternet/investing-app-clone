@@ -37,9 +37,5 @@ export default Vue.extend({
       titleText: viewsTitle.Markets,
     };
   },
-
-  methods: {
-    ...mapActions([RootActions.SET_CURRENT_TICKER]),
-  },
 });
 </script>

@@ -118,11 +118,18 @@ const setParams = (options: GetHistoricalOptions) => pipe(options, adjustKeyName
  *   - response: `{ data, status, statusText, headers, config }`
  * @returns 필요한 데이터만 추출/가공
  */
-const adjustPrices = (result) => {
+const adjustPrices = (_result) => {
+  const result = JSON.parse(_result);
+
+  if (result.error?.message) {
+    console.log(result.error?.message);
+    return { results: [], count: 0, payload: { total: 0 } };
+  }
+
   const {
     pagination: { count, total },
     data,
-  } = JSON.parse(result);
+  } = result;
 
   const adjusted = data.map(({ adj_close, open, close, high, low, volume, date }) => ({
     adj_close,
@@ -134,7 +141,13 @@ const adjustPrices = (result) => {
     date,
   })) as CandleData;
 
-  return { results: adjusted, count, payload: { total } };
+  const [last, prev] = adjusted;
+  const price = last['adj_close'];
+  const prevPrice = prev['adj_close'];
+  const change = Number((((price - prevPrice) / prevPrice) * 100).toFixed(2));
+  const typeName = `stock`;
+
+  return { results: adjusted, count, payload: { total }, change, price, typeName };
 };
 
 /**

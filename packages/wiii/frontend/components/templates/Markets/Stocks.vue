@@ -1,6 +1,6 @@
 <template>
   <main class="area section">
-    <MarketList :tickers="stockTickers" />
+    <MarketList :tickers="sortedStockData" />
     <!-- 주식 관련 뉴스 리스트 -->
   </main>
 </template>
@@ -18,7 +18,7 @@ export default Vue.extend({
   components: { MarketList },
 
   computed: {
-    ...mapState(['stockTickers']),
+    ...mapState(['sortedStockData']),
   },
 });
 </script>

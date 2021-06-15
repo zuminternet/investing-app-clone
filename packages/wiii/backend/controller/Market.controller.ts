@@ -59,6 +59,7 @@ const isOptionsValidate = (options: GetHistoricalOptions): boolean => {
 /**
  * @description
  * Market data -> Client (using EventSource)
+ * /api/markets/
  */
 @Controller({ path: marketHome })
 export class MarketController {
@@ -76,6 +77,7 @@ export class MarketController {
    * @param req
    * @param res
    */
+
   @GetMapping({ path: [marketSubpaths.historical] })
   public async sendHistoricalData(req: Request, res: Response) {
     try {
@@ -136,6 +138,20 @@ export class MarketController {
     } catch (e) {
       console.error(e);
       res.sendStatus(500);
+    }
+  }
+
+  /**
+   * getAllStocks
+   * 서버에 있는 데이터 전체 전송
+   */
+  @GetMapping({ path: ['/stocks/all'] })
+  public async getAllStocks(req: Request, res: Response) {
+    try {
+      const data = await this.marketService.getAllStocks();
+      res.send(data);
+    } catch (e) {
+      console.error(e);
     }
   }
 
