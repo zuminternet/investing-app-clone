@@ -37,8 +37,7 @@ export default Vue.extend({
   },
 
   async mounted() {
-    this.repls = await this.getRandRepls();
-    this.sortText = this.sortTexts[this.sortIdx];
+    this.repls = await this.getReplsByDocID();
   },
 
   methods: {

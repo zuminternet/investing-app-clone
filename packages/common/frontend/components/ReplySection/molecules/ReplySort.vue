@@ -35,9 +35,10 @@ export default Vue.extend({
   &-button {
     width: 50px;
     background-color: rgba(245, 245, 245, 1);
-    border: 2px solid rgba(245, 245, 245, 1);
+    border: none;
     margin-left: 2px;
     font-weight: bold;
+    font-size: 0.7rem;
   }
 }
 </style>

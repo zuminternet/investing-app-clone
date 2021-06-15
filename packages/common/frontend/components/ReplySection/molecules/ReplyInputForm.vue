@@ -2,7 +2,7 @@
   <form id="reply-input" class="card" @submit.prevent="submitReply">
     <TextArea id="reply-input-text" :newText="replyText" @change-text-handler="changeReplyInput" />
     <div id="buttons">
-      <Button id="reply-input-cancel" type="reset" @click.native="cancelInput">Cancel</Button>
+      <Button id="reply-input-cancel" type="reset" @click.native="resetInput">Cancel</Button>
       <Button id="reply-input-submit" type="submit" :disabled="replyText.length === 0">Save</Button>
     </div>
   </form>
@@ -16,6 +16,7 @@ import Button from '../atoms/Button';
 export default Vue.extend({
   components: { TextArea, Button },
 
+  /** @todo 현재 종목 또는 뉴스 ID props 또는 vuex에서 가져와야 함 */
   data() {
     return {
       replyText: '',
@@ -23,7 +24,7 @@ export default Vue.extend({
   },
 
   methods: {
-    cancelInput() {
+    resetInput() {
       this.replyText = '';
       this.$emit('change-current-input', 'none');
     },
@@ -32,9 +33,13 @@ export default Vue.extend({
       this.replyText = event.target.value;
     },
 
-    submitReply() {
-      this.cancelInput();
-      alert(this.replyText);
+    async submitReply() {
+      const isInserted = await this.insertReply({ contents: this.replyText });
+      /** @todo 실패 UI */
+      if (!isInserted) return;
+
+      this.resetInput();
+      this.$emit('after-submit');
     },
   },
 });
