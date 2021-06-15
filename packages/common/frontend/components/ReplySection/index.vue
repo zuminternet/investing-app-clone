@@ -1,8 +1,13 @@
 <template>
   <section class="section">
     <ReplySort :sortText="sortText" @change-sort="changeSort" />
-    <ReplyInput v-bind="{ curInputId }" @change-current-input="changeCurInput" @after-submit="afterSubmit" />
-    <Card v-for="(repl, idx) in repls" :key="idx" v-bind="{ ...repl, curInputId }" @change-current-input="changeCurInput" />
+    <ReplyInput v-bind="{ curInputId, hasAuth }" @change-current-input="changeCurInput" @after-submit="afterSubmit" />
+    <Card
+      v-for="(repl, idx) in repls"
+      :key="idx"
+      v-bind="{ ...repl, curInputId, hasAuth }"
+      @change-current-input="changeCurInput"
+    />
   </section>
 </template>
 
@@ -19,8 +24,14 @@ export default Vue.extend({
   components: { ReplyInput, ReplySort, Card },
 
   props: {
+    /** 종목 ticker 또는 뉴스 문서 ID 입력 */
     docId: {
       type: String,
+      required: true,
+    },
+    /** 사용자 로그인 정보; 로그인 된 사용자만 댓글 달기 가능 */
+    hasAuth: {
+      type: Boolean,
       required: true,
     },
   },
@@ -41,7 +52,7 @@ export default Vue.extend({
   },
 
   methods: {
-    ...mapActions('Reply', ['getReplsByDocID']),
+    ...mapActions('reply', ['getReplsByDocID']),
 
     changeSort() {
       this.sortIdx = (this.sortIdx + 1) % 2;

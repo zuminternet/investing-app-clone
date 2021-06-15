@@ -66,6 +66,11 @@ export default Vue.extend({
     },
     curInputId: {
       type: String,
+      required: true,
+    },
+    hasAuth: {
+      type: Boolean,
+      required: true,
     },
   },
 
@@ -89,6 +94,7 @@ export default Vue.extend({
 
   methods: {
     inputToggle(id: string | number) {
+      if (!this.hasAuth) return;
       this.$emit('change-current-input', id);
     },
   },

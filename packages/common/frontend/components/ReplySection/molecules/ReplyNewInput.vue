@@ -17,6 +17,11 @@ export default Vue.extend({
   props: {
     curInputId: {
       type: String,
+      required: true,
+    },
+    hasAuth: {
+      type: Boolean,
+      required: true,
     },
   },
 
@@ -27,11 +32,6 @@ export default Vue.extend({
   },
 
   computed: {
-    /** @todo 현재 사용자 인증정보 가져오는 로직 수정 필요 */
-    hasAuth() {
-      return this.$store.getters.getAuth;
-    },
-
     isValid() {
       const { curInputId, inputId } = this;
       return this.hasAuth && curInputId === inputId;
@@ -48,7 +48,7 @@ export default Vue.extend({
 
   methods: {
     inputToggle(id) {
-      if (!this.isValid) return this.$router.push(`/user/login`);
+      if (!this.hasAuth) return this.$router.push(`/user/login`);
       this.$emit('change-current-input', id);
     },
   },
