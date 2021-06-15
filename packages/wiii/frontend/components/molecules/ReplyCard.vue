@@ -26,7 +26,7 @@
  * @see https://semantic-ui.com/views/comment.html
  */
 import Vue from 'vue';
-import { createNamespacedHelpers } from 'vuex';
+import { mapState, createNamespacedHelpers } from 'vuex';
 import Button from '@/components/atoms/Button.vue';
 import Words from '@/components/atoms/Words.vue';
 import ReplyForm from '@/components/molecules/ReplyInputForm.vue';
@@ -69,6 +69,10 @@ export default Vue.extend({
     contents: {
       type: String,
     },
+    userLike: {
+      type: Boolean,
+      default: false,
+    },
     likes: {
       type: Number,
       default: 0,
@@ -80,12 +84,14 @@ export default Vue.extend({
 
   data() {
     return {
-      liked: false,
+      liked: this.userLike,
       changableLikes: this.likes,
     };
   },
 
   computed: {
+    ...mapState(['auth']),
+
     dateString() {
       const { updatedAt } = this;
       return `'${updatedAt
@@ -111,6 +117,8 @@ export default Vue.extend({
     },
 
     toggleLikes() {
+      /** @todo 예외처리 */
+      if (!this.auth) return;
       const { replId, liked, changableLikes } = this;
       this.liked = !liked;
       this.changableLikes = liked ? changableLikes - 1 : changableLikes + 1;

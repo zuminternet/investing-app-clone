@@ -31,10 +31,10 @@ const Reply = {
       }
     },
 
-    getReplsByDocID: async (_, ticker: string) => {
+    getReplsByDocID: async ({ rootState: { auth } }, ticker: string) => {
       if (!ticker) return;
       try {
-        const results = await getRepls(ticker);
+        const results = await getRepls(ticker, auth);
         console.log({ results });
         if (!results) return;
         return results;

@@ -23,7 +23,7 @@ const refiner = (repls: object[]): IReply[] =>
   pipe(
     repls,
     (repls): IReply[] =>
-      repls.map(({ id, userThumbnail, userName, userMail, contents, updatedAt, likes }) => ({
+      repls.map(({ id, userThumbnail, userName, userMail, contents, updatedAt, likes, userLike }) => ({
         replId: id,
         userThumbnail,
         userName,
@@ -31,17 +31,18 @@ const refiner = (repls: object[]): IReply[] =>
         contents,
         updatedAt: new Date(updatedAt),
         likes,
+        userLike: userLike ?? false,
       })),
     (repls: IReply[]) => repls.sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime()),
   );
 
-export const getRepls = async (ticker: string) => {
+export const getRepls = async (ticker: string, auth: boolean) => {
   try {
     const {
       data: { results },
       status,
       statusText,
-    } = await Axios.get(`/api/reply/${ticker}`);
+    } = await Axios.get(`/api/reply/${ticker}?auth=${auth}`);
 
     if (status >= 400) throw Error(statusText);
 
