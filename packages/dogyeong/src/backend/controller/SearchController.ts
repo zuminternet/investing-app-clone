@@ -35,7 +35,7 @@ export class SearchController {
 
       if (!items) return response.sendStatus(404);
 
-      const bookmarkAdder = (item) => this.appendIsBookmarked(item, user?.email as string);
+      const bookmarkAdder = (item) => this.appendIsBookmarked(item, user.email as string);
 
       if (user?.email) items = await Promise.all(items.map(bookmarkAdder));
 

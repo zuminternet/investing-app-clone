@@ -40,7 +40,7 @@
             </tr>
             <tr>
               <td>총 시가</td>
-              <td>{{ summaryDetail.marketCap }}</td>
+              <td>{{ summaryDetail.marketCap | formatNumber }}</td>
             </tr>
             <tr>
               <td>매수가/매도가</td>
@@ -48,11 +48,11 @@
             </tr>
             <tr>
               <td>거래량</td>
-              <td>{{ summaryDetail.volume }}</td>
+              <td>{{ summaryDetail.volume | formatNumber }}</td>
             </tr>
             <tr>
               <td>평균 거래량</td>
-              <td>{{ summaryDetail.averageVolume }}</td>
+              <td>{{ summaryDetail.averageVolume | formatNumber }}</td>
             </tr>
             <tr>
               <td>이전 종가</td>
@@ -65,14 +65,31 @@
           </tbody>
         </table>
       </section>
-      <ArticleTemplate section-title="뉴스" :articles="news" url-prefix="/news/new" />
-      <ArticleTemplate section-title="의견" :articles="opinions" url-prefix="/news/new" />
+      <ArticleTemplate
+        section-title="뉴스"
+        :articles="news.data"
+        url-prefix="/news/new"
+        :isLoading="news.isLoading"
+        :isError="news.isError"
+      />
+      <ArticleTemplate
+        section-title="의견"
+        :articles="opinions.data"
+        url-prefix="/news/new"
+        :isLoading="opinions.isLoading"
+        :isError="opinions.isError"
+      />
     </main>
     <BottomNav />
   </Layout>
 </template>
 
 <script lang="ts">
+/**
+ * MarketDetail
+ *
+ * 시장의 각 종목 상세페이지
+ */
 import Vue from 'vue';
 import { getSummary, getChart } from '@/services/financeService';
 import { getNewNews, getNewOpinions } from '@/services/articleService';
@@ -83,16 +100,7 @@ import { createChart } from '@/chart';
 import ArticleTemplate from '@/components/ArticleTemplate/ArticleTemplate.vue';
 import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner.vue';
 import SearchButton from '@/components/SearchButton/SearchButton.vue';
-
-const chartLightThemeOption = {
-  bgColor: '#fafffa',
-  blueColor: 'blue',
-  redColor: 'red',
-  textColor: 'black',
-  lineFillColor: '#f0f4ff',
-  lineStrokeColor: '#84bbf3',
-  graphLineColor: '#eee',
-};
+import { chartLightThemeOption } from '@/config';
 
 export default Vue.extend({
   name: 'MarketDetail',
@@ -108,14 +116,38 @@ export default Vue.extend({
     SearchButton,
   },
 
+  filters: {
+    // 숫자를 세 자리 마다 쉼표를 넣은 문자로 변환한다 (1000 -> '1,000')
+    formatNumber(value: string | number) {
+      return value
+        .toString()
+        .split('')
+        .reverse()
+        .reduce((acc, digit, i) => {
+          if (i > 0 && i % 3 === 0) acc.push(',');
+          return [...acc, digit];
+        }, [])
+        .reverse()
+        .join('');
+    },
+  },
+
   data() {
     return {
       summaryDetail: null,
       chartData: null,
       chart: null,
       name: '',
-      news: null,
-      opinions: null,
+      news: {
+        data: [],
+        isLoading: false,
+        isError: false,
+      },
+      opinions: {
+        data: [],
+        isLoading: false,
+        isError: false,
+      },
       symbol: '',
       isChartLoading: true,
     };
@@ -150,11 +182,11 @@ export default Vue.extend({
       .catch(console.error);
 
     getNewNews({ tickers: this.symbol })
-      .then((news) => (this.news = news))
+      .then((news) => (this.news.data = news))
       .catch(console.error);
 
     getNewOpinions({ tickers: this.symbol })
-      .then((opinions) => (this.opinions = opinions))
+      .then((opinions) => (this.opinions.data = opinions))
       .catch(console.error);
   },
 

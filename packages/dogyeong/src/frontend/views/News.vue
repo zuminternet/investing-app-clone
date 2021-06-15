@@ -33,6 +33,11 @@
 </template>
 
 <script lang="ts">
+/**
+ * News
+ *
+ * [뉴스] 탭에 해당하는 뉴스/분석 리스트 페이지
+ */
 import Vue from 'vue';
 import BottomNav from '@/components/BottomNav/BottomNav.vue';
 import { Header, HeaderTitle, HeaderNav, HeaderNavItem } from '@/components/Header';

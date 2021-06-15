@@ -4,14 +4,14 @@
       <HeaderTitle>{{ headerTtile }}</HeaderTitle>
     </Header>
     <main>
-      <div class="setting-item">
+      <div :class="$style.item">
         <label> <input v-model="isDark" type="checkbox" /> 어두운 테마 </label>
       </div>
-      <button v-if="userName" class="setting-item" @click="logout">로그아웃</button>
-      <RouterLink v-else to="/login" class="setting-item">로그인</RouterLink>
+      <button v-if="userName" :class="$style.item" @click="logout">로그아웃</button>
+      <RouterLink v-else to="/login" :class="$style.item">로그인</RouterLink>
       <template v-if="userName">
-        <RouterLink v-if="!isGoogleUser" to="/change-password" class="setting-item">비밀번호 변경</RouterLink>
-        <RouterLink to="/change-username" class="setting-item">이름 변경</RouterLink>
+        <RouterLink v-if="!isGoogleUser" to="/change-password" :class="$style.item">비밀번호 변경</RouterLink>
+        <RouterLink to="/change-username" :class="$style.item">이름 변경</RouterLink>
       </template>
     </main>
     <BottomNav />
@@ -19,6 +19,11 @@
 </template>
 
 <script lang="ts">
+/**
+ * Setting
+ *
+ * [더보기] 탭에 해당하는 세팅 페이지
+ */
 import Vue from 'vue';
 import { mapState, mapMutations, mapActions } from 'vuex';
 import Layout from '@/components/Layout/Layout.vue';
@@ -59,16 +64,14 @@ export default Vue.extend({
 });
 </script>
 
-<style lang="scss" scoped>
-main {
-  .setting-item {
-    padding: 18px 12px;
-    border-bottom: 1px solid var(--border-color);
-    display: block;
-    width: 100%;
-    text-align: left;
-    font-size: 16px;
-    color: var(--text-color);
-  }
+<style lang="scss" module>
+.item {
+  padding: 18px 12px;
+  border-bottom: 1px solid var(--border-color);
+  display: block;
+  width: 100%;
+  text-align: left;
+  font-size: 16px;
+  color: var(--text-color);
 }
 </style>

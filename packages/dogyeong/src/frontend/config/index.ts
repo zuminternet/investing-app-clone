@@ -35,3 +35,13 @@ export const googleAuthInitConfig = {
 export const googleAuthOptions = { prompt: 'select_account' };
 
 export const googleAuthHeader = 'inv_google_auth';
+
+export const chartLightThemeOption = {
+  bgColor: '#fafffa',
+  blueColor: 'blue',
+  redColor: 'red',
+  textColor: 'black',
+  lineFillColor: '#f0f4ff',
+  lineStrokeColor: '#84bbf3',
+  graphLineColor: '#eee',
+};

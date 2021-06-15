@@ -26,6 +26,7 @@ li {
 
   &.active {
     color: var(--text-color);
+    border-bottom: 3px solid var(--primary-color);
   }
 }
 </style>

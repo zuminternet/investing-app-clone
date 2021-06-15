@@ -22,6 +22,8 @@ nav {
 
   .header-nav-list {
     display: flex;
+    width: 100%;
+    height: 100%;
 
     li {
       cursor: pointer;

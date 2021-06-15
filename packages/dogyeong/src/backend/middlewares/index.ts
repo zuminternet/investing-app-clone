@@ -10,7 +10,7 @@ export const getUser = (req: Request, res: Response, next: NextFunction) => {
 
   if (!token) {
     req.body.user = null;
-    next();
+    return next();
   }
 
   req.body.user = tokenService.verifyToken(token) as UserDoc;

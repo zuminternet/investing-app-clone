@@ -1,19 +1,21 @@
 <template>
   <Layout>
-    <header :class="$style.header">
-      <HeaderButton @clickHeaderButton="back">&#8592;</HeaderButton>
-      <input v-model="keyword" type="text" autofocus placeholder="종목 검색" @keypress.enter="requestSearch" />
-      <button :class="$style['search-button']" @click="requestSearch">Search</button>
+    <header class="search-header">
+      <HeaderButton @clickHeaderButton="back">🠔</HeaderButton>
+      <label>
+        <input v-model="keyword" type="text" autofocus placeholder="종목 검색" @keypress.enter="search" />
+        <span @click="search">&#128269;</span>
+      </label>
     </header>
-    <main :class="$style.main">
+    <main class="search-main">
       <LoadingSpinner v-if="isLoading" />
-      <custom-swiper :navigator-button-names="swiperNavigatorButtonNames" :class="$style.swiper">
+      <custom-swiper :navigator-button-names="swiperNavigatorButtonNames">
         <swiper-slide>
           <BookmarkList>
             <BookmarkListItem v-for="{ name, symbol, category, isBookmarked } in items" :key="symbol">
               <BookmarkListItemTitle>{{ name }}</BookmarkListItemTitle>
               <BookmarkListItemText>{{ symbol }} | {{ category }}</BookmarkListItemText>
-              <template #button>
+              <template v-if="isLoggedIn" #button>
                 <BookmarkListItemButton v-if="isBookmarked" @click="onRemoveBookmark({ items, symbol, name })">
                   &#9733;
                 </BookmarkListItemButton>
@@ -37,6 +39,11 @@
 </template>
 
 <script lang="ts">
+/**
+ * Search
+ *
+ * 검색 페이지
+ */
 import Vue from 'vue';
 import { SwiperSlide } from 'vue-awesome-swiper';
 import CustomSwiper from 'common/frontend/components/CustomSwiper.vue';
@@ -54,7 +61,6 @@ import {
   BookmarkListItemTitle,
   BookmarkListItemText,
 } from '@/components/Bookmark';
-import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner.vue';
 
 export default Vue.extend({
   name: 'Search',
@@ -87,16 +93,21 @@ export default Vue.extend({
     };
   },
 
-  computed: {},
+  computed: {
+    isLoggedIn() {
+      return this.$store.state.user.user;
+    },
+  },
 
   methods: {
-    async requestSearch() {
+    async search() {
       try {
-        if (!this.keyword) return;
+        const keyword = this.keyword;
+
+        if (!keyword) return;
 
         this.isLoading = true;
 
-        const keyword = this.keyword;
         const itemPromise = searchItems({ keyword });
         const newsPromise = searchNews({ keyword });
         const opinionPromise = searchOpinions({ keyword });
@@ -104,10 +115,10 @@ export default Vue.extend({
         this.items = await itemPromise;
         this.news = await newsPromise;
         this.opinions = await opinionPromise;
-
-        this.isLoading = false;
       } catch (e) {
-        console.error(e);
+        window.alert(e);
+      } finally {
+        this.isLoading = false;
       }
     },
     back() {
@@ -117,36 +128,53 @@ export default Vue.extend({
 });
 </script>
 
-<style lang="scss" module>
-.header {
-  padding: 6px 12px;
+<style lang="scss">
+.search-header {
+  padding: 8px 12px;
   height: 60px;
   border-bottom: 1px solid var(--border-color);
   display: flex;
+  background-color: var(--header-bg-color);
 
-  input {
+  label {
     flex: 1;
-    padding: 4px 8px;
-    appearance: none;
-    border: 0;
-    border-bottom: 1px solid var(--text-color);
-    background-color: transparent;
+    display: flex;
+    position: relative;
+
+    input {
+      flex: 1;
+      padding: 4px 8px;
+      padding-left: 40px;
+      appearance: none;
+      border: 0;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      color: var(--text-color);
+      font-size: 16px;
+      margin-left: 12px;
+      background-color: var(--header-nav-bg-color);
+    }
+
+    span {
+      position: absolute;
+      left: 22px;
+      top: calc(50% - 12px);
+      cursor: pointer;
+    }
+  }
+}
+
+.search-main {
+  position: relative;
+}
+
+.swiper-navigator {
+  border-bottom: 1px solid var(--border-color);
+
+  .navigator-button {
     color: var(--text-color);
     font-size: 16px;
+    background-color: var(--header-nav-bg-color);
   }
-}
-
-.search-button {
-  padding: 4px 8px;
-  margin-left: 12px;
-  border-radius: 8px;
-
-  &:hover {
-    background-color: var(--border-color);
-  }
-}
-
-.main {
-  position: relative;
 }
 </style>

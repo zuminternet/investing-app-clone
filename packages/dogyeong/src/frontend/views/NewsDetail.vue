@@ -11,32 +11,38 @@
         {{ headerTitle }}
       </HeaderTitle>
     </Header>
-    <main v-if="isLoading">
-      <LoadingSpinner />
-    </main>
-    <main v-else-if="isError">
-      <div :class="$style.message">Error!</div>
-    </main>
-    <main v-else>
-      <ArticleDetailSection>
-        <ArticleDetailTitle>{{ article.title }}</ArticleDetailTitle>
-        <ArticleDetailSubInfo :class="$style.sub">{{ article.source }} | {{ article.date | formatDate }}</ArticleDetailSubInfo>
-      </ArticleDetailSection>
-      <ArticleDetailSection>
-        <ArticleDetailBodyImage :src="article.image_url" />
-        <ArticleDetailBodyText>{{ article.text }}</ArticleDetailBodyText>
-      </ArticleDetailSection>
+    <main :class="$style.main">
+      <LoadingSpinner v-if="isLoading" />
+      <ErrorMessage v-else-if="isError || !article">
+        에러가 발생했습니다 :(
+        <ErrorRetryButton @click="getArticle">&#8635;</ErrorRetryButton>
+      </ErrorMessage>
+      <template v-else>
+        <ArticleDetailSection>
+          <ArticleDetailTitle>{{ article.title }}</ArticleDetailTitle>
+          <ArticleDetailSubInfo :class="$style.sub">{{ article.source }} | {{ article.date | formatDate }}</ArticleDetailSubInfo>
+        </ArticleDetailSection>
+        <ArticleDetailSection>
+          <ArticleDetailBodyImage :src="article.image_url" />
+          <ArticleDetailBodyText>{{ article.text }}</ArticleDetailBodyText>
+        </ArticleDetailSection>
+      </template>
     </main>
     <BottomNav />
   </Layout>
 </template>
 
 <script lang="ts">
+/**
+ * NewsDetail
+ *
+ * 뉴스/분석 상세페이지
+ */
 import Vue from 'vue';
 import BottomNav from '@/components/BottomNav/BottomNav.vue';
 import { Header, HeaderTitle, HeaderButton } from '@/components/Header';
 import Layout from '@/components/Layout/Layout.vue';
-import { getArticle } from '@/services/articleService';
+import * as articleService from '@/services/articleService';
 import { fromNow } from 'common/frontend/utils';
 import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner.vue';
 import SearchButton from '@/components/SearchButton/SearchButton.vue';
@@ -47,6 +53,8 @@ import {
   ArticleDetailTitle,
   ArticleDetailSubInfo,
 } from 'common/frontend/components/ArticleDetail';
+import ErrorMessage from '@/components/Error/ErrorMessage.vue';
+import ErrorRetryButton from '@/components/Error/ErrorRetryButton.vue';
 
 export default Vue.extend({
   name: 'NewsDetail',
@@ -64,12 +72,12 @@ export default Vue.extend({
     ArticleDetailBodyImage,
     ArticleDetailTitle,
     ArticleDetailSubInfo,
+    ErrorMessage,
+    ErrorRetryButton,
   },
 
   filters: {
-    formatDate(date) {
-      return fromNow(date);
-    },
+    formatDate: fromNow,
   },
 
   data() {
@@ -89,33 +97,36 @@ export default Vue.extend({
   },
 
   created() {
-    getArticle(this.params.id)
-      .then((article) => {
-        this.article = article;
-        this.isLoading = false;
-      })
-      .catch((e) => {
-        console.error(e);
-        this.isError = true;
-        this.isLoading = false;
-      });
+    this.getArticle();
   },
 
   methods: {
     back() {
       this.$router.back();
     },
+    getArticle() {
+      articleService
+        .getArticle(this.params.id)
+        .then((article) => {
+          this.article = article;
+          this.isLoading = false;
+          this.isError = false;
+        })
+        .catch(() => {
+          this.isError = true;
+          this.isLoading = false;
+        });
+    },
   },
 });
 </script>
 
 <style lang="scss" module>
-.sub {
-  border-color: var(--border-color);
+.main {
+  position: relative;
 }
 
-.message {
-  padding: 12px;
-  font-size: 18px;
+.sub {
+  border-color: var(--border-color);
 }
 </style>

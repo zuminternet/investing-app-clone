@@ -9,13 +9,18 @@
       </HeaderTitle>
     </Header>
     <main :class="$style.main">
-      <div v-if="!isLoggedIn" :class="$style.message">로그인 해주세요 :)</div>
+      <!-- 로그아웃 상태 -->
+      <ErrorMessage v-if="!isLoggedIn">로그인 해주세요 :)</ErrorMessage>
+      <!-- 로딩 상태 -->
       <LoadingSpinner v-else-if="isLoading" />
-      <div v-else-if="isError" :class="$style.message">
+      <!-- 에러 발생 시 -->
+      <ErrorMessage v-else-if="isError">
         에러가 발생했습니다! :(
-        <button :class="$style.retry" @click="fetchBookmarks">&#8635;</button>
-      </div>
-      <div v-else-if="isEmpty" :class="$style.message">관심목록이 비어있습니다 :(</div>
+        <ErrorRetryButton @click="fetchBookmarks" />
+      </ErrorMessage>
+      <!-- 목록이 비어있는 상태 -->
+      <ErrorMessage v-else-if="isEmpty">관심목록이 비어있습니다 :(</ErrorMessage>
+      <!-- 정상적으로 북마크 목록을 렌더링하는 경우 -->
       <BookmarkList v-else>
         <BookmarkListItem v-for="{ name, symbol, category, isBookmarked } in bookmarks" :key="symbol">
           <BookmarkListItemTitle>{{ name }}</BookmarkListItemTitle>
@@ -36,6 +41,11 @@
 </template>
 
 <script lang="ts">
+/**
+ * Bookmark
+ *
+ * [관심목록]탭에 해당하는 페이지
+ */
 import Vue from 'vue';
 import BottomNav from '@/components/BottomNav/BottomNav.vue';
 import { Header, HeaderTitle } from '@/components/Header';
@@ -51,6 +61,8 @@ import {
   BookmarkListItemTitle,
   BookmarkListItemText,
 } from '@/components/Bookmark';
+import ErrorMessage from '@/components/Error/ErrorMessage.vue';
+import ErrorRetryButton from '@/components/Error/ErrorRetryButton.vue';
 
 export default Vue.extend({
   name: 'Bookmark',
@@ -67,6 +79,8 @@ export default Vue.extend({
     BookmarkListItemTitle,
     BookmarkListItemText,
     LoadingSpinner,
+    ErrorMessage,
+    ErrorRetryButton,
   },
 
   mixins: [bookmarkMixin],
@@ -89,7 +103,7 @@ export default Vue.extend({
   },
 
   created() {
-    this.fetchBookmarks();
+    if (this.isLoggedIn) this.fetchBookmarks();
   },
 
   methods: {
@@ -110,23 +124,5 @@ export default Vue.extend({
 <style lang="scss" module>
 .main {
   position: relative;
-}
-
-.message {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  font-size: 22px;
-  color: var(--text-color);
-}
-
-.retry {
-  border-radius: 100%;
-  background-color: var(--app-bg-color);
-  width: 60px;
-  height: 60px;
-  margin: 20px;
 }
 </style>
