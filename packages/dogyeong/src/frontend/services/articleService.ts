@@ -1,5 +1,6 @@
 import { AxiosStatic } from 'axios';
 import { apiEndpoints } from '@/config';
+import { ArticleDoc } from 'common/backend/model/ArticleModel';
 
 declare const Axios: AxiosStatic;
 
@@ -10,33 +11,33 @@ interface Query {
 }
 
 export const getArticle = async (id: string) => {
-  const { data } = await Axios.get(`${apiEndpoints.getArticle}/${id}`);
+  const { data } = await Axios.get<ArticleDoc>(`${apiEndpoints.getArticle}/${id}`);
   return data;
 };
 
 export const getNewNews = async ({ offset = 0, limit = 5, tickers }: Query = {}) => {
-  const { data } = await Axios.get(apiEndpoints.getNewNews, {
+  const { data } = await Axios.get<ArticleDoc[]>(apiEndpoints.getNewNews, {
     params: { offset, limit, tickers },
   });
   return data;
 };
 
 export const getNewOpinions = async ({ offset = 0, limit = 5, tickers }: Query = {}) => {
-  const { data } = await Axios.get(apiEndpoints.getNewOpinions, {
+  const { data } = await Axios.get<ArticleDoc[]>(apiEndpoints.getNewOpinions, {
     params: { offset, limit, tickers },
   });
   return data;
 };
 
 export const getPopularNews = async ({ offset = 0, limit = 5, tickers }: Query = {}) => {
-  const { data } = await Axios.get(apiEndpoints.getPopularNews, {
+  const { data } = await Axios.get<ArticleDoc[]>(apiEndpoints.getPopularNews, {
     params: { offset, limit, tickers },
   });
   return data;
 };
 
 export const getPopularOpinions = async ({ offset = 0, limit = 5, tickers }: Query = {}) => {
-  const { data } = await Axios.get(apiEndpoints.getPopularOpinions, {
+  const { data } = await Axios.get<ArticleDoc[]>(apiEndpoints.getPopularOpinions, {
     params: { offset, limit, tickers },
   });
   return data;

@@ -9,27 +9,27 @@ interface GetChartProps {
   period: ChartPeriod;
 }
 
-export const getIndices = async (): Promise<EndOfDay[]> => {
-  const { data } = await Axios.get(apiEndpoints.getIndices);
+export const getIndices = async () => {
+  const { data } = await Axios.get<EndOfDay[]>(apiEndpoints.getIndices);
   return data;
 };
 
-export const getCoins = async (): Promise<EndOfDay[]> => {
-  const { data } = await Axios.get(apiEndpoints.getCoins);
+export const getCoins = async () => {
+  const { data } = await Axios.get<EndOfDay[]>(apiEndpoints.getCoins);
   return data;
 };
 
-export const getStocks = async (): Promise<EndOfDay[]> => {
-  const { data } = await Axios.get(apiEndpoints.getStocks);
+export const getStocks = async () => {
+  const { data } = await Axios.get<EndOfDay[]>(apiEndpoints.getStocks);
   return data;
 };
 
-export const getSummary = async (symbol: MarketSymbol): Promise<SummaryDetail> => {
-  const { data } = await Axios.get(`${apiEndpoints.getSummary}/${symbol}`);
+export const getSummary = async (symbol: MarketSymbol) => {
+  const { data } = await Axios.get<SummaryDetail>(`${apiEndpoints.getSummary}/${symbol}`);
   return data;
 };
 
-export const getChart = async ({ symbol, period = '1d' }: GetChartProps): Promise<HistoricalData> => {
-  const { data } = await Axios.get(`${apiEndpoints.getChart}/${symbol}`, { params: { period } });
+export const getChart = async ({ symbol, period = '1d' }: GetChartProps) => {
+  const { data } = await Axios.get<HistoricalData>(`${apiEndpoints.getChart}/${symbol}`, { params: { period } });
   return data;
 };

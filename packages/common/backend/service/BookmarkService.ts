@@ -1,5 +1,5 @@
 import { Service } from 'zum-portal-core/backend/decorator/Alias';
-import Bookmark from '../model/BookmarkModel';
+import Bookmark, { BookmarkDocument } from '../model/BookmarkModel';
 import { investing } from 'investing-com-api';
 
 import { tickerMap } from '../../domain';
@@ -116,7 +116,7 @@ export default class BookmarkService {
     }
 
     if (displayedBookmarks) {
-      return displayedBookmarks;
+      return displayedBookmarks as BookmarkDocument[];
     }
 
     return false;

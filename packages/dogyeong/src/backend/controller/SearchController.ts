@@ -8,6 +8,16 @@ import SearchkService from 'common/backend/service/SearchService';
 import { getMatchedTickers } from 'common/domain';
 import { getUser } from '../middlewares';
 
+export interface SearchItem {
+  category: string;
+  country: string | null;
+  has_eod: boolean;
+  has_intraday: boolean;
+  isBookmarked?: boolean;
+  name: string;
+  symbol: string;
+}
+
 @Controller({ path: '/api/search' })
 export class SearchController {
   constructor(
@@ -22,7 +32,9 @@ export class SearchController {
   }
 
   /**
-   * @description search page에 렌더링할 searched items들을 가져오는 메소드
+   * SearchItems
+   *
+   * search page에 렌더링할 searched items들을 가져오는 메소드
    */
   @Middleware(getUser)
   @GetMapping({ path: '/items' })
@@ -47,7 +59,9 @@ export class SearchController {
   }
 
   /**
-   * @description DB에서 articles 중 검색된 news만 가져오는 controller
+   * searchNews
+   *
+   * DB에서 articles 중 검색된 news만 가져오는 controller
    */
   @GetMapping({ path: '/news' })
   public async searchNews(request: Request, response: Response) {
@@ -64,7 +78,9 @@ export class SearchController {
   }
 
   /**
-   * @description DB에서 articles 중 검색된 opinions만 가져오는 controller
+   * searchOpinions
+   *
+   * DB에서 articles 중 검색된 opinions만 가져오는 controller
    */
   @GetMapping({ path: '/opinions' })
   public async searchOpinions(request: Request, response: Response) {
