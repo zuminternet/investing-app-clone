@@ -37,7 +37,7 @@ export default {
   },
 
   methods: {
-    ...mapActions('user', ['checkSignInOrSignOut']),
+    ...mapActions('user', ['checkSignInOrSignOut', 'createUserByEmail']),
 
     handleAuthClick() {
       this.checkSignInOrSignOut();
@@ -52,16 +52,8 @@ export default {
     },
 
     async submitForEmailRegister(event) {
-      try {
-        const { name, email, password } = event.$data;
-        const result = await createUser({ name, email, password });
-
-        if (result.status === 200) {
-          this.routerToLogin();
-        }
-      } catch (error) {
-        console.log(error);
-        alert(error);
+      if (await this.createUserByEmail(event)) {
+        this.routerToLogin();
       }
     },
   },

@@ -8,6 +8,7 @@ const state = () => ({
   userGoogleId: '',
   userBookmarks: [],
   isAuthorizedByOAuth: false,
+  isLoading: false,
 });
 
 // getter 설정
@@ -134,6 +135,21 @@ const actions = {
     }
   },
 
+  async createUserByEmail({ commit }, event) {
+    try {
+      const { name, email, password } = event.$data;
+      const isCreated = await createUser({ name, email, password });
+
+      if (isCreated) {
+        return true;
+      }
+
+      throw new Error('Creating user was failed in user store');
+    } catch (error) {
+      console.log(error);
+    }
+  },
+
   async getBookmarks({ commit, state }) {
     try {
       const email = state.userEmail;
@@ -154,6 +170,11 @@ const actions = {
 
 // mutatuons 설정
 const mutations = {
+  /**
+   * @description JWT를 통해 인증이 되었는지 판단하는 flag를 바꾸는 mutation
+   * @param state
+   * @param judge
+   */
   setIsAuthorizedByOAuth(state, judge) {
     state.isAuthorizedByOAuth = judge;
   },

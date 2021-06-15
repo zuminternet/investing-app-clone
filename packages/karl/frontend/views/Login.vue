@@ -2,7 +2,6 @@
   <div class="login-page">
     <template v-if="isEmailLogin">
       <o-auth-buttons-box :handleAuthClick="handleAuthClick" />
-
       <div class="email-login-input-form-box">
         <login-password-input-form
           :submitButtonText="emailLogin"
@@ -17,7 +16,6 @@
       <div class="zum-logo-box">
         <div class="zum-logo"></div>
       </div>
-
       <div class="login-wrapper">
         <o-auth-buttons-box :handleAuthClick="handleAuthClick"></o-auth-buttons-box>
         <div class="login-options-box">
