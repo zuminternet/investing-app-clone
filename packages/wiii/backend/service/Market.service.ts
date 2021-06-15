@@ -25,8 +25,8 @@ const resultValidator = (data, status: number, statusText: string) => {
  */
 @Service()
 export class MarketService {
-  /** @todo 개발 모드에서 30분 단위 캐싱 */
-  private delay = MINUTE_ONE * 30;
+  /** @todo 개발 모드에서 300분 단위 캐싱 */
+  private delay = MINUTE_ONE * 300;
   private lastRequest: number;
   private cachedHistory = {};
 

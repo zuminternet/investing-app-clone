@@ -8,11 +8,10 @@
 <script lang="ts">
 import Vue from 'vue';
 import Words from '../atoms/Words.vue';
-import TextArea from '../atoms/TextArea.vue';
 import ReplyForm from './ReplyInputForm.vue';
 
 export default Vue.extend({
-  components: { Words, TextArea, ReplyForm },
+  components: { Words, ReplyForm },
 
   props: {
     curInputId: {

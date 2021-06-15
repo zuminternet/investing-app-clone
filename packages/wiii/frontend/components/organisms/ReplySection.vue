@@ -65,7 +65,7 @@ export default Vue.extend({
     },
 
     async afterSubmit() {
-      this.repls = await this.getReplsByDocID();
+      this.repls = await this.getReplsByDocID(this.ticker);
     },
   },
 });

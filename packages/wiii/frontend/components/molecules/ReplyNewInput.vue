@@ -28,7 +28,7 @@ export default Vue.extend({
 
   computed: {
     hasAuth() {
-      return this.$store.getters.getAuth;
+      return this.$store.state.auth;
     },
 
     isValid() {
@@ -47,7 +47,7 @@ export default Vue.extend({
 
   methods: {
     inputToggle(id) {
-      if (!this.isValid) return this.$router.push(`/user/login`);
+      if (!this.hasAuth) return this.$router.push(`/user/login`);
       this.$emit('change-current-input', id);
     },
   },
