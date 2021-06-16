@@ -3,7 +3,7 @@ import { AxiosStatic } from 'axios';
 import { RootState } from '@/store';
 import { range } from '../../../domain/utilFunc';
 import { getRandomText, getRandomUser } from '@/services/reply/random';
-import { getRepls } from '@/services/reply';
+import { getRepls, toggleLikes } from '@/services/reply';
 
 declare const Axios: AxiosStatic;
 
@@ -12,10 +12,8 @@ interface ReplyState {}
 const Reply = {
   namespaced: true,
   state: {},
-  getters: {
-    //
-  },
-
+  getters: {},
+  mutations: {},
   actions: {
     insertReply: async ({ rootGetters: { getTicker, getAuth, getEmail } }, { contents }) => {
       try {
@@ -33,9 +31,10 @@ const Reply = {
       }
     },
 
-    getReplsByDocID: async ({ commit, rootGetters: { getTicker } }) => {
+    getReplsByDocID: async ({ rootState: { auth } }, ticker: string) => {
+      if (!ticker) return;
       try {
-        const results = await getRepls(getTicker);
+        const results = await getRepls(ticker, auth);
         console.log({ results });
         if (!results) return;
         return results;
@@ -93,7 +92,16 @@ const Reply = {
         return console.error(e);
       }
     },
-  },
+
+    toggleLikesAction: (_, replId: string) => {
+      if (!replId) return false;
+      try {
+        toggleLikes(replId);
+      } catch (e) {
+        return console.error(e);
+      }
+    },
+  } /** actions */,
 } as Module<ReplyState, RootState>;
 
 export default Reply;

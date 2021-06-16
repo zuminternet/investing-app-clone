@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import Button from '@/components/atoms/Button.vue';
+import Button from '../atoms/Button.vue';
 
 export default Vue.extend({
   name: 'ReplySort',

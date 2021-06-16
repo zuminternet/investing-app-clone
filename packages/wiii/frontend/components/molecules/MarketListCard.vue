@@ -11,10 +11,12 @@
         <Words class="tickerName"> {{ tickerName }}</Words>
         <Words class="ticker"> ({{ ticker }}) </Words>
       </div>
-      <Words class="market-list-card-info-price"> 현재가 {{ currPrice }}원 {{ changeEmoji }} </Words>
-      <Words class="market-list-card-info-text">
-        전일대비 {{ changeSign }}&nbsp;{{ changePrice }}원 / {{ changeSign }} {{ changePercent }} {{ changeText }}
-      </Words>
+      <div class="market-list-card-info-change noselect">
+        <Words class="market-list-card-info-price"> 현재가 {{ currPrice }}원 {{ changeEmoji }} </Words>
+        <Words class="market-list-card-info-text">
+          전일대비 {{ changeSign }}&nbsp;{{ changePrice }}원 / {{ changeSign }} {{ changePercent }} {{ changeText }}
+        </Words>
+      </div>
     </div>
     <Chart v-bind="{ typeName, ticker }" />
   </Link>
@@ -105,6 +107,7 @@ export default Vue.extend({
     padding: 10px 30px;
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
     background-color: $grey-100;
@@ -119,32 +122,35 @@ export default Vue.extend({
   &-info {
     min-height: 70px;
     display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    padding-left: $margin-padding-15;
+    flex-direction: row;
+    justify-content: flex-end;
+    overflow: visible;
+    white-space: nowrap;
 
     &-ticker {
+      width: 200px;
       display: flex;
-      flex-direction: row;
+      flex-direction: column;
       justify-content: flex-start;
-      align-items: baseline;
-      line-height: 1.3rem;
 
       .tickerName {
-        width: max-content;
-        padding-right: 5px;
+        padding-bottom: 15px;
         font-weight: bolder;
         font-size: 1.3rem;
-        text-align: left;
-        text-shadow: none;
       }
 
       .ticker {
-        width: 50px;
         font-weight: normal;
         font-size: 0.8rem;
-        text-align: right;
+        vertical-align: baseline;
       }
+    }
+
+    &-change {
+      width: 250px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
     }
 
     &-price {

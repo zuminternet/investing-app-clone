@@ -10,8 +10,8 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import TextArea from '../atoms/TextArea';
-import Button from '../atoms/Button';
+import TextArea from '../atoms/TextArea.vue';
+import Button from '../atoms/Button.vue';
 
 export default Vue.extend({
   components: { TextArea, Button },

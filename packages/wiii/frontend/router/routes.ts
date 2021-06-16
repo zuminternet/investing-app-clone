@@ -12,17 +12,23 @@ export default [
     component: () => import('@/views/Markets.vue'),
     children: [
       { path: 'stocks', component: () => import('@/components/templates/Markets/Stocks.vue') },
-      { path: 'stocks/:ticker', component: () => import('@/components/templates/Markets/StocksDetail.vue') },
+      { path: 'stocks/:ticker', component: () => import('@/components/templates/Markets/StocksDetail.vue'), props: true },
       { path: 'indexes', component: () => import('@/components/templates/Markets/Indexes.vue') },
-      { path: 'indexes/:ticker', component: () => import('@/components/templates/Markets/IndexesDetail.vue') },
+      { path: 'indexes/:ticker', component: () => import('@/components/templates/Markets/IndexesDetail.vue'), props: true },
       { path: 'coins', component: () => import('@/components/templates/Markets/Coins.vue') },
-      { path: 'coins/:ticker', component: () => import('@/components/templates/Markets/CoinsDetail.vue') },
+      { path: 'coins/:ticker', component: () => import('@/components/templates/Markets/CoinsDetail.vue'), props: true },
     ],
   },
   {
     path: '/news/',
-    name: views.News,
+    /** 뉴스 리스트 */
     component: () => import('@/views/News.vue'),
+    children: [
+      /**  뉴스 상세 페이지 */
+      { path: ':newsid', component: () => import('@/components/templates/News/Detail.vue'), props: true },
+      /** 뉴스 홈; 뉴스 리스트 */
+      { path: '', component: () => import('@/components/templates/News/index.vue') },
+    ],
   },
   {
     path: paths.User,
@@ -34,12 +40,8 @@ export default [
     ],
   },
   {
-    path: paths.Home,
-    name: views.Home,
-    component: Home,
-  },
-  {
     path: '*',
+    name: views.Home,
     component: Home,
   },
 ];

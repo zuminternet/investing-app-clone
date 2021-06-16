@@ -1,10 +1,20 @@
 <template>
-  <section class="section">News 기사 영역</section>
+  <section class="section">
+    <Card>
+      News 기사 영역
+    </Card>
+    <Card>
+      News 기사 영역
+    </Card>
+    <Card>
+      News 기사 영역
+    </Card>
+  </section>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import Card from '@/components/molecules/Card';
+import Card from '@/components/molecules/Card.vue';
 
 export default Vue.extend({
   name: 'ReplySection',

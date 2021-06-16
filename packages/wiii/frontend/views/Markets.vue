@@ -37,26 +37,5 @@ export default Vue.extend({
       titleText: viewsTitle.Markets,
     };
   },
-
-  props: {
-    /** router에서 받는 props */
-    type: {
-      type: String,
-      default: 'stocks',
-    },
-    ticker: {
-      type: [String, Number],
-      default: '005930',
-    },
-  },
-
-  beforeMount() {
-    this[RootActions.SET_CURRENT_TICKER](this.ticker);
-    console.assert(this.getTicker === this.ticker);
-  },
-
-  methods: {
-    ...mapActions([RootActions.SET_CURRENT_TICKER]),
-  },
 });
 </script>

@@ -4,7 +4,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { mapState, createNamespacedHelpers } from 'vuex';
+import { createNamespacedHelpers } from 'vuex';
 import EsService from '@/services/chart/eventSource';
 import { TimespanEnum } from '@/type/apis';
 import { CanvasOptionEnum, MAColorEnum } from '@/type/chart';
@@ -42,7 +42,10 @@ export default Vue.extend({
       required: true,
       default: 'stock',
     },
-
+    ticker: {
+      type: String,
+      required: true,
+    },
     multiplier: {
       type: Number,
       default: 1 /** MarketStack => default 1hour => 24hour로  */,
@@ -117,7 +120,6 @@ export default Vue.extend({
   },
 
   computed: {
-    ...mapState(['ticker']),
     ...mapGetters(['hasStockData']),
 
     queryString(): GetHistoricalOptions {

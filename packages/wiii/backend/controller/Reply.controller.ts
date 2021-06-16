@@ -28,7 +28,9 @@ export class ReplyController {
     try {
       // jwt 인증 확인
       const token = cookies[TOKEN_COOKIE_KEY];
-      if (!verifyToken(token)) throw postReplyError();
+      /** @example { data: '123123@mail.com', iat: 1623767527, exp: 1623774727 } */
+      const { data } = verifyToken(token);
+      if (!data) throw postReplyError();
 
       const result = await this.replyService.createReply({ ...body });
       if (!result) throw postReplyError();
@@ -45,19 +47,49 @@ export class ReplyController {
    * @todo
    */
   @GetMapping({ path: '/:docId' })
-  public async getReplsByDoc({ params: { docId } }: Request, res: Response) {
+  public async getReplsByDoc({ params: { docId }, query, cookies }: Request, res: Response) {
     const getReplsError = () => this.error(`Get Replies`, this.getReplsByDoc.name);
     try {
-      console.log({ docId });
       if (!docId) throw getReplsError();
 
-      const results = await this.replyService.getAllReplsByDocId(docId);
+      let email;
+      if (query.auth !== 'false') {
+        const token = cookies[TOKEN_COOKIE_KEY];
+        const verified = verifyToken(token);
+        email = verified.data;
+      }
+
+      const results = await this.replyService.getAllReplsByDocId(docId, email);
       if (!results) throw getReplsError();
 
       res.status(200).json({ message: 'Success to Get All Replies', results });
     } catch (e) {
       console.error(e);
       res.status(400).send({ message: `Fail to Get All Replies: ${e.message}` });
+    }
+  }
+
+  /**
+   * 좋아요 버튼 api
+   * @description
+   * 기존에 좋아요가 된 경우 해제, 신규 좋아요인 경우 등록
+   * - body: replId
+   */
+  @PostMapping({ path: '/likes' })
+  public async postLikes({ cookies, body: { replId } }: Request, res: Response) {
+    const postLikesError = () => this.error(`Post Likes`, this.postLikes.name);
+    try {
+      const token = cookies[TOKEN_COOKIE_KEY];
+      const { data } = verifyToken(token);
+      if (!data) throw postLikesError();
+
+      const result = await this.replyService.toggleLike({ replId, email: data });
+      if (!result) throw postLikesError();
+
+      res.json({ message: 'Success to add a new Like' });
+    } catch (e) {
+      console.error(e);
+      res.status(500).send({ message: `Fail to add a new Like: ${e}` });
     }
   }
 }

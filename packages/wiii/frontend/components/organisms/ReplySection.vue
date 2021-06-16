@@ -2,17 +2,24 @@
   <section class="section">
     <ReplySort @change-sort="changeSort" :sortText="sortText" />
     <ReplyInput v-bind="{ curInputId }" @change-current-input="changeCurInput" @after-submit="afterSubmit" />
-    <Card v-for="(repl, idx) in repls" :key="idx" v-bind="{ ...repl, curInputId }" @change-current-input="changeCurInput" />
+    <Card
+      v-for="{ replId, ...repl } in repls"
+      :key="replId"
+      v-bind="{ ...repl, replId, curInputId }"
+      @change-current-input="changeCurInput"
+    />
   </section>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import { mapActions } from 'vuex';
+import { createNamespacedHelpers } from 'vuex';
 import ReplyInput from '@/components/molecules/ReplyNewInput.vue';
 import ReplySort from '@/components/molecules/ReplySort.vue';
 import Card from '@/components/molecules/ReplyCard.vue';
 import { StoreNames } from '@/store';
+
+const { mapActions } = createNamespacedHelpers(StoreNames.Reply);
 
 export default Vue.extend({
   name: 'ReplySection',
@@ -38,11 +45,11 @@ export default Vue.extend({
 
   async mounted() {
     this.sortText = this.sortTexts[this.sortIdx];
-    this.repls = await this.getReplsByDocID();
+    this.repls = await this.getReplsByDocID(this.ticker);
   },
 
   methods: {
-    ...mapActions(StoreNames.Reply, ['getRandomRepls', 'getReplsByDocID']),
+    ...mapActions(['getRandomRepls', 'getReplsByDocID']),
 
     async getRandRepls() {
       try {
@@ -65,7 +72,7 @@ export default Vue.extend({
     },
 
     async afterSubmit() {
-      this.repls = await this.getReplsByDocID();
+      this.repls = await this.getReplsByDocID(this.ticker);
     },
   },
 });
