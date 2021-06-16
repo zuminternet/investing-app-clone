@@ -16,15 +16,23 @@ export class ReplyController {
    */
   @GetMapping({ path: ['/:docId'] })
   public async getReplies(req: Request, res: Response) {
-    const { docId } = req.params;
-    const replies = (await this.replyService.getAllReplsByDocId(docId)) ?? [];
-    res.json({ results: replies });
+    try {
+      const { docId } = req.params;
+      const replies = (await this.replyService.getAllReplsByDocId(docId)) ?? [];
+      res.json({ results: replies });
+    } catch (err) {
+      res.status(500).json({ err: err.message ?? err });
+    }
   }
 
   @Middleware(getUser)
   @PostMapping({ path: ['/'] })
   public async createReply(req: Request, res: Response) {
-    // await this.replyService.createReply()
-    // return
+    try {
+      // await this.replyService.createReply()
+      res.json();
+    } catch (err) {
+      res.status(500).json({ err: err.message ?? err });
+    }
   }
 }
