@@ -32,7 +32,7 @@ const actions = {
    * 댓글 목록 조회
    * @param 종목 티커 또는 뉴스 id 로 조회
    */
-  getRepls: async (_, { docId }) => {
+  getReplsByDocID: async (_, { docId }) => {
     try {
       const repls = await getReplsByDocID(docId);
       return repls;

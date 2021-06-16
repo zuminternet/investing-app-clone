@@ -180,7 +180,6 @@ const getBookmarks = async (email: string) => {
   throw new Error('Getting bookmarks was failed in front api');
 };
 
-
 /**
  * 댓글 추가 API
  * email, 종목 또는 뉴스 Id 가져오는 방법은 개발자 특성에 따라 구현
@@ -240,14 +239,4 @@ export const getReplsByDocID = async (docId: string) => {
   }
 };
 
-export {
-  getSearchedAnalyses,
-  getSearchedItems,
-  getItemDetail,
-  getNews,
-  getAnalyses,
-  createBookmark,
-  getBookmarks,
-  deleteBookmark,
-  getSearchedNews,
-}
+export { getSearchedItems, getItemDetail, getNews, getAnalyses, createBookmark, getBookmarks, deleteBookmark };
