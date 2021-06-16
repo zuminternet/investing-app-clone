@@ -8,11 +8,12 @@
           <th @click="$emit('clickDiffTab')">전일대비{{ sortByDiff | formatSortText }}</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody ref="tbody">
         <RouterLink
           v-for="{ display_name, symbol, date, diff, growthRate, close, exchange } in listData"
           :key="symbol"
           :to="`/market/stock/${symbol}`"
+          :data-symbol="symbol"
         >
           <tr>
             <td>
@@ -85,6 +86,28 @@ export default Vue.extend({
     },
   },
 
+  watch: {
+    listData(newList, oldList) {
+      newList.forEach((newVal, idx) => {
+        const oldVal = oldList[idx];
+        const $el = document.querySelector(`a[data-symbol="${newVal.symbol}"]`);
+
+        if (!$el) return;
+
+        const diff = newVal.diff - oldVal.diff;
+
+        if (diff > 0) $el.classList.add('red');
+        if (diff < 0) $el.classList.remove('blue');
+      });
+    },
+  },
+
+  mounted() {
+    this.$refs.tbody.addEventListener('animationend ', (e) => {
+      console.log(e);
+    });
+  },
+
   methods: {
     getColorClass(value: number) {
       if (value > 0) return 'red';
@@ -146,6 +169,25 @@ table {
     &.blue {
       color: var(--blue-color);
     }
+  }
+}
+
+.red {
+  animation-name: backgroundColorPalette;
+  animation-duration: 0.5s;
+  animation-iteration-count: 1;
+  animation-direction: alternate;
+}
+
+@keyframes backgroundColorPalette {
+  0% {
+    background: transparent;
+  }
+  50% {
+    background: red;
+  }
+  100% {
+    background: transparent;
   }
 }
 </style>
