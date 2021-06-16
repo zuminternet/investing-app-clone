@@ -51,7 +51,8 @@
       </swiper-slide>
       <swiper-slide>
         <list-wrapper :excludedHeight="210">
-          <news-list>
+          <loading v-if="newsIsLoading"></loading>
+          <news-list v-else>
             <news-list-item v-for="element in news" :key="element.id" :to="''">
               <news-image class="news-image-align" :src="element.image_url" />
               <news-text-box>
@@ -64,7 +65,8 @@
       </swiper-slide>
       <swiper-slide>
         <list-wrapper :excludedHeight="210">
-          <news-list>
+          <loading v-if="analysesIsLoading"></loading>
+          <news-list v-else>
             <news-list-item v-for="element in analyses" :key="element.id" :to="''">
               <news-image class="news-image-align" :src="element.image_url" />
               <news-text-box>

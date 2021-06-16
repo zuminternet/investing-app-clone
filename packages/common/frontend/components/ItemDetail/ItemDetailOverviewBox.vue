@@ -14,7 +14,6 @@
 <script>
 import ItemDetailOverviewRow from './ItemDetailOverviewRow.vue';
 import Loading from 'karl/frontend/components/Loading.vue';
-import { isEmptyObject } from '../../utils';
 
 import { text } from '../../constants';
 
@@ -53,10 +52,6 @@ export default {
         [LOW, low],
       ];
     },
-  },
-
-  methods: {
-    isEmptyObject,
   },
 };
 </script>

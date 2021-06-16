@@ -38,8 +38,6 @@ import CustomText from '../CustomText.vue';
 import EmptySpace from '../karl/EmptySpace.vue';
 import Loading from 'karl/frontend/components/Loading.vue';
 
-import { isEmptyObject } from '../../utils';
-
 export default {
   name: 'ItemDetailPriceBox',
   components: {
@@ -88,10 +86,6 @@ export default {
     // currency() {
     //   return this.itemDetail.currency;
     // },
-  },
-
-  methods: {
-    isEmptyObject,
   },
 };
 </script>

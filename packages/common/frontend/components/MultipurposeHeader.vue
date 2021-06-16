@@ -90,7 +90,6 @@ import HeaderButton from '../components/HeaderButton.vue';
 import Loading from 'karl/frontend/components/Loading.vue';
 
 import { text } from '../constants';
-import { isEmptyObject } from '../utils';
 
 export default {
   name: 'MultipurposeHeader',
@@ -135,7 +134,7 @@ export default {
 
     isLoading: {
       type: Boolean,
-      required: true,
+      default: false,
     },
 
     itemDetail: {
@@ -191,8 +190,6 @@ export default {
 
   methods: {
     ...mapActions('search', ['getSearchedItems', 'getSearchedNews', 'getSearchedAnalyses']),
-
-    isEmptyObject,
 
     requestSearch(event) {
       const keyword = event.target.value;
