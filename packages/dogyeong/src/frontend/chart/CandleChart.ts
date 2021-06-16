@@ -104,7 +104,7 @@ export default class CandleChart {
       <tr>
         <td></td><td style="width: 88px;"></td>
       </tr>
-      <tr style="height: 60px;">
+      <tr style="height: 30px;">
         <td></td><td style="width: 88px;"></td>
       </tr>
     `;

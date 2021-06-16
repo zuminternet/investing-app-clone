@@ -29,7 +29,10 @@ const timeUnit = {
   year: 31536000000,
 } as const;
 
-type TimeUnit = typeof timeUnit[keyof typeof timeUnit];
+type TimeUnit = {
+  month: number;
+  day: number;
+};
 
 export default class TimeAxis extends Canvas {
   private minTime: number;
@@ -50,7 +53,16 @@ export default class TimeAxis extends Canvas {
     return this.canvas.getContext('2d');
   }
 
-  public draw(candles, firstCandleIndex, lastCandleIndex) {
+  // Date 객체를 받아서 year, month, date 객체로 반환
+  private getFullDate(date: Date) {
+    return {
+      y: date.getFullYear(),
+      m: date.getMonth() + 1,
+      d: date.getDate(),
+    };
+  }
+
+  public draw(candles: Candle[], firstCandleIndex, lastCandleIndex) {
     if (firstCandleIndex < 0 || lastCandleIndex < 0) return;
 
     this.minTime = new Date(candles[firstCandleIndex].date).getTime();
@@ -63,8 +75,9 @@ export default class TimeAxis extends Canvas {
 
     const visibleCandles = candles.slice(firstCandleIndex, lastCandleIndex + 1);
 
-    this.timeLines = visibleCandles.reduce((res, candle) => {
-      const timeLine = this.getTimeLine(candle);
+    this.timeLines = visibleCandles.reduce((res, candle, idx) => {
+      const prevCandle = visibleCandles[idx - 1] ?? null;
+      const timeLine = this.getTimeLine(prevCandle, candle);
       if (timeLine) res.push(timeLine);
       return res;
     }, []);
@@ -74,21 +87,31 @@ export default class TimeAxis extends Canvas {
     this.publish(this.timeLines);
   }
 
-  private getTimeLine(candle: Candle) {
-    const date = new Date(candle.date);
-    const m = date.getMonth() + 1;
-    const d = date.getDate();
-    const { year, month } = timeUnit;
+  private getTimeLine(prevCandle: Candle | null, candle: Candle) {
+    if (!prevCandle) return;
 
-    /** @TODO 날짜 체크 어떻게 함? */
-    if (this.timeGapUnit === year && (m !== 1 || d !== 1)) return;
-    if (this.timeGapUnit === month && d !== 1) return;
-    if (![1, 10, 20].includes(d)) return;
+    const prev = this.getFullDate(new Date(prevCandle.date));
+    const current = this.getFullDate(new Date(candle.date));
 
-    return {
-      x: candle.wickCenter,
-      text: date.toLocaleDateString(),
-    };
+    if (prev.y !== current.y) {
+      return {
+        x: candle.wickCenter,
+        text: current.y,
+      };
+    }
+
+    const isFirstDayOfMonth = prev.m !== current.m;
+    const shouldDisplay = current.m % Math.floor(12 / this.timeGapUnit.month) === 0;
+    const exceptLastMonth = !(this.timeGapUnit.month <= 4 && current.m === 12);
+
+    if (isFirstDayOfMonth && shouldDisplay && exceptLastMonth) {
+      return {
+        x: candle.wickCenter,
+        text: current.m + '월',
+      };
+    }
+
+    return;
   }
 
   private drawTime({ ctx, timeLine: { x, text } }: DrawTimeProps) {
@@ -98,11 +121,7 @@ export default class TimeAxis extends Canvas {
       ctx.font = this.font;
       ctx.textBaseline = this.textBaseline;
       ctx.textAlign = this.textAlign;
-      ctx.beginPath();
-      ctx.moveTo(x, 0);
-      ctx.lineTo(x, 20);
-      ctx.stroke();
-      ctx.fillText(text, x, 35);
+      ctx.fillText(text, x, 15);
     });
   }
 
@@ -119,10 +138,18 @@ export default class TimeAxis extends Canvas {
   }
 
   private getTimeGapUnit(): TimeUnit {
-    const { year, month, day } = timeUnit;
-    const diff = this.maxTime - this.minTime;
-    if (diff < year / 4) return day;
-    if (diff < year) return month;
-    return year;
+    const { year } = timeUnit;
+    // 화면 너비 200px 동안의 기간
+    const diffe = this.maxTime - this.minTime;
+    const period = (200 * diffe) / this.width;
+    const periodYear = period / year;
+
+    if (periodYear > 1) return { month: -1, day: 0 };
+    if (periodYear > 0.8) return { month: 2, day: 0 };
+    if (periodYear > 0.6) return { month: 3, day: 0 };
+    if (periodYear > 0.4) return { month: 4, day: 0 };
+    if (periodYear > 0.2) return { month: 6, day: 0 };
+    if (periodYear > 0.1) return { month: 12, day: 0 };
+    return { month: 12, day: 2 };
   }
 }
