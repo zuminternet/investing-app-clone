@@ -10,6 +10,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import { mapActions } from 'vuex';
 import TextArea from '../atoms/TextArea.vue';
 import Button from '../atoms/Button.vue';
 
@@ -24,6 +25,8 @@ export default Vue.extend({
   },
 
   methods: {
+    ...mapActions('reply', ['insertReply']),
+
     resetInput() {
       this.replyText = '';
       this.$emit('change-current-input', 'none');
