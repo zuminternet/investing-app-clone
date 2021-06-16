@@ -1,9 +1,9 @@
 <template>
-  <loading v-if="isLoading"></loading>
-  <error v-else-if="isError"></error>
-  <div v-else class="home-page">
+  <div class="home-page">
     <multipurpose-header isHome></multipurpose-header>
-    <custom-swiper :navigatorButtonNames="swiperNavigatorButtonNames">
+    <loading v-if="isLoading"></loading>
+    <error v-else-if="isError"></error>
+    <custom-swiper v-else :navigatorButtonNames="swiperNavigatorButtonNames">
       <swiper-slide v-for="(items, index) in itemCollections" :key="index">
         <item-card-list :items="items" :excludedHeight="150" isHome></item-card-list>
       </swiper-slide>

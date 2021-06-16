@@ -1,34 +1,37 @@
 <template>
   <div>
-    <div>
-      <canvas ref="graph" :width="canvasWidth" :height="canvasHeight"></canvas>
-      <y-axis
-        :valueData="valueData"
-        :graphBoxHeight="graphBoxHeight"
-        :canvasHeight="canvasHeight"
-        :canvasWidth="yAxisWidth"
-        :floorValue="floorValue"
-        :graphBoxMargin="graphBoxMargin"
-        :currentValue="currentValue"
-        :currentHeight="currentHeight"
-        :selectedHeight="selectedHeight"
-        :selectedValue="selectedValue"
-      ></y-axis>
-    </div>
+    <loading v-if="isLoading" :loadingHeight="340"></loading>
+    <div v-show="!isLoading">
+      <div>
+        <canvas ref="graph" :width="canvasWidth" :height="canvasHeight"></canvas>
+        <y-axis
+          :valueData="valueData"
+          :graphBoxHeight="graphBoxHeight"
+          :canvasHeight="canvasHeight"
+          :canvasWidth="yAxisWidth"
+          :floorValue="floorValue"
+          :graphBoxMargin="graphBoxMargin"
+          :currentValue="currentValue"
+          :currentHeight="currentHeight"
+          :selectedHeight="selectedHeight"
+          :selectedValue="selectedValue"
+        ></y-axis>
+      </div>
 
-    <x-axis
-      :timeData="timeData"
-      :unitWidth="unitWidth"
-      :startIndex="startIndex"
-      :graphBoxMargin="graphBoxMargin"
-      :canvasWidth="canvasWidth + yAxisWidth"
-    ></x-axis>
-    <chart-menu
-      :canvasWidth="canvasWidth + yAxisWidth"
-      :isCandle="isCandle"
-      :period="period"
-      @handle-chart-menu-button-click="handleChartMenuButtonClick"
-    />
+      <x-axis
+        :timeData="timeData"
+        :unitWidth="unitWidth"
+        :startIndex="startIndex"
+        :graphBoxMargin="graphBoxMargin"
+        :canvasWidth="canvasWidth + yAxisWidth"
+      ></x-axis>
+      <chart-menu
+        :canvasWidth="canvasWidth + yAxisWidth"
+        :isCandle="isCandle"
+        :period="period"
+        @handle-chart-menu-button-click="handleChartMenuButtonClick"
+      />
+    </div>
   </div>
 </template>
 
@@ -36,6 +39,8 @@
 import XAxis from './XAxis.vue';
 import YAxis from './YAxis.vue';
 import ChartMenu from './ChartMenu.vue';
+import Loading from '../components/Loading.vue';
+
 import { getHistoricalData } from '../apis';
 
 export default {
@@ -44,6 +49,7 @@ export default {
     XAxis,
     YAxis,
     ChartMenu,
+    Loading,
   },
 
   props: {
@@ -86,6 +92,7 @@ export default {
       tpCache: [],
       isCandle: true,
       period: 'd',
+      isLoading: false,
     };
   },
 
@@ -128,6 +135,32 @@ export default {
   },
 
   methods: {
+    getCeilAndFloorValue() {
+      let ceilValue = Number.MIN_VALUE;
+      let floorValue = Number.MAX_VALUE;
+
+      for (let i = 0; i < this.data.length; i++) {
+        let { close: value } = this.data[i];
+
+        ceilValue = Math.max(ceilValue, value);
+        floorValue = Math.min(floorValue, value);
+      }
+
+      const diff = ceilValue - floorValue;
+      ceilValue = ceilValue + 5 * 10 ** (parseInt(Math.log10(diff)) - 1);
+      floorValue = floorValue - 5 * 10 ** (parseInt(Math.log10(diff)) - 1);
+
+      if (floorValue < 0) {
+        floorValue = 0;
+      }
+
+      return { ceilValue, floorValue };
+    },
+
+    setIsloading(isLoading) {
+      this.isLoading = isLoading;
+    },
+
     drawGraphBox() {
       this.ctx.strokeStyle = this.graphBoxColor;
       this.ctx.strokeRect(this.graphBoxMargin, this.graphBoxMargin, this.graphBoxWidth, this.graphBoxHeight);
@@ -235,28 +268,6 @@ export default {
       this.ctx.setLineDash([]);
 
       this.ctx.globalAlpha = 1.0;
-    },
-
-    getCeilAndFloorValue() {
-      let ceilValue = Number.MIN_VALUE;
-      let floorValue = Number.MAX_VALUE;
-
-      for (let i = 0; i < this.data.length; i++) {
-        let { close: value } = this.data[i];
-
-        ceilValue = Math.max(ceilValue, value);
-        floorValue = Math.min(floorValue, value);
-      }
-
-      const diff = ceilValue - floorValue;
-      ceilValue = ceilValue + 5 * 10 ** (parseInt(Math.log10(diff)) - 1);
-      floorValue = floorValue - 5 * 10 ** (parseInt(Math.log10(diff)) - 1);
-
-      if (floorValue < 0) {
-        floorValue = 0;
-      }
-
-      return { ceilValue, floorValue };
     },
 
     drawVerticalLines() {
@@ -502,7 +513,9 @@ export default {
   },
 
   async mounted() {
+    this.setIsloading(true);
     await this.getHistoricalDataForPeriod(this.period);
+    this.setIsloading(false);
 
     this.endIndex = this.data.length - 1;
     this.startIndex = 0;
@@ -535,7 +548,10 @@ export default {
     },
 
     async period() {
+      this.setIsloading(true);
       await this.getHistoricalDataForPeriod(this.period);
+      this.setIsloading(false);
+
       this.endIndex = this.data.length - 1;
       this.startIndex = 0;
 
