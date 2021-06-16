@@ -8,9 +8,9 @@ export const getAllStocks = async () => {
   return data;
 };
 
-export const getStocksByTicker = async (tickers: string[]) => {
+export const getStocksByTicker = async (tickers: string) => {
   const { data, status, statusText } = await Axios.get(`/api/markets/stocks`, {
-    params: { stocks: tickers.join(`-`) },
+    params: { stocks: tickers },
   });
   if (status >= 400) throw Error(statusText);
 
