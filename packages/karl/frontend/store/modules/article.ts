@@ -5,6 +5,9 @@ import { tickerMap } from '../../../../common/domain';
 const state = () => ({
   news: [],
   articleDetail: {},
+
+  newsIsLoading: false,
+  newsIsError: false,
 });
 
 // getter 설정
@@ -68,6 +71,10 @@ const actions = {
       console.log(error);
     }
   },
+
+  async setNewsIsLoading({ commit }, isLoading) {
+    commit('setNewsIsLoading', isLoading);
+  },
 };
 
 // mutatuons 설정
@@ -77,6 +84,10 @@ const mutations = {
   },
   setArticleDetail(state, article) {
     state.articleDetail = article;
+  },
+
+  setNewsIsLoading(state, isLoading) {
+    state.newsIsLoading = isLoading;
   },
 };
 

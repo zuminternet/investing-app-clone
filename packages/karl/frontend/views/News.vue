@@ -4,7 +4,8 @@
     <custom-swiper :navigatorButtonNames="swiperNavigatorButtonNames">
       <swiper-slide v-if="news.length">
         <list-wrapper :excludedHeight="150">
-          <news-list>
+          <loading v-if="newsIsLoading" />
+          <news-list v-else>
             <news-headline v-if="firstNews" @handle-click="routeToNewsDetail" :id="firstNews._id">
               <news-image :src="firstNews.image_url" />
               <news-text-box>
@@ -31,7 +32,8 @@
       </swiper-slide>
       <swiper-slide v-if="news.length">
         <list-wrapper :excludedHeight="150">
-          <news-list>
+          <loading v-if="newsIsLoading" />
+          <news-list v-else>
             <news-headline v-if="firstNews" @handle-click="routeToNewsDetail" :id="firstNews._id">
               <news-image :src="firstNews.image_url" />
               <news-text-box>
@@ -58,7 +60,8 @@
       </swiper-slide>
       <swiper-slide v-if="stockNews.length">
         <list-wrapper :excludedHeight="150">
-          <news-list>
+          <loading v-if="newsIsLoading" />
+          <news-list v-else>
             <news-headline v-if="stockNews[0]" @handle-click="routeToNewsDetail" :id="stockNews[0]._id">
               <news-image :src="stockNews[0].image_url" />
               <news-text-box>
@@ -85,7 +88,8 @@
       </swiper-slide>
       <swiper-slide v-if="cryptoNews.length">
         <list-wrapper :excludedHeight="150">
-          <news-list>
+          <loading v-if="newsIsLoading" />
+          <news-list v-else>
             <news-headline v-if="cryptoNews[0]" @handle-click="routeToNewsDetail" :id="stockNews[0]._id">
               <news-image :src="cryptoNews[0].image_url" />
               <news-text-box>
@@ -125,6 +129,7 @@ import NewsTextBox from '../../../common/frontend/components/News/NewsTextBox.vu
 import NewsTextBoxDesc from '../../../common/frontend/components/News/NewsTextBoxDesc.vue';
 import NewsTextBoxTitle from '../../../common/frontend/components/News/NewsTextBoxTitle.vue';
 import ListWrapper from '../../../common/frontend/components/ListWrapper.vue';
+import Loading from 'karl/frontend/components/Loading.vue';
 
 import { text } from '../../../common/frontend/constants';
 
@@ -143,11 +148,14 @@ export default {
     NewsTextBoxDesc,
     NewsTextBoxTitle,
     ListWrapper,
+    Loading,
   },
 
   computed: {
     ...mapState({
       news: (state) => state.article.news,
+      newsIsLoading: (state) => state.article.newsIsLoading,
+      userInfo: (state) => state.user,
     }),
 
     ...mapGetters('article', {
@@ -170,15 +178,22 @@ export default {
   },
 
   methods: {
-    ...mapActions('article', ['getNews']),
+    ...mapActions('article', ['getNews', 'setNewsIsLoading']),
+    ...mapActions('user', ['getUser']),
 
     routeToNewsDetail(id) {
       this.$router.push({ path: 'news-detail', query: { id } });
     },
   },
 
-  beforeMount() {
-    this.getNews();
+  async mounted() {
+    const { userEmail, userGoogleId } = this.userInfo;
+    this.setNewsIsLoading(true);
+
+    !userEmail || !userGoogleId ? await this.getUser() : null;
+    await this.getNews();
+
+    this.setNewsIsLoading(false);
   },
 };
 </script>

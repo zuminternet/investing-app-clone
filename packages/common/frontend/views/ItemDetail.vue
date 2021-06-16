@@ -53,7 +53,7 @@
         <list-wrapper :excludedHeight="210">
           <loading v-if="newsIsLoading"></loading>
           <news-list v-else>
-            <news-list-item v-for="element in news" :key="element.id" :to="''">
+            <news-list-item v-for="element in news" :key="element.id" @handle-click="routeToNewsDetail" :id="element._id">
               <news-image class="news-image-align" :src="element.image_url" />
               <news-text-box>
                 <news-text-box-title>{{ element.title }}</news-text-box-title>
@@ -67,7 +67,7 @@
         <list-wrapper :excludedHeight="210">
           <loading v-if="analysesIsLoading"></loading>
           <news-list v-else>
-            <news-list-item v-for="element in analyses" :key="element.id" :to="''">
+            <news-list-item v-for="element in analyses" :key="element.id" @handle-click="routeToNewsDetail" :id="element._id">
               <news-image class="news-image-align" :src="element.image_url" />
               <news-text-box>
                 <news-text-box-title>{{ element.title }}</news-text-box-title>
