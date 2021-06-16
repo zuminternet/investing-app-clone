@@ -6,10 +6,13 @@ import { getStocksByTicker, getAllStocks } from '../../services/market/stocks';
 declare const Axios: AxiosStatic;
 
 interface MarketState {
+  stockOverviews: any;
   stockData: any;
   sortedStockData: Array<any>;
+  coinOverviews: any;
   coinData: any;
   sortedCoinData: Array<any>;
+  indexOverviews: any;
   indexData: any;
   sortedIndexData: Array<any>;
 }
@@ -18,10 +21,13 @@ const Market = {
   namespaced: true,
 
   state: {
+    stockOverviews: {},
     stockData: {},
     sortedStockData: [],
+    indexOverviews: {},
     indexData: {},
     sortedIndexData: [],
+    coinOverviews: {},
     coinData: {},
     sortedCoinData: [],
   },
@@ -31,6 +37,10 @@ const Market = {
   },
 
   mutations: {
+    setStockOverviews(state, { key, value }) {
+      state.stockOverviews[key] = value;
+    },
+
     setStockData(state, { key, value }) {
       state.stockData[key] = value;
     },
@@ -44,56 +54,36 @@ const Market = {
     getAllStocks: async ({ commit }) => {
       try {
         const data = await getAllStocks();
-        commit('setSortedStockData', data);
+        commit('setSortedStockData', data.hist);
 
-        for (const da of data) {
-          console.log(da.ticker);
-          if (!da.ticker) continue;
-          commit('setStockData', { key: da.ticker, value: da });
+        const { hist, overview } = data;
+        for (const hs of hist) {
+          const ticker = hs.ticker;
+          if (!ticker) continue;
+          commit('setStockData', { key: ticker, value: hs });
+        }
+
+        const ovTickers = Object.keys(overview);
+        for (const ticker of ovTickers) {
+          commit('setStockOverviews', { key: ticker, value: overview[ticker] });
         }
       } catch (e) {
         console.error(e);
       }
     },
 
-    /** @todo 함수 변경 */
     getTodayMiniStocks: async ({ state, commit }, ticker) => {
       if (ticker in state.stockData) return state.stockData[ticker];
-      /** @todo service 함수로 분리, 위 getTodayStocks와 동일 로직임 */
+      console.warn(`[Market:Module:getTodayMiniStocks] getting uncached ticker data : ${ticker}`);
+
       try {
         const _data = await getStocksByTicker(ticker);
         commit('setStockData', { key: ticker, value: _data });
-
-        const beforeData = state.sortedStockData;
-        commit(
-          'setSortedStockData',
-          [...beforeData, _data].sort(({ change: a }, { change: b }) => b - a),
-        );
-
         return state.stockData[ticker];
       } catch (e) {
         console.error(e);
       }
     },
-
-    /** @todo axios-polygon 서버로 옮겨야 */
-    // getTodayCoins: async ({ state, commit }, { type }) => {
-    //   try {
-    //     const today = getDateString();
-    //     const { data, status, statusText } = await Axios.get(
-    //       `https://api.polygon.io/v2/aggs/grouped/locale/global/market/crypto/${today}`,
-    //       {
-    //         params: { apiKey: polygonAPIKey },
-    //       },
-    //     );
-    //     console.log(data);
-    //     if (status >= 400) throw Error(statusText);
-    //     return data;
-    //   } catch (e) {
-    //     console.error(e);
-    //     return [];
-    //   }
-    // },
   },
 } as Module<MarketState, RootState>;
 
