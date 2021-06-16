@@ -165,7 +165,6 @@ export default {
       'getItemDetail',
       'getNews',
       'getAnalyses',
-      'clearItemDetail',
       'setItemDetailIsLoading',
       'setNewsIsLoading',
       'setAnalysesIsLoading',
@@ -198,10 +197,6 @@ export default {
 
     await this.getAnalyses({ offset: 0, limit: 20, tickers });
     this.setAnalysesIsLoading(false);
-  },
-
-  beforeDestroy() {
-    this.clearItemDetail();
   },
 };
 </script>

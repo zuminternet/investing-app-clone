@@ -109,7 +109,7 @@ const actions = {
 
       if (user) {
         commit('setUserInfo', user);
-        dispatch('getBookmarks');
+        await dispatch('getBookmarks');
       }
     } catch (error) {
       console.log(error);
@@ -175,6 +175,10 @@ const actions = {
   setIsError({ commit }, isError) {
     commit('setIsError', isError);
   },
+
+  clearBookmarks({ commit }) {
+    commit('clearBookmarks');
+  },
 };
 
 // mutatuons 설정
@@ -205,6 +209,10 @@ const mutations = {
 
   setIsError(state, isError) {
     state.isError = isError;
+  },
+
+  clearBookmarks(state) {
+    state.userBookmarks = [];
   },
 };
 

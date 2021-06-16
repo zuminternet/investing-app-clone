@@ -70,10 +70,6 @@ const actions = {
     }
   },
 
-  clearItemDetail({ commit }) {
-    commit('clearItemDetail');
-  },
-
   setItemDetailIsLoading({ commit }, isLoading) {
     commit('setItemDetailIsLoading', isLoading);
   },
@@ -123,10 +119,6 @@ const mutations = {
 
   setAnalyses(state, analyses) {
     state.analyses = analyses;
-  },
-
-  clearItemDetail(state) {
-    state.itemDetail = {};
   },
 
   setItemDetailIsLoading(state, isLoading) {

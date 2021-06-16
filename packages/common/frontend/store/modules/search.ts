@@ -5,6 +5,13 @@ const state = () => ({
   searchedItems: [],
   searchedNews: [],
   searchedAnalyses: [],
+
+  searchedItemsIsLoading: false,
+  searchedItemIsError: false,
+  searchedNewsIsLoading: false,
+  searchedNewsIsError: false,
+  searchedAnalysesIsLoading: false,
+  searchedAnalysesIsError: false,
 });
 
 // getter 설정
@@ -61,6 +68,30 @@ const actions = {
     }
   },
 
+  setSearchedItemsIsLoading({ commit }, isLoading) {
+    commit('setSearchedItemsIsLoading', isLoading);
+  },
+
+  setSearchedItemIsError({ commit }, isError) {
+    commit('setSearchedItemIsError', isError);
+  },
+
+  setSearchedNewsIsLoading({ commit }, isLoading) {
+    commit('setSearchedNewsIsLoading', isLoading);
+  },
+
+  setSearchedNewsIsError({ commit }, isError) {
+    commit('setSearchedNewsIsError', isError);
+  },
+
+  setSearchedAnalysesIsLoading({ commit }, isLoading) {
+    commit('setSearchedAnalysesIsLoading', isLoading);
+  },
+
+  setSearchedAnalysesIsError({ commmit }, isError) {
+    commmit('setSearchedAnalysesIsError', isError);
+  },
+
   clearSearchStore({ commit }) {
     commit('clearSearchStore');
   },
@@ -86,6 +117,30 @@ const mutations = {
     state.searchedItems = [];
     state.searchedNews = [];
     state.searchedAnalyses = [];
+  },
+
+  setSearchedItemsIsLoading(state, isLoading) {
+    state.searchedItemsIsLoading = isLoading;
+  },
+
+  setSearchedItemIsError(state, isError) {
+    state.searchedItemIsError = isError;
+  },
+
+  setSearchedNewsIsLoading(state, isLoading) {
+    state.searchedNewsIsLoading = isLoading;
+  },
+
+  setSearchedNewsIsError(state, isError) {
+    state.searchedNewsIsError = isError;
+  },
+
+  setSearchedAnalysesIsLoading(state, isLoading) {
+    state.searchedAnalysesIsLoading = isLoading;
+  },
+
+  setSearchedAnalysesIsError(state, isError) {
+    state.searchedAnalysesIsError = isError;
   },
 };
 
