@@ -37,7 +37,7 @@ export const googleAuthOptions = { prompt: 'select_account' };
 export const googleAuthHeader = 'inv_google_auth';
 
 export const chartLightThemeOption = {
-  bgColor: '#fafffa',
+  bgColor: '#fdfcf7',
   blueColor: 'blue',
   redColor: 'red',
   textColor: 'black',
