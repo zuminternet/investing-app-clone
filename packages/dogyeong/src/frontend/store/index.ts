@@ -8,7 +8,7 @@ import searchStore from 'common/frontend/store/modules/search';
 
 Vue.use(Vuex);
 
-export default () => {
+const createStore = () => {
   return new Vuex.Store({
     modules: {
       user: createUserStore(),
@@ -29,3 +29,7 @@ export default () => {
     },
   });
 };
+
+export default createStore;
+
+export const store = createStore();

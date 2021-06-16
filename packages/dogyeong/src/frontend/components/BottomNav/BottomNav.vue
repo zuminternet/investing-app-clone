@@ -1,22 +1,29 @@
 <template>
-  <nav>
-    <router-link to="/">시장</router-link>
-    <router-link to="/news">뉴스</router-link>
-    <router-link to="/bookmark">관심목록</router-link>
-    <router-link to="/setting">더보기</router-link>
+  <nav class="bottom-nav">
+    <RouterLink :to="routePaths.market">시장</RouterLink>
+    <RouterLink :to="routePaths.news">뉴스</RouterLink>
+    <RouterLink :to="routePaths.bookmark">관심목록</RouterLink>
+    <RouterLink :to="routePaths.setting">더보기</RouterLink>
   </nav>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
+import { routePaths } from '@/config';
 
 export default Vue.extend({
   name: 'BottomNav',
+
+  data() {
+    return {
+      routePaths,
+    };
+  },
 });
 </script>
 
 <style lang="scss" scoped>
-nav {
+.bottom-nav {
   background-color: var(--bg-color);
   width: 100%;
   max-width: var(--app-width);

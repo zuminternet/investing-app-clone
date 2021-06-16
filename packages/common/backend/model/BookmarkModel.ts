@@ -2,7 +2,7 @@ import mongoose from 'common/backend/mongoose';
 
 const { Schema, model } = mongoose;
 
-export interface BookmarkDocument {
+export interface BookmarkDocument extends mongoose.Document {
   email: string;
   symbol: string;
   name: string;

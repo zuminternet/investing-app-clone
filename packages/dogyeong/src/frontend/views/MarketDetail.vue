@@ -106,6 +106,7 @@ import ArticleTemplate from '@/components/ArticleTemplate/ArticleTemplate.vue';
 import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner.vue';
 import SearchButton from '@/components/SearchButton/SearchButton.vue';
 import { chartLightThemeOption } from '@/config';
+import { formatNumber } from '@/filters';
 import Chart from '@/components/Chart/Chart.vue';
 
 export default Vue.extend({
@@ -124,27 +125,7 @@ export default Vue.extend({
   },
 
   filters: {
-    // 숫자를 세 자리 마다 쉼표를 넣은 문자로 변환한다 (1000 -> '1,000')
-    formatNumber(value: string | number) {
-      return value
-        .toString()
-        .split('')
-        .reverse()
-        .reduce((acc, digit, i) => {
-          if (i > 0 && i % 3 === 0) acc.push(',');
-          return [...acc, digit];
-        }, [])
-        .reverse()
-        .join('');
-    },
-    formatPrice(value: number) {
-      const sign = value > 0 ? '+' : '';
-      const fixedValue = value.toFixed(2);
-      return `${sign}${fixedValue}`;
-    },
-    formatPercent(value: number) {
-      return `(${value}%)`;
-    },
+    formatNumber,
   },
 
   data() {

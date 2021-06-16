@@ -45,3 +45,17 @@ export const chartLightThemeOption = {
   lineStrokeColor: '#84bbf3',
   graphLineColor: '#eee',
 };
+
+export const routePaths = {
+  market: '/',
+  marketDetail: '/market/:type/:id',
+  news: '/news',
+  newsDetail: '/news/:type/:id',
+  login: '/login',
+  signup: '/signup',
+  search: '/search',
+  setting: '/setting',
+  bookmark: '/bookmark',
+  changeUserName: '/change-username',
+  changePassword: '/change-password',
+};

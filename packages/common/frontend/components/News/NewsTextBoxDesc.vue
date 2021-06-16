@@ -1,7 +1,7 @@
 <template>
   <p>
     <span class="news-author" :style="authorStyle">{{ author }}</span>
-    <span class="news-date" :style="dateStyle">{{ publishDate | formatDate }}</span>
+    <span class="news-date" :style="dateStyle">{{ publishDate | fromNow }}</span>
   </p>
 </template>
 
@@ -23,9 +23,7 @@ export default Vue.extend({
   name: 'NewsTextBoxDesc',
 
   filters: {
-    formatDate(date) {
-      return fromNow(date);
-    },
+    fromNow,
   },
 
   props: {
