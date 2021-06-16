@@ -10,17 +10,17 @@
         </template>
         {{ name }}
       </HeaderTitle>
-      <div v-if="summaryDetail" :class="$style.price">
+    </Header>
+    <main>
+      <section v-if="summaryDetail" :class="$style.price">
         <span :class="$style['current-price']">{{ summaryDetail.regularMarketOpen }}</span>
         <span :class="[{ [$style.red]: priceDiff > 0 }, { [$style.blue]: priceDiff < 0 }]">
           {{ priceDiff | formatPrice }} {{ pricePercent | formatPrice | formatPercent }}
         </span>
-      </div>
-    </Header>
-    <main>
+      </section>
       <section :class="$style['chart-section']">
         <LoadingSpinner v-if="isChartLoading" />
-        <div ref="chartContainer" :class="$style['chart-container']"></div>
+        <Chart :data="chartData" :colorOption="chartColorOptions" :class="$style['chart-container']" />
         <div :class="$style['button-container']">
           <button @click="changeChartPeriod('1d')">1일</button>
           <button @click="changeChartPeriod('1w')">1주</button>
@@ -102,11 +102,11 @@ import { getNewNews, getNewOpinions } from '@/services/articleService';
 import Layout from '@/components/Layout/Layout.vue';
 import { Header, HeaderTitle, HeaderButton } from '@/components/Header';
 import BottomNav from '@/components/BottomNav/BottomNav.vue';
-import { createChart } from '@/chart';
 import ArticleTemplate from '@/components/ArticleTemplate/ArticleTemplate.vue';
 import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner.vue';
 import SearchButton from '@/components/SearchButton/SearchButton.vue';
 import { chartLightThemeOption } from '@/config';
+import Chart from '@/components/Chart/Chart.vue';
 
 export default Vue.extend({
   name: 'MarketDetail',
@@ -120,6 +120,7 @@ export default Vue.extend({
     ArticleTemplate,
     LoadingSpinner,
     SearchButton,
+    Chart,
   },
 
   filters: {
@@ -149,7 +150,7 @@ export default Vue.extend({
   data() {
     return {
       summaryDetail: null,
-      chartData: null,
+      chartData: [],
       chart: null,
       name: '',
       news: {
@@ -177,12 +178,8 @@ export default Vue.extend({
     pricePercent() {
       return (this.priceDiff / this.summaryDetail?.regularMarketOpen) * 100;
     },
-  },
-
-  watch: {
-    chartData(newData) {
-      if (!this.chart) return;
-      this.chart.setCandles([...newData]);
+    chartColorOptions() {
+      return this.$store.state.isDarkTheme ? undefined : chartLightThemeOption;
     },
   },
 
@@ -208,13 +205,6 @@ export default Vue.extend({
     getNewOpinions({ tickers: this.symbol })
       .then((opinions) => (this.opinions.data = opinions))
       .catch(console.error);
-  },
-
-  mounted() {
-    const colorOption = this.$store.state.isDarkTheme ? undefined : chartLightThemeOption;
-    const chartContainer = this.$refs.chartContainer;
-    chartContainer.style.height = chartContainer.offsetWidth / 1.5 + 'px';
-    this.chart = createChart(chartContainer, colorOption);
   },
 
   methods: {
