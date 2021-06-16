@@ -42,6 +42,8 @@ const actions = {
 
         return true;
       }
+
+      throw new Error('Getting indices was failed in market store');
     } catch (error) {
       console.log(error);
     }
@@ -56,6 +58,8 @@ const actions = {
 
         return true;
       }
+
+      throw new Error('Getting crpytos was failed in market store');
     } catch (error) {
       console.log(error);
     }

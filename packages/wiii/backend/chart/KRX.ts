@@ -65,7 +65,7 @@ const setSymbols = (options) => {
 const setDefaultValues = (options) => {
   if (!Object.keys(options).length) return {};
 
-  let { date_from, date_to, interval } = options;
+  let { date_from, date_to, interval, limit } = options;
   const curDate = new Date();
   const curDateStr = getDateString(curDate);
 
@@ -76,6 +76,8 @@ const setDefaultValues = (options) => {
   /** interval 시간 단위 변경 */
   if (!interval || interval.match(`day`)) interval = `24hour`;
 
+  if (!limit) limit = 1000;
+
   return {
     ...options,
     date_to,
@@ -83,6 +85,7 @@ const setDefaultValues = (options) => {
     /** 한국거래소 */
     exchange: `XKRX`,
     interval,
+    limit,
   };
 };
 

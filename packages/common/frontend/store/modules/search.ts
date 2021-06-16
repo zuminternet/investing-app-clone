@@ -3,7 +3,6 @@ import { getSearchedItems, getNews, getAnalyses } from '../../apis';
 // 초기 state 값 설정
 const state = () => ({
   searchedItems: [],
-
   searchedNews: [],
   searchedAnalyses: [],
 });
@@ -62,7 +61,7 @@ const actions = {
     }
   },
 
-  async clearSearchStore({ commit }) {
+  clearSearchStore({ commit }) {
     commit('clearSearchStore');
   },
 };
@@ -70,13 +69,9 @@ const actions = {
 // mutatuons 설정
 const mutations = {
   setSearchedItems(state, items) {
-    const searchedItems = [];
-
-    items.forEach((item) => {
-      item = { ...item, category: item.stock_exchange.acronym };
-      searchedItems.push(item);
+    state.searchedItems = items.map((item) => {
+      return { ...item, category: item.stock_exchange.acronym };
     });
-    state.searchedItems = searchedItems;
   },
 
   setSearchedNews(state, news) {

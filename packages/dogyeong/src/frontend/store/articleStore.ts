@@ -1,5 +1,10 @@
 import * as articleService from '@/services/articleService';
 
+/**
+ * articleStore
+ *
+ * 뉴스/분석 데이터를 관리하는 모듈
+ */
 export default () => {
   return {
     state: {

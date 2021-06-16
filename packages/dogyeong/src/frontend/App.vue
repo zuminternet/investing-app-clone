@@ -16,6 +16,7 @@
  */
 import Vue from 'vue';
 import { googleAuthInitConfig } from '@/config';
+import { routePaths } from '@/config';
 
 export default Vue.extend({
   name: 'App',
@@ -25,9 +26,9 @@ export default Vue.extend({
 
     try {
       await this.$store.dispatch('fetchCurrentUser');
-      if (this.isLoginView()) this.$router.replace('/');
+      if (this.isLoginView()) this.$router.replace(routePaths.market);
     } catch (e) {
-      if (!this.isLoginView()) this.$router.replace('/login');
+      if (!this.isLoginView()) this.$router.replace(routePaths.login);
     }
   },
 

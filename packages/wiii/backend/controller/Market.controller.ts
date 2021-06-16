@@ -16,6 +16,7 @@ import { ApiError } from '../utils/error/api';
  * @returns API 요청에 필요한 options 객체
  */
 const parseQueryToOptions = (path: marketName, param): GetHistoricalOptions => {
+  /** /hist */
   if (path === marketName.historical) {
     const { type, ticker, exchange, dateFrom, dateTo, interval, sort, limit, offset } = param;
     return {
@@ -86,9 +87,10 @@ export class MarketController {
       /** @todo 굳이 class로? 그냥 함수로 선언해도 될 듯.. */
       new SSE(res, options);
 
-      const data = await this.marketService.getHistorical(options);
+      const data = await this.marketService.getCachedHistorical(options);
       this.writeData(data, res);
 
+      /** @todo setInterval 하지 않아도, 브라우저에서 2-3초 간격 요청 보냄..? */
       // const intervalTime = times.sse * 3000;
       // const eventSourceInterval = setInterval(async () => {
       //   const data = await this.marketService.getHistorical(options);
@@ -115,7 +117,7 @@ export class MarketController {
   @GetMapping({ path: ['/stocks'] })
   public async sendStocksList({ query }: Request, res: Response) {
     const stockListError = () => new ApiError(`Send Stocks List`, this.sendStocksList.name);
-    const dateFrom = getDateString(new Date().getTime() - WEEK_ONE * 2);
+
     try {
       const { stocks } = query;
 
@@ -123,10 +125,10 @@ export class MarketController {
       console.log({ tickers });
       const data = [];
       for await (const ticker of tickers) {
-        const options = parseQueryToOptions(marketName.historical, { type: `stock`, ticker, dateFrom, limit: `20` });
+        const options = parseQueryToOptions(marketName.historical, { type: `stock`, ticker });
         if (!isOptionsValidate(options)) return res.sendStatus(404);
 
-        const d = await this.marketService.getHistoricalNoCache({ type: `stock`, ticker, dateFrom, limit: `20` });
+        const d = await this.marketService.getCachedHistorical({ type: `stock`, ticker });
         data.push({ [ticker]: d });
       }
 

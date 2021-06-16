@@ -1,6 +1,11 @@
 import * as authService from '@/services/authService';
 import { googleAuthOptions } from '@/config';
 
+/**
+ * userStore
+ *
+ * 유저 정보, 인증로직을 관리하는 스토어 모듈
+ */
 export default () => {
   return {
     state: {

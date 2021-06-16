@@ -20,11 +20,11 @@ const Market = {
 
   state: {
     stockTickers: [
-      // { typeName: `stock`, ticker: '239340', tickerName: '줌인터넷', from: aWeekBefore },
       { typeName: `stock`, ticker: '005930', tickerName: '삼성전자', from: aWeekBefore },
       { typeName: `stock`, ticker: '017670', tickerName: 'SK Telecom', from: aWeekBefore },
-      // { typeName: `stock`, ticker: '035420', tickerName: 'Naver', from: aWeekBefore },
-      // { typeName: `stock`, ticker: '035720', tickerName: '카카오', from: aWeekBefore },
+      { typeName: `stock`, ticker: '035420', tickerName: 'Naver', from: aWeekBefore },
+      { typeName: `stock`, ticker: '035720', tickerName: '카카오', from: aWeekBefore },
+      { typeName: `stock`, ticker: '239340', tickerName: '줌인터넷', from: aWeekBefore },
     ],
     coinTickers: [
       // { typeName: `stock`, ticker: '239340', tickerName: '줌인터넷', from: aWeekBefore },
@@ -50,7 +50,7 @@ const Market = {
   },
 
   actions: {
-    getTodayStocks: async ({ state, commit, getters }) => {
+    getTodayStocks: async ({ state, commit }) => {
       try {
         const stocks = state.stockTickers.map(({ ticker }) => ticker).join(`-`);
         const { data, status, statusText } = await Axios.get(`/api/markets/stocks`, {
@@ -72,7 +72,7 @@ const Market = {
       }
     },
 
-    getTodayStockShort: async ({ state, commit }, ticker) => {
+    getTodayMiniStocks: async ({ state, commit }, ticker) => {
       if (ticker in state.stockData) return state.stockData[ticker];
       /** @todo service 함수로 분리 */
       try {
@@ -82,6 +82,7 @@ const Market = {
         console.log({ data, status, statusText });
 
         for (const d of data) {
+          /** @example data: { '005930' : { results: Array(10) }, count: 10, payload: { total : 10 } } */
           const key = Object.keys(d)[0];
           console.log({ key });
           console.log(d[key]);
@@ -94,24 +95,32 @@ const Market = {
         console.error(e);
       }
     },
-    /** @todo axios-polygon 서버로 옮겨야 */
-    getTodayCoins: async ({ state, commit }, { type }) => {
-      try {
-        const today = getDateString();
-        const { data, status, statusText } = await Axios.get(
-          `https://api.polygon.io/v2/aggs/grouped/locale/global/market/crypto/${today}`,
-          {
-            params: { apiKey: polygonAPIKey },
-          },
-        );
-        console.log(data);
-        if (status >= 400) throw Error(statusText);
-        return data;
-      } catch (e) {
-        console.error(e);
-        return [];
-      }
+
+    getTodayStockChange: ({ state }, ticker) => {
+      if (ticker in state.stockData) return state.stockData[ticker].results.slice(0, 2);
+
+      // console.log({ [ticker]: curData });
+      return [];
     },
+
+    /** @todo axios-polygon 서버로 옮겨야 */
+    // getTodayCoins: async ({ state, commit }, { type }) => {
+    //   try {
+    //     const today = getDateString();
+    //     const { data, status, statusText } = await Axios.get(
+    //       `https://api.polygon.io/v2/aggs/grouped/locale/global/market/crypto/${today}`,
+    //       {
+    //         params: { apiKey: polygonAPIKey },
+    //       },
+    //     );
+    //     console.log(data);
+    //     if (status >= 400) throw Error(statusText);
+    //     return data;
+    //   } catch (e) {
+    //     console.error(e);
+    //     return [];
+    //   }
+    // },
   },
 } as Module<MarketState, RootState>;
 

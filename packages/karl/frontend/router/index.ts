@@ -4,9 +4,7 @@ import { Login, Home, Signup, News, NewsDetail } from '../views';
 import ItemDetail from '../../../common/frontend/views/ItemDetail.vue';
 import Search from '../../../common/frontend/views/Search.vue';
 import Bookmark from '../../../common/frontend/views/Bookmark.vue';
-// import Login from '../views/Login.vue'
-// import Home from '../views/Home.vue'
-// import ItemDetail from '../views/ItemDetail.vue'
+
 Vue.use(Router);
 
 export default () => {

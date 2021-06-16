@@ -42,17 +42,21 @@ const actions = {
    *
    */
   async googleInitClient({ dispatch }) {
-    await gapi.client.init(googleAuthInitConfig);
-    googleAuth = gapi.auth2.getAuthInstance();
-    googleUser = googleAuth.currentUser.get();
-
-    googleAuth.isSignedIn.listen(async (isSignedIn) => {
+    try {
+      await gapi.client.init(googleAuthInitConfig);
+      googleAuth = gapi.auth2.getAuthInstance();
       googleUser = googleAuth.currentUser.get();
 
-      if (isSignedIn) {
-        dispatch('loginUserByGoogleOAuthOrCreateUser');
-      }
-    });
+      googleAuth.isSignedIn.listen(async (isSignedIn) => {
+        googleUser = googleAuth.currentUser.get();
+
+        if (isSignedIn) {
+          dispatch('loginUserByGoogleOAuthOrCreateUser');
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
   },
 
   /**
@@ -83,7 +87,7 @@ const actions = {
       }
     }
 
-    throw new Error('Google OAuth login or create user was failed in user store');
+    throw new Error('Login by google OAuth or creating user was failed in user store ');
   },
 
   /**

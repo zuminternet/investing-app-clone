@@ -40,7 +40,7 @@ const defaultColors: CandleChartColorOptions = {
 export default class CandleChart {
   private readonly $container: HTMLElement;
   private readonly colorOptions: CandleChartColorOptions;
-  private candles: Candle[];
+  private candles: Candle[] = [];
   private minPrice = 0;
   private maxPrice = 1000;
   private firstCandleIndex: number;
@@ -57,6 +57,7 @@ export default class CandleChart {
     this.initalizeCanvas();
     this.initializeEvents();
     this.subscribeEvents();
+    this.resize();
   }
 
   private initalizeCanvas() {
@@ -84,14 +85,7 @@ export default class CandleChart {
   }
 
   private initializeEvents() {
-    window.addEventListener('resize', () => {
-      const w = this.$container.offsetWidth;
-      const h = this.$container.offsetHeight;
-      this.graph.resize(w - 88, h - 30);
-      this.priceAxis.resize(88, h - 30);
-      this.timeAxis.resize(w - 88, 30);
-      this.draw();
-    });
+    window.addEventListener('resize', this.resize.bind(this));
   }
 
   private subscribeEvents() {
@@ -116,6 +110,17 @@ export default class CandleChart {
     `;
 
     return $table;
+  }
+
+  private resize() {
+    const w = this.$container.offsetWidth;
+    this.$container.style.height = w / 1.5 + 'px';
+    const h = w / 1.5;
+
+    this.graph.resize(w - 88, h - 60);
+    this.priceAxis.resize(88, h - 60);
+    this.timeAxis.resize(w - 88, 60);
+    this.draw();
   }
 
   // 보이는 첫 캔들의 인덱스를 구함

@@ -2,10 +2,7 @@
   <div class="area">
     <Header :titleText="titleText" />
     <main class="area">
-      <keep-alive>
-        <component :is="type"></component>
-      </keep-alive>
-      <Reply />
+      <router-view />
     </main>
     <Footer />
   </div>
@@ -13,13 +10,13 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { mapGetters, mapActions } from 'vuex';
-import { marketsType, viewsTitle } from '@/type/views';
-import Header from '@/components/organisms/Header';
-import Footer from '@/components/organisms/Footer';
-import Indexes from '@/components/templates/Markets/Indexes';
-import Stocks from '@/components/templates/Markets/Stocks';
-import Coins from '@/components/templates/Markets/Coins';
+import { mapActions } from 'vuex';
+import { viewsTitle } from '@/type/views';
+import Header from '@/components/organisms/Header.vue';
+import Footer from '@/components/organisms/Footer.vue';
+import Indexes from '@/components/templates/Markets/Indexes.vue';
+import Stocks from '@/components/templates/Markets/Stocks.vue';
+import Coins from '@/components/templates/Markets/Coins.vue';
 import Reply from '@/components/organisms/ReplySection.vue';
 import { RootActions } from '@/store';
 
@@ -53,16 +50,9 @@ export default Vue.extend({
     },
   },
 
-  mounted() {
+  beforeMount() {
     this[RootActions.SET_CURRENT_TICKER](this.ticker);
-    /** @todo console 삭제 */
-    console.log({ vuexTicker: this.getTicker, ticker: this.ticker });
     console.assert(this.getTicker === this.ticker);
-  },
-
-  computed: {
-    /** @todo 개발 마무리 단계에서 삭제 */
-    ...mapGetters(['getTicker']),
   },
 
   methods: {

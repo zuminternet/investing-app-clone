@@ -49,11 +49,12 @@ export default Vue.extend({
     },
     userThumbnail: {
       type: String,
+      default: 'https://picsum.photos/200',
     },
     userName: {
       type: String,
     },
-    date: {
+    updatedAt: {
       type: Date,
     },
     contents: {
@@ -65,16 +66,21 @@ export default Vue.extend({
     },
     curInputId: {
       type: String,
+      required: true,
+    },
+    hasAuth: {
+      type: Boolean,
+      required: true,
     },
   },
 
   computed: {
     dateString() {
-      const { date } = this;
-      return `'${date
+      const { updatedAt } = this;
+      return `'${updatedAt
         .getFullYear()
         .toString()
-        .slice(-2)}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date
+        .slice(-2)}/${(updatedAt.getMonth() + 1).toString().padStart(2, '0')}/${updatedAt
         .getDate()
         .toString()
         .padStart(2, '0')}`;
@@ -88,6 +94,7 @@ export default Vue.extend({
 
   methods: {
     inputToggle(id: string | number) {
+      if (!this.hasAuth) return;
       this.$emit('change-current-input', id);
     },
   },
@@ -162,10 +169,15 @@ $maxHeight: 50px;
     align-items: center;
     cursor: default;
 
+    button {
+      width: max-content;
+      font-size: 0.7rem;
+    }
+
     .reply-likes {
       text-align: center;
       font-weight: bold;
-      color: $neon-crimson;
+      color: rgba(249, 0, 79, 1);
     }
   }
 }

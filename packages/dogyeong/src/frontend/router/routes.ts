@@ -1,58 +1,60 @@
 import Market from '@/views/Market.vue';
+import { routePaths } from '@/config';
 
 export default [
   {
-    path: '/',
+    path: routePaths.market,
     name: 'Market',
     component: Market,
   },
   {
-    path: '/login',
+    path: routePaths.login,
     name: 'Login',
     component: () => import('@/views/Login.vue'),
   },
   {
-    path: '/search',
+    path: routePaths.search,
     name: 'Search',
     component: () => import('@/views/Search.vue'),
   },
   {
-    path: '/setting',
+    path: routePaths.setting,
     name: 'Setting',
     component: () => import('@/views/Setting.vue'),
   },
   {
-    path: '/news',
+    path: routePaths.news,
     name: 'News',
     component: () => import('@/views/News.vue'),
   },
   {
-    path: '/news/:type/:id',
+    path: routePaths.newsDetail,
     name: 'NewsDetail',
     component: () => import('@/views/NewsDetail.vue'),
   },
   {
-    path: '/market/:type/:id',
+    path: routePaths.marketDetail,
     name: 'MarketDetail',
     component: () => import('@/views/MarketDetail.vue'),
   },
   {
-    path: '/bookmark',
+    path: routePaths.bookmark,
     name: 'Bookmark',
     component: () => import('@/views/Bookmark.vue'),
+    meta: { requiresAuth: true },
   },
   {
-    path: '/signup',
+    path: routePaths.signup,
     name: 'Signup',
     component: () => import('@/views/Signup.vue'),
   },
   {
-    path: '/change-username',
+    path: routePaths.changeUserName,
     name: 'ChangeUserName',
     component: () => import('@/views/SettingUserName.vue'),
   },
   {
-    path: '/change-password',
+    path: routePaths.changePassword,
     name: 'ChangePassword',
     component: () => import('@/views/SettingPassword.vue'),
   },

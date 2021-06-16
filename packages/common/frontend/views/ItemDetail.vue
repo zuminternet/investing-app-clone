@@ -11,7 +11,7 @@
           <sub-content-box :text="newsText">
             <news-list>
               <news-list-item v-for="element in news" :key="element.id" :to="''">
-                <news-image :src="element.image_url" />
+                <news-image class="news-image-align" :src="element.image_url" />
                 <news-text-box>
                   <news-text-box-title>{{ element.title }}</news-text-box-title>
                   <news-text-box-desc :author="element.source" :publishDate="element.date"></news-text-box-desc>
@@ -22,7 +22,7 @@
           <sub-content-box :text="analysisText">
             <news-list>
               <news-list-item v-for="element in analyses" :key="element.id" :to="''">
-                <news-image :src="element.image_url" />
+                <news-image class="news-image-align" :src="element.image_url" />
                 <news-text-box>
                   <news-text-box-title>{{ element.title }}</news-text-box-title>
                   <news-text-box-desc :author="element.source" :publishDate="element.date"></news-text-box-desc>
@@ -36,7 +36,7 @@
         <list-wrapper :excludedHeight="210">
           <news-list>
             <news-list-item v-for="element in news" :key="element.id" :to="''">
-              <news-image :src="element.image_url" />
+              <news-image class="news-image-align" :src="element.image_url" />
               <news-text-box>
                 <news-text-box-title>{{ element.title }}</news-text-box-title>
                 <news-text-box-desc :author="element.source" :publishDate="element.date"></news-text-box-desc>
@@ -49,7 +49,7 @@
         <list-wrapper :excludedHeight="210">
           <news-list>
             <news-list-item v-for="element in analyses" :key="element.id" :to="''">
-              <news-image :src="element.image_url" />
+              <news-image class="news-image-align" :src="element.image_url" />
               <news-text-box>
                 <news-text-box-title>{{ element.title }}</news-text-box-title>
                 <news-text-box-desc :author="element.source" :publishDate="element.date"></news-text-box-desc>
@@ -147,5 +147,10 @@ export default {
   display: flex;
   flex-direction: column;
   flex: 1;
+}
+
+.news-image-align {
+  display: flex;
+  align-self: center;
 }
 </style>

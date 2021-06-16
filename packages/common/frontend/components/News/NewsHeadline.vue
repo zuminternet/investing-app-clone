@@ -1,8 +1,11 @@
 <template>
-  <article class="news-headline">
+  <article v-if="to" class="news-headline">
     <RouterLink :to="to" :style="headlineStyle">
       <slot></slot>
     </RouterLink>
+  </article>
+  <article v-else class="news-headline" @click="$emit('handle-click', id)">
+    <slot></slot>
   </article>
 </template>
 
@@ -20,11 +23,16 @@ export default Vue.extend({
   props: {
     to: {
       type: String,
-      required: true,
+      default: '',
     },
     headlineStyle: {
       type: [Object, String],
       default: () => '',
+    },
+
+    id: {
+      type: String,
+      default: '',
     },
   },
 });

@@ -2,10 +2,10 @@
   <div class="news-page">
     <multipurpose-header isNews />
     <custom-swiper :navigatorButtonNames="swiperNavigatorButtonNames">
-      <swiper-slide v-if="news">
+      <swiper-slide v-if="news.length">
         <list-wrapper :excludedHeight="150">
           <news-list>
-            <news-headline v-if="firstNews" :to="'/search'">
+            <news-headline v-if="firstNews" @handle-click="routeToNewsDetail" :id="firstNews._id">
               <news-image :src="firstNews.image_url" />
               <news-text-box>
                 <news-text-box-title>
@@ -14,8 +14,13 @@
                 <news-text-box-desc :author="firstNews.source" :publishDate="firstNews.date"></news-text-box-desc>
               </news-text-box>
             </news-headline>
-            <news-list-item v-for="element in news.slice(1, news.length)" :key="element.id" :to="'/search'">
-              <news-image :src="element.image_url" />
+            <news-list-item
+              v-for="element in news.slice(1, news.length)"
+              :key="element._id"
+              @handle-click="routeToNewsDetail"
+              :id="element._id"
+            >
+              <news-image class="news-image-align" :src="element.image_url" />
               <news-text-box>
                 <news-text-box-title>{{ element.title }}</news-text-box-title>
                 <news-text-box-desc :author="element.source" :publishDate="element.date"></news-text-box-desc>
@@ -24,20 +29,25 @@
           </news-list>
         </list-wrapper>
       </swiper-slide>
-      <swiper-slide v-if="news">
+      <swiper-slide v-if="news.length">
         <list-wrapper :excludedHeight="150">
           <news-list>
-            <news-headline>
-              <news-image :src="news[0].image_url" />
+            <news-headline v-if="firstNews" @handle-click="routeToNewsDetail" :id="firstNews._id">
+              <news-image :src="firstNews.image_url" />
               <news-text-box>
                 <news-text-box-title>
-                  {{ news[0].title }}
+                  {{ firstNews.title }}
                 </news-text-box-title>
-                <news-text-box-desc :author="news[0].source" :publishDate="news[0].date"></news-text-box-desc>
+                <news-text-box-desc :author="firstNews.source" :publishDate="firstNews.date"></news-text-box-desc>
               </news-text-box>
             </news-headline>
-            <news-list-item v-for="element in news.slice(1, news.length)" :key="element.id" :to="''">
-              <news-image :src="element.image_url" />
+            <news-list-item
+              v-for="element in news.slice(1, news.length)"
+              :key="element._id"
+              @handle-click="routeToNewsDetail"
+              :id="element._id"
+            >
+              <news-image class="news-image-align" :src="element.image_url" />
               <news-text-box>
                 <news-text-box-title>{{ element.title }}</news-text-box-title>
                 <news-text-box-desc :author="element.source" :publishDate="element.date"></news-text-box-desc>
@@ -46,10 +56,10 @@
           </news-list>
         </list-wrapper>
       </swiper-slide>
-      <swiper-slide v-if="stockNews">
+      <swiper-slide v-if="stockNews.length">
         <list-wrapper :excludedHeight="150">
           <news-list>
-            <news-headline>
+            <news-headline v-if="stockNews[0]" @handle-click="routeToNewsDetail" :id="stockNews[0]._id">
               <news-image :src="stockNews[0].image_url" />
               <news-text-box>
                 <news-text-box-title>
@@ -58,8 +68,13 @@
                 <news-text-box-desc :author="stockNews[0].source" :publishDate="stockNews[0].date"></news-text-box-desc>
               </news-text-box>
             </news-headline>
-            <news-list-item v-for="element in stockNews.slice(1, stockNews.length)" :key="element.id" :to="''">
-              <news-image :src="element.image_url" />
+            <news-list-item
+              v-for="element in stockNews.slice(1, stockNews.length)"
+              :key="element._id"
+              @handle-click="routeToNewsDetail"
+              :id="element._id"
+            >
+              <news-image class="news-image-align" :src="element.image_url" />
               <news-text-box>
                 <news-text-box-title>{{ element.title }}</news-text-box-title>
                 <news-text-box-desc :author="element.source" :publishDate="element.date"></news-text-box-desc>
@@ -68,10 +83,10 @@
           </news-list>
         </list-wrapper>
       </swiper-slide>
-      <swiper-slide v-if="cryptoNews">
+      <swiper-slide v-if="cryptoNews.length">
         <list-wrapper :excludedHeight="150">
           <news-list>
-            <news-headline>
+            <news-headline v-if="cryptoNews[0]" @handle-click="routeToNewsDetail" :id="stockNews[0]._id">
               <news-image :src="cryptoNews[0].image_url" />
               <news-text-box>
                 <news-text-box-title>
@@ -80,8 +95,8 @@
                 <news-text-box-desc :author="cryptoNews[0].source" :publishDate="cryptoNews[0].date"></news-text-box-desc>
               </news-text-box>
             </news-headline>
-            <news-list-item v-for="element in cryptoNews.slice(1, cryptoNews.length)" :key="element.id" :to="''">
-              <news-image :src="element.image_url" />
+            <news-list-item v-for="element in cryptoNews.slice(1, cryptoNews.length)" :key="element._id">
+              <news-image class="news-image-align" :src="element.image_url" />
               <news-text-box>
                 <news-text-box-title>{{ element.title }}</news-text-box-title>
                 <news-text-box-desc :author="element.source" :publishDate="element.date"></news-text-box-desc>
@@ -156,6 +171,10 @@ export default {
 
   methods: {
     ...mapActions('article', ['getNews']),
+
+    routeToNewsDetail(id) {
+      this.$router.push({ path: 'news-detail', query: { id } });
+    },
   },
 
   beforeMount() {
@@ -164,4 +183,9 @@ export default {
 };
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.news-image-align {
+  display: flex;
+  align-self: center;
+}
+</style>

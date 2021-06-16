@@ -15,6 +15,6 @@ export default {
 .text-button {
   width: fit-content;
   height: fit-content;
-  background-color: aqua;
+  border: 0;
 }
 </style>

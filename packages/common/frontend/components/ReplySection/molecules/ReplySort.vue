@@ -30,14 +30,15 @@ export default Vue.extend({
   align-items: center;
   justify-content: flex-end;
   font-size: 0.7rem;
-  color: $grey-700;
+  color: rgba(97, 97, 97, 1);
 
   &-button {
     width: 50px;
-    background-color: $grey-100;
-    border: 2px solid $grey-100;
+    background-color: rgba(245, 245, 245, 1);
+    border: none;
     margin-left: 2px;
     font-weight: bold;
+    font-size: 0.7rem;
   }
 }
 </style>

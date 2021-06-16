@@ -13,10 +13,10 @@
 import Vue from 'vue';
 import { mapGetters, mapActions } from 'vuex';
 
-import Header from '@/components/organisms/Header';
-import News from '@/components/organisms/NewsSection';
-import Reply from '@/components/organisms/ReplySection';
-import Footer from '@/components/organisms/Footer';
+import Header from '@/components/organisms/Header.vue';
+import News from '@/components/organisms/NewsSection.vue';
+import Reply from '@/components/organisms/ReplySection.vue';
+import Footer from '@/components/organisms/Footer.vue';
 import { viewsTitle } from '@/type/views';
 import { RootActions } from '@/store';
 
@@ -44,10 +44,8 @@ export default Vue.extend({
     Footer,
   },
 
-  mounted() {
+  beforeMount() {
     this[RootActions.SET_CURRENT_TICKER](this.ticker);
-    /** @todo console 삭제 */
-    console.log({ vuexTicker: this.getTicker, ticker: this.ticker });
     console.assert(this.getTicker === this.ticker);
   },
 

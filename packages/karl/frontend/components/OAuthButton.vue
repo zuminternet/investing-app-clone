@@ -13,7 +13,9 @@ export default {
 
 <style scoped lang="scss">
 .oauth-button {
-  background-color: red;
+  background-color: var(--blue-color);
+  border: 0;
+  border-radius: 3px;
   display: flex;
   height: 30px;
   width: 100%;

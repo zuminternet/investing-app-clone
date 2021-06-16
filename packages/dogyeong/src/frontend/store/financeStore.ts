@@ -1,5 +1,10 @@
 import * as financeService from '@/services/financeService';
 
+/**
+ * financeStore
+ *
+ * 시장 탭에서 사용하는 주식/가상화폐/지수 데이터를 관리하는 모듈
+ */
 export default () => {
   return {
     state: {

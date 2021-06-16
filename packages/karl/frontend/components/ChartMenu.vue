@@ -1,13 +1,16 @@
 <template>
   <div class="chart-menu" :style="style">
-    <button class="chart-menu-button" @click="$emit('handle-chart-menu-button-click', $event)" value="D">
-      D
+    <button class="chart-menu-button" @click="$emit('handle-chart-menu-button-click', $event)" value="d">
+      <custom-text v-if="period === 'd'" chartMenuActiveText>D</custom-text>
+      <custom-text v-else>D</custom-text>
     </button>
-    <button class="chart-menu-button" @click="$emit('handle-chart-menu-button-click', $event)" value="W">
-      W
+    <button class="chart-menu-button" @click="$emit('handle-chart-menu-button-click', $event)" value="w">
+      <custom-text v-if="period === 'w'" chartMenuActiveText>W</custom-text>
+      <custom-text v-else>W</custom-text>
     </button>
-    <button class="chart-menu-button" @click="$emit('handle-chart-menu-button-click', $event)" value="M">
-      M
+    <button class="chart-menu-button" @click="$emit('handle-chart-menu-button-click', $event)" value="m">
+      <custom-text v-if="period === 'm'" chartMenuActiveText>M</custom-text>
+      <custom-text v-else>M</custom-text>
     </button>
     <button v-if="isCandle" class="chart-menu-button" @click="$emit('handle-chart-menu-button-click', $event)" value="Linear">
       Linear
@@ -19,7 +22,10 @@
 </template>
 
 <script>
+import CustomText from 'common/frontend/components/CustomText.vue';
+
 export default {
+  components: { CustomText },
   name: 'ChartMenu',
   props: {
     canvasWidth: {
@@ -34,6 +40,11 @@ export default {
 
     isCandle: {
       type: Boolean,
+      required: true,
+    },
+
+    period: {
+      type: String,
       required: true,
     },
   },
@@ -55,5 +66,6 @@ export default {
 
 .chart-menu-button {
   flex: 1;
+  border: 0;
 }
 </style>

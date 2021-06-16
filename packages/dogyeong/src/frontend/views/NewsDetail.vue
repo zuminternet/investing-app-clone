@@ -20,7 +20,7 @@
       <template v-else>
         <ArticleDetailSection>
           <ArticleDetailTitle>{{ article.title }}</ArticleDetailTitle>
-          <ArticleDetailSubInfo :class="$style.sub">{{ article.source }} | {{ article.date | formatDate }}</ArticleDetailSubInfo>
+          <ArticleDetailSubInfo :class="$style.sub">{{ article.source }} | {{ article.date | fromNow }}</ArticleDetailSubInfo>
         </ArticleDetailSection>
         <ArticleDetailSection>
           <ArticleDetailBodyImage :src="article.image_url" />
@@ -77,7 +77,7 @@ export default Vue.extend({
   },
 
   filters: {
-    formatDate: fromNow,
+    fromNow,
   },
 
   data() {

@@ -1,6 +1,4 @@
-import { marketsFullUrl } from '../../../domain/apiUrls';
 import { GetHistoricalOptions } from '../../../domain/apiOptions';
-import { MINUTE_ONE } from '../../../domain/date';
 
 /**
  * EventSource Service
@@ -44,7 +42,7 @@ export default class EsService {
     }
     const params = new URLSearchParams({ ...adjusted }).toString();
 
-    return `${marketsFullUrl.historical}?${params}`;
+    return `/api/markets/hist?${params}`;
   }
 
   private addEventListers() {
@@ -81,6 +79,6 @@ export default class EsService {
 
   private onClose() {
     this.es.close();
-    console.info(`[SSR:Client] Connection Closed`);
+    console.warn(`[SSR:Client] Connection Closed`);
   }
 }
