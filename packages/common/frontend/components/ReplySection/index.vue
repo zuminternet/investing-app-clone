@@ -94,7 +94,7 @@ export default Vue.extend({
   border-radius: 10px;
 
   background-color: rgba(245, 245, 245, 1);
-  color: $grey-700;
+  color: rgba(97, 97, 97, 1);
 }
 
 .section {

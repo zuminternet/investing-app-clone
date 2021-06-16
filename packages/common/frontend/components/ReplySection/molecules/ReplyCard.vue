@@ -24,10 +24,10 @@
  * @see https://semantic-ui.com/views/comment.html
  */
 import Vue from 'vue';
-import Button from '@/components/atoms/Button';
-import Words from '@/components/atoms/Words';
-import ReplyForm from '@/components/molecules/ReplyInputForm';
-import lazyloading from '@/utils/lazyloading';
+import Button from '../atoms/Button.vue';
+import Words from '../atoms/Words.vue';
+import ReplyForm from './ReplyInputForm.vue';
+import lazyloading from '../../../utils/lazyloading';
 
 export default Vue.extend({
   name: 'ReplyCard',
