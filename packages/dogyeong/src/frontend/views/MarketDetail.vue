@@ -15,7 +15,7 @@
       <section v-if="summaryDetail" :class="$style.price">
         <span :class="$style['current-price']">{{ summaryDetail.regularMarketOpen }}</span>
         <span :class="[{ [$style.red]: priceDiff > 0 }, { [$style.blue]: priceDiff < 0 }]">
-          {{ priceDiff | formatPrice }} {{ pricePercent | formatPrice | formatPercent }}
+          {{ priceDiff | formatNumber }} {{ pricePercent | formatNumber | formatPercent }}
         </span>
       </section>
       <section :class="$style['chart-section']">
@@ -106,7 +106,7 @@ import ArticleTemplate from '@/components/ArticleTemplate/ArticleTemplate.vue';
 import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner.vue';
 import SearchButton from '@/components/SearchButton/SearchButton.vue';
 import { chartLightThemeOption } from '@/config';
-import { formatNumber } from '@/filters';
+import { formatNumber, formatNumber, formatPercent } from '@/filters';
 import Chart from '@/components/Chart/Chart.vue';
 
 export default Vue.extend({
@@ -126,6 +126,7 @@ export default Vue.extend({
 
   filters: {
     formatNumber,
+    formatPercent,
   },
 
   data() {
@@ -255,7 +256,7 @@ export default Vue.extend({
   color: var(--red-color);
 }
 
-.blud {
+.blue {
   color: var(--blue-color);
 }
 
