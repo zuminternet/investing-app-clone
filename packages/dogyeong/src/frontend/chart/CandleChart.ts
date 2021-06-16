@@ -54,6 +54,9 @@ export default class CandleChart {
     this.$container = $container;
     this.colorOptions = colorOptions;
 
+    // 초기 캔버스 영역 height 고정
+    this.$container.style.height = $container.offsetWidth / 1.5 + 'px';
+
     this.initalizeCanvas();
     this.initializeEvents();
     this.subscribeEvents();
@@ -113,10 +116,7 @@ export default class CandleChart {
   }
 
   private resize() {
-    const w = this.$container.offsetWidth;
-    this.$container.style.height = w / 1.5 + 'px';
-    const h = w / 1.5;
-
+    const { offsetWidth: w, offsetHeight: h } = this.$container;
     this.graph.resize(w - 88, h - 60);
     this.priceAxis.resize(88, h - 60);
     this.timeAxis.resize(w - 88, 60);
