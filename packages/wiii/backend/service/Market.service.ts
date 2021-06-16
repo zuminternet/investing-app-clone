@@ -114,7 +114,9 @@ export class MarketService {
     unless: (result) => !result,
   })
   public async getAllStocks() {
-    for await (const { ticker, tickerName } of stocksList) {
+    const baselist = IS_PRO_MODE ? stocksList : stocksList.slice(0, 2);
+
+    for await (const { ticker, tickerName } of baselist) {
       const { data, status, statusText } = await KRX({ ticker, type: `stock` });
       if (status >= 400) throw Error(statusText);
       this.cachedHistory[ticker] = { ticker, tickerName, ...data };
