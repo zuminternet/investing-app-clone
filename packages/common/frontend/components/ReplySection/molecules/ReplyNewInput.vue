@@ -66,4 +66,13 @@ export default Vue.extend({
     color: rgba(245, 245, 245, 1);
   }
 }
+
+.disabled {
+  cursor: not-allowed;
+}
+
+.reply-valid-text {
+  font-style: oblique;
+  font-size: 0.8rem;
+}
 </style>
