@@ -1,4 +1,5 @@
 import { AxiosStatic } from 'axios';
+import { ReplyDoc } from '../../backend/model/ReplyModel';
 
 declare const Axios: AxiosStatic;
 
@@ -176,8 +177,77 @@ const getBookmarks = async (email: string) => {
 
     return bookmarks;
   }
-
   throw new Error('Getting bookmarks was failed in front api');
 };
 
-export { getSearchedItems, getItemDetail, getNews, getAnalyses, createBookmark, getBookmarks, deleteBookmark, getArticleById };
+
+/**
+ * 댓글 추가 API
+ * email, 종목 또는 뉴스 Id 가져오는 방법은 개발자 특성에 따라 구현
+ */
+export interface CreateReplyProps {
+  email: string;
+  docId: string;
+  contents: string;
+}
+
+export const createReply = async ({ email, docId, contents }: CreateReplyProps) => {
+  try {
+    const { status, statusText } = await Axios.post(`/api/reply`, { docId, email, contents });
+    if (status >= 400) throw Error(statusText);
+    return true;
+  } catch (e) {
+    return console.error(e);
+  }
+};
+
+interface IReply {
+  replId: string;
+  userThumbnail: string;
+  userName: string;
+  email: string;
+  contents: string;
+  updatedAt: Date;
+  likes: number;
+  isParent?: boolean;
+  parentReplyId?: string;
+}
+
+const refiner = (repls: ReplyDoc[]): IReply[] =>
+  repls.map(({ id, userThumbnail, picture, name, userName, email, contents, updatedAt, likes }) => ({
+    replId: id,
+    userThumbnail: picture || userThumbnail,
+    userName: name || userName,
+    email,
+    contents,
+    updatedAt: new Date(updatedAt),
+    likes,
+  }));
+
+export const getReplsByDocID = async (docId: string) => {
+  try {
+    const {
+      data: { results },
+      status,
+      statusText,
+    } = await Axios.get(`/api/reply/${docId}`);
+
+    if (status >= 400) throw Error(statusText);
+
+    return refiner(results);
+  } catch (e) {
+    return console.error(e);
+  }
+};
+
+export {
+  getSearchedAnalyses,
+  getSearchedItems,
+  getItemDetail,
+  getNews,
+  getAnalyses,
+  createBookmark,
+  getBookmarks,
+  deleteBookmark,
+  getSearchedNews,
+}

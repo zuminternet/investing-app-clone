@@ -14,13 +14,12 @@ import { CanvasOptionEnum, ClientWH } from '@/type/chart';
  * @return resizing에 필요한 width, height === clientWidth, clientHeight
  */
 export const initCanvas = (ctx: CanvasRenderingContext2D, payload): ClientWH => {
-  const { width } = payload;
+  const { width, hasAxis } = payload;
   const ratio = window.devicePixelRatio;
 
   const cvs = ctx.canvas;
 
   const size = width ?? cvs.clientWidth;
-  console.log({ cvsWidth: size });
   cvs.style.width = `${size}px`;
   cvs.style.height = `${(size * 9) / 16}px`;
 
@@ -33,8 +32,8 @@ export const initCanvas = (ctx: CanvasRenderingContext2D, payload): ClientWH => 
   ctx.save();
 
   /** @todo 좀 이해안가는 부분.. */
-  const zeroX = canvasWidth * 0.927;
-  const zeroY = zeroX * 1.12;
+  const zeroX = canvasWidth * (hasAxis ? 0.927 : 1);
+  const zeroY = zeroX * (hasAxis ? 1.12 : 1.32);
 
   return {
     /** 영점 */

@@ -12,10 +12,10 @@ export default Vue.extend({});
 
 <style lang="scss" scoped>
 button {
-  background-color: $grey-300;
+  background-color: rgba(224, 224, 224, 1);
   height: 30px;
   width: max-content;
-  border: solid 2px $grey-300;
+  border: solid 2px rgba(224, 224, 224, 1);
   border-radius: 10px;
   font-size: 0.7rem;
   line-height: 1rem;
@@ -23,8 +23,8 @@ button {
   transition: all 0.15s ease-out;
 
   &:hover:not(:disabled) {
-    background-color: $grey-500;
-    border: solid 2px $grey-500;
+    background-color: rgba(158, 158, 158, 1);
+    border: solid 2px rgba(158, 158, 158, 1);
   }
 
   &:disabled {

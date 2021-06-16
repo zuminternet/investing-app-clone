@@ -5,10 +5,10 @@ import { GetHistoricalOptions } from '../../domain/apiOptions';
 import { marketName } from '../../domain/apiUrls';
 import { MINUTE_ONE, times } from '../../domain/date';
 import { devPrint, IS_PRO_MODE } from '../../domain/utilFunc';
-import { fetchHistoricalData as historicalKoreanData } from '../chart/KRX';
+import { fetchHistoricalData as KRX } from '../chart/KRX';
 
 const fetchers = {
-  [marketName.stocks]: historicalKoreanData,
+  [marketName.stocks]: KRX,
   [marketName.indexes]: undefined,
   [marketName.coins]: undefined,
 } as const;
@@ -25,8 +25,10 @@ const resultValidator = (data, status: number, statusText: string) => {
  */
 @Service()
 export class MarketService {
-  private delay = MINUTE_ONE * 5;
+  /** @todo 개발 모드에서 30분 단위 캐싱 */
+  private delay = MINUTE_ONE * 30;
   private lastRequest: number;
+  private cachedHistory = {};
 
   constructor() /**
    * @Yml('marketApi') private MarketApi: any,
@@ -69,16 +71,30 @@ export class MarketService {
     }
   }
 
-  public async getHistoricalNoCache(options: GetHistoricalOptions) {
+  /**
+   * getCachedHistorical
+   * @description
+   * node-cache의 경우 key 값을 동적으로 정의할 수 없어서
+   * 클래스 property에 저장
+   * @param options
+   * @returns
+   */
+  public async getCachedHistorical(options: GetHistoricalOptions) {
     try {
       const { type, ticker } = options;
 
+      const requestTime = new Date().getTime();
+      const cached = this.cachedHistory[ticker];
+      if (requestTime - this.lastRequest < this.delay && cached) return cached;
+
       /** response: data, status, statusText, headers, config */
       const { data, status, statusText } = await fetchers[type](options);
-      devPrint()({ type, ticker, status, statusText }, `getHistorical No Cache fetchers`);
+      devPrint()({ type, ticker, status, statusText, size: data?.results?.length }, `getHistorical No Cache fetchers`);
 
       resultValidator(data, status, statusText);
 
+      this.lastRequest = requestTime;
+      this.cachedHistory[ticker] = data;
       return data;
     } catch (e) {
       return console.error(e);

@@ -1,5 +1,5 @@
 <template>
-  <router-link :to="href" class="router-link noselect">{{ name }}</router-link>
+  <router-link :to="href" class="router-link noselect">{{ name }} <slot /></router-link>
 </template>
 
 <script lang="ts">
