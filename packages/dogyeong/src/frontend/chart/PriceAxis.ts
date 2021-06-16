@@ -29,6 +29,7 @@ export default class PriceAxis extends Canvas {
 
   public draw(minPrice: number, maxPrice: number) {
     this.setPrices(minPrice, maxPrice);
+    this.innerPrices = this.getInnerPrices();
 
     const ctx = this.getCtx();
 
@@ -45,13 +46,12 @@ export default class PriceAxis extends Canvas {
   private setPrices(minPrice, maxPrice) {
     this.minPrice = minPrice;
     this.maxPrice = maxPrice;
-    this.innerPrices = this.getInnerPrices();
   }
 
   private getInnerPrices() {
     const gap = this.getPriceGapUnit();
     const prices: string[] = [];
-    let index = Math.ceil(this.minPrice / gap);
+    let index = !this.minPrice ? 0 : Math.ceil(this.minPrice / gap);
 
     while (index * gap < this.maxPrice) {
       prices.push((index * gap).toFixed(2));
