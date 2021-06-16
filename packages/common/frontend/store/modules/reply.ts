@@ -1,16 +1,10 @@
 import { createReply, getReplsByDocID } from '../../apis/';
 
-const state = {
-  //
-};
+const state = {};
 
-const getters = {
-  //
-};
+const getters = {};
 
-const mutations = {
-  //
-};
+const mutations = {};
 
 const actions = {
   /**
@@ -32,7 +26,7 @@ const actions = {
    * 댓글 목록 조회
    * @param 종목 티커 또는 뉴스 id 로 조회
    */
-  getReplsByDocID: async (_, { docId }) => {
+  getReplsByDocID: async (_, docId: string) => {
     try {
       const repls = await getReplsByDocID(docId);
       return repls;
