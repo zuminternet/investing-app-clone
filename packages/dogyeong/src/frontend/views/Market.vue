@@ -73,10 +73,22 @@ export default Vue.extend({
 
   mixins: [
     swiperMixin({
+      // 슬라이드 할 때 새로운 데이터 fetch하고
+      // pulling을 위한 새로운 interval 생성
       fetchData() {
-        if (this.currentNavId === 'index') this.getIndices();
-        if (this.currentNavId === 'stock') this.getStocks();
-        if (this.currentNavId === 'coin') this.getCoins();
+        let fetcher;
+
+        if (this.currentNavId === 'index') fetcher = this.getIndices;
+        if (this.currentNavId === 'stock') fetcher = this.getStocks;
+        if (this.currentNavId === 'coin') fetcher = this.getCoins;
+
+        fetcher();
+
+        if (this.interval) {
+          clearInterval(this.interval);
+          this.interval = null;
+        }
+        this.interval = setInterval(fetcher, 1000);
       },
     }),
   ],
@@ -90,6 +102,10 @@ export default Vue.extend({
       ],
       currentNavId: 'index',
     };
+  },
+
+  beforeDestroy() {
+    if (this.interval) clearInterval(this.interval);
   },
 
   methods: {
