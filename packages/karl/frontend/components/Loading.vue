@@ -1,5 +1,5 @@
 <template>
-  <div v-if="loadingHeight" :style="style" class="loading">
+  <div v-if="loadingHeight" :style="style" class="loading-with-height">
     Loading!!
   </div>
   <div v-else class="loading">
@@ -29,6 +29,13 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.loading-with-height {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 .loading {
   display: flex;
   flex: 1;

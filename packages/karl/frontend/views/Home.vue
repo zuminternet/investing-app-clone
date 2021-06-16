@@ -44,6 +44,7 @@ export default {
     ...mapState({
       isLoading: (state) => state.market.isLoading,
       isError: (state) => state.market.isError,
+      userInfo: (state) => state.user,
     }),
   },
 
@@ -58,10 +59,15 @@ export default {
 
   methods: {
     ...mapActions('market', ['getStocks', 'getIndices', 'getCryptos', 'setIsLoading']),
+    ...mapActions('user', ['getUser']),
   },
 
   async mounted() {
+    const { userEmail, userGoogleId } = this.userInfo;
+
     this.setIsLoading(true);
+
+    !userEmail || !userGoogleId ? await this.getUser() : null;
 
     await this.getStocks();
     await this.getIndices();

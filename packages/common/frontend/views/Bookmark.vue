@@ -28,11 +28,11 @@ export default {
   },
 
   methods: {
-    ...mapActions('user', ['getBookmarks']),
+    ...mapActions('user', ['getBookmarks', 'getUser']),
   },
 
-  created() {
-    this.getBookmarks();
+  async mounted() {
+    await this.getUser();
   },
 };
 </script>

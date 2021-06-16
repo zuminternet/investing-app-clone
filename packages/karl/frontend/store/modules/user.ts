@@ -103,14 +103,13 @@ const actions = {
    * @description JWT를 이용하여 자동로그인을 수행하는 action. 성공하면 유저 정보를 가져온다.
    *
    */
-  async getUser({ commit }) {
+  async getUser({ commit, dispatch }) {
     try {
       const user = await getUser();
 
       if (user) {
         commit('setUserInfo', user);
-
-        return true;
+        dispatch('getBookmarks');
       }
     } catch (error) {
       console.log(error);
@@ -159,18 +158,13 @@ const actions = {
   },
 
   async getBookmarks({ commit, state }) {
-    try {
-      const email = state.userEmail;
-      const bookmarks = await getBookmarks(email);
+    const email = state.userEmail;
+    const bookmarks = await getBookmarks(email);
 
-      if (bookmarks) {
-        commit('setBookmarks', bookmarks);
+    if (bookmarks) {
+      commit('setBookmarks', bookmarks);
 
-        return true;
-      }
-    } catch (error) {
-      console.log(error);
-      commit('setIsError', true);
+      return true;
     }
   },
 

@@ -25,3 +25,7 @@ export const fromNow = (date: string | Date): string => {
   if (diff < year) return `${Math.floor(diff / month)}달 전`;
   return `${Math.floor(diff / year)}년 전`;
 };
+
+export const isEmptyObject = (object) => {
+  return Object.keys(object).length === 0;
+};
