@@ -76,9 +76,10 @@ export default () => {
     actions: {
       async getIndices({ state, commit }) {
         try {
-          if (state.indices.isLoading) return;
+          const { isLoading, data } = state.indices;
 
-          commit('setIndicesLoading');
+          if (isLoading) return;
+          if (!data.length) commit('setIndicesLoading');
 
           const indices = await financeService.getIndices();
 
@@ -90,9 +91,10 @@ export default () => {
       },
       async getCoins({ state, commit }) {
         try {
-          if (state.coins.isLoading) return;
+          const { isLoading, data } = state.coins;
 
-          commit('setCoinsLoading');
+          if (isLoading) return;
+          if (!data.length) commit('setCoinsLoading');
 
           const coins = await financeService.getCoins();
 
@@ -104,9 +106,10 @@ export default () => {
       },
       async getStocks({ state, commit }) {
         try {
-          if (state.stocks.isLoading) return;
+          const { isLoading, data } = state.stocks;
 
-          commit('setStocksLoading');
+          if (isLoading) return;
+          if (!data.length) commit('setStocksLoading');
 
           const stocks = await financeService.getStocks();
 
