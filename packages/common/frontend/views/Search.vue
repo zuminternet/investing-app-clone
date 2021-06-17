@@ -4,12 +4,14 @@
     <custom-swiper :navigatorButtonNames="swiperNavigatorButtonNames">
       <swiper-slide>
         <loading v-if="searchedItemsIsLoading" :loadingHeight="540" />
+        <error v-else-if="searchedItemIsError" :errorHeight="540" />
         <empty v-else-if="!searchedItemsIsLoading && !searchedItems.length" :emptyHeight="540" />
         <item-card-list v-else :items="searchedItems" :excludedHeight="100" :userInfo="userInfo" isSearch></item-card-list>
       </swiper-slide>
       <swiper-slide>
         <list-wrapper :excludedHeight="100">
           <loading v-if="searchedNewsIsLoading" />
+          <error v-else-if="searchedNewsIsError" :errorHeight="540" />
           <empty v-else-if="!searchedNewsIsLoading && !searchedNews.length" />
           <news-list v-else>
             <news-list-item v-for="element in searchedNews" :key="element.id" :to="''">
@@ -25,6 +27,7 @@
       <swiper-slide>
         <list-wrapper :excludedHeight="100">
           <loading v-if="searchedAnalysesIsLoading" />
+          <error v-else-if="searchedAnalysesIsError" :errorHeight="540" />
           <empty v-else-if="!searchedAnalysesIsLoading && !searchedAnalyses.length" />
           <news-list v-else>
             <news-list-item v-for="element in searchedAnalyses" :key="element.id" :to="''">
@@ -56,6 +59,7 @@ import NewsTextBox from '../components/News/NewsTextBox.vue';
 import NewsTextBoxTitle from '../components/News/NewsTextBoxTitle.vue';
 import NewsTextBoxDesc from '../components/News/NewsTextBoxDesc.vue';
 import Loading from 'karl/frontend/components/Loading.vue';
+import Error from 'karl/frontend/components/Error.vue';
 import Empty from 'karl/frontend/components/Empty.vue';
 
 import { text } from '../../../common/frontend/constants';
@@ -78,14 +82,17 @@ export default {
     ListWrapper,
     Loading,
     Empty,
+    Error,
   },
 
   computed: {
     ...mapState({
       userInfo: (state) => state.user,
+
       searchedItems: (state) => state.search.searchedItems,
       searchedNews: (state) => state.search.searchedNews,
       searchedAnalyses: (state) => state.search.searchedAnalyses,
+
       searchedItemsIsLoading: (state) => state.search.searchedItemsIsLoading,
       searchedItemIsError: (state) => state.search.searchedItemIsError,
       searchedNewsIsLoading: (state) => state.search.searchedNewsIsLoading,
@@ -102,6 +109,7 @@ export default {
   },
 
   methods: {
+    ...mapActions('user', ['getUser']),
     ...mapActions('search', [
       'getSearchedItems',
       'getSearchedNews',
@@ -123,16 +131,27 @@ export default {
         this.setSearchedNewsIsLoading(true);
         this.setSearchedAnalysesIsLoading(true);
 
-        await this.getSearchedItems({ keyword, email });
-        this.setSearchedItemsIsLoading(false);
+        this.getSearchedItems({ keyword, email }).then(() => {
+          this.setSearchedItemsIsLoading(false);
+        });
 
-        await this.getSearchedNews({ offset: 0, limit: 20, tickers });
-        this.setSearchedNewsIsLoading(false);
+        this.getSearchedNews({ offset: 0, limit: 20, tickers }).then(() => {
+          this.setSearchedNewsIsLoading(false);
+        });
 
-        await this.getSearchedAnalyses({ offset: 0, limit: 20, tickers });
-        this.setSearchedAnalysesIsLoading(false);
+        this.getSearchedAnalyses({ offset: 0, limit: 20, tickers }).then(() => {
+          this.setSearchedAnalysesIsLoading(false);
+        });
       }
     },
+  },
+
+  async mounted() {
+    const { userEmail, userGoogleId } = this.userInfo;
+
+    if (!userEmail || !userGoogleId) {
+      await this.getUser();
+    }
   },
 
   beforeDestroy() {

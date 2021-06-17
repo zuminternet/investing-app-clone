@@ -33,6 +33,7 @@ const actions = {
       throw new Error('Getting searched items was failed in search store');
     } catch (error) {
       console.log(error);
+      commit('setSearchedItemIsError', true);
     }
   },
 
@@ -49,6 +50,7 @@ const actions = {
       throw new Error('Getting news was failed in itemDetail store');
     } catch (error) {
       console.log(error);
+      commit('setSearchedNewsIsError', true);
     }
   },
 
@@ -65,6 +67,7 @@ const actions = {
       throw new Error('Getting news was failed in itemDetail store');
     } catch (error) {
       console.log(error);
+      commit('setSearchedAnalysesIsError', true);
     }
   },
 
@@ -72,24 +75,12 @@ const actions = {
     commit('setSearchedItemsIsLoading', isLoading);
   },
 
-  setSearchedItemIsError({ commit }, isError) {
-    commit('setSearchedItemIsError', isError);
-  },
-
   setSearchedNewsIsLoading({ commit }, isLoading) {
     commit('setSearchedNewsIsLoading', isLoading);
   },
 
-  setSearchedNewsIsError({ commit }, isError) {
-    commit('setSearchedNewsIsError', isError);
-  },
-
   setSearchedAnalysesIsLoading({ commit }, isLoading) {
     commit('setSearchedAnalysesIsLoading', isLoading);
-  },
-
-  setSearchedAnalysesIsError({ commmit }, isError) {
-    commmit('setSearchedAnalysesIsError', isError);
   },
 
   clearSearchStore({ commit }) {
