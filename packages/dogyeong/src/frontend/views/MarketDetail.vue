@@ -8,7 +8,7 @@
         <template #right>
           <SearchButton />
         </template>
-        {{ name }}
+        {{ displayName }}
       </HeaderTitle>
     </Header>
     <main>
@@ -135,7 +135,6 @@ export default Vue.extend({
       summaryDetail: null,
       chartData: [],
       chart: null,
-      name: '',
       news: {
         data: [],
         isLoading: false,
@@ -148,6 +147,9 @@ export default Vue.extend({
       },
       symbol: '',
       isChartLoading: true,
+      chartPeriod: '5y',
+      interval: null,
+      displayName: '',
     };
   },
 
@@ -180,14 +182,6 @@ export default Vue.extend({
       .then((summaryDetail) => (this.summaryDetail = summaryDetail))
       .catch(console.error);
 
-    getChart({ symbol: this.symbol, period: '1y' })
-      .then((chart) => {
-        this.chartData = chart.data;
-        this.name = chart.display_name;
-        this.isChartLoading = false;
-      })
-      .catch(console.error);
-
     getNewNews({ tickers: this.symbol })
       .then((news) => (this.news.data = news))
       .catch(console.error);
@@ -195,6 +189,13 @@ export default Vue.extend({
     getNewOpinions({ tickers: this.symbol })
       .then((opinions) => (this.opinions.data = opinions))
       .catch(console.error);
+
+    this.fetchChart();
+    this.interval = setInterval(this.fetchChart.bind(this), 2000);
+  },
+
+  beforeDestroy() {
+    this.clearInterval();
   },
 
   methods: {
@@ -202,10 +203,18 @@ export default Vue.extend({
       this.$router.back();
     },
     changeChartPeriod(period) {
-      this.isChartLoading = true;
-      getChart({ symbol: this.symbol, period })
+      this.chartPeriod = period;
+      this.clearInterval();
+      this.interval = setInterval(this.fetchChart.bind(this), 2000);
+      this.fetchChart();
+    },
+    fetchChart() {
+      if (!this.chartData.length) this.isChartLoading = true;
+
+      getChart({ symbol: this.symbol, period: this.chartPeriod })
         .then((chart) => {
           this.chartData = chart.data;
+          this.displayName = chart.display_name;
           this.isChartLoading = false;
         })
         .catch(console.error);
@@ -215,6 +224,11 @@ export default Vue.extend({
     },
     requestFullscreen() {
       this.$refs.chart.requestFullscreen();
+    },
+    clearInterval() {
+      if (!this.interval) return;
+      clearInterval(this.interval);
+      this.interval = null;
     },
   },
 });
