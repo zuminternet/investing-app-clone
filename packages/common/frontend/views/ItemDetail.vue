@@ -178,25 +178,31 @@ export default {
 
   async mounted() {
     const { userEmail, userGoogleId } = this.userInfo;
-    !userEmail || !userGoogleId ? await this.getUser() : null;
+
+    this.setItemDetailIsLoading(true);
+    this.setNewsIsLoading(true);
+    this.setAnalysesIsLoading(true);
+
+    if (!userEmail || !userGoogleId) {
+      await this.getUser();
+    }
 
     const { symbols, name } = this.$route.query;
     this.symbolForChart = symbols;
     const email = this.userInfo.userEmail;
     const tickers = [symbols];
 
-    this.setItemDetailIsLoading(true);
-    this.setNewsIsLoading(true);
-    this.setAnalysesIsLoading(true);
+    this.getItemDetail({ symbols, email, name }).then(() => {
+      this.setItemDetailIsLoading(false);
+    });
 
-    await this.getItemDetail({ symbols, email, name });
-    this.setItemDetailIsLoading(false);
+    this.getNews({ offset: 0, limit: 20, tickers }).then(() => {
+      this.setNewsIsLoading(false);
+    });
 
-    await this.getNews({ offset: 0, limit: 20, tickers });
-    this.setNewsIsLoading(false);
-
-    await this.getAnalyses({ offset: 0, limit: 20, tickers });
-    this.setAnalysesIsLoading(false);
+    this.getAnalyses({ offset: 0, limit: 20, tickers }).then(() => {
+      this.setAnalysesIsLoading(false);
+    });
   },
 };
 </script>
