@@ -155,14 +155,21 @@ export default Vue.extend({
     fullscreenEnabled() {
       return document.fullscreenEnabled;
     },
-    priceDiff() {
-      return this.summaryDetail?.regularMarketOpen - this.summaryDetail?.previousClose || 0;
-    },
-    pricePercent() {
-      return (this.priceDiff / this.summaryDetail?.regularMarketOpen) * 100;
-    },
     chartColorOptions() {
       return this.$store.state.isDarkTheme ? undefined : chartLightThemeOption;
+    },
+    previos2DayClose() {
+      return this.chartData[1]?.close ?? 0;
+    },
+    previosClose() {
+      return this.chartData[0]?.close ?? 0;
+    },
+    priceDiff() {
+      return this.previosClose - this.previos2DayClose;
+    },
+    pricePercent() {
+      const result = (this.priceDiff / this.previos2DayClose) * 100;
+      return Number.isNaN(result) ? 0 : result;
     },
   },
 
