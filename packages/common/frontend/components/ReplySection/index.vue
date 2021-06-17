@@ -62,7 +62,7 @@ export default Vue.extend({
 });
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .reset {
   box-sizing: border-box;
   margin: 0;

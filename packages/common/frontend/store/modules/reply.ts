@@ -1,4 +1,4 @@
-import { createReply, getReplsByDocID } from '../../apis/';
+import { createReply, getReplsByDocID, toggleLikes } from '../../apis/';
 
 const state = {};
 
@@ -30,6 +30,15 @@ const actions = {
     try {
       const repls = await getReplsByDocID(docId, email);
       return repls;
+    } catch (e) {
+      return console.error(e);
+    }
+  },
+
+  toggleLikesAction: (_, replId: string) => {
+    if (!replId) return false;
+    try {
+      toggleLikes(replId);
     } catch (e) {
       return console.error(e);
     }

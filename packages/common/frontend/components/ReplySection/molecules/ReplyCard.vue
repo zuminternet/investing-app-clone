@@ -107,7 +107,7 @@ export default Vue.extend({
       const { replId, liked, changableLikes } = this;
       this.liked = !liked;
       this.changableLikes = liked ? changableLikes - 1 : changableLikes + 1;
-      this.toggleLikesAction(replId);
+      if (!liked) this.toggleLikesAction(replId);
     },
   },
 });
