@@ -1,10 +1,16 @@
-import { getNews, getAnalyses, getArticleById } from '../../../../common/frontend/apis';
+import { getNews, getArticleById } from '../../../../common/frontend/apis';
 import { tickerMap } from '../../../../common/domain';
 
 // 초기 state 값 설정
 const state = () => ({
   news: [],
   articleDetail: {},
+
+  newsIsLoading: false,
+  newsIsError: false,
+
+  articleDetailIsLoading: false,
+  articleDetailIsError: false,
 });
 
 // getter 설정
@@ -50,6 +56,7 @@ const actions = {
       throw new Error('Getting news was failed in article store');
     } catch (error) {
       console.log(error);
+      commit('setNewsIsError', true);
     }
   },
 
@@ -66,7 +73,16 @@ const actions = {
       throw new Error('Getting article by id was failed in article store');
     } catch (error) {
       console.log(error);
+      commit('setArticleDetailIsError', true);
     }
+  },
+
+  setNewsIsLoading({ commit }, isLoading) {
+    commit('setNewsIsLoading', isLoading);
+  },
+
+  setArticleDetailIsLoading({ commit }, isLoading) {
+    commit('setArticleDetailIsLoading', isLoading);
   },
 };
 
@@ -77,6 +93,22 @@ const mutations = {
   },
   setArticleDetail(state, article) {
     state.articleDetail = article;
+  },
+
+  setNewsIsLoading(state, isLoading) {
+    state.newsIsLoading = isLoading;
+  },
+
+  setNewsIsError(state, isError) {
+    state.newsIsError = isError;
+  },
+
+  setArticleDetailIsLoading(state, isLoading) {
+    state.articleDetailIsLoading = isLoading;
+  },
+
+  setArticleDetailIsError(state, isError) {
+    state.articleDetailIsError = isError;
   },
 };
 

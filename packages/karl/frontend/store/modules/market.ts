@@ -5,15 +5,18 @@ const state = () => ({
   indicesItems: [],
   stockItems: [],
   cryptoItems: [],
+
+  indicesIsLoading: false,
+  indicesIsError: false,
+  stocksIsLoading: false,
+  stocksIsError: false,
+  cryptosIsLoading: false,
+  cryptosIsError: false,
 });
 
 // getter 설정
 
-const getters = {
-  itemCollections: (state) => {
-    return [state.indicesItems, state.stockItems, state.cryptoItems];
-  },
-};
+const getters = {};
 
 // actions 설정
 const actions = {
@@ -30,6 +33,7 @@ const actions = {
       throw new Error('Getting stocks was failed in market store');
     } catch (error) {
       console.log(error);
+      commit('setStocksIsError', true);
     }
   },
 
@@ -46,6 +50,7 @@ const actions = {
       throw new Error('Getting indices was failed in market store');
     } catch (error) {
       console.log(error);
+      commit('setIndicesIsError', true);
     }
   },
 
@@ -62,7 +67,20 @@ const actions = {
       throw new Error('Getting crpytos was failed in market store');
     } catch (error) {
       console.log(error);
+      commit('setCryptosIsError', true);
     }
+  },
+
+  setIndicesIsLoading({ commit }, isLoading) {
+    commit('setIndicesIsLoading', isLoading);
+  },
+
+  setStocksIsLoading({ commit }, isLoading) {
+    commit('setStocksIsLoading', isLoading);
+  },
+
+  setCryptosIsLoading({ commit }, isLoading) {
+    commit('setCryptosIsLoading', isLoading);
   },
 };
 
@@ -78,6 +96,38 @@ const mutations = {
 
   setCryptoItems(state, cryptos) {
     state.cryptoItems = cryptos;
+  },
+
+  setIsLoading(state, isLoading) {
+    state.isLoading = isLoading;
+  },
+
+  setIsError(state, isError) {
+    state.isError = isError;
+  },
+
+  setIndicesIsLoading(state, isLoading) {
+    state.indicesIsLoading = isLoading;
+  },
+
+  setIndicesIsError(state, isError) {
+    state.indicesIsError = isError;
+  },
+
+  setStocksIsLoading(state, isLoading) {
+    state.stocksIsLoading = isLoading;
+  },
+
+  setStocksIsError(state, isError) {
+    state.stocksIsError = isError;
+  },
+
+  setCryptosIsLoading(state, isLoading) {
+    state.cryptosIsLoading = isLoading;
+  },
+
+  setCryptosIsError(state, isError) {
+    state.cryptosIsError = isError;
   },
 };
 

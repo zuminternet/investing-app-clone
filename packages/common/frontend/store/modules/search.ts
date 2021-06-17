@@ -5,6 +5,13 @@ const state = () => ({
   searchedItems: [],
   searchedNews: [],
   searchedAnalyses: [],
+
+  searchedItemsIsLoading: false,
+  searchedItemIsError: false,
+  searchedNewsIsLoading: false,
+  searchedNewsIsError: false,
+  searchedAnalysesIsLoading: false,
+  searchedAnalysesIsError: false,
 });
 
 // getter 설정
@@ -26,6 +33,7 @@ const actions = {
       throw new Error('Getting searched items was failed in search store');
     } catch (error) {
       console.log(error);
+      commit('setSearchedItemIsError', true);
     }
   },
 
@@ -42,6 +50,7 @@ const actions = {
       throw new Error('Getting news was failed in itemDetail store');
     } catch (error) {
       console.log(error);
+      commit('setSearchedNewsIsError', true);
     }
   },
 
@@ -58,7 +67,20 @@ const actions = {
       throw new Error('Getting news was failed in itemDetail store');
     } catch (error) {
       console.log(error);
+      commit('setSearchedAnalysesIsError', true);
     }
+  },
+
+  setSearchedItemsIsLoading({ commit }, isLoading) {
+    commit('setSearchedItemsIsLoading', isLoading);
+  },
+
+  setSearchedNewsIsLoading({ commit }, isLoading) {
+    commit('setSearchedNewsIsLoading', isLoading);
+  },
+
+  setSearchedAnalysesIsLoading({ commit }, isLoading) {
+    commit('setSearchedAnalysesIsLoading', isLoading);
   },
 
   clearSearchStore({ commit }) {
@@ -86,6 +108,30 @@ const mutations = {
     state.searchedItems = [];
     state.searchedNews = [];
     state.searchedAnalyses = [];
+  },
+
+  setSearchedItemsIsLoading(state, isLoading) {
+    state.searchedItemsIsLoading = isLoading;
+  },
+
+  setSearchedItemIsError(state, isError) {
+    state.searchedItemIsError = isError;
+  },
+
+  setSearchedNewsIsLoading(state, isLoading) {
+    state.searchedNewsIsLoading = isLoading;
+  },
+
+  setSearchedNewsIsError(state, isError) {
+    state.searchedNewsIsError = isError;
+  },
+
+  setSearchedAnalysesIsLoading(state, isLoading) {
+    state.searchedAnalysesIsLoading = isLoading;
+  },
+
+  setSearchedAnalysesIsError(state, isError) {
+    state.searchedAnalysesIsError = isError;
   },
 };
 

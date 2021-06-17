@@ -4,26 +4,30 @@
       <div class="header-button-box">
         <header-button isBackButton></header-button>
       </div>
-      <div>
+      <loading v-if="isLoading" />
+      <error v-else-if="isError" />
+      <template v-else>
         <div>
-          <custom-text pageTitle>{{ name }}</custom-text>
+          <div>
+            <custom-text pageTitle>{{ name }}</custom-text>
+          </div>
+          <div v-if="isStock">
+            <custom-text>{{ category }} ({{ symbol }})</custom-text>
+          </div>
         </div>
-        <div v-if="isStock">
-          <custom-text>{{ category }} ({{ symbol }})</custom-text>
+        <empty-space></empty-space>
+        <div class="header-button-box">
+          <header-button isGoSearchButton></header-button>
+          <header-button
+            isAddBookmarkButton
+            :isBookmarked="isBookmarked"
+            :email="email"
+            :symbol="symbol"
+            :name="name"
+            :category="category"
+          ></header-button>
         </div>
-      </div>
-      <empty-space></empty-space>
-      <div class="header-button-box">
-        <header-button isGoSearchButton></header-button>
-        <header-button
-          isAddBookmarkButton
-          :isBookmarked="isBookmarked"
-          :email="email"
-          :symbol="symbol"
-          :name="name"
-          :category="category"
-        ></header-button>
-      </div>
+      </template>
     </template>
 
     <template v-if="isNewsDetail">
@@ -33,7 +37,6 @@
       </div>
       <empty-space></empty-space>
       <div class="header-button-box">
-        <!-- <header-button></header-button> -->
         <header-button isGoSearchButton></header-button>
       </div>
     </template>
@@ -72,7 +75,6 @@
       </div>
       <empty-space></empty-space>
       <div class="header-button-box">
-        <!-- <header-button></header-button> -->
         <header-button isGoSearchButton></header-button>
       </div>
     </template>
@@ -86,6 +88,8 @@ import CustomText from '../components/CustomText.vue';
 import EmptySpace from '../components/karl/EmptySpace.vue';
 import SearchInput from '../components/Search/SearchInput.vue';
 import HeaderButton from '../components/HeaderButton.vue';
+import Loading from 'karl/frontend/components/Loading.vue';
+import Error from 'karl/frontend/components/Error.vue';
 
 import { text } from '../constants';
 
@@ -96,6 +100,8 @@ export default {
     EmptySpace,
     SearchInput,
     HeaderButton,
+    Loading,
+    Error,
   },
 
   props: {
@@ -125,6 +131,16 @@ export default {
     },
 
     isNews: {
+      type: Boolean,
+      default: false,
+    },
+
+    isLoading: {
+      type: Boolean,
+      default: false,
+    },
+
+    isError: {
       type: Boolean,
       default: false,
     },

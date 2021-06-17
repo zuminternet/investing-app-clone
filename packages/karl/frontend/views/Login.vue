@@ -1,8 +1,9 @@
 <template>
-  <div class="login-page">
+  <loading v-if="isLoading"></loading>
+  <error v-else-if="isError"></error>
+  <div v-else class="login-page">
     <template v-if="isEmailLogin">
       <o-auth-buttons-box :handleAuthClick="handleAuthClick" />
-
       <div class="email-login-input-form-box">
         <login-password-input-form
           :submitButtonText="emailLogin"
@@ -17,7 +18,6 @@
       <div class="zum-logo-box">
         <div class="zum-logo"></div>
       </div>
-
       <div class="login-wrapper">
         <o-auth-buttons-box :handleAuthClick="handleAuthClick"></o-auth-buttons-box>
         <div class="login-options-box">
@@ -42,6 +42,8 @@
 <script lang="ts">
 import { mapActions, mapState } from 'vuex';
 
+import Loading from '../components/Loading.vue';
+import Error from '../components/Error.vue';
 import TextButton from '../components/TextButton.vue';
 import CustomText from '../../../common/frontend/components/CustomText.vue';
 import OAuthButtonsBox from '../components/OAuthButtonsBox.vue';
@@ -56,6 +58,8 @@ export default {
     CustomText,
     OAuthButtonsBox,
     LoginPasswordInputForm,
+    Loading,
+    Error,
   },
 
   data() {
@@ -63,7 +67,6 @@ export default {
     return {
       email: '',
       password: '',
-
       isEmailLogin: false,
       emailSignup: EMAIL_SIGNUP,
       alreadyRegister: ALREADY_REGISTER,
@@ -71,7 +74,6 @@ export default {
       passWithoutLogin: PASS_WITHOUT_LOGIN,
       emailLogin: EMAIL_LOGIN,
       register: REGISTER,
-
       user: null,
       isAuthorized: false,
       currentApiRequest: {},
@@ -82,11 +84,13 @@ export default {
   computed: {
     ...mapState({
       isAuthorizedByOAuth: (state) => state.user.isAuthorizedByOAuth,
+      isLoading: (state) => state.user.isLoading,
+      isError: (state) => state.user.isError,
     }),
   },
 
   methods: {
-    ...mapActions('user', ['googleInitClient', 'getUser', 'requestEmailLogin', 'checkSignInOrSignOut']),
+    ...mapActions('user', ['googleInitClient', 'getUser', 'requestEmailLogin', 'checkSignInOrSignOut', 'setIsLoading']),
 
     handleAuthClick() {
       this.checkSignInOrSignOut();
@@ -111,12 +115,16 @@ export default {
     },
   },
 
-  async created() {
+  async mounted() {
+    this.setIsLoading(true);
+
     if (await this.getUser()) {
       this.routeToMarket();
 
       return;
     }
+
+    this.setIsLoading(false);
 
     const gapi = window.gapi;
     gapi.load('client:auth2', this.googleInitClient);

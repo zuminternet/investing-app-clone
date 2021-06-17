@@ -1,49 +1,67 @@
 <template>
   <div class="item-detail-price-box">
-    <div class="up-and-down-icon-box">
-      <span
-        :class="{
-          'up-down-arrow': true,
-          'up-arrow': isUp,
-          'down-arrow': isDown,
-        }"
-        >&#10144;</span
-      >
-    </div>
-    <div>
-      <div>
-        <custom-text itemDetailPrice>{{ close }}</custom-text>
-        <template v-if="upDownPrice > 0">
-          <custom-text itemDetailPlus> {{ upDownPrice }}</custom-text>
-          <custom-text itemDetailPlus> ({{ upDownRate }})</custom-text>
-        </template>
-        <template v-else-if="upDownPrice < 0">
-          <custom-text itemDetailMinus> {{ upDownPrice }}</custom-text>
-          <custom-text itemDetailMinus> ({{ upDownRate }})</custom-text>
-        </template>
-        <template v-else>
-          <custom-text itemCardNameAndPrice> {{ upDownPrice }}</custom-text>
-          <custom-text itemCardNameAndPrice> ({{ upDownRate }})</custom-text>
-        </template>
+    <loading v-if="isLoading" />
+    <error v-else-if="isError" />
+    <template v-else>
+      <div class="up-and-down-icon-box">
+        <span
+          :class="{
+            'up-down-arrow': true,
+            'up-arrow': isUp,
+            'down-arrow': isDown,
+          }"
+          >&#10144;</span
+        >
       </div>
-    </div>
+      <div>
+        <div>
+          <custom-text itemDetailPrice>{{ close }}</custom-text>
+          <template v-if="upDownPrice > 0">
+            <custom-text itemDetailPlus> {{ upDownPrice }}</custom-text>
+            <custom-text itemDetailPlus> ({{ upDownRate }})</custom-text>
+          </template>
+          <template v-else-if="upDownPrice < 0">
+            <custom-text itemDetailMinus> {{ upDownPrice }}</custom-text>
+            <custom-text itemDetailMinus> ({{ upDownRate }})</custom-text>
+          </template>
+          <template v-else>
+            <custom-text itemCardNameAndPrice> {{ upDownPrice }}</custom-text>
+            <custom-text itemCardNameAndPrice> ({{ upDownRate }})</custom-text>
+          </template>
+        </div>
+      </div>
+    </template>
   </div>
 </template>
 
 <script>
 import CustomText from '../CustomText.vue';
 import EmptySpace from '../karl/EmptySpace.vue';
+import Loading from 'karl/frontend/components/Loading.vue';
+import Error from 'karl/frontend/components/Error.vue';
 
 export default {
   name: 'ItemDetailPriceBox',
   components: {
     CustomText,
     EmptySpace,
+    Loading,
+    Error,
   },
 
   props: {
     itemDetail: {
       type: Object,
+      required: true,
+    },
+
+    isLoading: {
+      type: Boolean,
+      required: true,
+    },
+
+    isError: {
+      type: Boolean,
       required: true,
     },
   },

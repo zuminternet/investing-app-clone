@@ -2,26 +2,18 @@ import { getAnalyses, getItemDetail, getNews } from '../../apis';
 
 // 초기 state 값 설정
 const state = () => ({
-  itemDetail: {
-    name: '', // 이름
-    symbol: '',
-    category: '', // 소속
-    adjClose: '', // 이전 종가
-    adjLow: '', // 이전 최저가
-    adjHigh: '', // 이전 최고가
-    close: '', // 종가
-    open: '', // 시가
-    volume: '', //  거래량
-    acronym: '', //
-    high: '', // 최고가
-    low: '', // 최저가
-    upDownPrice: '',
-    upDownRate: '',
-    // time: '100',
-    // currency: 'dallor',
-  },
+  itemDetail: {},
   news: [],
   analyses: [],
+
+  itemDetailIsLoading: false,
+  itemDetailIsError: false,
+
+  newsIsLoading: false,
+  newsIsError: false,
+
+  analysesIsLoading: false,
+  analysesIsError: false,
 });
 
 // getter 설정
@@ -34,8 +26,6 @@ const actions = {
     try {
       const itemDetail = await getItemDetail({ symbols, email });
 
-      console.log(itemDetail);
-
       if (itemDetail) {
         commit('setItemDetail', { itemDetail, name });
 
@@ -45,6 +35,7 @@ const actions = {
       throw new Error('Getting item detail was failed in itemDetail store');
     } catch (error) {
       console.log(error);
+      commit('setItemDetailIsError', true);
     }
   },
 
@@ -61,6 +52,8 @@ const actions = {
       throw new Error('Getting news was failed in itemDetail store');
     } catch (error) {
       console.log(error);
+
+      commit('setNewsIsError', true);
     }
   },
 
@@ -77,7 +70,20 @@ const actions = {
       throw new Error('Getting analyses was failed in itemDetail store');
     } catch (error) {
       console.log(error);
+      commit('setAnalysesIsError', true);
     }
+  },
+
+  setItemDetailIsLoading({ commit }, isLoading) {
+    commit('setItemDetailIsLoading', isLoading);
+  },
+
+  setNewsIsLoading({ commit }, isLoading) {
+    commit('setNewsIsLoading', isLoading);
+  },
+
+  setAnalysesIsLoading({ commit }, isLoading) {
+    commit('setAnalysesIsLoading', isLoading);
   },
 };
 
@@ -87,7 +93,6 @@ const mutations = {
     const { adj_close, adj_high, adj_low, close, stock_exchange } = itemDetail;
 
     state.itemDetail = {
-      ...state.itemDetail,
       ...itemDetail,
       name,
       category: stock_exchange.acronym,
@@ -106,6 +111,30 @@ const mutations = {
 
   setAnalyses(state, analyses) {
     state.analyses = analyses;
+  },
+
+  setItemDetailIsLoading(state, isLoading) {
+    state.itemDetailIsLoading = isLoading;
+  },
+
+  setItemDetailIsError(state, isError) {
+    state.itemDetailIsError = isError;
+  },
+
+  setNewsIsLoading(state, isLoading) {
+    state.newsIsLoading = isLoading;
+  },
+
+  setNewsIsError(state, isError) {
+    state.newsIsError = isError;
+  },
+
+  setAnalysesIsLoading(state, isLoading) {
+    state.analysesIsLoading = isLoading;
+  },
+
+  setAnalysesIsError(state, isError) {
+    state.analysesIsError = isError;
   },
 };
 

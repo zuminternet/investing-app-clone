@@ -2,9 +2,12 @@
   <div class="news-page">
     <multipurpose-header isNews />
     <custom-swiper :navigatorButtonNames="swiperNavigatorButtonNames">
-      <swiper-slide v-if="news.length">
+      <swiper-slide>
         <list-wrapper :excludedHeight="150">
-          <news-list>
+          <loading v-if="newsIsLoading" />
+          <error v-else-if="newsIsError" />
+          <empty v-else-if="!news.length" />
+          <news-list v-else>
             <news-headline v-if="firstNews" @handle-click="routeToNewsDetail" :id="firstNews._id">
               <news-image :src="firstNews.image_url" />
               <news-text-box>
@@ -29,9 +32,12 @@
           </news-list>
         </list-wrapper>
       </swiper-slide>
-      <swiper-slide v-if="news.length">
+      <swiper-slide>
         <list-wrapper :excludedHeight="150">
-          <news-list>
+          <loading v-if="newsIsLoading" />
+          <error v-else-if="newsIsError" />
+          <empty v-else-if="!news.length" />
+          <news-list v-else>
             <news-headline v-if="firstNews" @handle-click="routeToNewsDetail" :id="firstNews._id">
               <news-image :src="firstNews.image_url" />
               <news-text-box>
@@ -56,9 +62,12 @@
           </news-list>
         </list-wrapper>
       </swiper-slide>
-      <swiper-slide v-if="stockNews.length">
+      <swiper-slide>
         <list-wrapper :excludedHeight="150">
-          <news-list>
+          <loading v-if="newsIsLoading" />
+          <error v-else-if="newsIsError" />
+          <empty v-else-if="!stockNews.length" />
+          <news-list v-else>
             <news-headline v-if="stockNews[0]" @handle-click="routeToNewsDetail" :id="stockNews[0]._id">
               <news-image :src="stockNews[0].image_url" />
               <news-text-box>
@@ -83,9 +92,12 @@
           </news-list>
         </list-wrapper>
       </swiper-slide>
-      <swiper-slide v-if="cryptoNews.length">
+      <swiper-slide>
         <list-wrapper :excludedHeight="150">
-          <news-list>
+          <loading v-if="newsIsLoading" />
+          <error v-else-if="newsIsError" />
+          <empty v-else-if="!cryptoNews.length" />
+          <news-list v-else>
             <news-headline v-if="cryptoNews[0]" @handle-click="routeToNewsDetail" :id="stockNews[0]._id">
               <news-image :src="cryptoNews[0].image_url" />
               <news-text-box>
@@ -125,6 +137,9 @@ import NewsTextBox from '../../../common/frontend/components/News/NewsTextBox.vu
 import NewsTextBoxDesc from '../../../common/frontend/components/News/NewsTextBoxDesc.vue';
 import NewsTextBoxTitle from '../../../common/frontend/components/News/NewsTextBoxTitle.vue';
 import ListWrapper from '../../../common/frontend/components/ListWrapper.vue';
+import Loading from 'karl/frontend/components/Loading.vue';
+import Error from 'karl/frontend/components/Error.vue';
+import Empty from 'karl/frontend/components/Empty.vue';
 
 import { text } from '../../../common/frontend/constants';
 
@@ -143,11 +158,17 @@ export default {
     NewsTextBoxDesc,
     NewsTextBoxTitle,
     ListWrapper,
+    Loading,
+    Error,
+    Empty,
   },
 
   computed: {
     ...mapState({
       news: (state) => state.article.news,
+      newsIsLoading: (state) => state.article.newsIsLoading,
+      newsIsError: (state) => state.article.newsIsError,
+      userInfo: (state) => state.user,
     }),
 
     ...mapGetters('article', {
@@ -170,15 +191,25 @@ export default {
   },
 
   methods: {
-    ...mapActions('article', ['getNews']),
+    ...mapActions('article', ['getNews', 'setNewsIsLoading']),
+    ...mapActions('user', ['getUser']),
 
     routeToNewsDetail(id) {
       this.$router.push({ path: 'news-detail', query: { id } });
     },
   },
 
-  beforeMount() {
-    this.getNews();
+  async mounted() {
+    const { userEmail, userGoogleId } = this.userInfo;
+    this.setNewsIsLoading(true);
+
+    if (!userEmail || !userGoogleId) {
+      await this.getUser();
+    }
+
+    this.getNews().then(() => {
+      this.setNewsIsLoading(false);
+    });
   },
 };
 </script>

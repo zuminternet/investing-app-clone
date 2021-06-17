@@ -8,6 +8,8 @@ const state = () => ({
   userGoogleId: '',
   userBookmarks: [],
   isAuthorizedByOAuth: false,
+  isLoading: true,
+  isError: false,
 });
 
 // getter 설정
@@ -28,11 +30,16 @@ const actions = {
    *
    * @description signIn 여부에 따라 토큰을 재발급하거나 signIn 하도록하는 action.
    */
-  checkSignInOrSignOut({ dispatch }) {
-    if (googleAuth.isSignedIn.get()) {
-      dispatch('loginUserByGoogleOAuthOrCreateUser');
-    } else {
-      googleAuth.signIn();
+  checkSignInOrSignOut({ dispatch, commit }) {
+    try {
+      if (googleAuth.isSignedIn.get()) {
+        dispatch('loginUserByGoogleOAuthOrCreateUser');
+      } else {
+        googleAuth.signIn();
+      }
+    } catch (error) {
+      console.log(error);
+      commit('setIsError', true);
     }
   },
 
@@ -41,7 +48,7 @@ const actions = {
    * @description OAuth flow action. googleAuth 객체를 이용해 signIn 여부를 감지한다.
    *
    */
-  async googleInitClient({ dispatch }) {
+  async googleInitClient({ dispatch, commit }) {
     try {
       await gapi.client.init(googleAuthInitConfig);
       googleAuth = gapi.auth2.getAuthInstance();
@@ -56,6 +63,7 @@ const actions = {
       });
     } catch (error) {
       console.log(error);
+      commit('setIsError', true);
     }
   },
 
@@ -95,17 +103,14 @@ const actions = {
    * @description JWT를 이용하여 자동로그인을 수행하는 action. 성공하면 유저 정보를 가져온다.
    *
    */
-  async getUser({ commit }) {
+  async getUser({ commit, dispatch }) {
     try {
       const user = await getUser();
 
       if (user) {
         commit('setUserInfo', user);
-
-        return true;
+        await dispatch('getBookmarks');
       }
-
-      throw new Error('Getting user was failed in user store');
     } catch (error) {
       console.log(error);
     }
@@ -126,34 +131,63 @@ const actions = {
 
         return true;
       }
-
-      throw new Error('Requesting email login was failed in user store');
     } catch (error) {
       console.log(error);
-      alert(error);
+      commit('setIsError', true);
+    }
+  },
+
+  /**
+   * @description email을 통해 user를 만드는 action
+   * @param param0
+   * @param event
+   * @returns
+   */
+  async createUserByEmail({ commit }, event) {
+    try {
+      const { name, email, password } = event.$data;
+      const isCreated = await createUser({ name, email, password });
+
+      if (isCreated) {
+        return true;
+      }
+    } catch (error) {
+      console.log(error);
+      commit('setIsError', true);
     }
   },
 
   async getBookmarks({ commit, state }) {
-    try {
-      const email = state.userEmail;
-      const bookmarks = await getBookmarks(email);
+    const email = state.userEmail;
+    const bookmarks = await getBookmarks(email);
 
-      if (bookmarks) {
-        commit('setBookmarks', bookmarks);
+    if (bookmarks) {
+      commit('setBookmarks', bookmarks);
 
-        return true;
-      }
-
-      throw new Error('Getting bookmarks was failed in user store');
-    } catch (error) {
-      console.log(error);
+      return true;
     }
+  },
+
+  setIsLoading({ commit }, isLoading) {
+    commit('setIsLoading', isLoading);
+  },
+
+  setIsError({ commit }, isError) {
+    commit('setIsError', isError);
+  },
+
+  clearBookmarks({ commit }) {
+    commit('clearBookmarks');
   },
 };
 
 // mutatuons 설정
 const mutations = {
+  /**
+   * @description JWT를 통해 인증이 되었는지 판단하는 flag를 바꾸는 mutation
+   * @param state
+   * @param judge
+   */
   setIsAuthorizedByOAuth(state, judge) {
     state.isAuthorizedByOAuth = judge;
   },
@@ -167,6 +201,18 @@ const mutations = {
 
   setBookmarks(state, bookmarks) {
     state.userBookmarks = bookmarks;
+  },
+
+  setIsLoading(state, isLoading) {
+    state.isLoading = isLoading;
+  },
+
+  setIsError(state, isError) {
+    state.isError = isError;
+  },
+
+  clearBookmarks(state) {
+    state.userBookmarks = [];
   },
 };
 
