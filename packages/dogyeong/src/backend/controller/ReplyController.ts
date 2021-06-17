@@ -10,9 +10,8 @@ export class ReplyController {
   constructor(@Inject(ReplyService) private replyService: ReplyService) {}
 
   /**
-   * getReply
+   * getReplies
    *
-   * search page에 렌더링할 searched items들을 가져오는 메소드
    */
   @GetMapping({ path: ['/:docId'] })
   public async getReplies(req: Request, res: Response) {
@@ -29,8 +28,20 @@ export class ReplyController {
   @PostMapping({ path: ['/'] })
   public async createReply(req: Request, res: Response) {
     try {
-      // await this.replyService.createReply()
-      res.json();
+      const { user, docId, contents } = req.body;
+
+      if (!user) return res.sendStatus(403);
+      if (!docId || !contents) return res.sendStatus(400);
+
+      const reply = await this.replyService.createReply({
+        docId,
+        contents,
+        email: user.email,
+        picture: user.picture,
+        name: user.name,
+      });
+
+      res.json(reply);
     } catch (err) {
       res.status(500).json({ err: err.message ?? err });
     }
