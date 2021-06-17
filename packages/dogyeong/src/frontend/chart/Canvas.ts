@@ -6,8 +6,8 @@ export default abstract class Canvas extends PubSub {
 
   constructor(protected readonly $container: HTMLElement, protected readonly canvas: HTMLCanvasElement) {
     super();
-    this.width = this.canvas.width;
-    this.height = this.canvas.height;
+    this.width = this.canvas.offsetWidth;
+    this.height = this.canvas.offsetHeight;
   }
 
   public resize(width: number, height: number) {
@@ -16,8 +16,10 @@ export default abstract class Canvas extends PubSub {
 
     this.canvas.style.width = `${width}px`;
     this.canvas.style.height = `${height}px`;
-    this.width = this.canvas.width = width * pixelRatio;
-    this.height = this.canvas.height = height * pixelRatio;
+    this.width = width;
+    this.height = height;
+    this.canvas.width = width * pixelRatio;
+    this.canvas.height = height * pixelRatio;
 
     ctx.scale(pixelRatio, pixelRatio);
   }

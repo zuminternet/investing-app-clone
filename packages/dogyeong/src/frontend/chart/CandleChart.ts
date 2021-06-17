@@ -54,6 +54,9 @@ export default class CandleChart {
     this.$container = $container;
     this.colorOptions = colorOptions;
 
+    // 초기 캔버스 영역 height 고정
+    this.$container.style.height = $container.offsetWidth / 1.5 + 'px';
+
     this.initalizeCanvas();
     this.initializeEvents();
     this.subscribeEvents();
@@ -113,13 +116,10 @@ export default class CandleChart {
   }
 
   private resize() {
-    const w = this.$container.offsetWidth;
-    this.$container.style.height = w / 1.5 + 'px';
-    const h = w / 1.5;
-
-    this.graph.resize(w - 88, h - 60);
-    this.priceAxis.resize(88, h - 60);
-    this.timeAxis.resize(w - 88, 60);
+    const { offsetWidth: w, offsetHeight: h } = this.$container;
+    this.graph.resize(w - 88, h - 30);
+    this.priceAxis.resize(88, h - 30);
+    this.timeAxis.resize(w - 88, 30);
     this.draw();
   }
 
@@ -175,8 +175,8 @@ export default class CandleChart {
 
       // body
       const height = this.graph.height;
-      const bodyTop = Math.max(open ?? close, close ?? open);
-      const bodyBottom = Math.min(open ?? close, close ?? open);
+      const bodyTop = Math.max(open ?? close, close ?? open); // 캔들 몸통의 위 가격
+      const bodyBottom = Math.min(open ?? close, close ?? open); // 캔들 몸통의 아래 가격
       const bodyTopY = Math.round(((bodyTop - this.minPrice) / (this.maxPrice - this.minPrice)) * height);
       const bodyBottomY = Math.round(((bodyBottom - this.minPrice) / (this.maxPrice - this.minPrice)) * height);
       const bodyLeft = this.graph.getCandleBodyLeft(index);

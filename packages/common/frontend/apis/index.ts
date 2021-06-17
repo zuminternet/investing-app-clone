@@ -18,7 +18,7 @@ export interface getItemDetailInfo {
 export interface getNewsAndAnalysesInfo {
   offset: number;
   limit: number;
-  tickers: String[];
+  tickers: string[];
 }
 
 export interface createBookmarkInfo {
@@ -173,7 +173,7 @@ const getBookmarks = async (email: string) => {
   });
 
   if (result.status === 200) {
-    let { data: bookmarks } = result;
+    const { data: bookmarks } = result;
 
     return bookmarks;
   }

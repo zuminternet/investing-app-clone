@@ -33,7 +33,14 @@ export default Vue.extend({
     const $el = this.$refs.chartContainer;
     this.chartInstance = createChart($el, this.colorOption);
   },
-  beforeDestroy() {},
+  methods: {
+    toggleGraphType() {
+      this.chartInstance.toggleGraphType();
+    },
+    requestFullscreen() {
+      this.$refs.chartContainer.requestFullscreen();
+    },
+  },
 });
 </script>
 
