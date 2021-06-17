@@ -8,6 +8,9 @@ const state = () => ({
 
   newsIsLoading: false,
   newsIsError: false,
+
+  articleDetailIsLoading: false,
+  articleDetailIsError: false,
 });
 
 // getter 설정
@@ -70,11 +73,16 @@ const actions = {
       throw new Error('Getting article by id was failed in article store');
     } catch (error) {
       console.log(error);
+      commit('setArticleDetailIsError', true);
     }
   },
 
   setNewsIsLoading({ commit }, isLoading) {
     commit('setNewsIsLoading', isLoading);
+  },
+
+  setArticleDetailIsLoading({ commit }, isLoading) {
+    commit('setArticleDetailIsLoading', isLoading);
   },
 };
 
@@ -93,6 +101,14 @@ const mutations = {
 
   setNewsIsError(state, isError) {
     state.newsIsError = isError;
+  },
+
+  setArticleDetailIsLoading(state, isLoading) {
+    state.articleDetailIsLoading = isLoading;
+  },
+
+  setArticleDetailIsError(state, isError) {
+    state.articleDetailIsError = isError;
   },
 };
 
