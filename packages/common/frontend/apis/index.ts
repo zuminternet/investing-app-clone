@@ -223,13 +223,13 @@ const refiner = (repls: ReplyDoc[]): IReply[] =>
     likes,
   }));
 
-export const getReplsByDocID = async (docId: string) => {
+export const getReplsByDocID = async (docId: string, email: string) => {
   try {
     const {
       data: { results },
       status,
       statusText,
-    } = await Axios.get(`/api/reply/${docId}`);
+    } = await Axios.get(`/api/reply/${docId}?auth=${email}`);
 
     if (status >= 400) throw Error(statusText);
 

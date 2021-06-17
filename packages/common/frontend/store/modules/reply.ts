@@ -26,9 +26,9 @@ const actions = {
    * 댓글 목록 조회
    * @param 종목 티커 또는 뉴스 id 로 조회
    */
-  getReplsByDocID: async (_, docId: string) => {
+  getReplsByDocID: async (_, { email, docId }) => {
     try {
-      const repls = await getReplsByDocID(docId);
+      const repls = await getReplsByDocID(docId, email);
       return repls;
     } catch (e) {
       return console.error(e);
