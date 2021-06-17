@@ -229,7 +229,7 @@ export const getReplsByDocID = async (docId: string, email: string) => {
       data: { results },
       status,
       statusText,
-    } = await Axios.get(`/api/reply/${docId}?auth=${email}`);
+    } = await Axios.get(`/api/reply/${docId}`, { params: { email } });
 
     if (status >= 400) throw Error(statusText);
 
