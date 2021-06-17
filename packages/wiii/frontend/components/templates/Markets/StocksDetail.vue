@@ -1,12 +1,7 @@
 <template>
   <div class="area">
     <!-- 상단 시세 요약 -->
-    <div id="stocks-detail-header" class="card">
-      <img v-show="logo" :src="logo" height="35px" />
-      <Words id="stocks-detail-header-tickerName">{{ tickerName }}</Words>
-      <Words id="stocks-detail-header-price" :class="colorClass">현재가 {{ price }}원 </Words>
-      <Words id="stocks-detail-header-change" :class="colorClass"> ({{ changeSign }}{{ change }}%) </Words>
-    </div>
+    <Header v-bind="{ ...headerInfo }" />
     <PriceSummary v-bind="{ ...priceSummary }" />
     <Chart class="card" :typeName="`stock`" :apiType="`es`" :ticker="ticker" />
 
@@ -22,8 +17,8 @@
 import Vue from 'vue';
 import { createNamespacedHelpers } from 'vuex';
 
-import Words from '@/components/atoms/Words.vue';
 import Chart from '@/components/molecules/Chart.vue';
+import Header from '@/components/organisms/StockDetailHeader.vue';
 import PriceSummary from '@/components/organisms/StockDetailPriceSummary.vue';
 import CompanyInfo from '@/components/organisms/StockDetailCompanyInfo.vue';
 import ReplySection from '@/components/organisms/ReplySection.vue';
@@ -55,9 +50,9 @@ const adjMarketCap = (cap: number) =>
 
 export default Vue.extend({
   components: {
-    Words,
-    Chart,
+    Header,
     PriceSummary,
+    Chart,
     CompanyInfo,
     ReplySection,
   },
@@ -71,7 +66,7 @@ export default Vue.extend({
 
   data() {
     return {
-      logo: undefined,
+      headerInfo: {},
       priceSummary: {},
       companyInfo: {},
     };
@@ -88,20 +83,17 @@ export default Vue.extend({
       return this.stockData[this.ticker].price;
     },
 
+    volume() {
+      return this.stockData[this.ticker].volume;
+    },
+
     change() {
       return this.stockData[this.ticker].change;
-    },
-
-    changeSign() {
-      return this.change > 0 ? '+' : '';
-    },
-
-    colorClass() {
-      return this.change > 0 ? 'up' : this.change < 0 ? 'down' : 'same';
     },
   },
 
   beforeMount() {
+    const { ticker, tickerName, price, change, volume, stockOverviews } = this;
     const {
       metric: {
         metric,
@@ -109,12 +101,18 @@ export default Vue.extend({
       },
       peer,
       profile: { ipo, phone, weburl, marketCapitalization, logo, exchange },
-    } = this.stockOverviews[this.ticker];
+    } = stockOverviews[ticker];
 
     const { epsGrowth3Y, pbAnnual, roeRfy, roiAnnual, dividendPerShareAnnual, dividendYieldIndicatedAnnual } = metric;
     const { eps } = annual;
 
-    this.logo = logo;
+    this.headerInfo = {
+      logo,
+      tickerName,
+      price,
+      volume,
+      change,
+    };
 
     this.priceSummary = {
       marketCapitalization: adjMarketCap(marketCapitalization),
@@ -144,39 +142,5 @@ export default Vue.extend({
 main.area {
   display: grid;
   place-content: center;
-}
-
-#stocks-detail-header {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-
-  .pure-text {
-    width: max-content;
-  }
-
-  &-tickerName {
-    color: $grey-700;
-    font-weight: 700;
-  }
-
-  &-price {
-  }
-
-  &-change {
-    font-size: 0.7rem;
-  }
-}
-
-.up {
-  color: $red-700;
-}
-
-.down {
-  color: $blue-700;
-}
-
-.same {
-  color: inherit;
 }
 </style>

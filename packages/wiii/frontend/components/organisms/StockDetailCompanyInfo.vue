@@ -117,6 +117,7 @@ $dark-green: $neon-green;
     width: max-content;
 
     font-size: 1.1rem;
+    font-weight: bold;
     text-align: left;
     color: $grey-700;
 

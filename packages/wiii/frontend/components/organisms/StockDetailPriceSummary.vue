@@ -38,7 +38,7 @@ export default Vue.extend({
     font-size: 0.75rem;
 
     &.up {
-      color: $red-a400;
+      color: $red-700;
     }
 
     &.down {
