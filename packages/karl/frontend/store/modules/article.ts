@@ -1,4 +1,4 @@
-import { getNews, getAnalyses, getArticleById } from '../../../../common/frontend/apis';
+import { getNews, getArticleById } from '../../../../common/frontend/apis';
 import { tickerMap } from '../../../../common/domain';
 
 // 초기 state 값 설정
@@ -53,6 +53,7 @@ const actions = {
       throw new Error('Getting news was failed in article store');
     } catch (error) {
       console.log(error);
+      commit('setNewsIsError', true);
     }
   },
 
@@ -72,7 +73,7 @@ const actions = {
     }
   },
 
-  async setNewsIsLoading({ commit }, isLoading) {
+  setNewsIsLoading({ commit }, isLoading) {
     commit('setNewsIsLoading', isLoading);
   },
 };
@@ -88,6 +89,10 @@ const mutations = {
 
   setNewsIsLoading(state, isLoading) {
     state.newsIsLoading = isLoading;
+  },
+
+  setNewsIsError(state, isError) {
+    state.newsIsError = isError;
   },
 };
 

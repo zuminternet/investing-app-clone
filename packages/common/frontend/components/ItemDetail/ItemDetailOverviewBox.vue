@@ -2,6 +2,7 @@
   <div class="item-detail-overall-info-box">
     <loading v-if="isLoading" :loadingHeight="248" />
     <error v-else-if="isError" />
+
     <template v-else
       ><item-detail-overview-row v-for="(element, index) in itemDetailForRow" :key="index" :element="element"
     /></template>

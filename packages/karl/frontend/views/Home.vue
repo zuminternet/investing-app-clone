@@ -6,16 +6,19 @@
       <swiper-slide>
         <loading v-if="indicesIsLoading" :loadingHeight="490" />
         <error v-else-if="indicesIsError" :errorHeight="490" />
+        <empty v-else-if="!indicesItems.length" :emptyHeight="490" />
         <item-card-list v-else :items="indicesItems" :excludedHeight="150" isHome></item-card-list>
       </swiper-slide>
       <swiper-slide>
         <loading v-if="stocksIsLoading" :loadingHeight="490" />
         <error v-else-if="stocksIsError" :errorHeight="490" />
+        <empty v-else-if="!stockItems.length" :emptyHeight="490" />
         <item-card-list v-else :items="stockItems" :excludedHeight="150" isHome></item-card-list>
       </swiper-slide>
       <swiper-slide>
         <loading v-if="cryptosIsLoading" :loadingHeight="490" />
         <error v-else-if="cryptosIsError" :errorHeight="490" />
+        <empty v-else-if="!cryptoItems.length" :emptyHeight="490" />
         <item-card-list v-else :items="cryptoItems" :excludedHeight="150" isHome></item-card-list>
       </swiper-slide>
     </custom-swiper>
@@ -29,6 +32,7 @@ import { mapActions, mapState } from 'vuex';
 
 import Loading from '../components/Loading.vue';
 import Error from '../components/Error.vue';
+import Empty from '../components/Empty.vue';
 import BottomNaviagtor from '../../../common/frontend/components/BottomNaviagtor.vue';
 import MultipurposeHeader from '../../../common/frontend/components/MultipurposeHeader.vue';
 import ItemCardList from '../../../common/frontend/components/ItemCardList.vue';
@@ -46,7 +50,9 @@ export default {
     SwiperSlide,
     Loading,
     Error,
+    Empty,
   },
+
   computed: {
     ...mapState({
       userInfo: (state) => state.user,
