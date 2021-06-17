@@ -124,10 +124,10 @@ export default {
       return;
     }
 
-    this.setIsLoading(false);
-
     const gapi = window.gapi;
     gapi.load('client:auth2', this.googleInitClient);
+
+    this.setIsLoading(false);
   },
 
   watch: {

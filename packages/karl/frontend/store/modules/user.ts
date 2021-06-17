@@ -110,6 +110,8 @@ const actions = {
       if (user) {
         commit('setUserInfo', user);
         await dispatch('getBookmarks');
+
+        return true;
       }
     } catch (error) {
       console.log(error);
