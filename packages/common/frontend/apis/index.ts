@@ -239,4 +239,4 @@ export const getReplsByDocID = async (docId: string) => {
   }
 };
 
-export { getSearchedItems, getItemDetail, getNews, getAnalyses, createBookmark, getBookmarks, deleteBookmark };
+export { getSearchedItems, getItemDetail, getNews, getAnalyses, createBookmark, getBookmarks, deleteBookmark, getArticleById };

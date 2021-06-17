@@ -14,6 +14,7 @@
     "@vue/cli-plugin-typescript": "4.5.13",
     "axios": "^0.21.1",
     "cross-env": "7.0.3",
+    "epic-spinners": "^1.1.0",
     "investing-com-api": "https://github.com/dogyeong/investing-com-api",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.12.10",
