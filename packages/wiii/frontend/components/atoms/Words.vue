@@ -17,7 +17,6 @@ export default Vue.extend({});
   height: 100%;
   text-align: center;
   font-size: 1rem;
-  line-height: 1.5;
 
   color: inherit;
   background-color: transparent;

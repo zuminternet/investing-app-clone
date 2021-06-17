@@ -1,8 +1,8 @@
 <template>
   <section id="stocks-detail-header-summary" class="noselect">
-    <Words class="mini"> 시가총액: {{ marketCapitalization }}원</Words>
-    <Words class="mini"> 52주 최고가: {{ week52High }}원</Words>
-    <Words class="mini"> 52주 최저가: {{ week52Low }}</Words>
+    <Words class="stocks-detail-header-price"> 시가총액: {{ marketCapitalization }}</Words>
+    <Words class="stocks-detail-header-price up"> 52주 최고가: {{ week52High }} 원</Words>
+    <Words class="stocks-detail-header-price down"> 52주 최저가: {{ week52Low }} 원</Words>
   </section>
 </template>
 
@@ -33,5 +33,17 @@ export default Vue.extend({
 #stocks-detail-header-summary {
   display: flex;
   justify-content: space-around;
+
+  .stocks-detail-header-price {
+    font-size: 0.75rem;
+
+    &.up {
+      color: $red-700;
+    }
+
+    &.down {
+      color: $blue-500;
+    }
+  }
 }
 </style>

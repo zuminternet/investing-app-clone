@@ -150,11 +150,12 @@ const adjustPrices = (_result) => {
 
   const [last, prev] = adjusted;
   const price = last['adj_close'];
+  const volume = last.volume;
   const prevPrice = prev['adj_close'];
   const change = Number((((price - prevPrice) / prevPrice) * 100).toFixed(2));
   const typeName = `stock`;
 
-  return { results: adjusted, count, payload: { total }, change, price, typeName };
+  return { results: adjusted, count, payload: { total }, change, price, typeName, volume };
 };
 
 /**
