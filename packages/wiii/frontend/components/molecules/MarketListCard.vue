@@ -76,7 +76,7 @@ export default Vue.extend({
     },
   },
 
-  async beforeMount() {
+  async mounted() {
     const { results } = await this.getTodayMiniStocks(this.ticker);
     if (!results?.length) {
       return (this.changeData = null);

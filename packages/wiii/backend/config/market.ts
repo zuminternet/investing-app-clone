@@ -14,6 +14,14 @@ export const PolygonConfigs = {
   ACCESS_KEY: process.env.POLYGON_ACCESS,
 };
 
+export const AlphaConfigs = {
+  ACCESS_KEY: process.env.ALPHA_ACCESS,
+};
+
+export const FinnhubConfigs = {
+  ACCESS_KEY: process.env.FINNHUB_ACCESS,
+};
+
 export const enum DurationEnum {
   DAY = `day`,
   HOUR = `hour`,
