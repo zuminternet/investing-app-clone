@@ -1,11 +1,22 @@
 <template>
   <div class="home-page">
     <multipurpose-header isHome></multipurpose-header>
-    <loading v-if="isLoading"></loading>
-    <error v-else-if="isError"></error>
-    <custom-swiper v-else :navigatorButtonNames="swiperNavigatorButtonNames">
-      <swiper-slide v-for="(items, index) in itemCollections" :key="index">
-        <item-card-list :items="items" :excludedHeight="150" isHome></item-card-list>
+
+    <custom-swiper :navigatorButtonNames="swiperNavigatorButtonNames">
+      <swiper-slide>
+        <loading v-if="indicesIsLoading" :loadingHeight="490" />
+        <error v-else-if="indicesIsError" :errorHeight="490" />
+        <item-card-list v-else :items="indicesItems" :excludedHeight="150" isHome></item-card-list>
+      </swiper-slide>
+      <swiper-slide>
+        <loading v-if="stocksIsLoading" :loadingHeight="490" />
+        <error v-else-if="stocksIsError" :errorHeight="490" />
+        <item-card-list v-else :items="stockItems" :excludedHeight="150" isHome></item-card-list>
+      </swiper-slide>
+      <swiper-slide>
+        <loading v-if="cryptosIsLoading" :loadingHeight="490" />
+        <error v-else-if="cryptosIsError" :errorHeight="490" />
+        <item-card-list v-else :items="cryptoItems" :excludedHeight="150" isHome></item-card-list>
       </swiper-slide>
     </custom-swiper>
     <bottom-naviagtor :navigatorButtonNames="bottomNavigatorButtonNames"></bottom-naviagtor>
@@ -14,7 +25,7 @@
 
 <script>
 import { SwiperSlide } from 'vue-awesome-swiper';
-import { mapGetters, mapActions, mapState } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 
 import Loading from '../components/Loading.vue';
 import Error from '../components/Error.vue';
@@ -37,14 +48,19 @@ export default {
     Error,
   },
   computed: {
-    ...mapGetters('market', {
-      itemCollections: 'itemCollections',
-    }),
-
     ...mapState({
-      isLoading: (state) => state.market.isLoading,
-      isError: (state) => state.market.isError,
       userInfo: (state) => state.user,
+
+      indicesItems: (state) => state.market.indicesItems,
+      stockItems: (state) => state.market.stockItems,
+      cryptoItems: (state) => state.market.cryptoItems,
+
+      indicesIsLoading: (state) => state.market.indicesIsLoading,
+      indicesIsError: (state) => state.market.indicesIsError,
+      stocksIsLoading: (state) => state.market.stocksIsLoading,
+      stocksIsError: (state) => state.market.stocksIsError,
+      cryptosIsLoading: (state) => state.market.cryptosIsLoading,
+      cryptosIsError: (state) => state.market.cryptosIsError,
     }),
   },
 
@@ -58,22 +74,37 @@ export default {
   },
 
   methods: {
-    ...mapActions('market', ['getStocks', 'getIndices', 'getCryptos', 'setIsLoading']),
+    ...mapActions('market', [
+      'getStocks',
+      'getIndices',
+      'getCryptos',
+      'setIndicesIsLoading',
+      'setStocksIsLoading',
+      'setCryptosIsLoading',
+    ]),
     ...mapActions('user', ['getUser']),
   },
 
   async mounted() {
     const { userEmail, userGoogleId } = this.userInfo;
 
-    this.setIsLoading(true);
+    this.setIndicesIsLoading(true);
+    this.setStocksIsLoading(true);
+    this.setCryptosIsLoading(true);
 
-    !userEmail || !userGoogleId ? await this.getUser() : null;
+    if (!userEmail || !userGoogleId) {
+      await this.getUser();
+    }
 
-    await this.getStocks();
-    await this.getIndices();
-    await this.getCryptos();
-
-    this.setIsLoading(false);
+    this.getStocks().then(() => {
+      this.setIndicesIsLoading(false);
+    });
+    this.getIndices().then(() => {
+      this.setStocksIsLoading(false);
+    });
+    this.getCryptos().then(() => {
+      this.setCryptosIsLoading(false);
+    });
   },
 };
 </script>

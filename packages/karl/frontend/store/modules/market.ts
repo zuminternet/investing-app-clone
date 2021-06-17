@@ -5,17 +5,18 @@ const state = () => ({
   indicesItems: [],
   stockItems: [],
   cryptoItems: [],
-  isLoading: false,
-  isError: false,
+
+  indicesIsLoading: false,
+  indicesIsError: false,
+  stocksIsLoading: false,
+  stocksIsError: false,
+  cryptosIsLoading: false,
+  cryptosIsError: false,
 });
 
 // getter 설정
 
-const getters = {
-  itemCollections: (state) => {
-    return [state.indicesItems, state.stockItems, state.cryptoItems];
-  },
-};
+const getters = {};
 
 // actions 설정
 const actions = {
@@ -32,7 +33,7 @@ const actions = {
       throw new Error('Getting stocks was failed in market store');
     } catch (error) {
       console.log(error);
-      commit('setIsError', true);
+      commit('setStocksIsError', true);
     }
   },
 
@@ -49,7 +50,7 @@ const actions = {
       throw new Error('Getting indices was failed in market store');
     } catch (error) {
       console.log(error);
-      commit('setIsError', true);
+      commit('setIndicesIsError', true);
     }
   },
 
@@ -66,16 +67,20 @@ const actions = {
       throw new Error('Getting crpytos was failed in market store');
     } catch (error) {
       console.log(error);
-      commit('setIsError', true);
+      commit('setCryptosIsError', true);
     }
   },
 
-  setIsLoading({ commit }, isLoading) {
-    commit('setIsLoading', isLoading);
+  setIndicesIsLoading({ commit }, isLoading) {
+    commit('setIndicesIsLoading', isLoading);
   },
 
-  setIsError({ commit }, isError) {
-    commit('setIsError', isError);
+  setStocksIsLoading({ commit }, isLoading) {
+    commit('setStocksIsLoading', isLoading);
+  },
+
+  setCryptosIsLoading({ commit }, isLoading) {
+    commit('setCryptosIsLoading', isLoading);
   },
 };
 
@@ -99,6 +104,30 @@ const mutations = {
 
   setIsError(state, isError) {
     state.isError = isError;
+  },
+
+  setIndicesIsLoading(state, isLoading) {
+    state.indicesIsLoading = isLoading;
+  },
+
+  setIndicesIsError(state, isError) {
+    state.indicesIsError = isError;
+  },
+
+  setStocksIsLoading(state, isLoading) {
+    state.stocksIsLoading = isLoading;
+  },
+
+  setStocksIsError(state, isError) {
+    state.stocksIsError = isError;
+  },
+
+  setCryptosIsLoading(state, isLoading) {
+    state.cryptosIsLoading = isLoading;
+  },
+
+  setCryptosIsError(state, isError) {
+    state.cryptosIsError = isError;
   },
 };
 
