@@ -1,6 +1,7 @@
 <template>
   <div class="item-detail-price-box">
-    <loading v-if="isLoading"></loading>
+    <loading v-if="isLoading" />
+    <error v-else-if="isError" />
     <template v-else>
       <div class="up-and-down-icon-box">
         <span
@@ -37,6 +38,7 @@
 import CustomText from '../CustomText.vue';
 import EmptySpace from '../karl/EmptySpace.vue';
 import Loading from 'karl/frontend/components/Loading.vue';
+import Error from 'karl/frontend/components/Error.vue';
 
 export default {
   name: 'ItemDetailPriceBox',
@@ -44,6 +46,7 @@ export default {
     CustomText,
     EmptySpace,
     Loading,
+    Error,
   },
 
   props: {
@@ -53,6 +56,11 @@ export default {
     },
 
     isLoading: {
+      type: Boolean,
+      required: true,
+    },
+
+    isError: {
       type: Boolean,
       required: true,
     },

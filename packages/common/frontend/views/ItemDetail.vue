@@ -5,16 +5,19 @@
       isItemDetail
       :userInfo="userInfo"
       :isLoading="itemDetailIsLoading"
-    ></multipurpose-header>
-    <item-detail-price-box :itemDetail="itemDetail" :isLoading="itemDetailIsLoading"></item-detail-price-box>
+      :isError="itemDetailIsError"
+    />
+    <item-detail-price-box :itemDetail="itemDetail" :isLoading="itemDetailIsLoading" :isError="itemDetailIsError" />
     <custom-swiper :navigatorButtonNames="swiperNavigatorButtonNames">
       <swiper-slide>
         <list-wrapper :excludedHeight="210">
-          <chart v-if="symbolForChart" :canvasWidth="300" :canvasHeight="300" :symbol="symbolForChart"></chart>
-          <item-detail-overview-box :itemDetail="itemDetail" :isLoading="itemDetailIsLoading"></item-detail-overview-box>
+          <chart v-if="symbolForChart" :canvasWidth="300" :canvasHeight="300" :symbol="symbolForChart" />
+          <item-detail-overview-box :itemDetail="itemDetail" :isLoading="itemDetailIsLoading" :isError="itemDetailIsError" />
           <!-- 댓글 컴포넌트 자리 -->
           <sub-content-box :text="newsText">
             <loading v-if="newsIsLoading" :loadingHeight="220" />
+            <error v-else-if="newsIsError" :errorHeight="220" />
+            <empty v-else-if="!overviewNews.length" :emptyHeight="220" />
             <news-list v-else>
               <news-list-item
                 v-for="element in overviewNews"
@@ -25,13 +28,15 @@
                 <news-image class="news-image-align" :src="element.image_url" />
                 <news-text-box>
                   <news-text-box-title>{{ element.title }}</news-text-box-title>
-                  <news-text-box-desc :author="element.source" :publishDate="element.date"></news-text-box-desc>
+                  <news-text-box-desc :author="element.source" :publishDate="element.date" />
                 </news-text-box>
               </news-list-item>
             </news-list>
           </sub-content-box>
           <sub-content-box :text="analysisText">
             <loading v-if="analysesIsLoading" :loadingHeight="220" />
+            <error v-else-if="analysesIsError" :errorHeight="220" />
+            <empty v-else-if="!overviewAnalyses.length" :emptyHeight="220" />
             <news-list v-else>
               <news-list-item
                 v-for="element in overviewAnalyses"
@@ -42,7 +47,7 @@
                 <news-image class="news-image-align" :src="element.image_url" />
                 <news-text-box>
                   <news-text-box-title>{{ element.title }}</news-text-box-title>
-                  <news-text-box-desc :author="element.source" :publishDate="element.date"></news-text-box-desc>
+                  <news-text-box-desc :author="element.source" :publishDate="element.date" />
                 </news-text-box>
               </news-list-item>
             </news-list>
@@ -51,13 +56,15 @@
       </swiper-slide>
       <swiper-slide>
         <list-wrapper :excludedHeight="210">
-          <loading v-if="newsIsLoading"></loading>
+          <loading v-if="newsIsLoading" />
+          <error v-else-if="newsIsError" />
+          <empty v-else-if="!news.length" />
           <news-list v-else>
             <news-list-item v-for="element in news" :key="element.id" @handle-click="routeToNewsDetail" :id="element._id">
               <news-image class="news-image-align" :src="element.image_url" />
               <news-text-box>
                 <news-text-box-title>{{ element.title }}</news-text-box-title>
-                <news-text-box-desc :author="element.source" :publishDate="element.date"></news-text-box-desc>
+                <news-text-box-desc :author="element.source" :publishDate="element.date" />
               </news-text-box>
             </news-list-item>
           </news-list>
@@ -65,20 +72,22 @@
       </swiper-slide>
       <swiper-slide>
         <list-wrapper :excludedHeight="210">
-          <loading v-if="analysesIsLoading"></loading>
+          <loading v-if="analysesIsLoading" />
+          <error v-else-if="analysesIsError" />
+          <empty v-else-if="!analyses.length" />
           <news-list v-else>
             <news-list-item v-for="element in analyses" :key="element.id" @handle-click="routeToNewsDetail" :id="element._id">
               <news-image class="news-image-align" :src="element.image_url" />
               <news-text-box>
                 <news-text-box-title>{{ element.title }}</news-text-box-title>
-                <news-text-box-desc :author="element.source" :publishDate="element.date"></news-text-box-desc>
+                <news-text-box-desc :author="element.source" :publishDate="element.date" />
               </news-text-box>
             </news-list-item>
           </news-list>
         </list-wrapper>
       </swiper-slide>
     </custom-swiper>
-    <bottom-naviagtor :navigatorButtonNames="bottomNavigatorButtonNames"></bottom-naviagtor>
+    <bottom-naviagtor :navigatorButtonNames="bottomNavigatorButtonNames" />
   </div>
 </template>
 
@@ -102,6 +111,8 @@ import NewsTextBoxTitle from '../components/News/NewsTextBoxTitle.vue';
 import NewsTextBoxDesc from '../components/News/NewsTextBoxDesc.vue';
 import Chart from 'karl/frontend/components/Chart.vue';
 import Loading from 'karl/frontend/components/Loading.vue';
+import Error from 'karl/frontend/components/Error.vue';
+import Empty from 'karl/frontend/components/Empty.vue';
 
 export default {
   name: 'ItemDetail',
@@ -122,6 +133,8 @@ export default {
     ListWrapper,
     Chart,
     Loading,
+    Error,
+    Empty,
   },
 
   data() {

@@ -1,6 +1,7 @@
 <template>
   <div>
-    <loading v-if="isLoading" :loadingHeight="340"></loading>
+    <loading v-if="isLoading" :loadingHeight="348" />
+
     <div v-show="!isLoading">
       <div>
         <canvas ref="graph" :width="canvasWidth" :height="canvasHeight"></canvas>

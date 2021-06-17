@@ -1,19 +1,17 @@
 <template>
   <div class="item-detail-overall-info-box">
-    <loading v-if="isLoading" :loadingHeight="248"></loading>
+    <loading v-if="isLoading" :loadingHeight="248" />
+    <error v-else-if="isError" />
     <template v-else
-      ><item-detail-overview-row
-        v-for="(element, index) in itemDetailForRow"
-        :key="index"
-        :element="element"
-      ></item-detail-overview-row
-    ></template>
+      ><item-detail-overview-row v-for="(element, index) in itemDetailForRow" :key="index" :element="element"
+    /></template>
   </div>
 </template>
 
 <script>
 import ItemDetailOverviewRow from './ItemDetailOverviewRow.vue';
 import Loading from 'karl/frontend/components/Loading.vue';
+import Error from 'karl/frontend/components/Error.vue';
 
 import { text } from '../../constants';
 
@@ -22,6 +20,7 @@ export default {
   components: {
     ItemDetailOverviewRow,
     Loading,
+    Error,
   },
 
   props: {
@@ -31,6 +30,11 @@ export default {
     },
 
     isLoading: {
+      type: Boolean,
+      required: true,
+    },
+
+    isError: {
       type: Boolean,
       required: true,
     },

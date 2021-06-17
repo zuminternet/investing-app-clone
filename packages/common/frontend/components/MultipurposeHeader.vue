@@ -4,7 +4,8 @@
       <div class="header-button-box">
         <header-button isBackButton></header-button>
       </div>
-      <loading v-if="isLoading"></loading>
+      <loading v-if="isLoading" />
+      <error v-else-if="isError" />
       <template v-else>
         <div>
           <div>
@@ -88,6 +89,7 @@ import EmptySpace from '../components/karl/EmptySpace.vue';
 import SearchInput from '../components/Search/SearchInput.vue';
 import HeaderButton from '../components/HeaderButton.vue';
 import Loading from 'karl/frontend/components/Loading.vue';
+import Error from 'karl/frontend/components/Error.vue';
 
 import { text } from '../constants';
 
@@ -99,6 +101,7 @@ export default {
     SearchInput,
     HeaderButton,
     Loading,
+    Error,
   },
 
   props: {
@@ -133,6 +136,11 @@ export default {
     },
 
     isLoading: {
+      type: Boolean,
+      default: false,
+    },
+
+    isError: {
       type: Boolean,
       default: false,
     },
