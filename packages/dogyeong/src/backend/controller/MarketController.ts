@@ -14,10 +14,11 @@ export class MarketController {
 
     const random1 = Math.random();
     const random2 = Math.random();
-    const salt = (random1 > 0.5 ? 1 : -1) * random2;
+    const salt = (random1 > 0.5 ? 2 : -2) * random2;
     const index = Math.floor(random1 * eods.length);
     const { diff, growthRate } = eods[index];
-    eods[index].diff += salt;
+    eods[index].close = +(eods[index].close + salt).toFixed(2);
+    eods[index].diff = +(eods[index].diff + salt).toFixed(2);
     eods[index].growthRate = ((diff + salt) * growthRate) / diff;
 
     return eods;
