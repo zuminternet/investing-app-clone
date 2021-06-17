@@ -10,16 +10,9 @@
     <PriceSummary v-bind="{ ...priceSummary }" />
     <Chart class="card" :typeName="`stock`" :apiType="`es`" :ticker="ticker" />
 
-    <!-- 상세정보 표시 영역 -->
-    <section>
-      <Words> {{ weburl }} </Words>
-      <Words> 상장일: {{ ipo }} </Words>
-      <Words> 전화: {{ phone }} </Words>
-      <Words> 최근 3년 EPS 성장률 {{ epsGrowth3Y }} </Words>
-      <Words> 연간 BPS {{ pbAnnual }} </Words>
-      <Words> 연간 ROI {{ roiAnnual }} </Words>
-      <Words> 최근 연간 ROE {{ roeRfy }} </Words>
-    </section>
+    <CompanyInfo v-bind="{ ...companyInfo }" />
+
+    <!-- 뉴스 일부 표시 -->
 
     <ReplySection :ticker="ticker" />
   </div>
@@ -32,16 +25,34 @@ import { createNamespacedHelpers } from 'vuex';
 import Words from '@/components/atoms/Words.vue';
 import Chart from '@/components/molecules/Chart.vue';
 import PriceSummary from '@/components/organisms/StockDetailPriceSummary.vue';
+import CompanyInfo from '@/components/organisms/StockDetailCompanyInfo.vue';
 import ReplySection from '@/components/organisms/ReplySection.vue';
 import { StoreNames } from '@/store';
 
 const { mapState } = createNamespacedHelpers(StoreNames.Market);
+const phoneReplacer = (_phone: string) => {
+  const phone = _phone.split('.')[0];
+  const len = phone.length;
+  /**
+   * 10자리: 82 2 200 1114
+   * 11자리_1: 82 31 200 1114
+   * 11자리_2: 82 2 6100 2114
+   * 12자리: 82 31 2000 1114
+   */
+  let phoneReg;
+  if (len === 10) phoneReg = /(82)(\d{1})(\d{3})(\d{4})/;
+  if (len === 11) phoneReg = phone[2] === '2' ? /(82)(\d{1})(\d{4})(\d{4})/ : /(82)(\d{2})(\d{3})(\d{4})/;
+  if (len === 12) phoneReg = /(82)(\d{2})(\d{4})(\d{4})/;
+
+  return phone.replace(phoneReg, (_, n1, n2, n3, n4) => `+${n1}) ` + [`0${n2}`, n3, n4].join('-'));
+};
 
 export default Vue.extend({
   components: {
     Words,
     Chart,
     PriceSummary,
+    CompanyInfo,
     ReplySection,
   },
 
@@ -54,18 +65,9 @@ export default Vue.extend({
 
   data() {
     return {
-      ipo: undefined,
-      phone: undefined,
-      weburl: undefined,
       logo: undefined,
-
-      peer: [],
-      epsGrowth3Y: undefined,
-      pbAnnual: undefined,
-      roeRfy: undefined,
-      roiAnnual: undefined,
-
       priceSummary: {},
+      companyInfo: {},
     };
   },
 
@@ -93,30 +95,40 @@ export default Vue.extend({
     },
   },
 
-  mounted() {
+  beforeMount() {
     const {
-      metric: { metric },
+      metric: {
+        metric,
+        series: { annual },
+      },
       peer,
-      profile: { ipo, phone, weburl, marketCapitalization, logo },
+      profile: { ipo, phone, weburl, marketCapitalization, logo, exchange },
     } = this.stockOverviews[this.ticker];
 
-    const { epsGrowth3Y, pbAnnual, roeRfy, roiAnnual } = metric;
+    const { epsGrowth3Y, pbAnnual, roeRfy, roiAnnual, dividendPerShareAnnual, dividendYieldIndicatedAnnual } = metric;
+    const { eps } = annual;
 
-    this.ipo = ipo;
-    this.phone = phone.split('.')[0];
-    this.weburl = weburl;
     this.logo = logo;
-
-    this.peer = peer;
-    this.epsGrowth3Y = epsGrowth3Y.toFixed(2);
-    this.pbAnnual = pbAnnual.toFixed(2);
-    this.roeRfy = roeRfy.toFixed(2);
-    this.roiAnnual = roiAnnual.toFixed(2);
 
     this.priceSummary = {
       marketCapitalization: marketCapitalization.toLocaleString(),
       week52High: metric['52WeekHigh'].toLocaleString(),
       week52Low: metric['52WeekLow'].toLocaleString(),
+    };
+
+    this.companyInfo = {
+      ipo,
+      phone: phoneReplacer(phone),
+      weburl,
+      exchange,
+      peer,
+      eps: eps[0],
+      epsGrowth3Y: epsGrowth3Y.toFixed(2),
+      pbAnnual: pbAnnual.toFixed(2),
+      roeRfy: roeRfy.toFixed(2),
+      roiAnnual: roiAnnual.toFixed(2),
+      dps: dividendPerShareAnnual.toLocaleString(),
+      dpsRate: dividendYieldIndicatedAnnual.toFixed(2),
     };
   },
 });
