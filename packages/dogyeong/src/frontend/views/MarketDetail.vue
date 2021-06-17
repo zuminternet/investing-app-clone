@@ -46,7 +46,7 @@
             </tr>
             <tr>
               <td>총 시가</td>
-              <td>{{ summaryDetail.marketCap | formatNumber }}</td>
+              <td>{{ summaryDetail.marketCap | addComma }}</td>
             </tr>
             <tr>
               <td>매수가/매도가</td>
@@ -54,11 +54,11 @@
             </tr>
             <tr>
               <td>거래량</td>
-              <td>{{ summaryDetail.volume | formatNumber }}</td>
+              <td>{{ summaryDetail.volume | addComma }}</td>
             </tr>
             <tr>
               <td>평균 거래량</td>
-              <td>{{ summaryDetail.averageVolume | formatNumber }}</td>
+              <td>{{ summaryDetail.averageVolume | addComma }}</td>
             </tr>
             <tr>
               <td>이전 종가</td>
@@ -106,7 +106,7 @@ import ArticleTemplate from '@/components/ArticleTemplate/ArticleTemplate.vue';
 import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner.vue';
 import SearchButton from '@/components/SearchButton/SearchButton.vue';
 import { chartLightThemeOption } from '@/config';
-import { formatNumber, formatPercent } from '@/filters';
+import { addComma, formatNumber, formatPercent } from '@/filters';
 import Chart from '@/components/Chart/Chart.vue';
 
 export default Vue.extend({
@@ -126,6 +126,7 @@ export default Vue.extend({
 
   filters: {
     formatNumber,
+    addComma,
     formatPercent,
   },
 
