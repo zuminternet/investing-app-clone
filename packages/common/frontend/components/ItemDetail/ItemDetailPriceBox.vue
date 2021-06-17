@@ -1,6 +1,6 @@
 <template>
   <div class="item-detail-price-box">
-    <loading v-if="isLoading" />
+    <loading v-if="isLoading" :spinnerSize="25" />
     <error v-else-if="isError" />
     <template v-else>
       <div class="up-and-down-icon-box">

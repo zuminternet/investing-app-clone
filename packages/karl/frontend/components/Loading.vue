@@ -1,9 +1,9 @@
 <template>
   <div v-if="loadingHeight" :style="style" class="loading-with-height">
-    <half-circle-spinner :animation-duration="1000" :size="60" color="#1e90ff" />
+    <half-circle-spinner :animation-duration="1000" :size="spinnerSize" color="#1e90ff" />
   </div>
   <div v-else class="loading">
-    <half-circle-spinner :animation-duration="1000" :size="60" color="#1e90ff" />
+    <half-circle-spinner :animation-duration="1000" :size="spinnerSize" color="#1e90ff" />
   </div>
 </template>
 
@@ -21,6 +21,11 @@ export default {
     loadingHeight: {
       type: Number,
       default: null,
+    },
+
+    spinnerSize: {
+      type: Number,
+      default: 60,
     },
   },
 
@@ -48,8 +53,5 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-}
-
-.spinner {
 }
 </style>

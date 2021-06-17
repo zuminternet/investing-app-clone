@@ -4,7 +4,7 @@
       <div class="header-button-box">
         <header-button isBackButton></header-button>
       </div>
-      <loading v-if="isLoading" />
+      <loading v-if="isLoading" :spinnerSize="25" />
       <error v-else-if="isError" />
       <template v-else>
         <div>
