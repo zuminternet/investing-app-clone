@@ -13,7 +13,7 @@
     </Header>
     <main>
       <section v-if="summaryDetail" :class="$style.price">
-        <span :class="$style['current-price']">{{ summaryDetail.regularMarketOpen }}</span>
+        <span :class="$style['current-price']">{{ previosClose }}</span>
         <span :class="[{ [$style.red]: priceDiff > 0 }, { [$style.blue]: priceDiff < 0 }]">
           {{ priceDiff | formatNumber }} {{ pricePercent | formatNumber | formatPercent }}
         </span>
