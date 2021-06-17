@@ -27,6 +27,7 @@
           <ArticleDetailBodyText>{{ article.text }}</ArticleDetailBodyText>
         </ArticleDetailSection>
       </template>
+      <ReplySection :hasAuth="$store.getters.isLoggedIn" :docId="articleId" />
     </main>
     <BottomNav />
   </Layout>
@@ -55,6 +56,7 @@ import {
 } from 'common/frontend/components/ArticleDetail';
 import ErrorMessage from '@/components/Error/ErrorMessage.vue';
 import ErrorRetryButton from '@/components/Error/ErrorRetryButton.vue';
+import ReplySection from 'common/frontend/components/ReplySection/index.vue';
 
 export default Vue.extend({
   name: 'NewsDetail',
@@ -74,6 +76,7 @@ export default Vue.extend({
     ArticleDetailSubInfo,
     ErrorMessage,
     ErrorRetryButton,
+    ReplySection,
   },
 
   filters: {
@@ -93,6 +96,9 @@ export default Vue.extend({
   computed: {
     headerTitle() {
       return this.params.type === 'new' ? '최신' : '가장 인기 있는 뉴스';
+    },
+    articleId() {
+      return this.$route.path.split('/').pop();
     },
   },
 

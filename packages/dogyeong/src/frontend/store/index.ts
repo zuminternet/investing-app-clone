@@ -14,7 +14,7 @@ const createStore = () => {
       user: createUserStore(),
       finance: financeStore(),
       article: articleStore(),
-      // reply: replyStore,
+      reply: replyStore,
       search: searchStore,
     },
 

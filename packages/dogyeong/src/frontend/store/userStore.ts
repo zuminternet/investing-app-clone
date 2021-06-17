@@ -18,6 +18,12 @@ export default () => {
       },
     },
 
+    getters: {
+      isLoggedIn(state) {
+        return state.user !== null;
+      },
+    },
+
     actions: {
       async login({ commit }, { email, password }) {
         try {
