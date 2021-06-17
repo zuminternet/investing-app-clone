@@ -44,22 +44,22 @@ export default Vue.extend({
   },
 
   async mounted() {
-    this.sortText = this.sortTexts[this.sortIdx];
     this.repls = await this.getReplsByDocID(this.ticker);
   },
 
   methods: {
     ...mapActions(['getRandomRepls', 'getReplsByDocID']),
 
-    async getRandRepls() {
-      try {
-        const result = await this.getRandomRepls();
-        if (!result?.length) throw new Error('No Result');
-        return result;
-      } catch (e) {
-        console.error(e);
-      }
-    },
+    /** @deprecated 개발용 더미데이터 */
+    // async getRandRepls() {
+    //   try {
+    //     const result = await this.getRandomRepls();
+    //     if (!result?.length) throw new Error('No Result');
+    //     return result;
+    //   } catch (e) {
+    //     console.error(e);
+    //   }
+    // },
 
     changeSort() {
       this.sortIdx = (this.sortIdx + 1) % 2;
