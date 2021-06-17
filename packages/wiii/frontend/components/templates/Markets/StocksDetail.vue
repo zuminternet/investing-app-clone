@@ -46,6 +46,12 @@ const phoneReplacer = (_phone: string) => {
 
   return phone.replace(phoneReg, (_, n1, n2, n3, n4) => `+${n1}) ` + [`0${n2}`, n3, n4].join('-'));
 };
+const adjMarketCap = (cap: number) =>
+  cap > 1000000
+    ? Math.floor(cap / 100)
+        .toString()
+        .replace(/(\d+)(\d{4})/, (_, n1, n2) => `${n1}조 ${Number(n2).toLocaleString()}억원`)
+    : `${(cap / 100).toLocaleString()} 억원`;
 
 export default Vue.extend({
   components: {
@@ -111,7 +117,7 @@ export default Vue.extend({
     this.logo = logo;
 
     this.priceSummary = {
-      marketCapitalization: marketCapitalization.toLocaleString(),
+      marketCapitalization: adjMarketCap(marketCapitalization),
       week52High: metric['52WeekHigh'].toLocaleString(),
       week52Low: metric['52WeekLow'].toLocaleString(),
     };
