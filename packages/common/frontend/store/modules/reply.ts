@@ -35,10 +35,10 @@ const actions = {
     }
   },
 
-  toggleLikesAction: (_, replId: string) => {
+  toggleLikesAction: (_, { replId, likes }) => {
     if (!replId) return false;
     try {
-      toggleLikes(replId);
+      toggleLikes(replId, likes);
     } catch (e) {
       return console.error(e);
     }

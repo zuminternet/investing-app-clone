@@ -245,7 +245,8 @@ const getReplsByDocID = async (docId: string, email: string) => {
  * 클라이언트에서 UI (+ debounce) 처리만
  * @param replId 댓글 id
  */
-const toggleLikes = (replId: string) => Axios.post(`/api/reply/likes`, { replId }, { withCredentials: true });
+const toggleLikes = (replId: string, likes: number) =>
+  Axios.post(`/api/reply/likes`, { replId, likes }, { withCredentials: true });
 
 export {
   getSearchedItems,

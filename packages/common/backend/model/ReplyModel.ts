@@ -2,12 +2,7 @@ import mongoose from 'common/backend/mongoose';
 
 const { Schema, model } = mongoose;
 
-/**
- * 댓글 모델; Mongoose 버전
- * @author wiii
- * @see packages/wiii/backend/db/entity/Reply.entity.ts ; TypeORM 버전
- */
-export interface ReplyDoc extends mongoose.Document {
+export interface ReplyProps {
   /** 종목 티커 또는 뉴스 id */
   docId: string;
   /** 사용자 모델 interface가 조금씩 달라서 모두 합침 */
@@ -19,12 +14,16 @@ export interface ReplyDoc extends mongoose.Document {
   /** 사용자 이름 */
   name?: string;
   userName?: string;
-  /** 원 댓글인지 대댓글인지 판단; 추후 추가 예정 */
-  // isParent?: boolean;
-  /** 대댓글인경우 원댓글 id; ObjectId.toString() */
-  // parentReply?: string;
   /** 댓글 내용 */
   contents: string;
+}
+
+/**
+ * 댓글 모델; Mongoose 버전
+ * @author wiii
+ * @see packages/wiii/backend/db/entity/Reply.entity.ts ; TypeORM 버전
+ */
+export interface ReplyDoc extends ReplyProps, mongoose.Document {
   /** 좋아요 수 */
   likes: number;
   createdAt: Date;
