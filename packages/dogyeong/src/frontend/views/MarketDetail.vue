@@ -85,6 +85,7 @@
         :isLoading="opinions.isLoading"
         :isError="opinions.isError"
       />
+      <ReplySection id="reply-section" :hasAuth="$store.getters.isLoggedIn" :docId="symbol" />
     </main>
     <BottomNav />
   </Layout>
@@ -108,6 +109,7 @@ import SearchButton from '@/components/SearchButton/SearchButton.vue';
 import { chartLightThemeOption } from '@/config';
 import { formatNumber, formatPercent } from '@/filters';
 import Chart from '@/components/Chart/Chart.vue';
+import ReplySection from 'common/frontend/components/ReplySection/index.vue';
 
 export default Vue.extend({
   name: 'MarketDetail',
@@ -122,6 +124,7 @@ export default Vue.extend({
     LoadingSpinner,
     SearchButton,
     Chart,
+    ReplySection,
   },
 
   filters: {

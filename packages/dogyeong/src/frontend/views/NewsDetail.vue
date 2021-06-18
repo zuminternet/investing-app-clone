@@ -11,7 +11,7 @@
         {{ headerTitle }}
       </HeaderTitle>
     </Header>
-    <main :class="$style.main">
+    <main class="news-detail-main">
       <LoadingSpinner v-if="isLoading" />
       <ErrorMessage v-else-if="isError || !article">
         에러가 발생했습니다 :(
@@ -20,14 +20,14 @@
       <template v-else>
         <ArticleDetailSection>
           <ArticleDetailTitle>{{ article.title }}</ArticleDetailTitle>
-          <ArticleDetailSubInfo :class="$style.sub">{{ article.source }} | {{ article.date | fromNow }}</ArticleDetailSubInfo>
+          <ArticleDetailSubInfo class="news-detail-sub">{{ article.source }} | {{ article.date | fromNow }}</ArticleDetailSubInfo>
         </ArticleDetailSection>
         <ArticleDetailSection>
           <ArticleDetailBodyImage :src="article.image_url" />
           <ArticleDetailBodyText>{{ article.text }}</ArticleDetailBodyText>
         </ArticleDetailSection>
       </template>
-      <ReplySection :hasAuth="$store.getters.isLoggedIn" :docId="articleId" />
+      <ReplySection id="reply-section" :hasAuth="$store.getters.isLoggedIn" :docId="articleId" />
     </main>
     <BottomNav />
   </Layout>
@@ -127,12 +127,154 @@ export default Vue.extend({
 });
 </script>
 
-<style lang="scss" module>
-.main {
+<style lang="scss">
+.news-detail-main {
   position: relative;
 }
 
-.sub {
+.news-detail-sub {
   border-color: var(--border-color);
+}
+
+#reply-section {
+  padding: 20px 12px;
+  border-top: 1px solid var(--border-color);
+  border-radius: 0;
+
+  .reply {
+    display: block;
+  }
+
+  .reply-info {
+    margin-bottom: 12px;
+  }
+
+  .reply-content {
+    padding: 0;
+    margin-bottom: 12px;
+  }
+
+  .reply-reaction {
+    padding: 0;
+
+    .reply-rerepl {
+      padding: 4px 8px;
+      font-size: 14px;
+      border: 1px solid var(--border-color);
+      color: var(--text-color);
+
+      &:hover {
+        padding: 4px 8px;
+        border: 1px solid var(--border-color);
+        background-color: var(--border-color);
+      }
+    }
+
+    .reply-likes {
+      font-size: 14px;
+      border: 0;
+      padding: 4px 8px;
+
+      &:hover {
+        border: 0;
+        background-color: var(--border-color);
+      }
+    }
+  }
+
+  .reply-valid-text {
+    font-style: normal;
+    font-size: 15px;
+  }
+
+  .card {
+    background-color: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    color: var(--text-color);
+  }
+
+  #reply-open {
+    background-color: var(--header-nav-bg-color);
+    color: var(--text-color);
+
+    &:hover {
+      border: 1px solid var(--border-color);
+      background-color: var(--border-color);
+    }
+  }
+
+  .thumbnail {
+    max-width: 40px;
+    max-height: 40px;
+  }
+
+  .pure-text {
+    color: var(--text-color);
+    font-style: normal;
+  }
+
+  .reply-info-user-detail .mini {
+    font-size: 14px;
+    margin: 0;
+  }
+
+  // 댓글 입력창
+  #reply-input {
+    padding: 12px;
+
+    textarea {
+      background-color: var(--header-nav-bg-color);
+      margin: 0;
+      padding: 4px;
+      color: var(--text-color);
+      font-size: 15px;
+      border-radius: 4px;
+      border: 1px solid var(--border-color);
+      margin-bottom: 8px;
+    }
+
+    #buttons {
+      justify-content: flex-end;
+
+      #reply-input-cancel {
+        background-color: var(--red-color);
+        padding: 4px 8px;
+        color: #efefef;
+        border-radius: 4px;
+        border: 0;
+        font-size: 14px;
+        margin-left: 8px;
+      }
+
+      #reply-input-submit {
+        @extend #reply-input-cancel;
+        background-color: var(--blue-color);
+      }
+    }
+  }
+
+  // 정렬 영역
+  .reply-sort {
+    font-size: 15px;
+    color: var(--text-color);
+    line-height: 32px;
+
+    .reply-sort-button {
+      font-size: 12px;
+      margin-left: 8px;
+      padding: 6px 8px;
+      width: auto;
+      height: auto;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      color: var(--text-color);
+      background-color: var(--header-nav-bg-color);
+
+      &:hover {
+        background-color: var(--border-color);
+      }
+    }
+  }
 }
 </style>
