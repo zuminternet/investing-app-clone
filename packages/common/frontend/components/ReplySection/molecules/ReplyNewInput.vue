@@ -1,6 +1,6 @@
 <template>
-  <ReplyForm v-if="isValid" @change-current-input="inputToggle" @after-submit="$emit('after-submit')" />
-  <div v-else id="reply-open" class="card noselect" :class="{ disabled: !hasAuth }" @click="inputToggle(inputId)">
+  <ReplyForm v-if="isOpen" v-bind="{ docId, email }" @change-current-input="inputToggle" @after-submit="$emit('after-submit')" />
+  <div v-else id="reply-open" class="card noselect" :class="{ disabled: !formDisabled }" @click="inputToggle">
     <Words class="reply-valid-text"> {{ validText }} </Words>
   </div>
 </template>
@@ -14,41 +14,37 @@ export default Vue.extend({
   components: { Words, ReplyForm },
 
   props: {
-    curInputId: {
+    docId: {
       type: String,
       required: true,
     },
-    hasAuth: {
-      type: Boolean,
-      required: true,
+    email: {
+      type: String,
+      default: undefined,
     },
   },
 
   data() {
     return {
-      inputId: 'newReply',
+      isOpen: false,
     };
   },
 
   computed: {
-    isValid() {
-      const { curInputId, inputId } = this;
-      return this.hasAuth && curInputId === inputId;
-    },
-
     formDisabled() {
-      return this.hasAuth ? '' : 'disabled';
+      return this.email ? '' : 'disabled';
     },
 
     validText() {
-      return this.hasAuth ? `댓글 달기` : `댓글 달기는 로그인이 필요합니다`;
+      return this.email ? `댓글 달기` : `댓글 달기는 로그인이 필요합니다`;
     },
   },
 
   methods: {
-    inputToggle(id) {
-      if (!this.hasAuth) return this.$router.push(`/user/login`);
-      this.$emit('change-current-input', id);
+    inputToggle() {
+      const { email, isOpen } = this;
+      if (!email) return this.$router.push(`/user/login`);
+      this.isOpen = !isOpen;
     },
   },
 });

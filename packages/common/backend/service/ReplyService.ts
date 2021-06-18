@@ -25,7 +25,7 @@ export default class ReplyService {
    * docId에 해당하는 부분은 각 담당자가 만든 모델, 스키마에 맞게 controller에서 입력
    * @example 종목 관련 댓글 검색 => `AAPL`, `005930.KRX` 등
    */
-  public async getAllReplsByDocId(docId: string, offset = 0, limit = 15): Promise<ReplyDoc[]> {
+  public async getAllReplsByDocId(docId: string, offset = 0, limit = 15, email?: string): Promise<ReplyDoc[]> {
     return await Reply.find({ docId })
       .sort({ updatedAt: 'desc' })
       .skip(offset)
@@ -37,5 +37,9 @@ export default class ReplyService {
 
   /** @todo 댓글 삭제 */
 
-  /** @todo 좋아요 토글링 */
+  /** @todo 좋아요 +1 */
+  public async toggleLike(props) {
+    const { replId } = props;
+    return Reply.findByIdAndUpdate(replId, { $inc: { likes: 1 } }).exec();
+  }
 }

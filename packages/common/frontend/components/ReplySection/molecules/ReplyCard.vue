@@ -11,10 +11,10 @@
     </div>
     <Words class="reply-content"> {{ contents }} </Words>
     <div class="reply-reaction noselect">
-      <Button class="reply-likes">👍 {{ likes }}</Button>
-      <Button class="reply-rerepl" @click.native="inputToggle(replId)">대댓글 달기</Button>
+      <Button class="reply-likes" :class="{ 'reply-likes-added': liked }" @click.native="toggleLikes"
+        >👍 {{ changableLikes }}</Button
+      >
     </div>
-    <ReplyForm v-if="curInputId === replId" @change-current-input="inputToggle" />
   </article>
 </template>
 
@@ -24,15 +24,15 @@
  * @see https://semantic-ui.com/views/comment.html
  */
 import Vue from 'vue';
+import { mapActions } from 'vuex';
 import Button from '../atoms/Button.vue';
 import Words from '../atoms/Words.vue';
-import ReplyForm from './ReplyInputForm.vue';
 import lazyloading from '../../../utils/lazyloading';
 
 export default Vue.extend({
   name: 'ReplyCard',
 
-  components: { Button, Words, ReplyForm },
+  components: { Button, Words },
 
   /**
    * @see @/components/organisms/ReplySection
@@ -64,14 +64,21 @@ export default Vue.extend({
       type: Number,
       default: 0,
     },
-    curInputId: {
+    email: {
       type: String,
       required: true,
     },
-    hasAuth: {
+    userLike: {
       type: Boolean,
-      required: true,
+      default: false,
     },
+  },
+
+  data() {
+    return {
+      liked: this.userLike,
+      changableLikes: this.likes,
+    };
   },
 
   computed: {
@@ -88,14 +95,19 @@ export default Vue.extend({
   },
 
   mounted() {
-    const card = this.$refs.card;
-    lazyloading(card);
+    lazyloading(this.$refs.card);
   },
 
   methods: {
-    inputToggle(id: string | number) {
-      if (!this.hasAuth) return;
-      this.$emit('change-current-input', id);
+    ...mapActions('reply', ['toggleLikesAction']),
+
+    toggleLikes() {
+      /** @todo 예외처리 */
+      if (!this.email) return;
+      const { replId, liked, changableLikes } = this;
+      this.liked = !liked;
+      this.changableLikes = liked ? changableLikes - 1 : changableLikes + 1;
+      if (!liked) this.toggleLikesAction(replId);
     },
   },
 });
@@ -178,6 +190,11 @@ $maxHeight: 50px;
       text-align: center;
       font-weight: bold;
       color: rgba(249, 0, 79, 1);
+
+      &-added {
+        background-color: rgba(255, 23, 68, 0.6);
+        font-weight: bolder;
+      }
     }
   }
 }
