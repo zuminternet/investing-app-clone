@@ -9,7 +9,7 @@ import { FilterQuery, Document } from 'mongoose';
 const cache = new NodeCache({ deleteOnExpire: true });
 const cacheTTL = 30;
 
-interface ArticleWithReplies extends ArticleDoc {
+export interface ArticleWithReplies extends ArticleDoc {
   replies: ReplyDoc[];
   replyCount: number;
 }
