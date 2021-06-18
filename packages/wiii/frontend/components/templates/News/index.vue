@@ -1,5 +1,5 @@
 <template>
-  <List :class="{ loading }" v-bind="{ newsList }" />
+  <List :class="{ loading }" v-bind="{ newsList, category }" />
 </template>
 
 <script lang="ts">
