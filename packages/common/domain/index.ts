@@ -1,6 +1,6 @@
-import tickerMap from './tickerMap';
+import _tickerMap from './tickerMap';
 
-export { tickerMap };
+export const tickerMap = _tickerMap;
 
 export const tickerKeys = [...Object.keys(tickerMap.stock), ...Object.keys(tickerMap.index), ...Object.keys(tickerMap.crypto)];
 
