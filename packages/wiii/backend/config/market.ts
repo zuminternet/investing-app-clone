@@ -9,17 +9,10 @@ export const MarketStackConfigs = {
   baseUrl: `http://api.marketstack.com/v1/eod`,
 } as const;
 
-/** @description Config for Polygon.io */
-export const PolygonConfigs = {
-  ACCESS_KEY: process.env.POLYGON_ACCESS,
-};
-
-export const AlphaConfigs = {
-  ACCESS_KEY: process.env.ALPHA_ACCESS,
-};
-
 export const FinnhubConfigs = {
+  BASE: `https://finnhub.io/api/v1/`,
   ACCESS_KEY: process.env.FINNHUB_ACCESS,
+  KOSPI_SUFFIX: '.KS',
 };
 
 export const enum DurationEnum {
