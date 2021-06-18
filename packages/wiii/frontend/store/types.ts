@@ -14,6 +14,7 @@ export enum StoreNames {
   Auth = 'Auth',
   User = 'User',
   Market = 'Market',
+  News = 'News',
 }
 
 export enum ChartDataEnums {
