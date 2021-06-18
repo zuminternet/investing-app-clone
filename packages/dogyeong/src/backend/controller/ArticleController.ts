@@ -38,7 +38,7 @@ export class ApiController {
   public async getPopularNews(req: Request, res: Response) {
     try {
       const { offset, limit, tickers } = req.query;
-      const news = await this.articleService.getNews(+offset, +limit, this.getTickerArray(tickers));
+      const news = await this.articleService.getNews(+offset, +limit, this.getTickerArray(tickers), true);
       res.json(news);
     } catch (err) {
       res.status(500).json({ err: err.message ?? err });
@@ -49,7 +49,7 @@ export class ApiController {
   public async getPopularOpinions(req: Request, res: Response) {
     try {
       const { offset, limit, tickers } = req.query;
-      const news = await this.articleService.getOpinions(+offset, +limit, this.getTickerArray(tickers));
+      const news = await this.articleService.getOpinions(+offset, +limit, this.getTickerArray(tickers), true);
       res.json(news);
     } catch (err) {
       res.status(500).json({ err: err.message ?? err });
