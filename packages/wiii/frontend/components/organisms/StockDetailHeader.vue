@@ -86,4 +86,8 @@ export default Vue.extend({
 .same {
   color: $grey-500;
 }
+
+img {
+  border-radius: 100%;
+}
 </style>

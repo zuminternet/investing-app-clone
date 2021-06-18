@@ -1,5 +1,5 @@
 <template>
-  <section class="section">
+  <section class="section" :class="{ loading: isLoading }">
     <ReplySort @change-sort="changeSort" :sortText="sortText" />
     <ReplyInput v-bind="{ curInputId }" @change-current-input="changeCurInput" @after-submit="afterSubmit" />
     <Card
@@ -36,6 +36,7 @@ export default Vue.extend({
     const sortTexts = ['최신순', '좋아요순'];
     return {
       repls: [],
+      isLoading: true,
       sortIdx: 0,
       sortText: sortTexts[0],
       sortTexts,
@@ -45,6 +46,7 @@ export default Vue.extend({
 
   async mounted() {
     this.repls = await this.getReplsByDocID(this.ticker);
+    this.isLoading = false;
   },
 
   methods: {
