@@ -8,12 +8,12 @@
         <template #right>
           <SearchButton />
         </template>
-        {{ name }}
+        {{ displayName }}
       </HeaderTitle>
     </Header>
     <main>
       <section v-if="summaryDetail" :class="$style.price">
-        <span :class="$style['current-price']">{{ summaryDetail.regularMarketOpen }}</span>
+        <span :class="$style['current-price']">{{ previosClose }}</span>
         <span :class="[{ [$style.red]: priceDiff > 0 }, { [$style.blue]: priceDiff < 0 }]">
           {{ priceDiff | formatNumber }} {{ pricePercent | formatNumber | formatPercent }}
         </span>
@@ -46,7 +46,7 @@
             </tr>
             <tr>
               <td>총 시가</td>
-              <td>{{ summaryDetail.marketCap | formatNumber }}</td>
+              <td>{{ summaryDetail.marketCap | addComma }}</td>
             </tr>
             <tr>
               <td>매수가/매도가</td>
@@ -54,11 +54,11 @@
             </tr>
             <tr>
               <td>거래량</td>
-              <td>{{ summaryDetail.volume | formatNumber }}</td>
+              <td>{{ summaryDetail.volume | addComma }}</td>
             </tr>
             <tr>
               <td>평균 거래량</td>
-              <td>{{ summaryDetail.averageVolume | formatNumber }}</td>
+              <td>{{ summaryDetail.averageVolume | addComma }}</td>
             </tr>
             <tr>
               <td>이전 종가</td>
@@ -107,7 +107,7 @@ import ArticleTemplate from '@/components/ArticleTemplate/ArticleTemplate.vue';
 import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner.vue';
 import SearchButton from '@/components/SearchButton/SearchButton.vue';
 import { chartLightThemeOption } from '@/config';
-import { formatNumber, formatPercent } from '@/filters';
+import { addComma, formatNumber, formatPercent } from '@/filters';
 import Chart from '@/components/Chart/Chart.vue';
 import ReplySection from 'common/frontend/components/ReplySection/index.vue';
 
@@ -129,6 +129,7 @@ export default Vue.extend({
 
   filters: {
     formatNumber,
+    addComma,
     formatPercent,
   },
 
@@ -137,7 +138,6 @@ export default Vue.extend({
       summaryDetail: null,
       chartData: [],
       chart: null,
-      name: '',
       news: {
         data: [],
         isLoading: false,
@@ -150,6 +150,9 @@ export default Vue.extend({
       },
       symbol: '',
       isChartLoading: true,
+      chartPeriod: '5y',
+      interval: null,
+      displayName: '',
     };
   },
 
@@ -157,14 +160,21 @@ export default Vue.extend({
     fullscreenEnabled() {
       return document.fullscreenEnabled;
     },
-    priceDiff() {
-      return this.summaryDetail?.regularMarketOpen - this.summaryDetail?.previousClose || 0;
-    },
-    pricePercent() {
-      return (this.priceDiff / this.summaryDetail?.regularMarketOpen) * 100;
-    },
     chartColorOptions() {
       return this.$store.state.isDarkTheme ? undefined : chartLightThemeOption;
+    },
+    previos2DayClose() {
+      return this.chartData[1]?.close ?? 0;
+    },
+    previosClose() {
+      return this.chartData[0]?.close ?? 0;
+    },
+    priceDiff() {
+      return this.previosClose - this.previos2DayClose;
+    },
+    pricePercent() {
+      const result = (this.priceDiff / this.previos2DayClose) * 100;
+      return Number.isNaN(result) ? 0 : result;
     },
   },
 
@@ -175,14 +185,6 @@ export default Vue.extend({
       .then((summaryDetail) => (this.summaryDetail = summaryDetail))
       .catch(console.error);
 
-    getChart({ symbol: this.symbol, period: '1y' })
-      .then((chart) => {
-        this.chartData = chart.data;
-        this.name = chart.display_name;
-        this.isChartLoading = false;
-      })
-      .catch(console.error);
-
     getNewNews({ tickers: this.symbol })
       .then((news) => (this.news.data = news))
       .catch(console.error);
@@ -190,6 +192,13 @@ export default Vue.extend({
     getNewOpinions({ tickers: this.symbol })
       .then((opinions) => (this.opinions.data = opinions))
       .catch(console.error);
+
+    this.fetchChart();
+    this.interval = setInterval(this.fetchChart.bind(this), 2000);
+  },
+
+  beforeDestroy() {
+    this.clearInterval();
   },
 
   methods: {
@@ -197,10 +206,18 @@ export default Vue.extend({
       this.$router.back();
     },
     changeChartPeriod(period) {
-      this.isChartLoading = true;
-      getChart({ symbol: this.symbol, period })
+      this.chartPeriod = period;
+      this.clearInterval();
+      this.interval = setInterval(this.fetchChart.bind(this), 2000);
+      this.fetchChart();
+    },
+    fetchChart() {
+      if (!this.chartData.length) this.isChartLoading = true;
+
+      getChart({ symbol: this.symbol, period: this.chartPeriod })
         .then((chart) => {
           this.chartData = chart.data;
+          this.displayName = chart.display_name;
           this.isChartLoading = false;
         })
         .catch(console.error);
@@ -210,6 +227,11 @@ export default Vue.extend({
     },
     requestFullscreen() {
       this.$refs.chart.requestFullscreen();
+    },
+    clearInterval() {
+      if (!this.interval) return;
+      clearInterval(this.interval);
+      this.interval = null;
     },
   },
 });
