@@ -1,13 +1,13 @@
-export default (ref: Element) => {
+// @ts-nocheck
+export default (ref: HTMLElement) => {
   const io = new IntersectionObserver((entries) => {
     for (const { target, isIntersecting } of entries) {
       if (!isIntersecting) continue;
 
-      const img = target.getElementsByTagName('img')[0];
-      if (!img?.dataset?.src) continue;
+      if (!target?.dataset?.src) continue;
 
-      img.src = img.dataset.src;
-      img.removeAttribute('data-src');
+      target.src = target.dataset.src;
+      target.removeAttribute('data-src');
 
       io.disconnect();
     }

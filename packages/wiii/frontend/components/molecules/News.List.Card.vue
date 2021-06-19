@@ -1,26 +1,26 @@
 <template>
-  <Card class="news-list-card">
+  <article class="card news-list-card">
     <Words>{{ category }} </Words>
+    <LazyImages :src="image" :alt="headline" class="news-list-card-thumbnail" />
     <Words class="news-list-card-title">{{ headline }} </Words>
-    <img :src="image" ref="card" class="news-list-card-thumbnail" />
     <Words>{{ summary }} </Words>
     <Words>{{ url }} </Words>
     <Words>{{ source }} </Words>
     <Words>{{ dateString }} </Words>
-  </Card>
+  </article>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 import Words from '@/components/atoms/Words.vue';
+import LazyImages from '@/components/atoms/LazyImages.vue';
 import Card from '@/components/molecules/Card.vue';
-import lazyloading from '@/utils/lazyloading';
 import { getDateString } from '../../../domain/date';
 
 export default Vue.extend({
   name: 'NewsListCard',
 
-  components: { Words, Card },
+  components: { Words, Card, LazyImages },
 
   props: {
     id: {
@@ -55,10 +55,6 @@ export default Vue.extend({
       return getDateString(this.datetime * 1000);
     },
   },
-
-  mounted() {
-    lazyloading(this.$refs.card);
-  },
 });
 </script>
 
@@ -73,6 +69,11 @@ export default Vue.extend({
     width: 100%;
     margin: 10px;
     border-radius: $border-radius-10;
+
+    .loading {
+      min-width: 100px;
+      min-height: 100px;
+    }
   }
 }
 </style>

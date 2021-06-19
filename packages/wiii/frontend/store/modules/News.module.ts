@@ -36,7 +36,6 @@ const News = {
         const results = await getMarketNews(category);
         commit('cacheMarketNews', { category, data: results });
 
-        console.log({ results });
         if (!results) return [];
         return results;
       } catch (e) {
