@@ -2,7 +2,7 @@
   <article class="card reply" ref="card">
     <div class="reply-info">
       <div class="reply-info-user">
-        <img :data-src="userThumbnail" alt="😎" class="thumbnail noselect" />
+        <LazyImages :src="userThumbnail" :alt="'😎'" class="thumbnail noselect" />
         <div class="reply-info-user-detail">
           <Words class="mini bold"> {{ userName }} </Words>
           <Words class="mini"> {{ dateString }} </Words>
@@ -29,6 +29,7 @@ import Vue from 'vue';
 import { mapState, createNamespacedHelpers } from 'vuex';
 import Button from '@/components/atoms/Button.vue';
 import Words from '@/components/atoms/Words.vue';
+import LazyImages from '@/components/atoms/LazyImages.vue';
 import ReplyForm from '@/components/molecules/ReplyInputForm.vue';
 import lazyloading from '@/utils/lazyloading';
 import { StoreNames } from '@/store';
@@ -38,7 +39,7 @@ const { mapActions } = createNamespacedHelpers(StoreNames.Reply);
 export default Vue.extend({
   name: 'ReplyCard',
 
-  components: { Button, Words, ReplyForm },
+  components: { Button, Words, LazyImages, ReplyForm },
 
   /**
    * @see @/components/organisms/ReplySection
@@ -105,8 +106,7 @@ export default Vue.extend({
   },
 
   mounted() {
-    const card = this.$refs.card;
-    lazyloading(card);
+    lazyloading(this.$refs.card);
   },
 
   methods: {

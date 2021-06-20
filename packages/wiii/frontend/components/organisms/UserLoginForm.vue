@@ -1,19 +1,12 @@
 <template>
   <form method="post" class="area login-form" @submit.prevent="loginSubmitHandler">
     <Label :forId="'login-email'" class="login-form-label">Email</Label>
-    <Input
-      id="login-email"
-      :type="'email'"
-      :newValue="email"
-      @change-input-handler="changeEmailHandler"
-      autofocus
-      required
-    ></Input>
+    <Input id="login-email" :type="'email'" :newValue="email" @change-input-handler="changeEmailHandler" autofocus required />
     <Label :forId="'login-password'" class="login-form-label">Password</Label>
-    <Input id="login-password" :type="'password'" :newValue="password" @change-input-handler="changePWHandler" required></Input>
+    <Input id="login-password" :type="'password'" :newValue="password" @change-input-handler="changePWHandler" required />
     <div class="user-buttons">
       <Link :href="'/user/join'" :name="'가입하기'" />
-      <Button type="submit" class="user-sign-button">로그인</Button>
+      <Button type="submit" class="user-sign-button" :class="{ isSubmitting }">로그인 </Button>
     </div>
   </form>
 </template>
@@ -36,6 +29,7 @@ export default Vue.extend({
     return {
       email: '',
       password: '',
+      isSubmitting: false,
     };
   },
 
@@ -50,8 +44,9 @@ export default Vue.extend({
     },
 
     async loginSubmitHandler() {
+      this.isSubmitting = true;
       const isSuccess = await this.postLogin({ email: this.email, password: this.password });
-
+      this.isSubmitting = false;
       /** @todo UI 실패 처리 */
       if (!isSuccess) return alert('로그인 실패');
       this.$router.push('/user');
@@ -69,6 +64,7 @@ export default Vue.extend({
   .user-buttons {
     display: flex;
     justify-content: space-between;
+    margin-top: 20px;
 
     .router-link,
     .user-sign-button {
@@ -81,8 +77,45 @@ export default Vue.extend({
     }
 
     .user-sign-button {
+      position: relative;
       background-color: $green-500;
+
+      &.isSubmitting {
+        /** background */
+        &:before {
+          content: '';
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          left: 0;
+          top: 0;
+          cursor: progress;
+          border-radius: $border-radius-10;
+          background-color: $green-500;
+        }
+
+        /** spinning circle */
+        &:after {
+          content: '';
+          position: absolute;
+          width: 20px;
+          height: 20px;
+          border-radius: 20px;
+          border: 2px solid $shallow-blue;
+          border-right-color: $green-100;
+          animation: spinner 1s cubic-bezier(0.74, 0.16, 0.55, 0.76) infinite;
+        }
+      }
     }
+  }
+}
+
+@keyframes spinner {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
   }
 }
 </style>

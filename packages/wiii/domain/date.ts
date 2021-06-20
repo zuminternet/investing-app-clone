@@ -33,6 +33,11 @@ const getDateFromString = (date: string): string => {
   return getDateFromDate(dateObj);
 };
 
+/**
+ * getDateString
+ * @param date Date type 또는 Date로 바꿀수 있는 문자열/숫자, 없으면 현재시각
+ * @returns YYYY-MM-DD 스트링
+ */
 export const getDateString = (date: string | number | Date = new Date()): string => {
   if (typeof date === typeof Date || typeof date === 'object') return getDateFromDate(date as Date);
   if (typeof date === 'string' || typeof date === 'number') return getDateFromString(date as string);

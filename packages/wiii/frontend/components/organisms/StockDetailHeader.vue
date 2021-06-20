@@ -1,6 +1,6 @@
 <template>
   <div id="stocks-detail-header" class="card">
-    <img :src="logo" height="35px" alt="" />
+    <LazyImages :src="logo" :alt="tickerName" id="stocks-detail-header-logo" />
     <Words id="stocks-detail-header-tickerName">{{ tickerName }}</Words>
     <Words id="stocks-detail-header-price" :class="colorClass">현재가 {{ price.toLocaleString() }}원 </Words>
     <Words id="stocks-detail-header-change" :class="colorClass"> ({{ changeSign }}{{ change }}%) </Words>
@@ -11,11 +11,12 @@
 <script lang="ts">
 import Vue from 'vue';
 import Words from '@/components/atoms/Words.vue';
+import LazyImages from '@/components/atoms/LazyImages.vue';
 
 export default Vue.extend({
   name: 'StockDetailHeader',
 
-  components: { Words },
+  components: { Words, LazyImages },
 
   props: {
     logo: {
@@ -59,6 +60,13 @@ export default Vue.extend({
     place-content: center;
   }
 
+  &-logo {
+    width: 40px;
+    height: 40px;
+    box-shadow: 0 0 2px 0 $grey-500;
+    border-radius: 40px;
+  }
+
   &-tickerName {
     color: $grey-700;
     font-weight: 700;
@@ -85,9 +93,5 @@ export default Vue.extend({
 
 .same {
   color: $grey-500;
-}
-
-img {
-  border-radius: 100%;
 }
 </style>

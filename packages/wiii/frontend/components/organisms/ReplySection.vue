@@ -16,7 +16,7 @@ import Vue from 'vue';
 import { createNamespacedHelpers } from 'vuex';
 import ReplyInput from '@/components/molecules/ReplyNewInput.vue';
 import ReplySort from '@/components/molecules/ReplySort.vue';
-import Card from '@/components/molecules/ReplyCard.vue';
+import Card from '@/components/molecules/Reply.List.Card.vue';
 import { StoreNames } from '@/store';
 
 const { mapActions } = createNamespacedHelpers(StoreNames.Reply);

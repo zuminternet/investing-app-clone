@@ -34,5 +34,9 @@ input {
     outline: none;
     box-shadow: inset 0 0 5px rgba($grey-300, 0.5);
   }
+
+  .dark & {
+    color: rgba($neon-green, 0.7);
+  }
 }
 </style>
