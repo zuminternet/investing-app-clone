@@ -5,15 +5,15 @@
       <NewsImage :src="headline.image_url" />
       <NewsTextBox>
         <NewsTextBoxTitle>{{ headline.title }}</NewsTextBoxTitle>
-        <NewsTextBoxDesc :author="headline.source" :publish-date="headline.date" />
+        <NewsTextBoxDesc :author="headline.source" :publish-date="headline.date" :replyCount="headline.replyCount" />
       </NewsTextBox>
     </NewsHeadline>
     <NewsList v-if="articles">
-      <NewsListItem v-for="{ _id, image_url, date, source, title } in articles" :key="_id" :to="`${prefix}${_id}`">
+      <NewsListItem v-for="{ _id, image_url, date, source, title, replyCount } in articles" :key="_id" :to="`${prefix}${_id}`">
         <NewsImage :src="image_url" />
         <NewsTextBox>
           <NewsTextBoxTitle>{{ title }}</NewsTextBoxTitle>
-          <NewsTextBoxDesc :author="source" :publish-date="date" />
+          <NewsTextBoxDesc :author="source" :publish-date="date" :replyCount="replyCount" />
         </NewsTextBox>
       </NewsListItem>
     </NewsList>
@@ -137,9 +137,10 @@ export default Vue.extend({
     }
 
     .news-author,
-    .news-date {
+    .news-date,
+    .news-reply-count {
       color: var(--sub-text-color);
-      font-size: 13px;
+      font-size: 14px;
     }
   }
 
