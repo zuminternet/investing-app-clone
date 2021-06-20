@@ -45,5 +45,5 @@ export const text = {
   HIGH: '최고가',
   LOW: '최저가',
   NO_INFO: '정보 없음',
-  INVESTING_COM: 'ZUM-Investing',
+  ZUM: 'ZUM',
 };

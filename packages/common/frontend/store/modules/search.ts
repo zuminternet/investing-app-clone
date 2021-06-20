@@ -91,9 +91,7 @@ const actions = {
 // mutatuons 설정
 const mutations = {
   setSearchedItems(state, items) {
-    state.searchedItems = items.map((item) => {
-      return { ...item, category: item.stock_exchange.acronym };
-    });
+    state.searchedItems = items;
   },
 
   setSearchedNews(state, news) {

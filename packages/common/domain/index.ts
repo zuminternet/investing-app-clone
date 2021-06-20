@@ -1,17 +1,28 @@
 import _tickerMap from './tickerMap';
+import _nameMap from './nameMap';
+
+export const nameMap = _nameMap;
+
+export const nameKeys = [...Object.keys(nameMap.index), ...Object.keys(nameMap.crypto)];
 
 export const tickerMap = _tickerMap;
 
-export const tickerKeys = [...Object.keys(tickerMap.stock), ...Object.keys(tickerMap.index), ...Object.keys(tickerMap.crypto)];
+export const tickerKeys = [...Object.keys(tickerMap.stock)];
 
 const findMatchedTickers = (keyword: string) => {
   if (typeof keyword !== 'string') throw new Error('Keyword must be string');
   return tickerKeys.filter((ticker) => ticker.includes(keyword));
 };
 
-export const getMatchedTickers = (keywords: string | string[]): string[] => {
+const findMatchedNames = (keyword: stirng) => {
+  if (typeof keyword !== 'string') throw new Error('ketword must be string');
+
+  return nameKeys.filter((name) => name.includes(keyword));
+};
+
+export const getMatchedItems = (keywords: string | string[]): string[] => {
   if (typeof keywords === 'string') {
-    return findMatchedTickers(keywords);
+    return [...findMatchedTickers(keywords), ...findMatchedNames(keywords)];
   }
   if (Array.isArray(keywords)) {
     return [...new Set(keywords.flatMap(findMatchedTickers))];

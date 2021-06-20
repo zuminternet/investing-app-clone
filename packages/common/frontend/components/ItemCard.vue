@@ -8,8 +8,8 @@
           </custom-text>
 
           <div class="item-sub-info-box">
-            <custom-text> {{ symbol }}</custom-text>
-            <custom-text v-if="category" itemCardTimeAndCategory> | {{ category }} </custom-text>
+            <custom-text v-if="isStock"> {{ symbol }} | </custom-text>
+            <custom-text v-if="category" itemCardTimeAndCategory>{{ category }} </custom-text>
           </div>
         </div>
         <empty-space></empty-space>
@@ -119,6 +119,10 @@ export default {
 
     email() {
       return this.userInfo.userEmail;
+    },
+
+    isStock() {
+      return this.item.isStock;
     },
 
     isBookmarked() {

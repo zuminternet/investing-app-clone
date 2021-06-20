@@ -1,5 +1,5 @@
 <template>
-  <input class="search-input" :placeholder="`${product} ${search}`" @change="$emit('search-input-value-change', $event)" />
+  <input class="search-input" :placeholder="`${product} ${search}`" @input="$emit('search-input-value-change', $event)" />
 </template>
 
 <script>
@@ -23,5 +23,6 @@ export default {
 .search-input {
   height: 30px;
   flex: 1;
+  margin-right: 10px;
 }
 </style>

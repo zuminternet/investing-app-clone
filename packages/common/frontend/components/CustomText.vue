@@ -139,6 +139,7 @@ export default {
 .app-title {
   color: var(--title-color);
   font-weight: bold;
+  margin-left: 10px;
 }
 
 .item-card-name-price {

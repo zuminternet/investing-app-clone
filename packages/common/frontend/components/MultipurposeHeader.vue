@@ -2,7 +2,7 @@
   <div class="multipurpose-header">
     <template v-if="isItemDetail">
       <div class="header-button-box">
-        <header-button isBackButton></header-button>
+        <header-button isBackButton />
       </div>
       <loading v-if="isLoading" :spinnerSize="25" />
       <error v-else-if="isError" />
@@ -17,7 +17,7 @@
         </div>
         <empty-space></empty-space>
         <div class="header-button-box">
-          <header-button isGoSearchButton></header-button>
+          <header-button isGoSearchButton />
           <header-button
             isAddBookmarkButton
             :isBookmarked="isBookmarked"
@@ -25,24 +25,24 @@
             :symbol="symbol"
             :name="name"
             :category="category"
-          ></header-button>
+          />
         </div>
       </template>
     </template>
 
     <template v-if="isNewsDetail">
-      <header-button isBackButton></header-button>
+      <header-button isBackButton />
       <div class="header-title-box">
         <custom-text pageTitle>뉴스 상세페이지</custom-text>
       </div>
       <empty-space></empty-space>
       <div class="header-button-box">
-        <header-button isGoSearchButton></header-button>
+        <header-button isGoSearchButton />
       </div>
     </template>
 
     <template v-if="isSearch">
-      <header-button isBackButton></header-button>
+      <header-button isBackButton />
       <search-input @search-input-value-change="$emit('search-input-value-change', $event)" />
     </template>
 
@@ -54,8 +54,8 @@
       </div>
       <empty-space></empty-space>
       <div class="header-button-box">
-        <header-button isThemeButton></header-button>
-        <header-button isGoSearchButton></header-button>
+        <header-button isThemeButton />
+        <header-button isGoSearchButton />
       </div>
     </template>
 
@@ -65,18 +65,18 @@
       </div>
       <empty-space></empty-space>
       <div class="header-button-box">
-        <header-button isGoSearchButton></header-button>
+        <header-button isGoSearchButton />
       </div>
     </template>
 
     <template v-if="isBookmark">
-      <header-button isBackButton></header-button>
+      <header-button isBackButton />
       <div class="header-title-box">
         <custom-text pageTitle>{{ bookmarkTitle }}</custom-text>
       </div>
       <empty-space></empty-space>
       <div class="header-button-box">
-        <header-button isGoSearchButton></header-button>
+        <header-button isGoSearchButton />
       </div>
     </template>
   </div>
@@ -188,10 +188,10 @@ export default {
   },
 
   data() {
-    const { INVESTING_COM, BOOKMARK, NEWS } = text;
+    const { ZUM, BOOKMARK, NEWS } = text;
 
     return {
-      marketTitle: INVESTING_COM,
+      marketTitle: ZUM,
       bookmarkTitle: BOOKMARK,
       newsTitle: NEWS,
     };
