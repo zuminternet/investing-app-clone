@@ -1,13 +1,8 @@
 <template>
   <section class="section">
     <ReplySort :sortText="sortText" @change-sort="changeSort" />
-    <ReplyInput v-bind="{ curInputId, hasAuth }" @change-current-input="changeCurInput" @after-submit="afterSubmit" />
-    <Card
-      v-for="(repl, idx) in repls"
-      :key="idx"
-      v-bind="{ ...repl, curInputId, hasAuth }"
-      @change-current-input="changeCurInput"
-    />
+    <ReplyInput v-bind="{ docId, email }" @after-submit="afterSubmit" />
+    <Card v-for="(repl, idx) in repls" :key="idx" v-bind="{ ...repl, email }" />
   </section>
 </template>
 
@@ -29,10 +24,10 @@ export default Vue.extend({
       type: String,
       required: true,
     },
-    /** 사용자 로그인 정보; 로그인 된 사용자만 댓글 달기 가능 */
-    hasAuth: {
-      type: Boolean,
-      required: true,
+    /** 사용자 email; 로그인 된 사용자만 댓글 달기 가능 */
+    email: {
+      type: String,
+      default: undefined,
     },
   },
 
@@ -60,10 +55,6 @@ export default Vue.extend({
       this.repls = this.repls.sort((a, b) => (this.sortIdx === 0 ? b.date - a.date : b.likes - a.likes));
     },
 
-    changeCurInput(idx: string) {
-      this.curInputId = idx;
-    },
-
     async afterSubmit() {
       this.repls = await this.getReplsByDocID(this.docId);
     },
@@ -71,7 +62,7 @@ export default Vue.extend({
 });
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .reset {
   box-sizing: border-box;
   margin: 0;

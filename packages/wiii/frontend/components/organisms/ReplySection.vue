@@ -1,5 +1,5 @@
 <template>
-  <section class="section">
+  <section class="section" :class="{ loading: isLoading }">
     <ReplySort @change-sort="changeSort" :sortText="sortText" />
     <ReplyInput v-bind="{ curInputId }" @change-current-input="changeCurInput" @after-submit="afterSubmit" />
     <Card
@@ -36,6 +36,7 @@ export default Vue.extend({
     const sortTexts = ['최신순', '좋아요순'];
     return {
       repls: [],
+      isLoading: true,
       sortIdx: 0,
       sortText: sortTexts[0],
       sortTexts,
@@ -44,22 +45,23 @@ export default Vue.extend({
   },
 
   async mounted() {
-    this.sortText = this.sortTexts[this.sortIdx];
     this.repls = await this.getReplsByDocID(this.ticker);
+    this.isLoading = false;
   },
 
   methods: {
     ...mapActions(['getRandomRepls', 'getReplsByDocID']),
 
-    async getRandRepls() {
-      try {
-        const result = await this.getRandomRepls();
-        if (!result?.length) throw new Error('No Result');
-        return result;
-      } catch (e) {
-        console.error(e);
-      }
-    },
+    /** @deprecated 개발용 더미데이터 */
+    // async getRandRepls() {
+    //   try {
+    //     const result = await this.getRandomRepls();
+    //     if (!result?.length) throw new Error('No Result');
+    //     return result;
+    //   } catch (e) {
+    //     console.error(e);
+    //   }
+    // },
 
     changeSort() {
       this.sortIdx = (this.sortIdx + 1) % 2;

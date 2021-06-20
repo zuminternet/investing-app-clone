@@ -5,8 +5,9 @@ import { GetHistoricalOptions } from '../../domain/apiOptions';
 import { marketName } from '../../domain/apiUrls';
 import { MINUTE_ONE, times } from '../../domain/date';
 import { devPrint, IS_PRO_MODE } from '../../domain/utilFunc';
-import { fetchHistoricalData as KRX } from '../chart/KRX';
-import stocksList from '../chart/KRXList';
+import { fetchHistoricalData as KRX } from './chart/KRX';
+import stocksList from './chart/KRXList';
+import { getStockOverview } from './overview/stock';
 
 const fetchers = {
   [marketName.stocks]: KRX,
@@ -30,6 +31,7 @@ export class MarketService {
   private delay = MINUTE_ONE * 300;
   private lastRequest: number;
   private cachedHistory = {};
+  private cachedOverview = {};
 
   constructor() /**
    * @Yml('marketApi') private MarketApi: any,
@@ -112,15 +114,19 @@ export class MarketService {
     unless: (result) => !result,
   })
   public async getAllStocks() {
-    for await (const { ticker, tickerName } of stocksList) {
+    const baselist = IS_PRO_MODE ? stocksList : stocksList.slice(0, 2);
+
+    for await (const { ticker, tickerName } of baselist) {
       const { data, status, statusText } = await KRX({ ticker, type: `stock` });
       if (status >= 400) throw Error(statusText);
-
       this.cachedHistory[ticker] = { ticker, tickerName, ...data };
+
+      const overview = await getStockOverview(ticker);
+      this.cachedOverview[ticker] = overview;
     }
 
     console.log(`[Market:Service:Cached] ${Object.keys(this.cachedHistory)}`);
 
-    return this.sortStocks();
+    return { hist: this.sortStocks(), overview: this.cachedOverview };
   }
 }

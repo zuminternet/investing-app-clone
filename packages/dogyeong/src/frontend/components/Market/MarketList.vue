@@ -19,8 +19,8 @@
               <h4>{{ display_name }}</h4>
               <span class="date">{{ date | formatDate }} | {{ exchange }}</span>
             </td>
-            <td>
-              <span class="value" :class="getColorClass(diff)">{{ close }}</span>
+            <td class="value">
+              <span :data-symbol="symbol">{{ close }}</span>
             </td>
             <td>
               <span class="diff" :class="getColorClass(diff)">
@@ -85,6 +85,28 @@ export default Vue.extend({
     },
   },
 
+  watch: {
+    listData(newList, oldList) {
+      newList.forEach(function compareNewValue(newVal, idx) {
+        const oldVal = oldList[idx];
+        const $el = document.querySelector(`[data-symbol="${newVal.symbol}"]`);
+
+        if (!$el) return;
+
+        const diff = newVal.diff - oldVal.diff;
+
+        $el.className = ''; // 강제 리플로우?
+
+        if (diff < 0) {
+          $el.classList.add('blue-effect');
+        }
+        if (diff > 0) {
+          $el.classList.add('red-effect');
+        }
+      });
+    },
+  },
+
   methods: {
     getColorClass(value: number) {
       if (value > 0) return 'red';
@@ -138,7 +160,11 @@ table {
     border-bottom: 1px solid var(--border-color);
   }
 
-  .value,
+  .value {
+    color: var(--text-color);
+    font-size: 18px;
+  }
+
   .diff {
     &.red {
       color: var(--red-color);
@@ -146,6 +172,42 @@ table {
     &.blue {
       color: var(--blue-color);
     }
+  }
+}
+
+.red-effect {
+  animation-name: redBgEffect;
+  animation-duration: 0.25s;
+  animation-iteration-count: 1;
+}
+
+.blue-effect {
+  animation-name: blueBgEffect;
+  animation-duration: 0.25s;
+  animation-iteration-count: 1;
+}
+
+@keyframes redBgEffect {
+  0% {
+    background: transparent;
+  }
+  50% {
+    background: var(--red-color);
+  }
+  100% {
+    background: transparent;
+  }
+}
+
+@keyframes blueBgEffect {
+  0% {
+    background: transparent;
+  }
+  50% {
+    background: var(--blue-color);
+  }
+  100% {
+    background: transparent;
   }
 }
 </style>

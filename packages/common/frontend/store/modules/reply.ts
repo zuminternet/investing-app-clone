@@ -1,4 +1,4 @@
-import { createReply, getReplsByDocID } from '../../apis/';
+import { createReply, getReplsByDocID, toggleLikes } from '../../apis/';
 
 const state = {};
 
@@ -26,10 +26,19 @@ const actions = {
    * 댓글 목록 조회
    * @param 종목 티커 또는 뉴스 id 로 조회
    */
-  getReplsByDocID: async (_, docId: string) => {
+  getReplsByDocID: async (_, { email, docId }) => {
     try {
-      const repls = await getReplsByDocID(docId);
+      const repls = await getReplsByDocID(docId, email);
       return repls;
+    } catch (e) {
+      return console.error(e);
+    }
+  },
+
+  toggleLikesAction: (_, { replId, likes }) => {
+    if (!replId) return false;
+    try {
+      toggleLikes(replId, likes);
     } catch (e) {
       return console.error(e);
     }

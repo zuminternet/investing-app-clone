@@ -1,5 +1,5 @@
 import { Service } from 'zum-portal-core/backend/decorator/Alias';
-import Reply, { ReplyDoc } from '../model/ReplyModel';
+import Reply, { ReplyDoc, ReplyProps } from '../model/ReplyModel';
 
 /**
  * ReplyService
@@ -14,7 +14,7 @@ export default class ReplyService {
    * 댓글 생성
    * ReplyDoc interface 참고
    */
-  public async createReply(props: ReplyDoc): Promise<ReplyDoc> {
+  public async createReply(props: ReplyProps): Promise<ReplyDoc> {
     return await Reply.create({ ...props });
   }
 
@@ -37,5 +37,9 @@ export default class ReplyService {
 
   /** @todo 댓글 삭제 */
 
-  /** @todo 좋아요 토글링 */
+  /** @todo 좋아요 +1 */
+  public async toggleLike(props) {
+    const { replId, likes } = props;
+    return Reply.findByIdAndUpdate(replId, { $set: { likes } }).exec();
+  }
 }

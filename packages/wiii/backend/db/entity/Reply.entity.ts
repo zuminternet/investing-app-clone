@@ -56,7 +56,7 @@ export class Reply extends Base {
    * @property
    * 현 댓글이 대댓글인 경우 원(부모) 댓글 object id
    */
-  @Column({ nullable: true })
+  @Column({ type: 'string', nullable: true })
   parentReply: ObjectID;
 
   /**

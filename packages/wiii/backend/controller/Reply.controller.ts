@@ -6,6 +6,12 @@ import { ApiError } from '../utils/error/api';
 import { TOKEN_COOKIE_KEY } from '../config/auth';
 import { verifyToken } from '../utils/auth/jwt';
 
+export interface VerifiedToken {
+  data: string;
+  iat: number;
+  exp: number;
+}
+
 /**
  * @description
  * 댓글 CRUD api controller
@@ -29,7 +35,7 @@ export class ReplyController {
       // jwt 인증 확인
       const token = cookies[TOKEN_COOKIE_KEY];
       /** @example { data: '123123@mail.com', iat: 1623767527, exp: 1623774727 } */
-      const { data } = verifyToken(token);
+      const { data } = verifyToken(token) as VerifiedToken;
       if (!data) throw postReplyError();
 
       const result = await this.replyService.createReply({ ...body });
@@ -55,7 +61,7 @@ export class ReplyController {
       let email;
       if (query.auth !== 'false') {
         const token = cookies[TOKEN_COOKIE_KEY];
-        const verified = verifyToken(token);
+        const verified = verifyToken(token) as VerifiedToken;
         email = verified.data;
       }
 
@@ -80,7 +86,7 @@ export class ReplyController {
     const postLikesError = () => this.error(`Post Likes`, this.postLikes.name);
     try {
       const token = cookies[TOKEN_COOKIE_KEY];
-      const { data } = verifyToken(token);
+      const { data } = verifyToken(token) as VerifiedToken;
       if (!data) throw postLikesError();
 
       const result = await this.replyService.toggleLike({ replId, email: data });

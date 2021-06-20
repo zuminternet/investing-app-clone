@@ -20,12 +20,6 @@ export default {
 
   components: { ThemeToggleButton },
 
-  data() {
-    return {
-      stocksPromise: null,
-    };
-  },
-
   computed: {
     ...mapGetters({
       theme: ThemeMapper.GET_THEME,
@@ -33,12 +27,7 @@ export default {
   },
 
   beforeMount() {
-    this.stocksPromise = this.getAllStocks();
-  },
-
-  async mounted() {
-    await this.stocksPromise;
-    this.stocksPromise = null;
+    this.getAllStocks();
   },
 
   methods: {

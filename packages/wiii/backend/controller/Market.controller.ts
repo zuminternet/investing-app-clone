@@ -123,6 +123,8 @@ export class MarketController {
     try {
       const { stocks } = query;
 
+      /** @todo 콘솔 제거, interface 정의 */
+      // @ts-ignore
       const tickers = stocks.split(`-`) as string[];
       console.log({ tickers });
       const data = [];
