@@ -3,7 +3,7 @@ import { Service } from 'zum-portal-core/backend/decorator/Alias';
 import axios from 'axios';
 
 import { marketStackConfig } from '../config';
-import { tickerMap } from '../../domain';
+import { tickerMap, nameMap, getMatchedItems } from '../../domain';
 // import { times, isProductionMode } from '../../domain';
 
 export interface getSearchedItemsInfo {
@@ -31,38 +31,47 @@ export default class SearchService {
   //   unless: (result) => !result,
   // })
   public async getSearchedItems({ keyword }: getSearchedItemsInfo) {
-    const { accessKey } = marketStackConfig;
-    const { data: result } = await axios.get(`http://api.marketstack.com/v1/tickers?access_key=${accessKey}&search=${keyword}`);
-    const { data: items } = result;
-    const displayedItems = [];
+    const matchtedItems = getMatchedItems(keyword);
 
-    if (items) {
-      for (let i = 0; i < items.length; i++) {
-        items[i].name = undefined;
-        const { symbol } = items[i];
-        const { acronym } = items[i].stock_exchange;
+    console.log(matchtedItems);
 
-        if (tickerMap.stock[symbol]) {
-          items[i].name = tickerMap.stock[symbol].name;
-          items[i].category = tickerMap.stock[symbol].category;
+    if (matchtedItems.length) {
+      return matchtedItems.map((item) => {
+        let symbol, name, category;
+
+        if (tickerMap.stock[item]) {
+          ({ name, category } = tickerMap.stock[item]);
+
+          return {
+            name,
+            category,
+            symbol: item,
+            isStock: true,
+          };
         }
 
-        if (tickerMap.index[symbol]) {
-          items[i].name = tickerMap.index[symbol].name;
-          items[i].category = tickerMap.index[symbol].category;
+        if (nameMap.index[item]) {
+          ({ symbol, category } = nameMap.index[item]);
+
+          return {
+            name: item,
+            category,
+            symbol,
+            isStock: false,
+          };
         }
 
-        if (tickerMap.crypto[symbol]) {
-          items[i].name = tickerMap.crypto[symbol].name;
-          items[i].category = tickerMap.crypto[symbol].category;
-        }
+        if (nameMap.crypto[item]) {
+          ({ symbol, category } = nameMap.crypto[item]);
 
-        if (items[i].name && acronym === items[i].category) {
-          displayedItems.push(items[i]);
+          return {
+            name: item,
+            category,
+            symbol,
+            isStock: false,
+          };
         }
-      }
-
-      return displayedItems;
+      });
     }
 
     return false;

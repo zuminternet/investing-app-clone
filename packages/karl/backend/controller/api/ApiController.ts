@@ -220,6 +220,8 @@ export class ApiController {
       const { keyword, email } = request.query;
       let items = await this.searchService.getSearchedItems({ keyword });
 
+      console.log(items);
+
       if (items) {
         for (let i = 0; i < items.length; i++) {
           const { symbol } = items[i];

@@ -23,5 +23,6 @@ export default {
 .search-input {
   height: 30px;
   flex: 1;
+  margin-right: 10px;
 }
 </style>

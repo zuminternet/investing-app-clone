@@ -1,7 +1,6 @@
 import { Service } from 'zum-portal-core/backend/decorator/Alias';
 import { Caching } from 'zum-portal-core/backend/decorator/Caching';
 import axios from 'axios';
-import * as yahooFinance from 'yahoo-finance';
 import { investing } from 'investing-com-api';
 
 import { marketStackConfig } from '../../../common/backend/config';
