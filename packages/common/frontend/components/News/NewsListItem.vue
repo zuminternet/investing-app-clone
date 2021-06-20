@@ -30,6 +30,7 @@ export default Vue.extend({
       type: String,
       default: '',
     },
+
     listStyle: {
       type: [Object, String],
       default: () => '',

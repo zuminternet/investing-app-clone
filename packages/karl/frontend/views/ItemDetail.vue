@@ -11,9 +11,15 @@
     <custom-swiper :navigatorButtonNames="swiperNavigatorButtonNames">
       <swiper-slide>
         <list-wrapper :excludedHeight="210">
-          <chart v-if="symbolForChart" :canvasWidth="300" :canvasHeight="300" :symbol="symbolForChart" />
+          <chart
+            v-if="symbolForChart"
+            :isDarkTheme="isDarkTheme"
+            :canvasWidth="300"
+            :canvasHeight="300"
+            :symbol="symbolForChart"
+          />
           <item-detail-overview-box :itemDetail="itemDetail" :isLoading="itemDetailIsLoading" :isError="itemDetailIsError" />
-          <!-- 댓글 컴포넌트 자리 -->
+
           <sub-content-box :text="newsText">
             <loading v-if="newsIsLoading" :loadingHeight="220" />
             <error v-else-if="newsIsError" :errorHeight="220" />
@@ -95,25 +101,25 @@
 import { mapState, mapActions } from 'vuex';
 import { SwiperSlide } from 'vue-awesome-swiper';
 
-import BottomNaviagtor from '../components/BottomNaviagtor.vue';
-import MultipurposeHeader from '../components/MultipurposeHeader.vue';
-import ItemDetailPriceBox from '../components/ItemDetail/ItemDetailPriceBox.vue';
-import ListWrapper from '../components/ListWrapper.vue';
-import CustomSwiper from '../components/CustomSwiper.vue';
-import ItemDetailOverviewBox from '../components/ItemDetail/ItemDetailOverviewBox.vue';
-import SubContentBox from '../components/ItemDetail/SubContentBox.vue';
-import NewsList from '../components/News/NewsList.vue';
-import NewsListItem from '../components/News/NewsListItem.vue';
-import NewsImage from '../components/News/NewsImage.vue';
-import NewsTextBox from '../components/News/NewsTextBox.vue';
-import NewsTextBoxTitle from '../components/News/NewsTextBoxTitle.vue';
-import NewsTextBoxDesc from '../components/News/NewsTextBoxDesc.vue';
+import BottomNaviagtor from 'common/frontend/components/BottomNaviagtor.vue';
+import MultipurposeHeader from 'common/frontend/components/MultipurposeHeader.vue';
+import ItemDetailPriceBox from 'common/frontend/components/ItemDetail/ItemDetailPriceBox.vue';
+import ListWrapper from 'common/frontend/components/ListWrapper.vue';
+import CustomSwiper from 'common/frontend/components/CustomSwiper.vue';
+import ItemDetailOverviewBox from 'common/frontend/components/ItemDetail/ItemDetailOverviewBox.vue';
+import SubContentBox from 'common/frontend/components/ItemDetail/SubContentBox.vue';
+import NewsList from 'common/frontend/components/News/NewsList.vue';
+import NewsListItem from 'common/frontend/components/News/NewsListItem.vue';
+import NewsImage from 'common/frontend/components/News/NewsImage.vue';
+import NewsTextBox from 'common/frontend/components/News/NewsTextBox.vue';
+import NewsTextBoxTitle from 'common/frontend/components/News/NewsTextBoxTitle.vue';
+import NewsTextBoxDesc from 'common/frontend/components/News/NewsTextBoxDesc.vue';
 import Chart from 'karl/frontend/components/Chart.vue';
 import Loading from 'karl/frontend/components/Loading.vue';
 import Error from 'karl/frontend/components/Error.vue';
 import Empty from 'karl/frontend/components/Empty.vue';
 
-import { text } from '../constants';
+import { text } from 'common/frontend/constants';
 
 export default {
   name: 'ItemDetail',
@@ -153,6 +159,7 @@ export default {
 
   computed: {
     ...mapState({
+      isDarkTheme: (state) => state.isDarkTheme,
       itemDetail: (state) => state.itemDetail.itemDetail,
       news: (state) => state.itemDetail.news,
       analyses: (state) => state.itemDetail.analyses,

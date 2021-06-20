@@ -12,14 +12,10 @@
 </template>
 
 <script>
-import Vue from 'vue';
-import VueAwesomeSwiper from 'vue-awesome-swiper';
 import { Swiper } from 'vue-awesome-swiper';
 import 'swiper/css/swiper.css';
 
 import SwiperNavigator from './SwiperNavigator.vue';
-
-Vue.use(VueAwesomeSwiper);
 
 export default {
   name: 'CustomSwiper',

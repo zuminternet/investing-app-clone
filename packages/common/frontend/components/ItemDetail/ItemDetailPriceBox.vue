@@ -1,6 +1,6 @@
 <template>
   <div class="item-detail-price-box">
-    <loading v-if="isLoading" />
+    <loading v-if="isLoading" :spinnerSize="25" />
     <error v-else-if="isError" />
     <template v-else>
       <div class="up-and-down-icon-box">
@@ -68,15 +68,27 @@ export default {
 
   computed: {
     close() {
-      return this.itemDetail.close.toFixed(2);
+      if (this.itemDetail.close) {
+        return this.itemDetail.close.toFixed(2);
+      }
+
+      return 0;
     },
 
     upDownPrice() {
-      return this.itemDetail.upDownPrice.toFixed(2);
+      if (this.itemDetail.upDownPrice) {
+        return this.itemDetail.upDownPrice.toFixed(2);
+      }
+
+      return 0;
     },
 
     upDownRate() {
-      return this.itemDetail.upDownRate.toFixed(2);
+      if (this.itemDetail.upDownRate) {
+        return this.itemDetail.upDownRate.toFixed(2);
+      }
+
+      return 0;
     },
 
     isUp() {

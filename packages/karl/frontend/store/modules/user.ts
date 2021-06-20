@@ -73,7 +73,7 @@ const actions = {
    */
   async loginUserByGoogleOAuthOrCreateUser({ commit }) {
     const googleId = googleUser.Aa;
-    const email = googleUser.Ft.pu;
+    const email = googleUser.dt.Nt;
 
     let user = await loginUserByGoogleOAuth({ email, googleId });
 
@@ -110,6 +110,8 @@ const actions = {
       if (user) {
         commit('setUserInfo', user);
         await dispatch('getBookmarks');
+
+        return true;
       }
     } catch (error) {
       console.log(error);

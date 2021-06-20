@@ -1,22 +1,22 @@
 <template>
   <div class="chart-menu" :style="style">
-    <button class="chart-menu-button" @click="$emit('handle-chart-menu-button-click', $event)" value="d">
+    <button :class="buttonClass" @click="$emit('handle-chart-menu-button-click', $event)" value="d">
       <custom-text v-if="period === 'd'" chartMenuActiveText>D</custom-text>
       <custom-text v-else>D</custom-text>
     </button>
-    <button class="chart-menu-button" @click="$emit('handle-chart-menu-button-click', $event)" value="w">
+    <button :class="buttonClass" @click="$emit('handle-chart-menu-button-click', $event)" value="w">
       <custom-text v-if="period === 'w'" chartMenuActiveText>W</custom-text>
       <custom-text v-else>W</custom-text>
     </button>
-    <button class="chart-menu-button" @click="$emit('handle-chart-menu-button-click', $event)" value="m">
+    <button :class="buttonClass" @click="$emit('handle-chart-menu-button-click', $event)" value="m">
       <custom-text v-if="period === 'm'" chartMenuActiveText>M</custom-text>
       <custom-text v-else>M</custom-text>
     </button>
-    <button v-if="isCandle" class="chart-menu-button" @click="$emit('handle-chart-menu-button-click', $event)" value="Linear">
-      Linear
+    <button v-if="isCandle" :class="buttonClass" @click="$emit('handle-chart-menu-button-click', $event)" value="Linear">
+      <custom-text>Linear</custom-text>
     </button>
-    <button v-if="!isCandle" class="chart-menu-button" @click="$emit('handle-chart-menu-button-click', $event)" value="Candle">
-      Candle
+    <button v-if="!isCandle" :class="buttonClass" @click="$emit('handle-chart-menu-button-click', $event)" value="Candle">
+      <custom-text>Candle</custom-text>
     </button>
   </div>
 </template>
@@ -47,6 +47,11 @@ export default {
       type: String,
       required: true,
     },
+
+    isDarkTheme: {
+      type: Boolean,
+      required: true,
+    },
   },
 
   computed: {
@@ -54,6 +59,10 @@ export default {
       return {
         height: this.canvasHeight + 'px',
       };
+    },
+
+    buttonClass() {
+      return this.isDarkTheme ? 'chart-menu-button-dark' : 'chart-menu-button';
     },
   },
 };
@@ -67,5 +76,11 @@ export default {
 .chart-menu-button {
   flex: 1;
   border: 0;
+}
+
+.chart-menu-button-dark {
+  flex: 1;
+  border: 0;
+  background-color: var(--button-background-color);
 }
 </style>

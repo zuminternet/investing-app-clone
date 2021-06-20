@@ -51,21 +51,6 @@ const createUser = async ({ name, email, password, googleId }: createUserInfo) =
   throw new Error('User was not created');
 };
 
-// const createArticles = async ({ articles }) => {
-//   try {
-//     const result = await Axios.post(`${devURL}/api/articles`, {
-//       articles,
-//     });
-
-//     if (result.status === 201) {
-//       return true;
-//     }
-//     throw new Error('Articles were not created');
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
-
 const getUser = async () => {
   const result = await Axios.get(`${devURL}/api/user`, { withCredentials: true });
 
@@ -179,14 +164,4 @@ const getHistoricalData = async ({ symbol, from, to, period }: getHistoricalData
   throw new Error('Getting Historical data was failed in front api');
 };
 
-export {
-  createUser,
-  loginUserByEmail,
-  getUser,
-  loginUserByGoogleOAuth,
-  getStocks,
-  getIndices,
-  // createArticles,
-  getCryptos,
-  getHistoricalData,
-};
+export { createUser, loginUserByEmail, getUser, loginUserByGoogleOAuth, getStocks, getIndices, getCryptos, getHistoricalData };

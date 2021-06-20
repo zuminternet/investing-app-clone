@@ -1,20 +1,31 @@
 <template>
   <div v-if="loadingHeight" :style="style" class="loading-with-height">
-    Loading!!
+    <half-circle-spinner :animation-duration="1000" :size="spinnerSize" color="#1e90ff" />
   </div>
   <div v-else class="loading">
-    Loading!!
+    <half-circle-spinner :animation-duration="1000" :size="spinnerSize" color="#1e90ff" />
   </div>
 </template>
 
 <script>
+import { HalfCircleSpinner } from 'epic-spinners';
+
 export default {
   name: 'Loading',
+
+  components: {
+    HalfCircleSpinner,
+  },
 
   props: {
     loadingHeight: {
       type: Number,
       default: null,
+    },
+
+    spinnerSize: {
+      type: Number,
+      default: 60,
     },
   },
 

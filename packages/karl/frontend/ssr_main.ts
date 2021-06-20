@@ -1,13 +1,13 @@
 import Vue from 'vue';
-import Router from 'vue-router';
-import Vuex from 'vuex';
+// import Router from 'vue-router';
+// import Vuex from 'vuex';
 
 import App from './App.vue';
 import createRouter from './router';
 import createStore from './store';
 
-Vue.use(Router);
-Vue.use(Vuex);
+// Vue.use(Router);
+// Vue.use(Vuex);
 
 export default (ctx) => {
   return new Promise((resolve, reject) => {

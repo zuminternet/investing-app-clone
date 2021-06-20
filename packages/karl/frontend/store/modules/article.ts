@@ -1,8 +1,8 @@
-import { getNews, getArticleById } from '../../../../common/frontend/apis';
-import { tickerMap } from '../../../../common/domain';
+import { getNews, getArticleById } from 'common/frontend/apis';
+import { tickerMap } from 'common/domain';
 
 // 초기 state 값 설정
-const state = () => ({
+const state = {
   news: [],
   articleDetail: {},
 
@@ -11,7 +11,7 @@ const state = () => ({
 
   articleDetailIsLoading: false,
   articleDetailIsError: false,
-});
+};
 
 // getter 설정
 

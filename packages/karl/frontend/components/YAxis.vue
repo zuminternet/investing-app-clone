@@ -1,14 +1,16 @@
 <template>
-  <canvas
-    ref="yaxis"
-    :width="this.canvasWidth"
-    :height="this.canvasHeight"
-  ></canvas>
+  <canvas ref="yaxis" :width="this.canvasWidth" :height="this.canvasHeight"></canvas>
 </template>
 
 <script>
 export default {
   name: 'YAxis',
+
+  data() {
+    return {
+      ctx: null,
+    };
+  },
 
   props: {
     valueData: {
@@ -60,24 +62,29 @@ export default {
       type: Number,
       required: true,
     },
+
+    isDarkTheme: {
+      type: Boolean,
+      required: true,
+    },
   },
 
-  data() {
-    return {
-      ctx: null,
-    };
+  computed: {
+    textColor() {
+      return this.isDarkTheme ? 'white' : 'black';
+    },
   },
 
   methods: {
     writeYAxis() {
+      this.ctx.fillStyle = this.textColor;
+
       for (let i = 0; i < this.valueData.length; i++) {
         if (i === this.valueData.length - 1) {
           this.ctx.fillText(
             `${this.floorValue.toFixed(3)}`,
             0,
-            this.graphBoxMargin +
-              (this.graphBoxHeight / this.valueData.length) * (i + 1) +
-              4
+            this.graphBoxMargin + (this.graphBoxHeight / this.valueData.length) * (i + 1) + 4,
           );
         }
 
@@ -85,30 +92,20 @@ export default {
         this.ctx.fillText(
           `${(this.floorValue + value).toFixed(3)}`,
           0,
-          this.graphBoxMargin +
-            (this.graphBoxHeight / this.valueData.length) * i +
-            4
+          this.graphBoxMargin + (this.graphBoxHeight / this.valueData.length) * i + 4,
         );
       }
     },
 
     writeCurrentValue() {
       this.ctx.fillStyle = 'red';
-      this.ctx.fillText(
-        `${this.currentValue.toFixed(3)}`,
-        0,
-        this.currentHeight
-      );
+      this.ctx.fillText(`${this.currentValue.toFixed(3)}`, 0, this.currentHeight);
       this.ctx.fillStyle = 'black';
     },
 
     writeSelectedValue() {
       this.ctx.fillStyle = 'blue';
-      this.ctx.fillText(
-        `${this.selectedValue.toFixed(3)}`,
-        0,
-        this.selectedHeight
-      );
+      this.ctx.fillText(`${this.selectedValue.toFixed(3)}`, 0, this.selectedHeight);
 
       this.ctx.fillStyle = 'black';
     },

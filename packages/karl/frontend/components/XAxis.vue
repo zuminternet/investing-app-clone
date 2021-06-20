@@ -42,10 +42,23 @@ export default {
       type: Number,
       default: 20,
     },
+
+    isDarkTheme: {
+      type: Boolean,
+      required: true,
+    },
+  },
+
+  computed: {
+    textColor() {
+      return this.isDarkTheme ? 'white' : 'black';
+    },
   },
 
   methods: {
     writeXAxis() {
+      this.ctx.fillStyle = this.textColor;
+
       for (let i = 0; i < this.timeData.length; i++) {
         let [time, index] = this.timeData[i];
         time = new Date(time);

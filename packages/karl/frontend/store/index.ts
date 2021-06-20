@@ -3,8 +3,10 @@ import Vuex from 'vuex';
 import market from './modules/market';
 import user from './modules/user';
 import article from './modules/article';
+import itemDetail from './modules/itemDetail';
 import search from '../../../common/frontend/store/modules/search';
-import itemDetail from '../../../common/frontend/store/modules/itemDetail';
+
+// import itemDetail from '../../../common/frontend/store/modules/itemDetail';
 
 Vue.use(Vuex);
 
@@ -23,13 +25,21 @@ export default () => {
 
     // 글로벌 영역 상태값.
     state: {
-      isDarkTheme: false,
+      isDarkTheme: true,
     },
 
     getters: {},
 
-    mutations: {},
+    mutations: {
+      setIsDarkTheme(state, isDarkTheme) {
+        state.isDarkTheme = isDarkTheme;
+      },
+    },
 
-    actions: {},
+    actions: {
+      setIsDarkTheme({ commit }, isDarkTheme) {
+        commit('setIsDarkTheme', isDarkTheme);
+      },
+    },
   });
 };
