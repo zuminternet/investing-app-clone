@@ -164,14 +164,4 @@ const getHistoricalData = async ({ symbol, from, to, period }: getHistoricalData
   throw new Error('Getting Historical data was failed in front api');
 };
 
-export {
-  createUser,
-  loginUserByEmail,
-  getUser,
-  loginUserByGoogleOAuth,
-  getStocks,
-  getIndices,
-  // createArticles,
-  getCryptos,
-  getHistoricalData,
-};
+export { createUser, loginUserByEmail, getUser, loginUserByGoogleOAuth, getStocks, getIndices, getCryptos, getHistoricalData };

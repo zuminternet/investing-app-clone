@@ -73,7 +73,7 @@ const actions = {
    */
   async loginUserByGoogleOAuthOrCreateUser({ commit }) {
     const googleId = googleUser.Aa;
-    const email = googleUser.Ft.pu;
+    const email = googleUser.dt.Nt;
 
     let user = await loginUserByGoogleOAuth({ email, googleId });
 

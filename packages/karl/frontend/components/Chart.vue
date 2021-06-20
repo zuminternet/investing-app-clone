@@ -16,6 +16,7 @@
           :currentHeight="currentHeight"
           :selectedHeight="selectedHeight"
           :selectedValue="selectedValue"
+          :isDarkTheme="isDarkTheme"
         ></y-axis>
       </div>
 
@@ -25,9 +26,11 @@
         :startIndex="startIndex"
         :graphBoxMargin="graphBoxMargin"
         :canvasWidth="canvasWidth + yAxisWidth"
+        :isDarkTheme="isDarkTheme"
       ></x-axis>
       <chart-menu
         :canvasWidth="canvasWidth + yAxisWidth"
+        :isDarkTheme="isDarkTheme"
         :isCandle="isCandle"
         :period="period"
         @handle-chart-menu-button-click="handleChartMenuButtonClick"
@@ -68,6 +71,11 @@ export default {
       type: String,
       required: true,
     },
+
+    isDarkTheme: {
+      type: Boolean,
+      required: true,
+    },
   },
 
   data() {
@@ -77,8 +85,7 @@ export default {
       yAxisWidth: 40,
       unitHeight: null,
       currentHeight: 0,
-      graphBoxColor: 'green',
-      graphColor: 'green',
+
       data: [],
       baseStartIndex: 0,
       baseEndIndex: null,
@@ -98,6 +105,14 @@ export default {
   },
 
   computed: {
+    graphBoxColor() {
+      return this.isDarkTheme ? 'white' : 'green';
+    },
+
+    graphColor() {
+      return this.isDarkTheme ? 'white' : 'green';
+    },
+
     graphBoxWidth() {
       return this.canvasWidth - 2 * this.graphBoxMargin;
     },
@@ -189,21 +204,22 @@ export default {
           let unitHigh = this.graphBoxMargin + this.graphBoxHeight - (high - this.floorValue) * this.heightRatio;
           let unitLow = this.graphBoxMargin + this.graphBoxHeight - (low - this.floorValue) * this.heightRatio;
 
+          this.ctx.beginPath();
+          this.ctx.moveTo(this.graphBoxMargin + this.unitWidth * (i - this.startIndex), unitHigh);
+          this.ctx.lineTo(this.graphBoxMargin + this.unitWidth * (i - this.startIndex), unitLow);
+          this.ctx.closePath();
+          this.ctx.stroke();
+
           this.ctx.fillStyle = close >= open ? 'red' : 'blue';
           this.ctx.strokeStyle = close >= open ? 'red' : 'blue';
 
           let candleWidth = 4;
-
           this.ctx.fillRect(
             this.graphBoxMargin + this.unitWidth * (i - this.startIndex) - candleWidth / 2,
             this.unitHeight,
             candleWidth,
             Math.abs(this.unitHeight - unitOpen),
           );
-
-          this.ctx.moveTo(this.graphBoxMargin + this.unitWidth * (i - this.startIndex), unitHigh);
-
-          this.ctx.lineTo(this.graphBoxMargin + this.unitWidth * (i - this.startIndex), unitLow);
 
           this.ctx.strokeStyle = this.graphColor;
 

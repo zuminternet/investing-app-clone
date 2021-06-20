@@ -68,15 +68,27 @@ export default {
 
   computed: {
     close() {
-      return this.itemDetail.close.toFixed(2);
+      if (this.itemDetail.close) {
+        return this.itemDetail.close.toFixed(2);
+      }
+
+      return 0;
     },
 
     upDownPrice() {
-      return this.itemDetail.upDownPrice.toFixed(2);
+      if (this.itemDetail.upDownPrice) {
+        return this.itemDetail.upDownPrice.toFixed(2);
+      }
+
+      return 0;
     },
 
     upDownRate() {
-      return this.itemDetail.upDownRate.toFixed(2);
+      if (this.itemDetail.upDownRate) {
+        return this.itemDetail.upDownRate.toFixed(2);
+      }
+
+      return 0;
     },
 
     isUp() {

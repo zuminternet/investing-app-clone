@@ -9,15 +9,25 @@
     <span v-if="isBookmarkedForLocal" class="full-star">&#9733;</span>
     <span v-else class="empty-star">&#9734;</span>
   </button>
+  <button v-else-if="isThemeButton" class="header-button" @click="handleDarkTheme">
+    <span v-if="isDarkTheme" class="sun">&#9788;</span>
+    <span v-else class="moon">&#9789;</span>
+  </button>
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex';
 import { createBookmark, deleteBookmark } from '../apis';
 
 export default {
   name: 'HeaderButton',
   props: {
     isBackButton: {
+      type: Boolean,
+      default: false,
+    },
+
+    isThemeButton: {
       type: Boolean,
       default: false,
     },
@@ -29,7 +39,7 @@ export default {
 
     isAddBookmarkButton: {
       type: Boolean,
-      default: true,
+      default: false,
     },
 
     email: {
@@ -64,7 +74,15 @@ export default {
     };
   },
 
+  computed: {
+    ...mapState({
+      isDarkTheme: (state) => state.isDarkTheme,
+    }),
+  },
+
   methods: {
+    ...mapActions(['setIsDarkTheme']),
+
     goBack() {
       this.$router.back();
     },
@@ -78,6 +96,14 @@ export default {
         this.isBookmarkedForLocal = true;
       } else if (this.isBookmarkedForLocal && (await deleteBookmark({ email, symbol, name, category }))) {
         this.isBookmarkedForLocal = false;
+      }
+    },
+
+    handleDarkTheme() {
+      if (this.isDarkTheme) {
+        this.setIsDarkTheme(false);
+      } else {
+        this.setIsDarkTheme(true);
       }
     },
   },
@@ -103,6 +129,7 @@ export default {
   justify-content: center;
   align-items: center;
   border: 0;
+  background-color: var(--button-background-color);
 }
 
 .search {
@@ -130,6 +157,20 @@ export default {
   font-size: 25px;
   color: var(--icon-color);
   margin-top: -5px;
+  font-weight: bold;
+}
+
+.sun {
+  font-size: 25px;
+  color: var(--icon-color);
+  margin-top: -1px;
+  font-weight: bold;
+}
+
+.moon {
+  font-size: 25px;
+  color: var(--icon-color);
+  margin-top: -3px;
   font-weight: bold;
 }
 </style>

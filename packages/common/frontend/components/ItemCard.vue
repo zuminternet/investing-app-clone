@@ -155,8 +155,7 @@ export default {
   display: flex;
   flex: 0 0 auto;
   height: 40px;
-  padding-top: 5px;
-  padding-bottom: 5px;
+  padding: 7px;
 }
 
 .wrapper {

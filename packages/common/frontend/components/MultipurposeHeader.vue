@@ -54,6 +54,7 @@
       </div>
       <empty-space></empty-space>
       <div class="header-button-box">
+        <header-button isThemeButton></header-button>
         <header-button isGoSearchButton></header-button>
       </div>
     </template>

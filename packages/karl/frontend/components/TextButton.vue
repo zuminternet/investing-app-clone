@@ -16,5 +16,6 @@ export default {
   width: fit-content;
   height: fit-content;
   border: 0;
+  background-color: var(--button-background-color);
 }
 </style>

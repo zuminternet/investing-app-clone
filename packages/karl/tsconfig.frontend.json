@@ -1,15 +1,8 @@
 {
+  "extends": "../common/tsconfig.json",
   "compilerOptions": {
-    "sourceMap": true,
-    "target": "es6",
-    "module": "commonjs",
-    "outDir": "./dist",
     "baseUrl": "./",
-    "types": ["reflect-metadata", "node"],
-    "moduleResolution": "node",
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "allowJs": true
+    "typeRoots": ["**/node_modules/@types", "./frontend/type-shims"]
   },
   "exclude": ["**/backend/**", "**/node_modules/**"]
 }

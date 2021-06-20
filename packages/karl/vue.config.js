@@ -6,5 +6,4 @@ const { modeConfigurer } = require('zum-portal-core/frontend/config/configUtils'
  */
 module.exports = modeConfigurer({
 
-
 });

@@ -18,8 +18,4 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
-#app {
-  background-color: var(--app-bg-color);
-}
-</style>
+<style scoped lang="scss"></style>

@@ -107,7 +107,12 @@
                 <news-text-box-desc :author="cryptoNews[0].source" :publishDate="cryptoNews[0].date"></news-text-box-desc>
               </news-text-box>
             </news-headline>
-            <news-list-item v-for="element in cryptoNews.slice(1, cryptoNews.length)" :key="element._id">
+            <news-list-item
+              v-for="element in cryptoNews.slice(1, cryptoNews.length)"
+              :key="element._id"
+              @handle-click="routeToNewsDetail"
+              :id="element._id"
+            >
               <news-image class="news-image-align" :src="element.image_url" />
               <news-text-box>
                 <news-text-box-title>{{ element.title }}</news-text-box-title>
