@@ -74,6 +74,6 @@ export default class SearchService {
       });
     }
 
-    return false;
+    return [];
   }
 }

@@ -8,7 +8,7 @@
         <empty v-else-if="!searchedItemsIsLoading && !searchedItems.length" :emptyHeight="540" />
         <item-card-list v-else :items="searchedItems" :excludedHeight="100" :userInfo="userInfo" isSearch></item-card-list>
       </swiper-slide>
-      <swiper-slide>
+      <!-- <swiper-slide>
         <list-wrapper :excludedHeight="100">
           <loading v-if="searchedNewsIsLoading" />
           <error v-else-if="searchedNewsIsError" :errorHeight="540" />
@@ -39,7 +39,7 @@
             </news-list-item>
           </news-list>
         </list-wrapper>
-      </swiper-slide>
+      </swiper-slide> -->
     </custom-swiper>
   </div>
 </template>
