@@ -4,7 +4,8 @@ import market from './modules/market';
 import user from './modules/user';
 import article from './modules/article';
 import itemDetail from './modules/itemDetail';
-import search from '../../../common/frontend/store/modules/search';
+import search from 'common/frontend/store/modules/search';
+import reply from 'common/frontend/store/modules/reply';
 
 // import itemDetail from '../../../common/frontend/store/modules/itemDetail';
 
@@ -21,6 +22,7 @@ export default () => {
       search,
       itemDetail,
       article,
+      reply,
     },
 
     // 글로벌 영역 상태값.

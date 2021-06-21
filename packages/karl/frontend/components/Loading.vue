@@ -1,20 +1,23 @@
 <template>
   <div v-if="loadingHeight" :style="style" class="loading-with-height">
-    <half-circle-spinner :animation-duration="1000" :size="spinnerSize" color="#1e90ff" />
+    <hollow-dots-spinner v-if="isDotSpinner" :animation-duration="1000" :dot-size="spinnerSize" :dots-num="3" color="#1e90ff" />
+    <half-circle-spinner v-else :animation-duration="1000" :size="spinnerSize" color="#1e90ff" />
   </div>
   <div v-else class="loading">
-    <half-circle-spinner :animation-duration="1000" :size="spinnerSize" color="#1e90ff" />
+    <hollow-dots-spinner v-if="isDotSpinner" :animation-duration="1000" :dot-size="spinnerSize" :dots-num="3" color="#1e90ff" />
+    <half-circle-spinner v-else :animation-duration="1000" :size="spinnerSize" color="#1e90ff" />
   </div>
 </template>
 
 <script>
-import { HalfCircleSpinner } from 'epic-spinners';
+import { HalfCircleSpinner, HollowDotsSpinner } from 'epic-spinners';
 
 export default {
   name: 'Loading',
 
   components: {
     HalfCircleSpinner,
+    HollowDotsSpinner,
   },
 
   props: {
@@ -26,6 +29,11 @@ export default {
     spinnerSize: {
       type: Number,
       default: 60,
+    },
+
+    isDotSpinner: {
+      type: Boolean,
+      default: false,
     },
   },
 

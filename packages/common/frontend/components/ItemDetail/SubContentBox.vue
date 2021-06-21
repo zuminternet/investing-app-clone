@@ -28,6 +28,7 @@ export default {
 <style scoped lang="scss">
 .sub-content-box {
   width: 100%;
+  background-color: var(--app-bg-color);
 }
 
 .sub-content-title-box {

@@ -1,16 +1,30 @@
 <template>
   <div v-if="errorHeight" :style="style" class="error-with-height">
-    Error!!
+    <div class="error-icon-box">
+      <span class="error-icon">&#9785;</span>
+      <custom-text>{{ errorText }}</custom-text>
+    </div>
   </div>
 
   <div v-else class="error">
-    Error!!
+    <div class="error-icon-box">
+      <span class="error-icon">&#9785;</span>
+      <custom-text>{{ errorText }}</custom-text>
+    </div>
   </div>
 </template>
 
 <script>
+import CustomText from 'common/frontend/components/CustomText.vue';
+
+import { text } from 'common/frontend/constants';
+
 export default {
   name: 'Error',
+
+  components: {
+    CustomText,
+  },
 
   props: {
     errorHeight: {
@@ -25,6 +39,12 @@ export default {
         height: this.errorHeight + 'px',
       };
     },
+  },
+
+  data() {
+    return {
+      errorText: text.ERROR,
+    };
   },
 };
 </script>
@@ -42,6 +62,17 @@ export default {
   flex: 1;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
+}
+
+.error-icon {
+  font-size: 80px;
+  color: var(--blue-color);
+}
+
+.error-icon-box {
+  display: flex;
+  flex-direction: column;
   align-items: center;
 }
 </style>

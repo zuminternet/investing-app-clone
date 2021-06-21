@@ -39,7 +39,6 @@ export default {
 <style scoped lang="scss">
 .item-detail-overall-info-row {
   display: flex;
-  padding-top: 5px;
-  padding-bottom: 5px;
+  padding: 5px;
 }
 </style>

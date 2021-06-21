@@ -6,12 +6,13 @@ import UserService from '../../service/UserService';
 import AuthService from '../../service/AuthService';
 import ChartService from '../../service/ChartService';
 import MarketService from '../../service/MarketService';
-import SearchService from '../../../../common/backend/service/SearchService';
-import ItemDetailService from '../../../../common/backend/service/ItemDetailService';
-import ArticleService from '../../../../common/backend/service/ArticleService';
-import BookmarkService from '../../../../common/backend/service/BookmarkService';
+import SearchService from 'common/backend/service/SearchService';
+import ItemDetailService from 'common/backend/service/ItemDetailService';
+import ArticleService from 'common/backend/service/ArticleService';
+import BookmarkService from 'common/backend/service/BookmarkService';
+import ReplyService from 'common/backend/service/ReplyService';
 
-import { tickerMap, tickerKeys } from '../../../../common/domain';
+import { tickerMap, tickerKeys } from 'common/domain';
 
 @Controller({ path: '/api' })
 export class ApiController {
@@ -24,6 +25,7 @@ export class ApiController {
     @Inject(ArticleService) private articleService: ArticleService,
     @Inject(BookmarkService) private bookmarkService: BookmarkService,
     @Inject(ChartService) private chartService: ChartService,
+    @Inject(ReplyService) private replyService: ReplyService,
   ) {}
 
   @GetMapping({ path: '/user' })
@@ -51,6 +53,7 @@ export class ApiController {
       response.sendStatus(404);
     } catch (error) {
       console.log(error);
+      response.sendStatus(500).json(error);
     }
   }
 
@@ -85,7 +88,7 @@ export class ApiController {
       response.sendStatus(401);
     } catch (error) {
       console.log(error);
-      response.status(401).json(error);
+      response.sendStatus(500).json(error);
     }
   }
 
@@ -100,7 +103,7 @@ export class ApiController {
       return response.status(200).send(user);
     } catch (error) {
       console.log(error);
-      response.sendStatus(401);
+      response.sendStatus(500).json(error);
     }
   }
 
@@ -113,18 +116,18 @@ export class ApiController {
    */
 
   @GetMapping({ path: '/market/stock' })
-  public async getStocks(request: Request, resposne: Response) {
+  public async getStocks(request: Request, response: Response) {
     try {
       const stocks = await this.marketService.getStocks();
 
       if (stocks) {
-        return resposne.status(200).send(stocks);
+        return response.status(200).send(stocks);
       }
 
-      resposne.sendStatus(404);
+      response.sendStatus(404);
     } catch (error) {
       console.log(error);
-      resposne.status(404).json(error);
+      response.sendStatus(500).json(error);
     }
   }
 
@@ -146,7 +149,7 @@ export class ApiController {
       response.sendStatus(404);
     } catch (error) {
       console.log(error);
-      response.status(404).json(error);
+      response.sendStatus(500).json(error);
     }
   }
 
@@ -162,24 +165,10 @@ export class ApiController {
       response.sendStatus(404);
     } catch (error) {
       console.log(error);
-      response.status(404).json(error);
+      response.sendStatus(500).json(error);
     }
   }
 
-  /**
-   * @description Home page에 렌더링할 cpyto currencies를 가져오는 controller
-   * @param request
-   * @param resposne
-   * @reutrns response
-   */
-  @GetMapping({ path: '/market/cpyto-currencies' })
-  public async getCryptoCurrencies(request: Request, resposne: Response) {
-    try {
-    } catch (error) {
-      console.log(error);
-      resposne.status(404).json(error);
-    }
-  }
   /**
    * @description item detail page에 렌더링할 item datail info를 가져오는 controller
    * @param request
@@ -188,7 +177,7 @@ export class ApiController {
    */
 
   @GetMapping({ path: '/item-detail' })
-  public async getItemDetail(request: Request, resposne: Response) {
+  public async getItemDetail(request: Request, response: Response) {
     try {
       const { symbols, email } = request.query;
       const itemDetailInfo = await this.itemDetailService.getItemDetail({ symbols });
@@ -198,13 +187,13 @@ export class ApiController {
         itemDetailInfo.isStock = tickerMap.stock[symbols] ? true : false;
         itemDetailInfo.symbol = symbols;
 
-        return resposne.status(200).send(itemDetailInfo);
+        return response.status(200).send(itemDetailInfo);
       }
 
-      resposne.sendStatus(404);
+      response.sendStatus(404);
     } catch (error) {
       console.log(error);
-      resposne.status(404).json(error);
+      response.sendStatus(500).json(error);
     }
   }
 
@@ -236,32 +225,9 @@ export class ApiController {
       response.sendStatus(404);
     } catch (error) {
       console.log(error);
-      response.status(404).json(error);
+      response.sendStatus(500).json(error);
     }
   }
-
-  /**
-   * @description articles를 parsing하여 DB에 document들로 저장하는 controller(common에 추가할 때까지 주석처리)
-   * @param request
-   * @param response
-   * @returns response
-   */
-  // @PostMapping({ path: '/articles' })
-  // public async createArticles(request: Request, response: Response) {
-  //   try {
-  //     const result = await this.articleService.createArticles(request.body);
-
-  //     if (result) {
-  //       response.sendStatus(201);
-
-  //       return true;
-  //     }
-  //     response.sendStatus(409);
-  //   } catch (error) {
-  //     console.log(error);
-  //     response.status(500).json(error);
-  //   }
-  // }
 
   /**
    * @description DB에서 articles 중 news만 가져오는 controller
@@ -272,10 +238,12 @@ export class ApiController {
   @GetMapping({ path: '/articles/news' })
   public async getNews(request: Request, response: Response) {
     try {
-      const { offset, limit } = request.query;
+      const { offset, limit, sortByReply } = request.query;
       let { tickers } = request.query;
       let keyword;
       let news;
+
+      console.log(sortByReply, 'sortbyreply');
 
       if (tickers) {
         [keyword] = tickers;
@@ -283,11 +251,11 @@ export class ApiController {
           return key.includes(keyword);
         });
 
-        news = await this.articleService.getNews(+offset, +limit, tickers);
+        news = await this.articleService.getNews(+offset, +limit, tickers, sortByReply);
       }
 
       if (!tickers) {
-        news = await this.articleService.getNews(+offset, +limit);
+        news = await this.articleService.getNews(+offset, +limit, [], sortByReply);
       }
 
       if (news) {
@@ -297,6 +265,7 @@ export class ApiController {
       response.sendStatus(404);
     } catch (error) {
       console.log(error);
+      response.sendStatus(500).json(error);
     }
   }
 
@@ -314,6 +283,7 @@ export class ApiController {
       response.sendStatus(404);
     } catch (error) {
       console.log(error);
+      response.sendStatus(500).json(error);
     }
   }
 
@@ -326,7 +296,7 @@ export class ApiController {
   @GetMapping({ path: '/articles/analyses' })
   public async getAnalyses(request: Request, response: Response) {
     try {
-      const { offset, limit } = request.query;
+      const { offset, limit, sortByReply } = request.query;
       let { tickers } = request.query;
       let keyword;
       let analyses;
@@ -337,11 +307,11 @@ export class ApiController {
           return key.includes(keyword);
         });
 
-        analyses = await this.articleService.getOpinions(+offset, +limit, tickers);
+        analyses = await this.articleService.getOpinions(+offset, +limit, tickers, sortByReply);
       }
 
       if (!tickers) {
-        analyses = await this.articleService.getOpinions(+offset, +limit);
+        analyses = await this.articleService.getOpinions(+offset, +limit, [], sortByReply);
       }
 
       if (analyses) {
@@ -351,6 +321,7 @@ export class ApiController {
       response.sendStatus(404);
     } catch (error) {
       console.log(error);
+      response.sendStatus(500).json(error);
     }
   }
 
@@ -374,7 +345,7 @@ export class ApiController {
       response.sendStatus(409);
     } catch (error) {
       console.log(error);
-      response.json(error);
+      response.sendStatus(500).json(error);
     }
   }
 
@@ -392,7 +363,7 @@ export class ApiController {
       response.sendStatus(409);
     } catch (error) {
       console.log(error);
-      response.json(error);
+      response.sendStatus(500).json(error);
     }
   }
   /**
@@ -414,7 +385,7 @@ export class ApiController {
       response.sendStatus(404);
     } catch (error) {
       console.log(error);
-      response.json(error);
+      response.sendStatus(500).json(error);
     }
   }
 
@@ -426,6 +397,42 @@ export class ApiController {
 
       if (data) {
         return response.status(200).send(data);
+      }
+
+      response.sendStatus(404);
+    } catch (error) {
+      console.log(error);
+      response.sendStatus(500).json(error);
+    }
+  }
+
+  @PostMapping({ path: '/reply' })
+  public async createReply(request: Request, response: Response) {
+    try {
+      const { email, docId, contents } = request.body;
+
+      const result = await this.replyService.createReply({ email, docId, contents });
+
+      if (result) {
+        return response.sendStatus(201);
+      }
+
+      response.sendStatus(409);
+    } catch (error) {
+      console.log(error);
+      response.sendStatus(500).json(error);
+    }
+  }
+
+  @GetMapping({ path: '/reply/:docId' })
+  public async getRepliesByDocId(request: Request, response: Response) {
+    try {
+      const { docId } = request.params;
+
+      const results = await this.replyService.getAllReplsByDocId(docId);
+
+      if (results) {
+        return response.status(200).json({ message: 'Success to Get All Replies', results });
       }
 
       response.sendStatus(404);

@@ -33,8 +33,6 @@ export default class SearchService {
   public async getSearchedItems({ keyword }: getSearchedItemsInfo) {
     const matchtedItems = getMatchedItems(keyword);
 
-    console.log(matchtedItems);
-
     if (matchtedItems.length) {
       return matchtedItems.map((item) => {
         let symbol, name, category;

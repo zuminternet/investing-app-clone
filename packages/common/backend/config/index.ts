@@ -1,5 +1,5 @@
 const marketStackConfig = {
-  accessKey: 'e955923a2bfefffc19ba21ee2c78beaa',
+  accessKey: 'cf7c812feb1b9576f7ed060a2f487ccc',
 };
 
 export { marketStackConfig };

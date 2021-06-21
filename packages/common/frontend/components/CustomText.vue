@@ -129,6 +129,7 @@ export default {
 
 .page-title {
   font-weight: bold;
+  margin-left: 10px;
 }
 
 .button-active {
