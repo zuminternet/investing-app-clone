@@ -5,7 +5,7 @@ import { Inject } from 'zum-portal-core/backend/decorator/Alias';
 import ArticleService from 'common/backend/service/ArticleService';
 import BookmarkService from 'common/backend/service/BookmarkService';
 import SearchkService from 'common/backend/service/SearchService';
-import { getMatchedTickers } from 'common/domain';
+import { tickerKeys } from 'common/domain';
 import { getUser } from '../middlewares';
 
 export interface SearchItem {
@@ -67,7 +67,7 @@ export class SearchController {
   public async searchNews(request: Request, response: Response) {
     try {
       const { offset, limit, keyword } = request.query;
-      const tickers = getMatchedTickers(keyword as string);
+      const tickers = tickerKeys.filter((ticker) => ticker.includes(keyword as string));
       const news = await this.articleService.getNews(+offset, +limit, tickers);
 
       response.json(news);
@@ -86,7 +86,7 @@ export class SearchController {
   public async searchOpinions(request: Request, response: Response) {
     try {
       const { offset, limit, keyword } = request.query;
-      const tickers = getMatchedTickers(keyword as string);
+      const tickers = tickerKeys.filter((ticker) => ticker.includes(keyword as string));
       const opinions = await this.articleService.getOpinions(+offset, +limit, tickers);
 
       response.json(opinions);
