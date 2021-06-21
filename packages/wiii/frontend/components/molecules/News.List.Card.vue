@@ -99,6 +99,7 @@ export default Vue.extend({
     width: 85%;
     margin: 10px auto;
     border-radius: $border-radius-10;
+    box-shadow: 0 0 5px 0 $grey-500;
 
     .loading {
       min-width: 100px;

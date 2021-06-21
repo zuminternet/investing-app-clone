@@ -1,11 +1,11 @@
 <template>
-  <div id="news-modal" @click="$emit('set-modal-handler')">
+  <div id="news-modal" @click.self="$emit('set-modal-handler')">
     <article id="news-modal-detail">
+      <Button id="news-modal-detail-close" @click.native="$emit('set-modal-handler')">❌</Button>
       <img :src="image" :alt="image" id="news-modal-detail-image" />
       <Words id="news-modal-detail-headline">{{ headline }}</Words>
       <Words id="news-modal-detail-summary">{{ summary }}</Words>
-      <Words id="news-modal-detail-source">{{ source }}</Words>
-      <Words @click.native="openOrigin" id="news-modal-detail-origin">원문보기</Words>
+      <Words @click.native="openOrigin" id="news-modal-detail-origin"> 원문보기 ➡️ {{ source }} </Words>
     </article>
   </div>
 </template>
@@ -13,16 +13,17 @@
 <script lang="ts">
 import Vue from 'vue';
 import { createNamespacedHelpers } from 'vuex';
-
-import Words from '@/components/atoms/Words.vue';
 import { StoreNames } from '@/store';
+
+import Button from '@/components/atoms/Button.vue';
+import Words from '@/components/atoms/Words.vue';
 
 const { mapState } = createNamespacedHelpers(StoreNames.News);
 
 export default Vue.extend({
   name: 'NewsModal',
 
-  components: { Words },
+  components: { Words, Button },
 
   data() {
     return {
@@ -76,6 +77,7 @@ export default Vue.extend({
   background-color: rgba($grey-900, 0.8);
 
   &-detail {
+    position: relative;
     padding: 30px;
     width: 80%;
     height: max-content;
@@ -86,15 +88,67 @@ export default Vue.extend({
     align-items: center;
     background-color: $grey-300;
     border-radius: $border-radius-10;
+    animation: showUp 0.3s ease-in-out;
+
+    &-close {
+      position: absolute;
+      top: 30px;
+      right: 25px;
+      width: max-content;
+      padding: 5px 10px;
+      margin-bottom: 15px;
+      cursor: pointer;
+      background-color: transparent;
+
+      &:hover {
+        color: $grey-100;
+        text-decoration: none;
+        scale: 1.25;
+      }
+    }
 
     &-image {
       width: 80%;
+      border-radius: $border-radius-10;
+      box-shadow: 0 0 10px 0 rgba($grey-700, 0.7);
     }
 
     &-headline {
+      margin: $margin-padding-15;
       font-weight: bold;
       font-size: 1.2rem;
     }
+
+    &-summary {
+      margin-bottom: $margin-padding-15;
+    }
+
+    &-origin {
+      width: max-content;
+      padding: 5px 10px;
+      cursor: pointer;
+      border-radius: $border-radius-10;
+      box-shadow: 0 0 3px 0 $grey-500;
+      font-size: 0.8rem;
+      font-weight: bold;
+      transition: all 0.1s ease-in-out;
+
+      &:hover {
+        background-color: $green-700;
+        color: $grey-100;
+        scale: 1.1;
+      }
+    }
+  }
+}
+
+@keyframes showUp {
+  0% {
+    transform: scale(0);
+  }
+
+  100% {
+    transform: scale(1);
   }
 }
 </style>
