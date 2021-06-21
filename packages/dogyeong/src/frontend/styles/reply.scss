@@ -111,7 +111,8 @@
 
       #reply-input-submit {
         @extend #reply-input-cancel;
-        background-color: var(--blue-color);
+        background-color: var(--blue-color) !important;
+        border: 0 !important;
       }
     }
   }
