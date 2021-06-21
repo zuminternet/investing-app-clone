@@ -6,24 +6,26 @@
       <Words id="news-modal-detail-headline">{{ headline }}</Words>
       <Words id="news-modal-detail-summary">{{ summary }}</Words>
       <Words @click.native="openOrigin" id="news-modal-detail-origin"> 원문보기 ➡️ {{ source }} </Words>
+      <Reply />
     </article>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import { createNamespacedHelpers } from 'vuex';
-import { StoreNames } from '@/store';
+import { mapActions, createNamespacedHelpers } from 'vuex';
+import { RootActions, StoreNames } from '@/store';
 
 import Button from '@/components/atoms/Button.vue';
 import Words from '@/components/atoms/Words.vue';
+import Reply from '@/components/organisms/ReplySection.vue';
 
 const { mapState } = createNamespacedHelpers(StoreNames.News);
 
 export default Vue.extend({
   name: 'NewsModal',
 
-  components: { Words, Button },
+  components: { Words, Button, Reply },
 
   data() {
     return {
@@ -44,6 +46,7 @@ export default Vue.extend({
   watch: {
     currentModalNews() {
       const { id, headline, image, summary, source, url, datetime } = this.currentModalNews;
+      if (!id) return;
 
       this.id = id;
       this.headline = headline;
@@ -52,10 +55,14 @@ export default Vue.extend({
       this.source = source;
       this.url = url;
       this.datetime = datetime;
+
+      this[RootActions.SET_CURRENT_TICKER](id?.toString());
     },
   },
 
   methods: {
+    ...mapActions([RootActions.SET_CURRENT_TICKER]),
+
     openOrigin() {
       window.open(this.url);
     },
@@ -72,6 +79,7 @@ export default Vue.extend({
   left: 0;
   z-index: 10;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   background-color: rgba($grey-900, 0.8);
@@ -80,12 +88,15 @@ export default Vue.extend({
     position: relative;
     padding: 30px;
     width: 60%;
+    max-width: $max-width-mobile;
     height: max-content;
-    min-height: 400px;
+    max-height: 600px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
+    overflow-y: auto;
+    overflow-x: hidden;
     background-color: $grey-300;
     border-radius: $border-radius-10;
     box-shadow: 0 0 5px 0 rgba($grey-700, 0.7);
