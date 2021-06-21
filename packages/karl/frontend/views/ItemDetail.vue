@@ -218,8 +218,13 @@ export default {
     const email = this.userInfo.userEmail;
     const tickers = [symbols];
 
+    const fetcher = this.getItemDetail.bind(this, { symbols, email, name });
+
     this.getItemDetail({ symbols, email, name }).then(() => {
       this.setItemDetailIsLoading(false);
+      this.intervalForItemDetail = setInterval(function() {
+        fetcher();
+      }, 2000);
     });
 
     this.getNews({ offset: 0, limit: 20, tickers }).then(() => {
@@ -229,6 +234,12 @@ export default {
     this.getAnalyses({ offset: 0, limit: 20, tickers }).then(() => {
       this.setAnalysesIsLoading(false);
     });
+  },
+
+  beforeDestroy() {
+    if (this.intervalForItemDetail) {
+      clearInterval(this.intervalForItemDetail);
+    }
   },
 };
 </script>
