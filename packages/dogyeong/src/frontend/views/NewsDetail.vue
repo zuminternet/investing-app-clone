@@ -27,7 +27,7 @@
           <ArticleDetailBodyText>{{ article.text }}</ArticleDetailBodyText>
         </ArticleDetailSection>
       </template>
-      <ReplySection id="reply-section" :hasAuth="$store.getters.isLoggedIn" :docId="articleId" />
+      <ReplySection id="reply-section" :email="$store.getters.isLoggedIn.toString()" :docId="articleId" />
     </main>
     <BottomNav />
   </Layout>

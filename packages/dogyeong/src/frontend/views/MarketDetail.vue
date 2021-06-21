@@ -85,7 +85,7 @@
         :isLoading="opinions.isLoading"
         :isError="opinions.isError"
       />
-      <ReplySection id="reply-section" :hasAuth="$store.getters.isLoggedIn" :docId="symbol" />
+      <ReplySection id="reply-section" :email="$store.getters.isLoggedIn.toString()" :docId="symbol" />
     </main>
     <BottomNav />
   </Layout>
@@ -209,6 +209,7 @@ export default Vue.extend({
       this.chartPeriod = period;
       this.clearInterval();
       this.interval = setInterval(this.fetchChart.bind(this), 2000);
+      this.isChartLoading = true;
       this.fetchChart();
     },
     fetchChart() {
@@ -218,9 +219,9 @@ export default Vue.extend({
         .then((chart) => {
           this.chartData = chart.data;
           this.displayName = chart.display_name;
-          this.isChartLoading = false;
         })
-        .catch(console.error);
+        .catch(console.error)
+        .finally(() => (this.isChartLoading = false));
     },
     toggleGraphType() {
       this.$refs.chart.toggleGraphType();
