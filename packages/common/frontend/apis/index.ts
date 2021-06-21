@@ -19,6 +19,7 @@ export interface getNewsAndAnalysesInfo {
   offset: number;
   limit: number;
   tickers: string[];
+  sortByReply: boolean;
 }
 
 export interface createBookmarkInfo {
@@ -79,9 +80,9 @@ const getItemDetail = async ({ symbols, email }: getItemDetailInfo) => {
  * @param param0
  * @returns Promise
  */
-const getNews = async ({ offset = 0, limit = 10, tickers = [] }: getNewsAndAnalysesInfo) => {
+const getNews = async ({ offset = 0, limit = 10, tickers = [], sortByReply = false }: getNewsAndAnalysesInfo) => {
   const result = await Axios.get(`${devURL}/api/articles/news`, {
-    params: { offset, limit, tickers },
+    params: { offset, limit, tickers, sortByReply },
   });
 
   if (result.status === 200) {
@@ -99,9 +100,9 @@ const getNews = async ({ offset = 0, limit = 10, tickers = [] }: getNewsAndAnaly
  * @returns Promise
  */
 
-const getAnalyses = async ({ offset, limit, tickers }: getNewsAndAnalysesInfo) => {
+const getAnalyses = async ({ offset = 0, limit = 10, tickers = [], sortByReply = false }: getNewsAndAnalysesInfo) => {
   const result = await Axios.get(`${devURL}/api/articles/analyses`, {
-    params: { offset, limit, tickers },
+    params: { offset, limit, tickers, sortByReply },
   });
 
   if (result.status === 200) {
@@ -223,13 +224,13 @@ const refiner = (repls: ReplyDoc[]): IReply[] =>
     likes,
   }));
 
-const getReplsByDocID = async (docId: string, email: string) => {
+const getReplsByDocID = async (docId: string) => {
   try {
     const {
       data: { results },
       status,
       statusText,
-    } = await Axios.get(`/api/reply/${docId}`, { params: { email } });
+    } = await Axios.get(`/api/reply/${docId}`);
 
     if (status >= 400) throw Error(statusText);
 
@@ -248,4 +249,16 @@ const getReplsByDocID = async (docId: string, email: string) => {
 const toggleLikes = (replId: string, likes: number) =>
   Axios.post(`/api/reply/likes`, { replId, likes }, { withCredentials: true });
 
-export { getSearchedItems, getItemDetail, getNews, getAnalyses, createBookmark, getBookmarks, deleteBookmark, getArticleById, toggleLikes };
+export {
+  getSearchedItems,
+  getItemDetail,
+  getNews,
+  getAnalyses,
+  createBookmark,
+  getBookmarks,
+  deleteBookmark,
+  getArticleById,
+  toggleLikes,
+  createReply,
+  getReplsByDocID,
+};

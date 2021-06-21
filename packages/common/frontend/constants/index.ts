@@ -46,4 +46,6 @@ export const text = {
   LOW: '최저가',
   NO_INFO: '정보 없음',
   ZUM: 'ZUM',
+  ERROR: '에러가 발생했어요!',
+  EMPTY: '컨텐츠가 없어요!',
 };

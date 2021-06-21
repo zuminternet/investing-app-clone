@@ -71,11 +71,11 @@ export default {
   },
 
   data() {
-    const { INDICES, STOCK, CRYPTO_CURRENCY, MARKET, NEWS, BOOKMARK, MORE } = text;
+    const { INDICES, STOCK, CRYPTO_CURRENCY, MARKET, NEWS, BOOKMARK } = text;
 
     return {
       swiperNavigatorButtonNames: [INDICES, STOCK, CRYPTO_CURRENCY],
-      bottomNavigatorButtonNames: [MARKET, NEWS, BOOKMARK, MORE],
+      bottomNavigatorButtonNames: [MARKET, NEWS, BOOKMARK],
     };
   },
 

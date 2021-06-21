@@ -4,10 +4,15 @@ import { tickerMap } from 'common/domain';
 // 초기 state 값 설정
 const state = {
   news: [],
+  hotNews: [],
+
   articleDetail: {},
 
   newsIsLoading: false,
   newsIsError: false,
+
+  hotNewsIsLoading: false,
+  hotNewsIsError: false,
 
   articleDetailIsLoading: false,
   articleDetailIsError: false,
@@ -60,6 +65,23 @@ const actions = {
     }
   },
 
+  async getHotNews({ commit }) {
+    try {
+      const hotNews = await getNews({ sortByReply: true });
+
+      if (hotNews) {
+        commit('setHotNews', hotNews);
+
+        return true;
+      }
+
+      throw new Error('Getting news was failed in article store');
+    } catch (error) {
+      console.log(error);
+      commit('setHotNewsIsError', true);
+    }
+  },
+
   async getArticleById({ commit }, id: string) {
     try {
       const article = await getArticleById(id);
@@ -84,6 +106,10 @@ const actions = {
   setArticleDetailIsLoading({ commit }, isLoading) {
     commit('setArticleDetailIsLoading', isLoading);
   },
+
+  setHotNewsIsLoading({ commit }, isLoading) {
+    commit('setHotNewsIsLoading', isLoading);
+  },
 };
 
 // mutatuons 설정
@@ -91,6 +117,11 @@ const mutations = {
   setNews(state, news) {
     state.news = news;
   },
+
+  setHotNews(state, hotNews) {
+    state.hotNews = hotNews;
+  },
+
   setArticleDetail(state, article) {
     state.articleDetail = article;
   },
@@ -101,6 +132,14 @@ const mutations = {
 
   setNewsIsError(state, isError) {
     state.newsIsError = isError;
+  },
+
+  setHotNewsIsLoading(state, isLoading) {
+    state.hotNewsIsLoading = isLoading;
+  },
+
+  setHotNewsIsError(state, isError) {
+    state.hotNewsIsError = isError;
   },
 
   setArticleDetailIsLoading(state, isLoading) {

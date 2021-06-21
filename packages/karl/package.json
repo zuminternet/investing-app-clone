@@ -10,8 +10,8 @@
     "backend:dev": "cross-env NODE_ENV=development nodemon --exec ts-node --transpile-only backend/Server.ts"
   },
   "dependencies": {
-    "@vue/cli-plugin-babel": "4.5.13",
-    "@vue/cli-plugin-typescript": "4.5.13",
+    "@vue/cli-plugin-babel": "^4.5.13",
+    "@vue/cli-plugin-typescript": "^4.5.13",
     "axios": "^0.21.1",
     "cross-env": "7.0.3",
     "epic-spinners": "^1.1.0",
@@ -19,9 +19,9 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.12.10",
     "swiper": "5.3.7",
-    "typescript": "4.2.4",
-    "vue": "2.6.12",
-    "vue-awesome-swiper": "4.1.1",
+    "typescript": "^4.2.4",
+    "vue": "^2.6.12",
+    "vue-awesome-swiper": "^4.1.1",
     "yahoo-finance": "https://github.com/dogyeong/node-yahoo-finance",
     "zum-portal-core": "1.1.1"
   }

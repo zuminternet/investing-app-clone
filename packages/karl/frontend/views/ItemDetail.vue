@@ -11,14 +11,11 @@
     <custom-swiper :navigatorButtonNames="swiperNavigatorButtonNames">
       <swiper-slide>
         <list-wrapper :excludedHeight="210">
-          <chart
-            v-if="symbolForChart"
-            :isDarkTheme="isDarkTheme"
-            :canvasWidth="300"
-            :canvasHeight="300"
-            :symbol="symbolForChart"
-          />
+          <chart v-if="symbol" :isDarkTheme="isDarkTheme" :canvasWidth="300" :canvasHeight="300" :symbol="symbol" />
           <item-detail-overview-box :itemDetail="itemDetail" :isLoading="itemDetailIsLoading" :isError="itemDetailIsError" />
+          <sub-content-box :text="opinionText">
+            <reply-section v-if="symbol" :email="userInfo.userEmail" :docId="symbol" />
+          </sub-content-box>
 
           <sub-content-box :text="newsText">
             <loading v-if="newsIsLoading" :loadingHeight="220" />
@@ -34,7 +31,7 @@
                 <news-image class="news-image-align" :src="element.image_url" />
                 <news-text-box>
                   <news-text-box-title>{{ element.title }}</news-text-box-title>
-                  <news-text-box-desc :author="element.source" :publishDate="element.date" />
+                  <news-text-box-desc :author="element.source" :publishDate="element.date" :replyCount="element.replyCount" />
                 </news-text-box>
               </news-list-item>
             </news-list>
@@ -53,7 +50,7 @@
                 <news-image class="news-image-align" :src="element.image_url" />
                 <news-text-box>
                   <news-text-box-title>{{ element.title }}</news-text-box-title>
-                  <news-text-box-desc :author="element.source" :publishDate="element.date" />
+                  <news-text-box-desc :author="element.source" :publishDate="element.date" :replyCount="element.replyCount" />
                 </news-text-box>
               </news-list-item>
             </news-list>
@@ -70,7 +67,7 @@
               <news-image class="news-image-align" :src="element.image_url" />
               <news-text-box>
                 <news-text-box-title>{{ element.title }}</news-text-box-title>
-                <news-text-box-desc :author="element.source" :publishDate="element.date" />
+                <news-text-box-desc :author="element.source" :publishDate="element.date" :replyCount="element.replyCount" />
               </news-text-box>
             </news-list-item>
           </news-list>
@@ -86,10 +83,15 @@
               <news-image class="news-image-align" :src="element.image_url" />
               <news-text-box>
                 <news-text-box-title>{{ element.title }}</news-text-box-title>
-                <news-text-box-desc :author="element.source" :publishDate="element.date" />
+                <news-text-box-desc :author="element.source" :publishDate="element.date" :replyCount="element.replyCount" />
               </news-text-box>
             </news-list-item>
           </news-list>
+        </list-wrapper>
+      </swiper-slide>
+      <swiper-slide>
+        <list-wrapper :excludedHeight="210">
+          <reply-section v-if="symbol" :email="userInfo.userEmail" :docId="symbol" />
         </list-wrapper>
       </swiper-slide>
     </custom-swiper>
@@ -107,6 +109,7 @@ import ItemDetailPriceBox from 'common/frontend/components/ItemDetail/ItemDetail
 import ListWrapper from 'common/frontend/components/ListWrapper.vue';
 import CustomSwiper from 'common/frontend/components/CustomSwiper.vue';
 import ItemDetailOverviewBox from 'common/frontend/components/ItemDetail/ItemDetailOverviewBox.vue';
+import ReplySection from 'common/frontend/components/ReplySection';
 import SubContentBox from 'common/frontend/components/ItemDetail/SubContentBox.vue';
 import NewsList from 'common/frontend/components/News/NewsList.vue';
 import NewsListItem from 'common/frontend/components/News/NewsListItem.vue';
@@ -114,6 +117,7 @@ import NewsImage from 'common/frontend/components/News/NewsImage.vue';
 import NewsTextBox from 'common/frontend/components/News/NewsTextBox.vue';
 import NewsTextBoxTitle from 'common/frontend/components/News/NewsTextBoxTitle.vue';
 import NewsTextBoxDesc from 'common/frontend/components/News/NewsTextBoxDesc.vue';
+
 import Chart from 'karl/frontend/components/Chart.vue';
 import Loading from 'karl/frontend/components/Loading.vue';
 import Error from 'karl/frontend/components/Error.vue';
@@ -130,6 +134,7 @@ export default {
     CustomSwiper,
     SwiperSlide,
     ItemDetailOverviewBox,
+    ReplySection,
     SubContentBox,
     NewsList,
     NewsListItem,
@@ -145,15 +150,15 @@ export default {
   },
 
   data() {
-    const { OVERLALL, NEWS, ANALYSIS, OPINION, CHART, MARKET, BOOKMARK, MORE } = text;
+    const { OVERLALL, NEWS, ANALYSIS, OPINION, MARKET, BOOKMARK } = text;
 
     return {
-      swiperNavigatorButtonNames: [OVERLALL, NEWS, ANALYSIS, OPINION, CHART],
-      bottomNavigatorButtonNames: [MARKET, NEWS, BOOKMARK, MORE],
+      swiperNavigatorButtonNames: [OVERLALL, NEWS, ANALYSIS, OPINION],
+      bottomNavigatorButtonNames: [MARKET, NEWS, BOOKMARK],
       newsText: NEWS,
       analysisText: ANALYSIS,
-      opnionText: OPINION,
-      symbolForChart: '',
+      opinionText: OPINION,
+      symbol: '',
     };
   },
 
@@ -209,7 +214,7 @@ export default {
     }
 
     const { symbols, name } = this.$route.query;
-    this.symbolForChart = symbols;
+    this.symbol = symbols;
     const email = this.userInfo.userEmail;
     const tickers = [symbols];
 

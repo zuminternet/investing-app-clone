@@ -5,31 +5,42 @@
     <error v-else-if="articleDetailIsError" />
     <empty v-else-if="isEmptyObject(articleDetail)" />
     <template v-else>
-      <article-detail-section>
-        <article-detail-title>{{ articleDetail.title }}</article-detail-title>
-        <article-detail-sub-info>{{ articleDetail.source }} | {{ articleDetail.date | formatDate }}</article-detail-sub-info>
-      </article-detail-section>
-      <article-detail-section>
-        <article-detail-body-image :src="imageURL" />
-        <article-detail-body-text>{{ articleDetail.text }}</article-detail-body-text>
-      </article-detail-section>
+      <list-wrapper :excludedHeight="50">
+        <article-detail-section>
+          <article-detail-title>{{ articleDetail.title }}</article-detail-title>
+          <article-detail-sub-info>{{ articleDetail.source }} | {{ articleDetail.date | formatDate }}</article-detail-sub-info>
+        </article-detail-section>
+        <article-detail-section>
+          <article-detail-body-image :src="imageURL" />
+          <article-detail-body-text>{{ articleDetail.text }}</article-detail-body-text>
+        </article-detail-section>
+        <sub-content-box :text="opinionText">
+          <reply-section v-if="docId" :email="userInfo.userEmail" :docId="docId" />
+        </sub-content-box>
+      </list-wrapper>
     </template>
   </div>
 </template>
 
 <script>
-import MultipurposeHeader from '../../../common/frontend/components/MultipurposeHeader.vue';
-import ArticleDetailSection from '../../../common/frontend/components/ArticleDetail/ArticleDetailSection.vue';
-import ArticleDetailTitle from '../../../common/frontend/components/ArticleDetail/ArticleDetailTitle.vue';
-import ArticleDetailSubInfo from '../../../common/frontend/components/ArticleDetail/ArticleDetailSubInfo.vue';
-import ArticleDetailBodyImage from '../../../common/frontend/components/ArticleDetail/ArticleDetailBodyImage.vue';
-import ArticleDetailBodyText from '../../../common/frontend/components/ArticleDetail/ArticleDetailBodyText.vue';
+import { mapActions, mapState } from 'vuex';
+
+import MultipurposeHeader from 'common/frontend/components/MultipurposeHeader.vue';
+import ArticleDetailSection from 'common/frontend/components/ArticleDetail/ArticleDetailSection.vue';
+import ArticleDetailTitle from 'common/frontend/components/ArticleDetail/ArticleDetailTitle.vue';
+import ArticleDetailSubInfo from 'common/frontend/components/ArticleDetail/ArticleDetailSubInfo.vue';
+import ArticleDetailBodyImage from 'common/frontend/components/ArticleDetail/ArticleDetailBodyImage.vue';
+import ArticleDetailBodyText from 'common/frontend/components/ArticleDetail/ArticleDetailBodyText.vue';
+import SubContentBox from 'common/frontend/components/ItemDetail/SubContentBox.vue';
+import ReplySection from 'common/frontend/components/ReplySection';
+import ListWrapper from 'common/frontend/components/ListWrapper.vue';
+
 import Loading from 'karl/frontend/components/Loading.vue';
 import Error from 'karl/frontend/components/Error.vue';
 import Empty from 'karl/frontend/components/Empty.vue';
 
-import { mapActions, mapState } from 'vuex';
 import { fromNow, isEmptyObject } from 'common/frontend/utils';
+import { text } from 'common/frontend/constants';
 
 export default {
   name: 'NewsDetail',
@@ -44,6 +55,16 @@ export default {
     Loading,
     Error,
     Empty,
+    SubContentBox,
+    ReplySection,
+    ListWrapper,
+  },
+
+  data() {
+    return {
+      opinionText: text.OPINION,
+      docId: '',
+    };
   },
 
   filters: {
@@ -75,6 +96,8 @@ export default {
     const { id } = this.$route.query;
     const { userEmail, userGoogleId } = this.userInfo;
 
+    this.docId = id;
+
     this.setArticleDetailIsLoading(true);
 
     if (!userEmail || !userGoogleId) {
@@ -93,5 +116,9 @@ export default {
   display: flex;
   flex: 1;
   flex-direction: column;
+}
+
+p {
+  color: var(--text-color);
 }
 </style>
