@@ -133,12 +133,14 @@ $paddingTop: 5px;
 $maxHeight: 50px;
 
 .reply {
-  width: 100%;
-  padding: 3% 5%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
+  &.card {
+    width: 100%;
+    padding: 3% 5%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
 
   .thumbnail {
     width: fit-content;
