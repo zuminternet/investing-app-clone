@@ -34,7 +34,7 @@ export default () => {
     if (!requiresAuth) return next();
 
     // 로그인 되어있으면 이동
-    if (store.state.user.user) return next();
+    if (store.getters.isLoggedIn) return next();
 
     // 인증이 필요한데 로그인 안돼있으면 로그인 페이지로 리다이렉션
     redirectToLogin();
