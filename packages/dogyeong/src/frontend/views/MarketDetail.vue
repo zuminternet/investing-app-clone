@@ -85,7 +85,7 @@
         :isLoading="opinions.isLoading"
         :isError="opinions.isError"
       />
-      <ReplySection id="reply-section" :email="$store.getters.isLoggedIn.toString()" :docId="symbol" />
+      <ReplySection id="reply-section" :email="isLoggedIn" :docId="symbol" />
     </main>
     <BottomNav />
   </Layout>
@@ -175,6 +175,9 @@ export default Vue.extend({
     pricePercent() {
       const result = (this.priceDiff / this.previos2DayClose) * 100;
       return Number.isNaN(result) ? 0 : result;
+    },
+    isLoggedIn() {
+      return this.$store.getters.isLoggedIn ? 'loggedIn' : undefined;
     },
   },
 

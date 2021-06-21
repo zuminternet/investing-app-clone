@@ -27,7 +27,7 @@
           <ArticleDetailBodyText>{{ article.text }}</ArticleDetailBodyText>
         </ArticleDetailSection>
       </template>
-      <ReplySection id="reply-section" :email="$store.getters.isLoggedIn.toString()" :docId="articleId" />
+      <ReplySection id="reply-section" :email="isLoggedIn" :docId="articleId" />
     </main>
     <BottomNav />
   </Layout>
@@ -99,6 +99,9 @@ export default Vue.extend({
     },
     articleId() {
       return this.$route.path.split('/').pop();
+    },
+    isLoggedIn() {
+      return this.$store.getters.isLoggedIn ? 'loggedIn' : undefined;
     },
   },
 
