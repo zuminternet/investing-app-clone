@@ -248,4 +248,16 @@ const getReplsByDocID = async (docId: string, email: string) => {
 const toggleLikes = (replId: string, likes: number) =>
   Axios.post(`/api/reply/likes`, { replId, likes }, { withCredentials: true });
 
-export { getSearchedItems, getItemDetail, getNews, getAnalyses, createBookmark, getBookmarks, deleteBookmark, getArticleById, toggleLikes };
+export {
+  getSearchedItems,
+  getItemDetail,
+  getNews,
+  getAnalyses,
+  createBookmark,
+  getBookmarks,
+  deleteBookmark,
+  getArticleById,
+  toggleLikes,
+  createReply,
+  getReplsByDocID,
+};
