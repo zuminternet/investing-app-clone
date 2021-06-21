@@ -88,7 +88,12 @@ export default Vue.extend({
     align-items: center;
     background-color: $grey-300;
     border-radius: $border-radius-10;
+    box-shadow: 0 0 5px 0 rgba($grey-700, 0.7);
     animation: showUp 0.3s ease-in-out;
+
+    .dark & {
+      background-color: $deep-dark;
+    }
 
     &-close {
       position: absolute;
@@ -117,10 +122,18 @@ export default Vue.extend({
       margin: $margin-padding-15;
       font-weight: bold;
       font-size: 1.2rem;
+
+      .dark & {
+        color: $sup-beige;
+      }
     }
 
     &-summary {
       margin-bottom: $margin-padding-15;
+
+      .dark & {
+        color: $grey-300;
+      }
     }
 
     &-origin {
@@ -137,6 +150,14 @@ export default Vue.extend({
         background-color: $green-700;
         color: $grey-100;
         scale: 1.1;
+
+        .dark & {
+          background-color: $deep-blue;
+        }
+      }
+
+      .dark & {
+        color: $grey-500;
       }
     }
   }
