@@ -238,12 +238,13 @@ export class ApiController {
   @GetMapping({ path: '/articles/news' })
   public async getNews(request: Request, response: Response) {
     try {
-      const { offset, limit, sortByReply } = request.query;
-      let { tickers } = request.query;
+      const { offset, limit } = request.query;
+      let { tickers, sortByReply } = request.query;
+      console.log(sortByReply);
+      sortByReply = sortByReply === 'true' ? true : false;
+
       let keyword;
       let news;
-
-      console.log(sortByReply, 'sortbyreply');
 
       if (tickers) {
         [keyword] = tickers;

@@ -106,7 +106,7 @@ export default class ArticleService {
    * @param tickers 포함되어야 할 ticker 심볼 배열
    * @param sortByReply 추가적으로 댓글 갯수순으로 정렬할 것인지 여부
    */
-  @Caching({ ttl: cacheTTL, runOnStart: false, cache })
+  // @Caching({ ttl: cacheTTL, runOnStart: false, cache })
   public async getNews(offset = 0, limit = 10, tickers: string[] = [], sortByReply = false): Promise<ArticleWithReplies[]> {
     const findQuery = this.getFindQuery(tickers, ArticleType.news);
     const sortQuery = this.getSortQuery(sortByReply);
