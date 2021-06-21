@@ -6,6 +6,7 @@
       <div class="news-company-card-tags noselect">
         <Words class="news-company-card-tag news-company-card-source"> {{ source }} </Words>
         <Words class="news-company-card-tag news-company-card-date">{{ dateString }} </Words>
+        <Words class="news-company-card-tag news-company-card-likes" :class="{ userLiked }"> 🏷️ {{ likes }} </Words>
       </div>
     </div>
   </article>
@@ -52,6 +53,15 @@ export default Vue.extend({
     },
     url: {
       type: String,
+      default: '',
+    },
+    likes: {
+      type: Number,
+      default: 0,
+    },
+    userLiked: {
+      type: Boolean,
+      default: false,
     },
   },
 
@@ -69,7 +79,8 @@ export default Vue.extend({
   &.card {
     width: 100%;
     padding: 20px;
-    height: max-content;
+    height: fit-content;
+    max-height: 200px;
     display: grid;
     grid-template-columns: 160px auto;
     column-gap: 15px;
@@ -94,7 +105,7 @@ export default Vue.extend({
 
   &-title {
     font-weight: bold;
-    font-size: 1.2rem;
+    font-size: 1rem;
     text-align: left;
     cursor: pointer;
 
@@ -116,6 +127,7 @@ export default Vue.extend({
     overflow: visible;
     border-radius: $border-radius-10;
     font-size: 0.8rem;
+    line-height: 1.1rem;
     color: $grey-300;
     cursor: pointer;
   }
@@ -126,6 +138,19 @@ export default Vue.extend({
 
   &-date {
     background-color: $grey-700;
+  }
+
+  &-likes {
+    color: $grey-700;
+    background-color: rgba($grey-500, 0.2);
+
+    .dark & {
+      color: $grey-300;
+    }
+
+    &.userLiked {
+      background-color: rgba($red-a400, 0.4);
+    }
   }
 }
 </style>

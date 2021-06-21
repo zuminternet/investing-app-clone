@@ -5,7 +5,10 @@
       <img :src="image" :alt="image" id="news-modal-detail-image" />
       <Words id="news-modal-detail-headline">{{ headline }}</Words>
       <Words id="news-modal-detail-summary">{{ summary === 'Content' ? '기사내용이 없습니다.' : summary }}</Words>
-      <Words @click.native="openOrigin" id="news-modal-detail-origin"> 원문보기 ➡️ {{ source }} </Words>
+      <div id="news-modal-detail-options">
+        <Words @click.native="toggleLikes" id="news-modal-detail-likes" :class="{ userLiked }"> 🏷️ {{ likes }} </Words>
+        <Words @click.native="openOrigin" id="news-modal-detail-origin"> 원문보기 ➡️ {{ source }} </Words>
+      </div>
       <Reply />
     </article>
   </div>
@@ -36,6 +39,8 @@ export default Vue.extend({
       source: undefined,
       url: undefined,
       datetime: undefined,
+      likes: 0,
+      userLiked: false,
     };
   },
 
@@ -45,7 +50,7 @@ export default Vue.extend({
 
   watch: {
     currentModalNews() {
-      const { id, headline, image, summary, source, url, datetime } = this.currentModalNews;
+      const { id, headline, image, summary, source, url, datetime, likes, userLiked } = this.currentModalNews;
       if (!id) return;
 
       this.id = id;
@@ -55,6 +60,8 @@ export default Vue.extend({
       this.source = source;
       this.url = url;
       this.datetime = datetime;
+      this.likes = likes;
+      this.userLiked = userLiked;
 
       this[RootActions.SET_CURRENT_TICKER](id?.toString());
     },
@@ -65,6 +72,12 @@ export default Vue.extend({
 
     openOrigin() {
       window.open(this.url);
+    },
+
+    toggleLikes() {
+      const { likes, userLiked } = this;
+      this.likes = likes + (userLiked ? -1 : +1);
+      this.userLiked = !userLiked;
     },
   },
 });
@@ -149,14 +162,53 @@ export default Vue.extend({
       }
     }
 
+    &-options {
+      width: 100%;
+      margin: 15px 10px;
+      display: flex;
+      justify-content: space-between;
+      align-content: center;
+      font-size: 0.8rem;
+    }
+
+    &-likes {
+      width: max-content;
+      padding: 5px 10px;
+      border-radius: $border-radius-10;
+      box-shadow: 0 0 2px 0 $red-a400;
+      background-color: transparent;
+
+      display: flex;
+      align-items: center;
+      line-height: 1rem;
+      cursor: pointer;
+
+      .dark & {
+        color: $grey-300;
+      }
+
+      &:hover {
+        background-color: rgba($red-a400, 0.4);
+        color: $grey-100;
+      }
+
+      &.userLiked {
+        background-color: rgba($red-a400, 0.4);
+        color: $red-a400;
+      }
+    }
+
     &-origin {
       width: max-content;
-      margin: 15px 0;
       padding: 5px 10px;
       cursor: pointer;
       border-radius: $border-radius-10;
       box-shadow: 0 0 3px 0 $grey-500;
+
+      display: flex;
+      align-items: center;
       font-size: 0.8rem;
+      line-height: 1rem;
       font-weight: bold;
       transition: all 0.1s ease-in-out;
 

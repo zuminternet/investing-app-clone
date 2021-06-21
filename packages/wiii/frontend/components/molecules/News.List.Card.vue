@@ -6,6 +6,7 @@
       <Words class="news-list-card-tag news-list-card-category" :class="categoryColor"> {{ category.toUpperCase() }} </Words>
       <Words class="news-list-card-tag news-list-card-source"> {{ source }} </Words>
       <Words class="news-list-card-tag news-list-card-date">{{ dateString }} </Words>
+      <Words class="news-list-card-tag news-list-card-likes" :class="{ userLiked }"> 🏷️ {{ likes }} </Words>
     </div>
   </article>
 </template>
@@ -60,6 +61,14 @@ export default Vue.extend({
     },
     url: {
       type: String,
+    },
+    likes: {
+      type: Number,
+      default: 0,
+    },
+    userLiked: {
+      type: Boolean,
+      default: false,
     },
   },
 
@@ -120,6 +129,7 @@ export default Vue.extend({
     overflow: visible;
     border-radius: $border-radius-10;
     font-size: 0.8rem;
+    line-height: 1.1rem;
     color: $grey-300;
     cursor: default;
   }
@@ -140,6 +150,19 @@ export default Vue.extend({
 
   &-date {
     background-color: $grey-700;
+  }
+
+  &-likes {
+    color: $grey-700;
+    background-color: rgba($grey-500, 0.2);
+
+    .dark & {
+      color: $grey-300;
+    }
+
+    &.userLiked {
+      background-color: rgba($red-a400, 0.4);
+    }
   }
 }
 </style>
