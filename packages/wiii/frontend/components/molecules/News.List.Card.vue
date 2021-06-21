@@ -1,8 +1,7 @@
 <template>
-  <article class="news-list-card card">
+  <article class="news-list-card card" :data-id="idx">
     <Words class="news-list-card-title">{{ headline }} </Words>
     <LazyImages :src="image" :alt="headline" class="news-list-card-thumbnail" />
-    <Words class="news-list-card-summary">{{ summary }} </Words>
     <div class="news-list-card-tags noselect">
       <Words class="news-list-card-tag news-list-card-category" :class="categoryColor"> {{ category.toUpperCase() }} </Words>
       <Words class="news-list-card-tag news-list-card-source"> {{ source }} </Words>
@@ -30,6 +29,10 @@ export default Vue.extend({
 
   props: {
     id: {
+      type: Number,
+      required: true,
+    },
+    idx: {
       type: Number,
       required: true,
     },
@@ -86,11 +89,15 @@ export default Vue.extend({
   &-title {
     font-weight: bold;
     font-size: 1.2rem;
+
+    .dark & {
+      color: rgba($neon-green, 0.6);
+    }
   }
 
   &-thumbnail {
-    width: 100%;
-    margin: 10px 0;
+    width: 85%;
+    margin: 10px auto;
     border-radius: $border-radius-10;
 
     .loading {
@@ -100,16 +107,16 @@ export default Vue.extend({
   }
 
   &-tags {
-    padding-top: 15px;
+    padding-top: 10px;
     width: 100%;
     display: flex;
     justify-content: flex-end;
   }
 
   &-tag {
+    padding: 0 10px;
     width: max-content;
     overflow: visible;
-    padding: 0 10px;
     border-radius: $border-radius-10;
     font-size: 0.8rem;
     color: $grey-300;
