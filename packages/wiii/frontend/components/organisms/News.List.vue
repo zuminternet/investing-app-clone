@@ -69,16 +69,20 @@ export default Vue.extend({
   methods: {
     ...mapActions(['setModalNewsAction']),
 
+    resetModal() {
+      this.isModalOpen = false;
+      this.setModalNewsAction({});
+      history.pushState({ data: '' }, '', './');
+    },
+
     setModalOpen(e) {
       const id = e?.target?.closest('article[data-id]');
-      if (!e || !id) {
-        this.isModalOpen = false;
-        this.setModalNewsAction({});
-        return;
-      }
+      if (!e || !id) return this.resetModal();
 
       this.isModalOpen = true;
-      this.setModalNewsAction(this.newsList[id.getAttribute('data-id')]);
+      const newsData = this.newsList[id.getAttribute('data-id')];
+      this.setModalNewsAction(newsData);
+      history.pushState({ data: newsData.id }, newsData.headline, `./${newsData.id}`);
     },
   },
 });

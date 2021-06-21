@@ -79,7 +79,7 @@ export default Vue.extend({
   &-detail {
     position: relative;
     padding: 30px;
-    width: 80%;
+    width: 60%;
     height: max-content;
     min-height: 400px;
     display: flex;
