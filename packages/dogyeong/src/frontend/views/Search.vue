@@ -3,7 +3,14 @@
     <header class="search-header">
       <HeaderButton @clickHeaderButton="back">🠔</HeaderButton>
       <label>
-        <input v-model="keyword" type="text" autofocus placeholder="종목 검색" @keypress.enter="search" />
+        <input
+          v-model="keyword"
+          type="text"
+          autofocus
+          placeholder="종목 검색"
+          @keypress.enter="search"
+          @input="searchWithDebounce"
+        />
         <span @click="search">&#128269;</span>
       </label>
     </header>
@@ -90,18 +97,20 @@ export default Vue.extend({
       news: [],
       opinions: [],
       isLoading: false,
+      timer: null,
     };
   },
 
   computed: {
     isLoggedIn() {
-      return this.$store.state.user.user;
+      return this.$store.getters.isLoggedIn;
     },
   },
 
   methods: {
     async search() {
       try {
+        this.clearTimer();
         const keyword = this.keyword;
 
         if (!keyword) return;
@@ -121,8 +130,20 @@ export default Vue.extend({
         this.isLoading = false;
       }
     },
+
     back() {
       this.$router.back();
+    },
+
+    searchWithDebounce() {
+      this.clearTimer();
+      this.timer = setTimeout(() => this.search(), 1000);
+    },
+
+    clearTimer() {
+      if (!this.timer) return;
+      clearTimeout(this.timer);
+      this.timer = null;
     },
   },
 });
