@@ -74,3 +74,9 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style lang="scss" scoped>
+section.section {
+  padding: 5px;
+}
+</style>

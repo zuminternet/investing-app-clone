@@ -14,7 +14,6 @@ const newsUrl = `/api/news`;
  */
 export const getMarketNews = async (category: marketEnum = marketEnum.general) => {
   const { data, status, statusText } = await Axios.get(`${newsUrl}/market/${category}`);
-  console.log({ data, status, statusText });
   if (status >= 400) throw Error(statusText);
   return data;
 };

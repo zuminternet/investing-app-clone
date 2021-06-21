@@ -4,7 +4,7 @@
       <Button id="news-modal-detail-close" @click.native="$emit('set-modal-handler')">❌</Button>
       <img :src="image" :alt="image" id="news-modal-detail-image" />
       <Words id="news-modal-detail-headline">{{ headline }}</Words>
-      <Words id="news-modal-detail-summary">{{ summary }}</Words>
+      <Words id="news-modal-detail-summary">{{ summary === 'Content' ? '기사내용이 없습니다.' : summary }}</Words>
       <Words @click.native="openOrigin" id="news-modal-detail-origin"> 원문보기 ➡️ {{ source }} </Words>
       <Reply />
     </article>
@@ -141,6 +141,8 @@ export default Vue.extend({
 
     &-summary {
       margin-bottom: $margin-padding-15;
+      margin: 15px 0;
+      text-align: left;
 
       .dark & {
         color: $grey-300;
@@ -149,6 +151,7 @@ export default Vue.extend({
 
     &-origin {
       width: max-content;
+      margin: 15px 0;
       padding: 5px 10px;
       cursor: pointer;
       border-radius: $border-radius-10;

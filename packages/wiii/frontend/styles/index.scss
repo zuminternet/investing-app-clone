@@ -54,13 +54,13 @@ body {
     border-radius: $border-radius-10;
     background: linear-gradient(45deg, $grey-300, $grey-500);
     background-size: 300% 300%;
-    animation: gradient 5s ease-in-out infinite;
+    animation: gradient 3s ease-in-out infinite;
   }
 }
 
 @keyframes gradient {
   0% {
-    background-position: 0% 0%;
+    background-position: 0% 100%;
   }
 
   50% {
@@ -68,6 +68,6 @@ body {
   }
 
   100% {
-    background-position: 0% 0%;
+    background-position: 0% 100%;
   }
 }
