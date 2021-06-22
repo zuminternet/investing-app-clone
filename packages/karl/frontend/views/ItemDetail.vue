@@ -222,7 +222,7 @@ export default {
 
     this.getItemDetail({ symbols, email, name }).then(() => {
       this.setItemDetailIsLoading(false);
-      this.intervalForItemDetail = setInterval(fetcher, 2000);
+      this.intervalForItemDetail = setInterval(fetcher, 3000);
     });
 
     this.getNews({ offset: 0, limit: 20, tickers }).then(() => {

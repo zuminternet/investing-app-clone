@@ -47,6 +47,16 @@ export default {
       type: Boolean,
       required: true,
     },
+
+    selectedDate: {
+      validator: (prop) => typeof prop === 'string' || prop === null,
+      required: true,
+    },
+
+    selectedIndex: {
+      validator: (prop) => typeof prop === 'number' || prop === null,
+      required: true,
+    },
   },
 
   computed: {
@@ -62,12 +72,60 @@ export default {
       for (let i = 0; i < this.timeData.length; i++) {
         let [time, index] = this.timeData[i];
         time = new Date(time);
-        let displayedTime = `${time.getMonth() + 1}-${time.getDate()}`;
+
+        const fullYear = `${time.getFullYear()}`;
+        const monthAndDate = `${time.getMonth() + 1}-${time.getDate()}`;
 
         this.ctx.fillText(
-          displayedTime,
-          this.graphBoxMargin + this.unitWidth * (index - this.startIndex) - this.ctx.measureText(displayedTime).width / 2,
+          fullYear,
+          this.graphBoxMargin + this.unitWidth * (index - this.startIndex) - this.ctx.measureText(fullYear).width / 2,
           10,
+        );
+
+        this.ctx.fillText(
+          monthAndDate,
+          this.graphBoxMargin + this.unitWidth * (index - this.startIndex) - this.ctx.measureText(monthAndDate).width / 2,
+          20,
+        );
+      }
+
+      this.writeSelectedDate();
+    },
+
+    writeSelectedDate() {
+      if (this.selectedDate !== null) {
+        const date = new Date(this.selectedDate);
+
+        const fullYear = `${date.getFullYear()}`;
+        const monthAndDate = `${date.getMonth() + 1}-${date.getDate()}`;
+
+        const fullYearLength = this.ctx.measureText(`${fullYear}`).width;
+        const monthAndDateLength = this.ctx.measureText(`${monthAndDate}`).width;
+        this.ctx.fillStyle = '#31c27e';
+
+        this.ctx.fillRect(
+          this.graphBoxMargin + this.unitWidth * (this.selectedIndex - this.startIndex) - fullYearLength / 2,
+          0,
+          fullYearLength ? fullYearLength : monthAndDateLength,
+          20,
+        );
+
+        this.ctx.fillStyle = 'white';
+
+        this.ctx.fillText(
+          fullYear,
+          this.graphBoxMargin +
+            this.unitWidth * (this.selectedIndex - this.startIndex) -
+            this.ctx.measureText(fullYear).width / 2,
+          10,
+        );
+
+        this.ctx.fillText(
+          monthAndDate,
+          this.graphBoxMargin +
+            this.unitWidth * (this.selectedIndex - this.startIndex) -
+            this.ctx.measureText(monthAndDate).width / 2,
+          20,
         );
       }
     },
@@ -86,7 +144,4 @@ export default {
 };
 </script>
 
-<style>
-.x-axis {
-}
-</style>
+<style></style>

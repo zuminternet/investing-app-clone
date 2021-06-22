@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="chart-container">
     <loading v-if="isLoading" :loadingHeight="348" />
 
     <div v-show="!isLoading">
@@ -27,6 +27,8 @@
         :graphBoxMargin="graphBoxMargin"
         :canvasWidth="canvasWidth + yAxisWidth"
         :isDarkTheme="isDarkTheme"
+        :selectedDate="selectedDate"
+        :selectedIndex="selectedIndex"
       ></x-axis>
       <chart-menu
         :canvasWidth="canvasWidth + yAxisWidth"
@@ -93,7 +95,8 @@ export default {
       targetEndIndex: null,
       startIndex: null,
       selectedIndex: null,
-      selectedValue: 0,
+      selectedValue: null,
+      selectedDate: null,
       endIndex: null,
       timeData: [],
       valueData: [],
@@ -177,15 +180,9 @@ export default {
       this.isLoading = isLoading;
     },
 
-    drawGraphBox() {
-      this.ctx.strokeStyle = this.graphBoxColor;
-      this.ctx.strokeRect(this.graphBoxMargin, this.graphBoxMargin, this.graphBoxWidth, this.graphBoxHeight);
-    },
-
     drawGraph() {
       this.ctx.strokeStyle = this.graphColor;
       this.ctx.beginPath();
-      this.ctx.moveTo(this.graphBoxMargin, this.graphBoxMargin + this.graphBoxHeight);
 
       let interval = Math.floor((this.endIndex - this.startIndex) / 7);
 
@@ -195,7 +192,7 @@ export default {
         interval = 1;
       }
 
-      if (this.isCandle) {
+      if (this.isCandle && this.data.length) {
         for (let i = this.startIndex; i < this.endIndex + 1; i++) {
           const { date: time, close, open, high, low } = this.data[i];
 
@@ -213,7 +210,14 @@ export default {
           this.ctx.fillStyle = close >= open ? 'red' : 'blue';
           this.ctx.strokeStyle = close >= open ? 'red' : 'blue';
 
-          let candleWidth = 4;
+          let candleWidth;
+
+          if (this.period === 'd') candleWidth = 4;
+
+          if (this.period === 'w') candleWidth = 3;
+
+          if (this.period === 'm') candleWidth = 3;
+
           this.ctx.fillRect(
             this.graphBoxMargin + this.unitWidth * (i - this.startIndex) - candleWidth / 2,
             this.unitHeight,
@@ -229,7 +233,7 @@ export default {
         }
       }
 
-      if (!this.isCandle) {
+      if (!this.isCandle && this.data.length) {
         for (let i = this.startIndex; i < this.endIndex + 1; i++) {
           const { date: time, close: value } = this.data[i];
 
@@ -241,10 +245,8 @@ export default {
             this.timeData.push([time, i]);
           }
         }
-        this.ctx.lineTo(this.graphBoxMargin + this.graphBoxWidth, this.graphBoxMargin + this.graphBoxHeight);
       }
 
-      this.ctx.closePath();
       this.ctx.stroke();
 
       this.drawCurrentLine(this.unitHeight);
@@ -327,7 +329,6 @@ export default {
 
     touchStartHandler(event) {
       event.preventDefault();
-      console.log('start');
 
       const touches = event.targetTouches;
       this.tpCache = [];
@@ -341,6 +342,7 @@ export default {
           this.startIndex + Math.round((event.targetTouches[0].clientX - this.graphBoxMargin) / this.unitWidth) - 1;
 
         this.selectedValue = this.data[this.selectedIndex].close;
+        this.selectedDate = this.data[this.selectedIndex].date;
       } else if (event.targetTouches.length === 2) {
         this.selectedIndex = null;
 
@@ -362,8 +364,6 @@ export default {
       event.preventDefault();
 
       if (event.targetTouches.length === 0) {
-        console.log('touch end');
-
         this.baseStartIndex = this.startIndex;
         this.baseEndIndex = this.endIndex;
         this.targetStartIndex = null;
@@ -474,7 +474,7 @@ export default {
       this.valueData = [];
 
       this.ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
-      this.drawGraphBox();
+
       this.drawGraph();
       this.drawVerticalLines();
 
@@ -486,22 +486,22 @@ export default {
       this.drawSelectedLine();
     },
 
-    getFromAndTo(period) {
+    getFromAndTo(period, isCandle) {
       const today = new Date();
       let from = null;
       let to = null;
       let diff;
 
       if (period === 'd') {
-        diff = 5184000000;
+        diff = isCandle ? 5184000000 : 20736000000;
       }
 
       if (period === 'w') {
-        diff = 15552000000;
+        diff = isCandle ? 62208000000 : 124416000000;
       }
 
       if (period === 'm') {
-        diff = 63072000000;
+        diff = isCandle ? 248832000000 : 497664000000;
       }
 
       const fromDay = new Date();
@@ -516,39 +516,28 @@ export default {
       to += today.getMonth() + 1 >= 10 ? `-${today.getMonth() + 1}` : `-0${today.getMonth() + 1}`;
       to += today.getDate() >= 10 ? `-${today.getDate()}` : `-0${today.getDate()}`;
 
-      console.log(from);
-      console.log(to);
-
       return { from, to };
     },
 
-    async getHistoricalDataForPeriod(period) {
-      const { from, to } = this.getFromAndTo(period);
+    async getHistoricalDataForPeriod(period, isCandle) {
+      const { from, to } = this.getFromAndTo(period, isCandle);
       this.data = await getHistoricalData({ symbol: this.symbol, from, to, period });
       this.data.reverse();
+      this.data = this.addRandom(this.data);
     },
-  },
 
-  async mounted() {
-    this.setIsloading(true);
-    await this.getHistoricalDataForPeriod(this.period);
-    this.setIsloading(false);
+    createRandom() {
+      return (Math.random() > 0.5 ? 2 : -2) * Math.random();
+    },
 
-    this.endIndex = this.data.length - 1;
-    this.startIndex = 0;
+    addRandom(data) {
+      const random = this.createRandom();
+      const endData = data[data.length - 1];
 
-    this.ctx = this.$refs.graph.getContext('2d');
-    this.baseStartIndex = 0;
-    this.baseEndIndex = this.data.length - 1;
+      data.push({ ...endData, close: endData.close + random });
 
-    this.drawGraphBox();
-    this.drawGraph();
-    this.drawVerticalLines();
-
-    this.$refs.graph.ontouchstart = this.touchStartHandler;
-    this.$refs.graph.ontouchmove = this.touchMoveHandler;
-    this.$refs.graph.ontocuhcancel = this.touchEndhandler;
-    this.$refs.graph.ontouchend = this.touchEndhandler;
+      return data;
+    },
   },
 
   watch: {
@@ -564,18 +553,100 @@ export default {
       this.redrawChart();
     },
 
+    data() {
+      if (this.afterDataFetch) {
+        this.redrawChart();
+      }
+    },
+
     async period() {
+      this.afterDataFetch = false;
+
+      if (this.intervalForHistoricalData) {
+        clearInterval(this.intervalForHistoricalData);
+      }
+
       this.setIsloading(true);
-      await this.getHistoricalDataForPeriod(this.period);
+      await this.getHistoricalDataForPeriod(this.period, this.isCandle);
       this.setIsloading(false);
+
+      const fetcher = this.getHistoricalDataForPeriod.bind(this, this.period, this.isCandle);
+      this.intervalForHistoricalData = setInterval(fetcher, 2675);
 
       this.endIndex = this.data.length - 1;
       this.startIndex = 0;
 
       this.redrawChart();
+      this.selectedIndex = null;
+      this.selectedValue = null;
+      this.selectedDate = null;
+
+      this.afterDataFetch = true;
     },
+
+    async isCandle() {
+      this.afterDataFetch = false;
+
+      if (this.intervalForHistoricalData) {
+        clearInterval(this.intervalForHistoricalData);
+      }
+
+      this.setIsloading(true);
+      await this.getHistoricalDataForPeriod(this.period, this.isCandle);
+      this.setIsloading(false);
+
+      const fetcher = this.getHistoricalDataForPeriod.bind(this, this.period, this.isCandle);
+      this.intervalForHistoricalData = setInterval(fetcher, 2675);
+
+      this.endIndex = this.data.length - 1;
+      this.startIndex = 0;
+
+      this.redrawChart();
+      this.selectedIndex = null;
+      this.selectedValue = null;
+      this.selectedDate = null;
+
+      this.afterDataFetch = true;
+    },
+  },
+
+  async mounted() {
+    this.setIsloading(true);
+    await this.getHistoricalDataForPeriod(this.period, this.isCandle);
+    this.setIsloading(false);
+
+    this.ctx = this.$refs.graph.getContext('2d');
+
+    const fetcher = this.getHistoricalDataForPeriod.bind(this, this.period, this.isCandle);
+    this.intervalForHistoricalData = setInterval(fetcher, 2675);
+
+    this.endIndex = this.data.length - 1;
+    this.startIndex = 0;
+
+    this.baseStartIndex = 0;
+    this.baseEndIndex = this.data.length - 1;
+
+    this.drawGraph();
+    this.drawVerticalLines();
+
+    this.$refs.graph.ontouchstart = this.touchStartHandler;
+    this.$refs.graph.ontouchmove = this.touchMoveHandler;
+    this.$refs.graph.ontocuhcancel = this.touchEndhandler;
+    this.$refs.graph.ontouchend = this.touchEndhandler;
+
+    this.afterDataFetch = true;
+  },
+
+  beforeDestroy() {
+    if (this.intervalForHistoricalData) {
+      clearInterval(this.intervalForHistoricalData);
+    }
   },
 };
 </script>
 
-<style></style>
+<style>
+.chart-container {
+  margin: 10px;
+}
+</style>

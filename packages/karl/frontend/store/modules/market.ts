@@ -32,7 +32,6 @@ const actions = {
 
       throw new Error('Getting stocks was failed in market store');
     } catch (error) {
-      console.log(error);
       commit('setStocksIsError', true);
     }
   },
@@ -49,7 +48,6 @@ const actions = {
 
       throw new Error('Getting indices was failed in market store');
     } catch (error) {
-      console.log(error);
       commit('setIndicesIsError', true);
     }
   },
@@ -66,7 +64,6 @@ const actions = {
 
       throw new Error('Getting crpytos was failed in market store');
     } catch (error) {
-      console.log(error);
       commit('setCryptosIsError', true);
     }
   },

@@ -59,7 +59,7 @@ export default {
     },
 
     selectedValue: {
-      type: Number,
+      validator: (prop) => typeof prop === 'number' || prop === null,
       required: true,
     },
 
@@ -98,16 +98,29 @@ export default {
     },
 
     writeCurrentValue() {
-      this.ctx.fillStyle = 'red';
-      this.ctx.fillText(`${this.currentValue.toFixed(3)}`, 0, this.currentHeight);
+      const displayedValue = this.currentValue.toFixed(3);
+
+      this.ctx.fillStyle = '#1e90ff';
+
+      this.ctx.fillRect(0, this.currentHeight - 12, this.ctx.measureText(`${displayedValue}`).width, 14);
+
+      this.ctx.fillStyle = 'white';
+      this.ctx.fillText(`${displayedValue}`, 0, this.currentHeight);
       this.ctx.fillStyle = 'black';
     },
 
     writeSelectedValue() {
-      this.ctx.fillStyle = 'blue';
-      this.ctx.fillText(`${this.selectedValue.toFixed(3)}`, 0, this.selectedHeight);
+      if (this.selectedValue !== null) {
+        const displayedValue = this.selectedValue.toFixed(3);
 
-      this.ctx.fillStyle = 'black';
+        this.ctx.fillStyle = '#31c27e';
+
+        this.ctx.fillRect(0, this.selectedHeight - 12, this.ctx.measureText(`${displayedValue}`).width, 14);
+
+        this.ctx.fillStyle = 'white';
+        this.ctx.fillText(`${this.selectedValue.toFixed(3)}`, 0, this.selectedHeight);
+        this.ctx.fillStyle = 'black';
+      }
     },
   },
 

@@ -32,7 +32,6 @@ const actions = {
 
       throw new Error('Getting searched items was failed in search store');
     } catch (error) {
-      console.log(error);
       commit('setSearchedItemIsError', true);
     }
   },
@@ -49,7 +48,6 @@ const actions = {
 
       throw new Error('Getting news was failed in itemDetail store');
     } catch (error) {
-      console.log(error);
       commit('setSearchedNewsIsError', true);
     }
   },
@@ -66,7 +64,6 @@ const actions = {
 
       throw new Error('Getting news was failed in itemDetail store');
     } catch (error) {
-      console.log(error);
       commit('setSearchedAnalysesIsError', true);
     }
   },

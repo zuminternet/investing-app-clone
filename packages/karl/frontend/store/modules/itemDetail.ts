@@ -34,7 +34,6 @@ const actions = {
 
       throw new Error('Getting item detail was failed in itemDetail store');
     } catch (error) {
-      console.log(error);
       commit('setItemDetailIsError', true);
     }
   },
@@ -51,7 +50,6 @@ const actions = {
 
       throw new Error('Getting news was failed in itemDetail store');
     } catch (error) {
-      console.log(error);
       commit('setNewsIsError', true);
     }
   },
@@ -68,7 +66,6 @@ const actions = {
 
       throw new Error('Getting analyses was failed in itemDetail store');
     } catch (error) {
-      console.log(error);
       commit('setAnalysesIsError', true);
     }
   },
