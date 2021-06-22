@@ -27,6 +27,8 @@
         :graphBoxMargin="graphBoxMargin"
         :canvasWidth="canvasWidth + yAxisWidth"
         :isDarkTheme="isDarkTheme"
+        :selectedDate="selectedDate"
+        :selectedIndex="selectedIndex"
       ></x-axis>
       <chart-menu
         :canvasWidth="canvasWidth + yAxisWidth"
@@ -94,6 +96,7 @@ export default {
       startIndex: null,
       selectedIndex: null,
       selectedValue: null,
+      selectedDate: null,
       endIndex: null,
       timeData: [],
       valueData: [],
@@ -189,7 +192,7 @@ export default {
         interval = 1;
       }
 
-      if (this.isCandle) {
+      if (this.isCandle && this.data.length) {
         for (let i = this.startIndex; i < this.endIndex + 1; i++) {
           const { date: time, close, open, high, low } = this.data[i];
 
@@ -230,7 +233,7 @@ export default {
         }
       }
 
-      if (!this.isCandle) {
+      if (!this.isCandle && this.data.length) {
         for (let i = this.startIndex; i < this.endIndex + 1; i++) {
           const { date: time, close: value } = this.data[i];
 
@@ -340,6 +343,7 @@ export default {
           this.startIndex + Math.round((event.targetTouches[0].clientX - this.graphBoxMargin) / this.unitWidth) - 1;
 
         this.selectedValue = this.data[this.selectedIndex].close;
+        this.selectedDate = this.data[this.selectedIndex].date;
       } else if (event.targetTouches.length === 2) {
         this.selectedIndex = null;
 
@@ -580,7 +584,8 @@ export default {
 
       this.redrawChart();
       this.selectedIndex = null;
-      this.selectedValue = 0;
+      this.selectedValue = null;
+      this.selectedDate = null;
 
       this.afterDataFetch = true;
     },
@@ -604,7 +609,8 @@ export default {
 
       this.redrawChart();
       this.selectedIndex = null;
-      this.selectedValue = 0;
+      this.selectedValue = null;
+      this.selectedDate = null;
 
       this.afterDataFetch = true;
     },
@@ -647,6 +653,6 @@ export default {
 
 <style>
 .chart-container {
-  padding: 10px;
+  margin: 10px;
 }
 </style>

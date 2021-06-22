@@ -72,5 +72,6 @@ export default {
   color: var(--blue-color);
   font-weight: bold;
   border: 0;
+  background-color: var(--app-bg-color);
 }
 </style>

@@ -113,9 +113,7 @@ const actions = {
 
         return true;
       }
-    } catch (error) {
-      // console.log(error);
-    }
+    } catch (error) {}
   },
 
   /**

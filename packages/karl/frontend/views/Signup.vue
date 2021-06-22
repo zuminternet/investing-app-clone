@@ -71,6 +71,10 @@ export default {
       }
     },
   },
+
+  mounted() {
+    this.setIsLoading(false);
+  },
 };
 </script>
 
