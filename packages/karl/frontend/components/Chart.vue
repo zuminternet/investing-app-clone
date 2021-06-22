@@ -579,6 +579,7 @@ export default {
       this.startIndex = 0;
 
       this.redrawChart();
+      this.selectedIndex = null;
 
       this.afterDataFetch = true;
     },
@@ -601,6 +602,7 @@ export default {
       this.startIndex = 0;
 
       this.redrawChart();
+      this.selectedIndex = null;
 
       this.afterDataFetch = true;
     },
