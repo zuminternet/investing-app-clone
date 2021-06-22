@@ -143,8 +143,8 @@ $maxHeight: 50px;
   }
 
   .thumbnail {
-    width: fit-content;
-    height: fit-content;
+    width: max-content;
+    height: max-content;
     max-width: $maxHeight;
     max-height: $maxHeight;
     background-position: center;

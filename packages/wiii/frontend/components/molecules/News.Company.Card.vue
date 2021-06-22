@@ -79,7 +79,7 @@ export default Vue.extend({
   &.card {
     width: 100%;
     padding: 20px;
-    height: fit-content;
+    height: max-content;
     max-height: 200px;
     display: grid;
     grid-template-columns: 160px auto;
