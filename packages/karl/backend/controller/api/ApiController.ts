@@ -14,6 +14,12 @@ import ReplyService from 'common/backend/service/ReplyService';
 
 import { tickerMap, tickerKeys } from 'common/domain';
 
+interface itemForRandom {
+  close: number;
+  diff: number;
+  growthRate: number;
+}
+
 @Controller({ path: '/api' })
 export class ApiController {
   constructor(
@@ -27,6 +33,32 @@ export class ApiController {
     @Inject(ChartService) private chartService: ChartService,
     @Inject(ReplyService) private replyService: ReplyService,
   ) {}
+
+  private createRandom() {
+    return (Math.random() > 0.5 ? 2 : -2) * Math.random();
+  }
+
+  private addRandom(item: itemForRandom) {
+    const random = this.createRandom();
+    const { diff, growthRate } = item;
+
+    item.close = +(item.close + random).toFixed(2);
+    item.diff = +(item.diff + random).toFixed(2);
+    item.growthRate = ((diff + random) * growthRate) / diff;
+
+    return item;
+  }
+
+  private addRandomForItemDetail(itemDetail) {
+    const random = this.createRandom();
+    const { upDownPrice, upDownRate } = itemDetail;
+
+    itemDetail.close = +(itemDetail.close + random).toFixed(2);
+    itemDetail.upDownPrice = +(itemDetail.upDownPrice + random).toFixed(2);
+    itemDetail.upDownRate = ((upDownPrice + random) * upDownRate) / upDownRate;
+
+    return itemDetail;
+  }
 
   @GetMapping({ path: '/user' })
   public async getUser(request: Request, response: Response) {
@@ -118,7 +150,11 @@ export class ApiController {
   @GetMapping({ path: '/market/stock' })
   public async getStocks(request: Request, response: Response) {
     try {
-      const stocks = await this.marketService.getStocks();
+      let stocks = await this.marketService.getStocks();
+
+      stocks = stocks.map((stock) => {
+        return this.addRandom(stock);
+      });
 
       if (stocks) {
         return response.status(200).send(stocks);
@@ -140,7 +176,11 @@ export class ApiController {
   @GetMapping({ path: '/market/indices' })
   public async getIndices(request: Request, response: Response) {
     try {
-      const indices = await this.marketService.getIndices();
+      let indices = await this.marketService.getIndices();
+
+      indices = indices.map((indice) => {
+        return this.addRandom(indice);
+      });
 
       if (indices) {
         return response.status(200).send(indices);
@@ -156,7 +196,11 @@ export class ApiController {
   @GetMapping({ path: '/market/cryptos' })
   public async getCryptos(request: Request, response: Response) {
     try {
-      const cryptos = await this.marketService.getCryptos();
+      let cryptos = await this.marketService.getCryptos();
+
+      cryptos = cryptos.map((crypto) => {
+        return this.addRandom(crypto);
+      });
 
       if (cryptos) {
         return response.status(200).send(cryptos);
@@ -180,7 +224,9 @@ export class ApiController {
   public async getItemDetail(request: Request, response: Response) {
     try {
       const { symbols, email } = request.query;
-      const itemDetailInfo = await this.itemDetailService.getItemDetail({ symbols });
+      let itemDetailInfo = await this.itemDetailService.getItemDetail({ symbols });
+
+      itemDetailInfo = this.addRandomForItemDetail(itemDetailInfo);
 
       if (itemDetailInfo) {
         itemDetailInfo.isBookmarked = await this.bookmarkService.getIsBookmarked({ email, symbols });
@@ -238,12 +284,13 @@ export class ApiController {
   @GetMapping({ path: '/articles/news' })
   public async getNews(request: Request, response: Response) {
     try {
-      const { offset, limit, sortByReply } = request.query;
-      let { tickers } = request.query;
+      const { offset, limit } = request.query;
+      let { tickers, sortByReply } = request.query;
+      console.log(sortByReply);
+      sortByReply = sortByReply === 'true' ? true : false;
+
       let keyword;
       let news;
-
-      console.log(sortByReply, 'sortbyreply');
 
       if (tickers) {
         [keyword] = tickers;

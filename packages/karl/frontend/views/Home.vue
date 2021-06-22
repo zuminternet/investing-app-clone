@@ -104,13 +104,30 @@ export default {
 
     this.getStocks().then(() => {
       this.setIndicesIsLoading(false);
+      this.intervalForStocks = setInterval(this.getStocks, 3000);
     });
     this.getIndices().then(() => {
       this.setStocksIsLoading(false);
+      this.intervalForIndices = setInterval(this.getIndices, 3000);
     });
     this.getCryptos().then(() => {
       this.setCryptosIsLoading(false);
+      this.intervalForCryptos = setInterval(this.getCryptos, 3000);
     });
+  },
+
+  beforeDestroy() {
+    if (this.intervalForStocks) {
+      clearInterval(this.intervalForStocks);
+    }
+
+    if (this.intervalForIndices) {
+      clearInterval(this.intervalForIndices);
+    }
+
+    if (this.intervalForCryptos) {
+      clearInterval(this.intervalForCryptos);
+    }
   },
 };
 </script>
