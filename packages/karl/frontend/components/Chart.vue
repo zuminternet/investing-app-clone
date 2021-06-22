@@ -177,15 +177,9 @@ export default {
       this.isLoading = isLoading;
     },
 
-    drawGraphBox() {
-      this.ctx.strokeStyle = this.graphBoxColor;
-      this.ctx.strokeRect(this.graphBoxMargin, this.graphBoxMargin, this.graphBoxWidth, this.graphBoxHeight);
-    },
-
     drawGraph() {
       this.ctx.strokeStyle = this.graphColor;
       this.ctx.beginPath();
-      this.ctx.moveTo(this.graphBoxMargin, this.graphBoxMargin + this.graphBoxHeight);
 
       let interval = Math.floor((this.endIndex - this.startIndex) / 7);
 
@@ -241,10 +235,8 @@ export default {
             this.timeData.push([time, i]);
           }
         }
-        this.ctx.lineTo(this.graphBoxMargin + this.graphBoxWidth, this.graphBoxMargin + this.graphBoxHeight);
       }
 
-      this.ctx.closePath();
       this.ctx.stroke();
 
       this.drawCurrentLine(this.unitHeight);
@@ -474,7 +466,7 @@ export default {
       this.valueData = [];
 
       this.ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
-      this.drawGraphBox();
+
       this.drawGraph();
       this.drawVerticalLines();
 
@@ -526,6 +518,7 @@ export default {
       const { from, to } = this.getFromAndTo(period);
       this.data = await getHistoricalData({ symbol: this.symbol, from, to, period });
       this.data.reverse();
+      this.data = this.addRandom(this.data);
     },
 
     createRandom() {
@@ -534,29 +527,12 @@ export default {
 
     addRandom(data) {
       const random = this.createRandom();
+      const endData = data[data.length - 1];
+
+      data.push({ ...endData, close: endData.close + random });
+
+      return data;
     },
-  },
-
-  async mounted() {
-    this.setIsloading(true);
-    await this.getHistoricalDataForPeriod(this.period);
-    this.setIsloading(false);
-
-    this.endIndex = this.data.length - 1;
-    this.startIndex = 0;
-
-    this.ctx = this.$refs.graph.getContext('2d');
-    this.baseStartIndex = 0;
-    this.baseEndIndex = this.data.length - 1;
-
-    this.drawGraphBox();
-    this.drawGraph();
-    this.drawVerticalLines();
-
-    this.$refs.graph.ontouchstart = this.touchStartHandler;
-    this.$refs.graph.ontouchmove = this.touchMoveHandler;
-    this.$refs.graph.ontocuhcancel = this.touchEndhandler;
-    this.$refs.graph.ontouchend = this.touchEndhandler;
   },
 
   watch: {
@@ -572,16 +548,65 @@ export default {
       this.redrawChart();
     },
 
+    data() {
+      if (this.afterDataFetch) {
+        this.redrawChart();
+      }
+    },
+
     async period() {
+      this.afterDataFetch = false;
+      if (this.intervalForHistoricalData) {
+        clearInterval(this.intervalForHistoricalData);
+      }
+
       this.setIsloading(true);
       await this.getHistoricalDataForPeriod(this.period);
       this.setIsloading(false);
+
+      const fetcher = this.getHistoricalDataForPeriod.bind(this, this.period);
+      this.intervalForHistoricalData = setInterval(fetcher, 2675);
 
       this.endIndex = this.data.length - 1;
       this.startIndex = 0;
 
       this.redrawChart();
+
+      this.afterDataFetch = true;
     },
+  },
+
+  async mounted() {
+    this.setIsloading(true);
+    await this.getHistoricalDataForPeriod(this.period);
+    this.setIsloading(false);
+
+    this.ctx = this.$refs.graph.getContext('2d');
+
+    const fetcher = this.getHistoricalDataForPeriod.bind(this, this.period);
+    this.intervalForHistoricalData = setInterval(fetcher, 2675);
+
+    this.endIndex = this.data.length - 1;
+    this.startIndex = 0;
+
+    this.baseStartIndex = 0;
+    this.baseEndIndex = this.data.length - 1;
+
+    this.drawGraph();
+    this.drawVerticalLines();
+
+    this.$refs.graph.ontouchstart = this.touchStartHandler;
+    this.$refs.graph.ontouchmove = this.touchMoveHandler;
+    this.$refs.graph.ontocuhcancel = this.touchEndhandler;
+    this.$refs.graph.ontouchend = this.touchEndhandler;
+
+    this.afterDataFetch = true;
+  },
+
+  beforeDestroy() {
+    if (this.intervalForHistoricalData) {
+      clearInterval(this.intervalForHistoricalData);
+    }
   },
 };
 </script>

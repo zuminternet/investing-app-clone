@@ -458,7 +458,7 @@ export class ApiController {
     try {
       const { email, docId, contents } = request.body;
 
-      const result = await this.replyService.createReply({ email, docId, contents });
+      const result = await this.replyService.createReply({ email, docId, contents, userName: email });
 
       if (result) {
         return response.sendStatus(201);
