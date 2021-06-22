@@ -62,12 +62,20 @@ export default {
       for (let i = 0; i < this.timeData.length; i++) {
         let [time, index] = this.timeData[i];
         time = new Date(time);
-        let displayedTime = `${time.getMonth() + 1}-${time.getDate()}`;
+
+        const fullYear = `${time.getFullYear()}`;
+        const monthAndDate = `${time.getMonth() + 1}-${time.getDate()}`;
 
         this.ctx.fillText(
-          displayedTime,
-          this.graphBoxMargin + this.unitWidth * (index - this.startIndex) - this.ctx.measureText(displayedTime).width / 2,
+          fullYear,
+          this.graphBoxMargin + this.unitWidth * (index - this.startIndex) - this.ctx.measureText(fullYear).width / 2,
           10,
+        );
+
+        this.ctx.fillText(
+          monthAndDate,
+          this.graphBoxMargin + this.unitWidth * (index - this.startIndex) - this.ctx.measureText(monthAndDate).width / 2,
+          20,
         );
       }
     },
@@ -86,7 +94,4 @@ export default {
 };
 </script>
 
-<style>
-.x-axis {
-}
-</style>
+<style></style>

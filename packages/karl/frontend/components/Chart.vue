@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="chart-container">
     <loading v-if="isLoading" :loadingHeight="348" />
 
     <div v-show="!isLoading">
@@ -641,4 +641,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.chart-container {
+  padding: 10px;
+}
+</style>
