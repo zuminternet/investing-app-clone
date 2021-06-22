@@ -329,7 +329,6 @@ export default {
 
     touchStartHandler(event) {
       event.preventDefault();
-      console.log('start');
 
       const touches = event.targetTouches;
       this.tpCache = [];
@@ -365,8 +364,6 @@ export default {
       event.preventDefault();
 
       if (event.targetTouches.length === 0) {
-        console.log('touch end');
-
         this.baseStartIndex = this.startIndex;
         this.baseEndIndex = this.endIndex;
         this.targetStartIndex = null;
@@ -518,9 +515,6 @@ export default {
 
       to += today.getMonth() + 1 >= 10 ? `-${today.getMonth() + 1}` : `-0${today.getMonth() + 1}`;
       to += today.getDate() >= 10 ? `-${today.getDate()}` : `-0${today.getDate()}`;
-
-      console.log(from);
-      console.log(to);
 
       return { from, to };
     },

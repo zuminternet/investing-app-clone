@@ -99,14 +99,14 @@ export default {
         const fullYear = `${date.getFullYear()}`;
         const monthAndDate = `${date.getMonth() + 1}-${date.getDate()}`;
 
+        const fullYearLength = this.ctx.measureText(`${fullYear}`).width;
+        const monthAndDateLength = this.ctx.measureText(`${monthAndDate}`).width;
         this.ctx.fillStyle = '#31c27e';
 
         this.ctx.fillRect(
-          this.graphBoxMargin +
-            this.unitWidth * (this.selectedIndex - this.startIndex) -
-            this.ctx.measureText(`${fullYear}`).width / 2,
+          this.graphBoxMargin + this.unitWidth * (this.selectedIndex - this.startIndex) - fullYearLength / 2,
           0,
-          this.ctx.measureText(`${monthAndDate}`).width,
+          fullYearLength ? fullYearLength : monthAndDateLength,
           20,
         );
 

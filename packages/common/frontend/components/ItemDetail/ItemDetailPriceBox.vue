@@ -98,14 +98,6 @@ export default {
     isDown() {
       return this.itemDetail.upDownPrice < 0;
     },
-
-    // time() {
-    //   return this.itemDetail.time;
-    // },
-
-    // currency() {
-    //   return this.itemDetail.currency;
-    // },
   },
 };
 </script>

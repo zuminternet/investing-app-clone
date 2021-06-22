@@ -122,9 +122,7 @@ export default class MarketService {
       }
 
       return false;
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   }
 
   /**
@@ -157,8 +155,6 @@ export default class MarketService {
       }
 
       return false;
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   }
 }

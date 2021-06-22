@@ -60,7 +60,6 @@ const actions = {
 
       throw new Error('Getting news was failed in article store');
     } catch (error) {
-      console.log(error);
       commit('setNewsIsError', true);
     }
   },
@@ -77,7 +76,6 @@ const actions = {
 
       throw new Error('Getting news was failed in article store');
     } catch (error) {
-      console.log(error);
       commit('setHotNewsIsError', true);
     }
   },
@@ -94,7 +92,6 @@ const actions = {
 
       throw new Error('Getting article by id was failed in article store');
     } catch (error) {
-      console.log(error);
       commit('setArticleDetailIsError', true);
     }
   },

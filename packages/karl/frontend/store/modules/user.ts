@@ -38,7 +38,6 @@ const actions = {
         googleAuth.signIn();
       }
     } catch (error) {
-      console.log(error);
       commit('setIsError', true);
     }
   },
@@ -62,7 +61,6 @@ const actions = {
         }
       });
     } catch (error) {
-      console.log(error);
       commit('setIsError', true);
     }
   },
@@ -132,7 +130,6 @@ const actions = {
         return true;
       }
     } catch (error) {
-      console.log(error);
       commit('setIsError', true);
     }
   },
@@ -152,7 +149,6 @@ const actions = {
         return true;
       }
     } catch (error) {
-      console.log(error);
       commit('setIsError', true);
     }
   },

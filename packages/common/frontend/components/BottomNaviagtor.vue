@@ -28,8 +28,9 @@ export default {
 
   methods: {
     routeToTargetPage(event) {
-      const { MARKET, NEWS, BOOKMARK, MORE } = text;
+      const { MARKET, NEWS, BOOKMARK } = text;
       const targetPage = event.target.innerText;
+      const { current } = this.$router.history;
 
       if (targetPage === MARKET) {
         this.$router.push('market');
@@ -41,10 +42,6 @@ export default {
 
       if (targetPage === BOOKMARK) {
         this.$router.push('bookmark');
-      }
-
-      if (targetPage === MORE) {
-        this.$router.push('more');
       }
     },
   },

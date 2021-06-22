@@ -82,77 +82,77 @@ export default {
     },
   },
   crypto: {
-    Bitcoin: {
+    비트코인: {
       symbol: 'BIDU',
       investingId: 'crypto/bitcoin/btc-usd',
       category: 'zum-investing-app',
     },
-    Ethereum: {
+    이더리움: {
       symbol: 'EBAY',
       investingId: 'crypto/ethereum/eth-usd?c997650',
       category: 'zum-investing-app',
     },
-    Tether: {
+    테더: {
       symbol: 'INTC',
       investingId: 'equities/apple-computer-inc',
       category: 'zum-investing-app',
     },
-    XRP: {
+    리플: {
       symbol: 'MAR',
       investingId: 'equities/apple-computer-inc',
       category: 'zum-investing-app',
     },
-    'Bitcoin Cash': {
+    '비트코인 캐쉬': {
       symbol: 'MNST',
       investingId: 'equities/apple-computer-inc',
       category: 'zum-investing-app',
     },
-    'Bitcoin SV': {
+    '비트코인 SV': {
       symbol: 'USB',
       investingId: 'equities/apple-computer-inc',
       category: 'zum-investing-app',
     },
-    Cardano: {
+    카다노: {
       symbol: 'ENB',
       investingId: 'equities/apple-computer-inc',
       category: 'zum-investing-app',
     },
-    Litecoin: {
+    라이트코인: {
       symbol: 'MRNA',
       investingId: 'equities/apple-computer-inc',
       category: 'zum-investing-app',
     },
-    'Binance Coin': {
+    바이낸스코인: {
       symbol: 'CI',
       investingId: 'equities/apple-computer-inc',
       category: 'zum-investing-app',
     },
-    Chainlink: {
+    체인링크: {
       symbol: 'COP',
       investingId: 'equities/apple-computer-inc',
       category: 'zum-investing-app',
     },
-    EOS: {
+    이오스: {
       symbol: 'BNS',
       investingId: 'equities/apple-computer-inc',
       category: 'zum-investing-app',
     },
-    Tezos: {
+    테조스: {
       symbol: 'DUK',
       investingId: 'equities/apple-computer-inc',
       category: 'zum-investing-app',
     },
-    Stellar: {
+    스텔라: {
       symbol: 'TJX',
       investingId: 'equities/apple-computer-inc',
       category: 'zum-investing-app',
     },
-    Monero: {
+    모네로: {
       symbol: 'CME',
       investingId: 'equities/apple-computer-inc',
       category: 'zum-investing-app',
     },
-    TRON: {
+    트론: {
       symbol: 'BAM',
       investingId: 'equities/apple-computer-inc',
       category: 'zum-investing-app',
