@@ -93,7 +93,7 @@ export default {
       targetEndIndex: null,
       startIndex: null,
       selectedIndex: null,
-      selectedValue: 0,
+      selectedValue: null,
       endIndex: null,
       timeData: [],
       valueData: [],
@@ -580,6 +580,7 @@ export default {
 
       this.redrawChart();
       this.selectedIndex = null;
+      this.selectedValue = 0;
 
       this.afterDataFetch = true;
     },
@@ -603,6 +604,7 @@ export default {
 
       this.redrawChart();
       this.selectedIndex = null;
+      this.selectedValue = 0;
 
       this.afterDataFetch = true;
     },

@@ -59,8 +59,8 @@ export default {
     },
 
     selectedValue: {
-      type: Number,
       required: true,
+      validator: (prop) => typeof prop === 'number' || prop === null,
     },
 
     isDarkTheme: {
@@ -104,10 +104,11 @@ export default {
     },
 
     writeSelectedValue() {
-      this.ctx.fillStyle = 'blue';
-      this.ctx.fillText(`${this.selectedValue.toFixed(3)}`, 0, this.selectedHeight);
-
-      this.ctx.fillStyle = 'black';
+      if (this.selectedValue !== null) {
+        this.ctx.fillStyle = 'blue';
+        this.ctx.fillText(`${this.selectedValue.toFixed(3)}`, 0, this.selectedHeight);
+        this.ctx.fillStyle = 'black';
+      }
     },
   },
 
