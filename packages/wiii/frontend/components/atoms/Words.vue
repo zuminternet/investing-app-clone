@@ -36,7 +36,7 @@ export default Vue.extend({});
   }
 
   &.mini {
-    width: fit-content;
+    width: max-content;
     font-size: 0.6rem;
     line-height: 1.3;
     font-style: oblique;

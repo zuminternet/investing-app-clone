@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { createNamespacedHelpers } from 'vuex';
+import { mapState, createNamespacedHelpers } from 'vuex';
 import ReplyInput from '@/components/molecules/ReplyNewInput.vue';
 import ReplySort from '@/components/molecules/ReplySort.vue';
 import Card from '@/components/molecules/Reply.List.Card.vue';
@@ -25,12 +25,6 @@ export default Vue.extend({
   name: 'ReplySection',
 
   components: { ReplyInput, ReplySort, Card },
-
-  props: {
-    ticker: {
-      type: String,
-    },
-  },
 
   data() {
     const sortTexts = ['최신순', '좋아요순'];
@@ -44,6 +38,18 @@ export default Vue.extend({
     };
   },
 
+  computed: {
+    ...mapState(['ticker']),
+  },
+
+  watch: {
+    async ticker() {
+      this.isLoading = true;
+      this.repls = await this.getReplsByDocID(this.ticker);
+      this.isLoading = false;
+    },
+  },
+
   async mounted() {
     this.repls = await this.getReplsByDocID(this.ticker);
     this.isLoading = false;
@@ -51,17 +57,6 @@ export default Vue.extend({
 
   methods: {
     ...mapActions(['getRandomRepls', 'getReplsByDocID']),
-
-    /** @deprecated 개발용 더미데이터 */
-    // async getRandRepls() {
-    //   try {
-    //     const result = await this.getRandomRepls();
-    //     if (!result?.length) throw new Error('No Result');
-    //     return result;
-    //   } catch (e) {
-    //     console.error(e);
-    //   }
-    // },
 
     changeSort() {
       this.sortIdx = (this.sortIdx + 1) % 2;
@@ -79,3 +74,9 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style lang="scss" scoped>
+section.section {
+  padding: 5px;
+}
+</style>

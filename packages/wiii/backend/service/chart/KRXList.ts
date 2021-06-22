@@ -1,5 +1,6 @@
 export default [
   { ticker: '005930', tickerName: '삼성전자' },
+  { ticker: '000660', tickerName: 'SK Hynix' },
   { ticker: '017670', tickerName: 'SK Telecom' },
   { ticker: '035420', tickerName: 'Naver' },
   { ticker: '035720', tickerName: '카카오' },

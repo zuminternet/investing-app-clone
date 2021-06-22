@@ -25,10 +25,6 @@ export default Vue.extend({
 
   components: { TextArea, Button },
 
-  mounted() {
-    console.log({ route_ticker: this.ticker });
-  },
-
   computed: {
     ...mapGetters(['getTicker']),
     ticker() {

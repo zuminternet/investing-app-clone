@@ -7,12 +7,24 @@ import { marketEnum } from '../../../domain/newsData';
 
 declare const Axios: AxiosStatic;
 
+interface NewsData {
+  id: number;
+  category: string;
+  headline: string;
+  summarty: string;
+  datetime: number;
+  image: string;
+  source: string;
+  url: string;
+}
+
 interface CachingMarketNews {
   [category: string]: any[];
 }
 
 interface NewsState {
   cachedMarketNews: CachingMarketNews;
+  currentModalNews: NewsData;
 }
 
 const News = {
@@ -22,13 +34,20 @@ const News = {
       [marketEnum.general]: [],
       [marketEnum.crypto]: [],
     },
+    currentModalNews: undefined,
   },
+
   getters: {},
+
   mutations: {
     cacheMarketNews: (state, { category, data }) => {
       state.cachedMarketNews[category] = data;
     },
+    setModalNews: (state, payload: NewsData) => {
+      state.currentModalNews = payload;
+    },
   },
+
   actions: {
     getMarketNewsAction: async ({ commit }, category: marketEnum) => {
       if (!category) return;
@@ -36,6 +55,7 @@ const News = {
         const results = await getMarketNews(category);
         commit('cacheMarketNews', { category, data: results });
 
+        console.log({ results });
         if (!results) return [];
         return results;
       } catch (e) {
@@ -53,6 +73,10 @@ const News = {
       } catch (e) {
         return console.error(e);
       }
+    },
+
+    setModalNewsAction({ commit }, payload: NewsData) {
+      commit('setModalNews', payload);
     },
 
     /** 북마크 */

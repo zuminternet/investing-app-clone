@@ -3,6 +3,7 @@ import { Service } from 'zum-portal-core/backend/decorator/Alias';
 import { getCompanyNews, getMarketNews } from './news';
 import { marketEnum } from '../../domain/newsData';
 import { Caching } from 'zum-portal-core/backend/decorator/Caching';
+import tickerMap from './tickerMap';
 
 @Service()
 export class NewsService {
@@ -36,6 +37,7 @@ export class NewsService {
   })
   public getCompanyNewsList(symbol: string, from?: string, to?: string) {
     const now = new Date().getTime();
+    if (symbol in tickerMap) symbol = tickerMap[symbol];
     return getCompanyNews(symbol, from ?? getDateString(now - WEEK_ONE * 2), to ?? getDateString(now));
   }
 }

@@ -15,7 +15,6 @@ import { FinnhubConfigs } from '../../config/market';
 
 const { BASE } = FinnhubConfigs;
 
-const setUrl = (paths: string[]) => `${BASE}${paths.join('/')}`;
 const setAxiosConfig = (params: object): AxiosRequestConfig => ({
   maxRedirects: 1,
   responseType: 'json',
