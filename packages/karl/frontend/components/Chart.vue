@@ -207,7 +207,14 @@ export default {
           this.ctx.fillStyle = close >= open ? 'red' : 'blue';
           this.ctx.strokeStyle = close >= open ? 'red' : 'blue';
 
-          let candleWidth = 4;
+          let candleWidth;
+
+          if (this.period === 'd') candleWidth = 4;
+
+          if (this.period === 'w') candleWidth = 3;
+
+          if (this.period === 'm') candleWidth = 3;
+
           this.ctx.fillRect(
             this.graphBoxMargin + this.unitWidth * (i - this.startIndex) - candleWidth / 2,
             this.unitHeight,
@@ -478,22 +485,22 @@ export default {
       this.drawSelectedLine();
     },
 
-    getFromAndTo(period) {
+    getFromAndTo(period, isCandle) {
       const today = new Date();
       let from = null;
       let to = null;
       let diff;
 
       if (period === 'd') {
-        diff = 5184000000;
+        diff = isCandle ? 5184000000 : 20736000000;
       }
 
       if (period === 'w') {
-        diff = 15552000000;
+        diff = isCandle ? 62208000000 : 124416000000;
       }
 
       if (period === 'm') {
-        diff = 63072000000;
+        diff = isCandle ? 248832000000 : 497664000000;
       }
 
       const fromDay = new Date();
@@ -514,8 +521,8 @@ export default {
       return { from, to };
     },
 
-    async getHistoricalDataForPeriod(period) {
-      const { from, to } = this.getFromAndTo(period);
+    async getHistoricalDataForPeriod(period, isCandle) {
+      const { from, to } = this.getFromAndTo(period, isCandle);
       this.data = await getHistoricalData({ symbol: this.symbol, from, to, period });
       this.data.reverse();
       this.data = this.addRandom(this.data);
@@ -556,15 +563,38 @@ export default {
 
     async period() {
       this.afterDataFetch = false;
+
       if (this.intervalForHistoricalData) {
         clearInterval(this.intervalForHistoricalData);
       }
 
       this.setIsloading(true);
-      await this.getHistoricalDataForPeriod(this.period);
+      await this.getHistoricalDataForPeriod(this.period, this.isCandle);
       this.setIsloading(false);
 
-      const fetcher = this.getHistoricalDataForPeriod.bind(this, this.period);
+      const fetcher = this.getHistoricalDataForPeriod.bind(this, this.period, this.isCandle);
+      this.intervalForHistoricalData = setInterval(fetcher, 2675);
+
+      this.endIndex = this.data.length - 1;
+      this.startIndex = 0;
+
+      this.redrawChart();
+
+      this.afterDataFetch = true;
+    },
+
+    async isCandle() {
+      this.afterDataFetch = false;
+
+      if (this.intervalForHistoricalData) {
+        clearInterval(this.intervalForHistoricalData);
+      }
+
+      this.setIsloading(true);
+      await this.getHistoricalDataForPeriod(this.period, this.isCandle);
+      this.setIsloading(false);
+
+      const fetcher = this.getHistoricalDataForPeriod.bind(this, this.period, this.isCandle);
       this.intervalForHistoricalData = setInterval(fetcher, 2675);
 
       this.endIndex = this.data.length - 1;
@@ -578,12 +608,12 @@ export default {
 
   async mounted() {
     this.setIsloading(true);
-    await this.getHistoricalDataForPeriod(this.period);
+    await this.getHistoricalDataForPeriod(this.period, this.isCandle);
     this.setIsloading(false);
 
     this.ctx = this.$refs.graph.getContext('2d');
 
-    const fetcher = this.getHistoricalDataForPeriod.bind(this, this.period);
+    const fetcher = this.getHistoricalDataForPeriod.bind(this, this.period, this.isCandle);
     this.intervalForHistoricalData = setInterval(fetcher, 2675);
 
     this.endIndex = this.data.length - 1;
