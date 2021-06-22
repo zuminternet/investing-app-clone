@@ -43,7 +43,7 @@ export default Vue.extend({
   },
 
   async mounted() {
-    this.repls = await this.getReplsByDocID(this.docId);
+    this.repls = await this.getReplsByDocID({ docId: this.docId, email: this.email });
   },
 
   methods: {
@@ -56,7 +56,7 @@ export default Vue.extend({
     },
 
     async afterSubmit() {
-      this.repls = await this.getReplsByDocID(this.docId);
+      this.repls = await this.getReplsByDocID({ docId: this.docId, email: this.email });
     },
   },
 });
