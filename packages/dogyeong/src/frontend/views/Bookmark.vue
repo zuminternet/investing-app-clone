@@ -9,10 +9,8 @@
       </HeaderTitle>
     </Header>
     <main :class="$style.main">
-      <!-- 로그아웃 상태 -->
-      <ErrorMessage v-if="!isLoggedIn">로그인 해주세요 :)</ErrorMessage>
       <!-- 로딩 상태 -->
-      <LoadingSpinner v-else-if="isLoading" />
+      <LoadingSpinner v-if="isLoading" />
       <!-- 에러 발생 시 -->
       <ErrorMessage v-else-if="isError">
         에러가 발생했습니다! :(
@@ -96,9 +94,6 @@ export default Vue.extend({
   computed: {
     isEmpty() {
       return this.bookmarks.length === 0;
-    },
-    isLoggedIn() {
-      return this.$store.state.user.user;
     },
   },
 

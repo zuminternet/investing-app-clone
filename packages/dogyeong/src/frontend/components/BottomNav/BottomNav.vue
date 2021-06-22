@@ -36,13 +36,13 @@ export default Vue.extend({
     text-align: center;
     height: 48px;
     line-height: 48px;
-    color: var(--sub-text-color);
+    color: var(--text-color);
     font-weight: 500;
 
     &.router-link-exact-active,
     &:hover {
       font-weight: 600;
-      color: var(--text-color);
+      color: var(--primary-color);
     }
   }
 }
