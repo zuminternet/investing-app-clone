@@ -19,14 +19,14 @@ export default class ItemDetailService {
    * @returns
    */
 
-  // @Caching({
-  //   /** 개발모드에서는 1시간에 한 번만 실행 */
-  //   refreshCron: isProductionMode ? `30 * * * * *` : `1 * * *`,
-  //   /** 캐싱 기간 초 단위 */
-  //   ttl: isProductionMode ? times.caching : times.caching * 60,
-  //   runOnStart: false,
-  //   unless: (result) => result,
-  // })
+  @Caching({
+    /** 개발모드에서는 1시간에 한 번만 실행 */
+    refreshCron: isProductionMode ? `30 * * * * *` : `1 * * *`,
+    /** 캐싱 기간 초 단위 */
+    ttl: isProductionMode ? times.caching : times.caching * 60,
+    runOnStart: false,
+    unless: (result) => !result,
+  })
   public async getItemDetail({ symbols }) {
     const { accessKey } = marketStackConfig;
     const { data: itemDetailSubInfo1 } = await axios.get(

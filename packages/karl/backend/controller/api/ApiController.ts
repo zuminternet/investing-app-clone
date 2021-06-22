@@ -15,7 +15,7 @@ import ReplyService from 'common/backend/service/ReplyService';
 import { tickerMap, tickerKeys } from 'common/domain';
 
 interface itemForRandom {
-  close: number;
+  value: number;
   diff: number;
   growthRate: number;
 }
@@ -42,7 +42,7 @@ export class ApiController {
     const random = this.createRandom();
     const { diff, growthRate } = item;
 
-    item.close = +(item.close + random).toFixed(2);
+    item.value = +(item.value + random).toFixed(2);
     item.diff = +(item.diff + random).toFixed(2);
     item.growthRate = ((diff + random) * growthRate) / diff;
 

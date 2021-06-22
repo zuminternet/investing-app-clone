@@ -527,6 +527,14 @@ export default {
       this.data = await getHistoricalData({ symbol: this.symbol, from, to, period });
       this.data.reverse();
     },
+
+    createRandom() {
+      return (Math.random() > 0.5 ? 2 : -2) * Math.random();
+    },
+
+    addRandom(data) {
+      const random = this.createRandom();
+    },
   },
 
   async mounted() {
