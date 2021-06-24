@@ -1,0 +1,99 @@
+<template>
+  <button v-if="isAddBookmarkButton" class="item-card-button" @click="handleBookmark(email, symbol, name, category)">
+    <span v-if="isBookmarkedForLocal" class="full-star">&#9733;</span>
+    <span v-else class="empty-star">&#9734;</span>
+  </button>
+  <input v-else class="item-card-button" type="button" @click="$emit('handle-item-card-button-click')" />
+</template>
+
+<script>
+import { createBookmark, deleteBookmark } from '../apis';
+
+export default {
+  name: 'ItemCardButton',
+  props: {
+    isAddBookmarkButton: {
+      type: Boolean,
+      default: false,
+    },
+
+    email: {
+      type: String,
+      default: '',
+    },
+
+    symbol: {
+      type: String,
+      default: '',
+    },
+
+    name: {
+      type: String,
+      default: '',
+    },
+
+    category: {
+      type: String,
+      default: '',
+    },
+
+    isBookmarked: {
+      type: Boolean,
+      default: false,
+    },
+  },
+
+  data() {
+    return {
+      isBookmarkedForLocal: false,
+    };
+  },
+
+  methods: {
+    async handleBookmark(email, symbol, name, category) {
+      if (!this.isBookmarkedForLocal && (await createBookmark({ email, symbol, name, category }))) {
+        this.isBookmarkedForLocal = true;
+      } else if (this.isBookmarkedForLocal && (await deleteBookmark({ email, symbol, name, category }))) {
+        this.isBookmarkedForLocal = false;
+      }
+    },
+  },
+
+  mounted() {
+    this.isBookmarkedForLocal = this.isBookmarked;
+  },
+
+  watch: {
+    isBookmarked() {
+      this.isBookmarkedForLocal = this.isBookmarked;
+    },
+  },
+};
+</script>
+
+<style scoped lang="scss">
+.item-card-button {
+  width: 30px;
+  height: 30px;
+  margin-right: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 0;
+  background-color: var(--button-background-color);
+}
+
+.full-star {
+  font-size: 25px;
+  color: var(--icon-color);
+  margin-top: -5px;
+  font-weight: bold;
+}
+
+.empty-star {
+  font-size: 25px;
+  color: var(--icon-color);
+  margin-top: -5px;
+  font-weight: bold;
+}
+</style>

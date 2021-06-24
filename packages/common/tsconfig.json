@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "sourceMap": true,
+    "target": "es6",
+    "module": "commonjs",
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "types": ["reflect-metadata", "node"],
+    "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "allowJs": true,
+    "lib": ["ESNext", "DOM", "DOM.Iterable", "ScriptHost"]
+  },
+
+  "exclude": ["**/node_modules/**"]
+}

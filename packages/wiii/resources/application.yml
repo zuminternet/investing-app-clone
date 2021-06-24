@@ -1,0 +1,15 @@
+default: # 기본 옵션
+  port: 8080
+  renderer: resources/vue-ssr-server-bundle.json # SSR 파일명
+  template: # 사용할 템플릿 파일
+    index: index.html
+
+development: # 개발모드 옵션
+
+# 테스트 옵션
+test:
+  port: 69876
+
+production: # 배포모드 옵션
+  template: # 사용할 템플릿 파일
+    index: dist/index.html

@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "sourceMap": true,
+    "target": "es6",
+    "module": "commonjs",
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "types": ["reflect-metadata", "node"],
+    "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "allowJs": true,
+    "esModuleInterop": true,
+    "paths": {
+      "@/*": ["./frontend/*"],
+    }
+  },
+  "exclude": ["node_modules/**", "**/__tests__/**"]
+}

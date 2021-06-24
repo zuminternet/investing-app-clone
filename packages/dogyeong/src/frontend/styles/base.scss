@@ -1,0 +1,40 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  border-collapse: collapse;
+  outline: 0;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  font-size: 16px;
+}
+
+#app {
+  background-color: var(--app-bg-color);
+  color: var(--text-color);
+  width: 100%;
+  height: 100%;
+}
+
+a {
+  color: var(--text-color);
+  text-decoration: none;
+}
+
+li {
+  list-style: none;
+}
+
+canvas {
+  display: block;
+}
+
+button {
+  background-color: transparent;
+  border: 0;
+  cursor: pointer;
+}

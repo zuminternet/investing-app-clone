@@ -1,0 +1,48 @@
+{
+  "name": "wiii",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "concurrently -c yellow,cyan \"npm:frontend:dev\" \"npm:backend:dev\"",
+    "start": "cross-env ZUM_BACK_MODE=deploy NODE_ENV=production ts-node ./backend/Server.ts",
+    "build": "rimraf ./node_modules/.cache && npm run frontend:build",
+    "frontend:dev": "cross-env ZUM_FRONT_MODE=dev vue-cli-service serve",
+    "frontend:build": "vue-cli-service build --no-clean && cross-env ZUM_FRONT_MODE=ssr vue-cli-service build --no-clean",
+    "frontend:test": "jest --watchAll --silent --colors",
+    "backend:dev": "cross-env NODE_ENV=development nodemon --exec ts-node --transpile-only backend/Server.ts",
+    "db:up": "docker-compose up -d",
+    "db:stop": "docker-compose stop",
+    "db:restart": "docker-compose restart"
+  },
+  "dependencies": {
+    "@polygon.io/client-js": "^2.1.2",
+    "bcrypt": "^5.0.1",
+    "connect-redis": "^5.2.0",
+    "cross-env": "^7.0.3",
+    "express-session": "^1.17.2",
+    "helmet": "^4.6.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongodb": "^3.6.7",
+    "mongoose": "^5.12.13",
+    "redis": "^3.1.2",
+    "typeorm": "^0.2.32",
+    "typescript": "^4.2.4",
+    "vue": "^2.6.12",
+    "vue-awesome-swiper": "^4.1.1",
+    "zum-portal-core": "1.1.1"
+  },
+  "devDependencies": {
+    "@babel/plugin-transform-runtime": "^7.14.2",
+    "@types/bcrypt": "^5.0.0",
+    "@types/connect-redis": "^0.0.16",
+    "@types/express-session": "^1.17.3",
+    "@types/mongoose": "^5.11.97",
+    "@types/redis": "^2.8.29",
+    "@typescript-eslint/parser": "^4.24.0",
+    "@vue/cli-plugin-babel": "^4.5.13",
+    "@vue/cli-plugin-typescript": "^4.5.13",
+    "@vue/eslint-config-typescript": "^7.0.0",
+    "babel-core": "^7.0.0-bridge.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-vue": "^7.9.0"
+  }
+}

@@ -1,0 +1,14 @@
+curl -d "nickname=hello&email=test@com.com&password=mymymymym12124" 127.0.0.1:8080/api/user/
+curl -d "nickname=hello&email=test2@com.com&password=mymymymym12124" 127.0.0.1:8080/api/user/
+curl -d "nickname=hello&email=test3@com.com&password=111111" 127.0.0.1:8080/api/user/
+
+curl -d "nickname=hello&email=test@1com&password=my" 127.0.0.1:8080/api/user/
+
+POST 127.0.0.1:8080/api/user/signUp HTTP/1.1
+content-type: application/json
+
+{
+  "nickname": "hello", 
+  "email": "test@com.com", 
+  "password": "mymymymym12124"
+}

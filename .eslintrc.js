@@ -3,12 +3,23 @@ module.exports = {
   env: {
     node: true,
   },
-  extends: ['plugin:vue/essential', 'eslint:recommended', '@vue/prettier'],
+  extends: [
+    'eslint:recommended',
+    'plugin:vue/recommended',
+    'plugin:@typescript-eslint/recommended',
+    '@vue/typescript/recommended',
+    '@vue/prettier',
+    '@vue/prettier/@typescript-eslint',
+  ],
+  parser: 'vue-eslint-parser',
   parserOptions: {
-    parser: 'babel-eslint',
+    parser: '@typescript-eslint/parser',
+    sourceType: 'module',
+    ecmaVersion: 2020,
   },
   rules: {
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+    'vue/attribute-hyphenation': 'off',
   },
 };

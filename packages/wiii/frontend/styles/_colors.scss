@@ -1,0 +1,67 @@
+// materialuicolors(https://materialuicolors.co/?ref=uxprocc)
+// grey
+$grey-900: rgba(33, 33, 33, 1);
+$grey-700: rgba(97, 97, 97, 1);
+$grey-500: rgba(158, 158, 158, 1);
+$grey-300: rgba(224, 224, 224, 1);
+$grey-100: rgba(245, 245, 245, 1);
+
+$white-900: hsla(0, 0%, 100%, 1);
+
+// blue
+$blue-900: rgba(13, 71, 161, 1);
+$blue-700: rgba(25, 118, 210, 1);
+$blue-500: rgba(33, 150, 243, 1);
+$blue-300: rgba(100, 181, 246, 1);
+$blue-100: rgba(187, 222, 251, 1);
+
+// teal
+$green-900: rgba(0, 77, 64, 1);
+$green-700: rgba(0, 121, 107, 1);
+$green-500: rgba(0, 150, 136, 1);
+$green-300: rgba(77, 182, 172, 1);
+$green-100: rgba(178, 223, 219, 1);
+
+// red
+$red-800: rgba(198, 40, 40, 1);
+$red-700: rgba(211, 47, 47, 1);
+$red-a400: rgba(255, 23, 68, 1);
+
+// for dark mode
+// super theme 색상 참고 (rainglow)
+// @see https://github.com/rainglow/vscode/blob/master/themes/super.json
+$sup-dark: #2c343d;
+$sup-beige: #ffe792;
+
+// neon colors
+// @see https://colorswall.com/palette/94171
+$neon-crimson: rgba(249, 0, 79, 1);
+$neon-blurple: rgba(114, 137, 218, 1);
+$neon-green: rgba(57, 255, 186, 1);
+$sunny-yellow: rgba(255, 238, 122, 1);
+$deep-dark: rgba(25, 27, 42, 1);
+$deep-blue: rgba(42, 45, 70, 1);
+$shallow-blue: rgba(60, 67, 103, 1);
+
+:export {
+  grey900: $grey-900;
+  grey700: $grey-700;
+  grey500: $grey-500;
+  grey300: $grey-300;
+  grey100: $grey-100;
+  white900: $white-900;
+  reda400: $red-a400;
+  blue900: $blue-900;
+  blue700: $blue-700;
+  blue500: $blue-500;
+  blue300: $blue-300;
+  blue100: $blue-100;
+  green900: $green-900;
+  green700: $green-700;
+  green500: $green-500;
+  green300: $green-300;
+  green100: $green-100;
+  neonCrimson: $neon-crimson;
+  neonBlurple: $neon-blurple;
+  sunnyYellow: $sunny-yellow;
+}

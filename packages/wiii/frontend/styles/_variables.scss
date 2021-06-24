@@ -1,0 +1,198 @@
+@import 'colors';
+@import 'sizes';
+
+.reset {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  transition: all 0.15s ease-out;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue',
+    sans-serif;
+}
+
+.center {
+  display: grid;
+  place-items: center;
+}
+
+.rows-space-between {
+  @extend .reset;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  & > * {
+    margin-right: $margin-padding-15;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
+
+.boundary {
+  @extend .reset;
+  @extend .center;
+
+  // margin-bottom: $margin-padding-15;
+  margin: 7px 0;
+  padding: 10px;
+  border-radius: $border-radius-10;
+
+  background-color: $grey-100;
+  color: $grey-700;
+}
+
+.area {
+  @extend .reset;
+
+  margin: 7px 0;
+  max-width: $max-width-mobile;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.section {
+  @extend .boundary;
+
+  background-color: transparent;
+  padding: 10px 0;
+}
+
+.card {
+  @extend .boundary;
+
+  cursor: pointer;
+}
+
+.router-link,
+button {
+  @extend .reset;
+  @extend .center;
+
+  padding: 10px;
+  border-radius: $border-radius-10;
+  border: none;
+  font-size: 1rem;
+  line-height: 1.1rem;
+  text-decoration: none;
+  background-color: $grey-100;
+  color: $grey-700;
+  cursor: pointer;
+
+  &:hover:not(:disabled) {
+    color: $grey-100;
+    background-color: $blue-700;
+    font-weight: bold;
+    text-decoration: rgba($grey-100, 0.5) underline 3px;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+}
+
+.router-link {
+  &-exact-active {
+    color: $blue-700;
+    font-weight: bold;
+  }
+}
+
+// DARK
+.dark {
+  background-color: $deep-dark;
+  color: $grey-100;
+
+  .area {
+    background-color: $deep-dark;
+  }
+
+  .section {
+    color: $sunny-yellow;
+  }
+
+  .card {
+    background-color: $deep-blue;
+  }
+
+  .title-area {
+    color: $neon-crimson;
+    box-shadow: inset 0 -5px 5px rgba($neon-crimson, 0.7);
+    background-color: transparent;
+  }
+
+  .router-link,
+  #menu-user {
+    background-color: transparent;
+    box-shadow: inset 0 0 7px rgba($neon-crimson, 0.7);
+    color: $grey-500;
+
+    &.user-link {
+      box-shadow: inset 0 0 7px $neon-green;
+
+      &:hover {
+        color: $neon-green;
+      }
+    }
+
+    &:hover {
+      background-color: $deep-blue;
+      text-decoration: none;
+      color: $neon-crimson;
+    }
+
+    &-active {
+      color: $neon-crimson;
+      font-style: oblique;
+      text-shadow: 0 0 7px $red-a400;
+    }
+  }
+
+  .pure-text:not(.title-text) {
+    &.mini {
+      color: $neon-blurple;
+    }
+
+    &.subtitle {
+      color: $neon-blurple;
+      text-shadow: 0 0 4px $grey-500;
+    }
+
+    &.reply-content {
+      color: $grey-500;
+    }
+  }
+
+  button {
+    background-color: rgba($shallow-blue, 0.8);
+    color: rgba($grey-300, 0.5);
+
+    &:hover {
+      background-color: $deep-dark;
+      text-decoration: none;
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+    }
+  }
+
+  input {
+    &:focus {
+      box-shadow: inset 0 0 5px rgba($neon-green, 0.8);
+    }
+  }
+}
+
+// @see https://stackoverflow.com/questions/826782/how-to-disable-text-selection-highlighting
+.noselect {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}

@@ -1,0 +1,18 @@
+#app {
+  background-color: var(--app-bg-color);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+body {
+  margin: 0;
+}
+
+h4 {
+  color: var(--text-color);
+}
+
+h3 {
+  color: var(--text-color);
+}
